@@ -1,0 +1,640 @@
+body{
+    font-size:8px!important;
+}
+.rec{
+    height:60px;
+    margin-top:-1px;
+}
+table th{
+    text-align:center;
+}
+.dp_sched{
+	width:28%;
+	border:solid 1px black;
+	padding:2px;
+    padding-left:5px;
+    margin-top:-1px;
+	display:inline-block;
+	margin-left:3px;
+    height:auto;
+    padding-top:0px!important;
+}
+#nobotspace{
+    padding-bottom: -5px!important;
+    height:296px;
+}
+.ma{
+    margin-top:-1px;
+	width:28%;
+	border:solid 1px black;
+	padding:2px;
+	display:inline-block;
+	margin-left:3px;
+    height:auto;
+    padding-top:0px!important;
+}
+.sales{
+	width:41.7%;
+    padding:none;
+	display:inline-block;
+	margin-left:5px;
+    margin-top:-1px;
+    margin-bottom:none!important;
+}
+#small_box_lot{
+	width:30%;
+	border:solid 1px white;
+	display:inline-block;
+	margin-left:25px;
+}
+#spacetop{
+    margin-top:15px;
+}
+#title_sub{
+    text-align:center;
+    width:100%;
+    height:20px;
+    line-height:20px;
+    color:white;
+    background-color:black;
+    margin-top:14px;
+    margin-bottom:1px;
+}
+.titles{
+	background-color:black;
+    color:white;
+	font-weight:bolder;
+	text-align:center;
+	margin-bottom:5px;
+    padding-top: 3px;
+    margin-left:0px!important;
+    padding-right: 0px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    height:30px;
+    line-height: 20px;
+}
+.titles2{
+	background-color:black;
+    color:white;
+	font-weight:bolder;
+	text-align:center;
+    padding-right: 0px!important;
+    padding-bottom: 3px;
+    padding-left: 0px!important;
+    height:15px;
+    line-height: 20px;
+}
+.titles3{
+	background-color:black;
+    color:white;
+	font-weight:bolder;
+	text-align:center;
+    padding-right: 0px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    height:20px;
+    line-height: 20px;
+}
+.sub{
+	background-color:black;
+    text-align:center;
+    font-size:6.5px;
+    color:white;
+    margin-bottom:3px;
+    line-height:15px;
+
+}
+#small_box{
+	width:23%;
+	border:solid 1px white;
+	display:inline-block;
+}
+#small_box1{
+	width:33%;
+	border:solid 1px white;
+    margin-right:0px!important;
+	display:inline-block;
+}
+.small_box2{
+	width:11.5%;
+	border:solid 1px white;
+	padding:3px;
+	display:inline-block;
+    height:150px;
+}
+.chklbl{
+    font-style:normal!important;
+}
+.form-control{
+    background-color:#E0E0E0;
+    border-radius: 0px;
+    margin-bottom:-12px;
+    height:auto!important;
+    padding-top:0px!important;
+    padding-bottom:0px!important;
+    text-transform: uppercase!important;
+    font-size:8px!important;
+}
+.control-label{
+    display: inline-block;
+    width: auto;
+    font-style:italic;
+    margin-bottom:0px;
+}
+.control-labeliv{
+    display: inline-block;
+    width: auto;
+    font-style:italic;
+    margin-bottom:-5px;
+    margin-top:-10px!important;
+}
+.control-label2{
+    display: inline-block;
+    width: auto;
+    font-style:italic;
+    margin-bottom:0px;
+}
+.control-label4{
+    width: auto;
+    font-style:italic;
+    width:auto;
+    height:auto;
+}
+.control-label3{
+    display: inline-block;
+    width: auto;
+    margin-bottom:1px;
+    margin-top: 3px;
+    font-weight:bold!important;
+}
+
+img{
+    margin-left: auto;
+    margin-right: auto;
+    border: none !important;
+    display:block;
+    width:100%;
+    margin-top:none;
+}
+h6{
+    margin-top:-195px;
+    margin-left:100px;
+    position:absolute!important;
+}
+#dateofsale{
+    margin-top:-122px;
+    margin-left:85px;
+    margin-bottom:8px;
+}
+#processing_fee{
+    padding-top:5px;
+    padding-bottom:-25px;
+}
+.card-body{
+    border: 1px solid black!important;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 8px!important;
+    padding-left: 0px;
+}
+
+.doc_title{
+	width:100%;
+    background-color:black;
+    color:white;
+    text-align:left;
+    display:inline-block;
+    padding-left:8px;
+    font-weight:bold;
+}
+.investment_value{
+    width:100%;
+    background-color:black;
+    color:white;
+    text-align:center;
+    display:inline-block;
+    padding-left:8px;
+    
+}
+
+#others_main_div{
+    margin-top:-5px;
+}
+.others_title{
+    width:100%;
+    background-color:black;
+    color:white;
+    text-align:left;
+    display:inline-block;
+    padding-left:15px;
+    height:auto;
+}
+.doc_title_last{
+	width:100%;
+    background-color:black;
+    color:white;
+    text-align:left;
+    display:inline-block;
+    padding-left:5px;
+    margin-top:-5px!important;
+}
+.doc_title_lastrem{
+	width:100%;
+    background-color:black;
+    color:white;
+    text-align:left;
+    display:inline-block;
+    padding-left:10px;
+    margin-top:-5px!important;
+}
+#csr_status{
+    width:35%;
+    float:left;
+    height:18px;
+}
+
+#txtsrc{
+    border:0;
+    margin-left:5px;
+    border-bottom:1px solid black;
+    width:100px;
+    height:25px!important;
+}
+
+.subcontainer{
+    width:100%;
+    height:25px;
+    display:inline-block;
+    margin-top:1px;
+}
+.client_label{
+    width:60%;
+    float:right;
+}
+.label1{
+    height:4px;
+}
+.label2{
+    font-style:italic;
+}
+#bottom_space{
+    margin-bottom:3px;
+}
+
+#tcp_coverage{
+	background-color:black;
+    color:white;
+	padding-top:0px !important;
+	height:56px;
+    padding-left:15px;
+}
+table td{
+    margin-top:-1px;
+    text-align:center;
+    border-color:black!important;
+    border-width: 1px!important;
+}
+table th{
+    text-align:center;
+    border-color:black!important;
+    border-width: 1px!important;
+}
+.txtSignature{
+    width: 100%;
+    font-size:8px!important;
+    text-align:center;
+    border-right:none;
+    border-left:none;
+    border-top:none;
+    border-bottom:none;
+    font-weight:bold;
+}
+.noborder{
+    border: none;
+}
+body{
+    margin-top:0px!important;
+    height:100%;
+    width:100%;
+}
+.container-fluid{
+    margin-bottom:-10px;
+}
+.test{
+    height:15px;
+    width:100%;
+}
+#arch_date{
+    width:100%;
+    border:none;
+}
+.td_width_none{
+    border:none!important;
+    text-align:left;
+}
+.td_width_none1{
+    border-bottom: none!important;
+    border-right: none!important;
+    border-left: none!important;
+
+    text-align:left;
+}
+.notes{
+    font-style:italic;
+    font-size:8px!important;
+    border-bottom:black 1px solid!important;
+    border-top:none!important;
+}
+.client_conforme{
+    float:left;
+    text-align:left;
+    width:100%;
+    margin-bottom:10px;
+    padding-left:4px;
+    padding-right:5px;
+    margin-top:-1px;
+    font-size:8px!important;
+}
+.rec_app{
+    float:left;
+    text-align:left;
+    width:100%;
+    margin-bottom:10px;
+    padding-left:4px;
+    padding-right:5px;
+    margin-top:-1px;
+    font-size:8px!important;
+    border-top: black 1px solid!important;
+}
+#tblborder{
+    border-left: black 1px solid!important;
+    border-right: black 1px solid!important;
+    border-bottom: black 1px solid!important;
+    margin-top:-5px;
+    margin-left:1px;
+}
+.approval{
+    float:left;
+    text-align:left;
+    width:100%;
+    height:auto;
+    padding-left:10px;
+    padding-right:5px;
+    margin-top:-29px;
+}
+.validation{
+    margin-top:92px;
+}
+#withbd{
+    border-right:1px solid black!important;
+}
+.coo_name{
+    width:auto;
+    height:auto;
+    margin-bottom:-20px;
+    
+}
+.rem{
+    height:auto;
+    border:1px solid black!important;
+    width:779px;
+    margin-left:7px;
+    margin-top:-1px;
+
+}
+.rightbdarch2{
+    border-right:none;
+    border-top:none!important;
+    border-left:1px solid black;
+    padding-right:none!important;
+    padding-left:none!important;
+    padding-bottom:none!important;
+}
+.rightbdarch{
+    border-right:none;
+    border-left:1px solid black;
+    border-bottom:1px solid black;
+    padding-right:none!important;
+    padding-left:none!important;
+    padding-bottom:none!important;
+}
+.rightbd{
+    border-right:1px solid black;
+    border-left:1px solid black;
+    border-bottom:1px solid black;
+    padding-right:none!important;
+    padding-left:none!important;
+    padding-bottom:none!important;
+}
+
+#rdo_class{
+    margin-top:8px;
+    font-style:normal;
+}
+#others{
+    margin-top:5px!important;
+}
+#inside_txtbox{
+    width:100%;
+}
+#makeUppercase{
+    text-transform: uppercase;
+}
+.form-control{
+    text-transform: uppercase!important;
+}
+
+#chkboxes{
+
+    margin-left:15px;
+    background-color: pink;
+
+}
+#small_title{
+    text-align: center!important;
+    width:100%;
+}
+#lbl{
+    margin-top:15px;
+}
+#lbliv{
+    margin-top:3px;
+}
+#lbl11{
+    margin-top:4px;
+}
+#lbl12{
+    margin-top:18px;
+}
+#lbl13{
+    margin-top:17px;
+}
+#lbl9{
+    margin-top:28px;
+}
+#lbl14{
+    margin-top:17px;
+}
+#lbl15{
+    margin-top:17px;
+}
+#lbl1{
+    margin-top:8px;
+    margin-left:15px;
+    font-style:normal;
+}
+#rdolight{
+    font-style:normal;
+    
+    margin-top:3px;
+}
+#lbl2{
+    margin-top:-5px;
+    margin-left:15px;
+    font-size:10px!important;
+    font-style:normal;
+    
+}
+#options{
+    margin-left:10px;
+}
+#lblothers{
+    padding-left:15px;
+    height:25px;
+    width:auto;
+    line-height: 25px;
+}
+#others{
+    margin-top:3px!important;
+    margin-bottom:5px!important;
+}
+#lbl_div_others{
+    width:15%;
+    height:auto;
+    float:left;
+    font-size:8px!important;
+}
+.lbl_div_others_txtbox{
+    width:25%;
+    height:auto;
+    float:left;
+    font-size:8px!important;
+    margin-top:5px;
+}
+
+#lbl_units{
+    width:12%;
+    height:auto;
+    float:left;
+    margin-top:18px;
+    font-size:8px!important;
+}
+#lbl3{
+    margin-top:18px;
+    padding-left:15px;
+    font-style:normal;
+     
+}
+
+.rdo_buttons{
+    width:auto;
+    height:auto;
+    float:left;
+    margin-top:10px;
+    margin-left:45px;
+    margin-right:80px;
+    font-size:10px!important;
+}
+#r2{
+    margin-top:5px;
+    font-size:10px!important;
+}
+#r3{
+    margin-top:15px;
+    font-size:10px!important;
+}
+#txtfaucet{
+    margin-top:2px;
+}
+#txtotherspecify{
+    margin-top:17px;
+}
+#dplbl{
+    margin-top:-8px!important;
+}
+#aflbl{
+    margin-top:-3px!important;
+}
+#txtothers{
+    margin-top:-2px!important;
+    margin-left:1px!important;
+    width:40px;
+}
+.first_table{
+    float:left;
+    height:auto;
+    margin-top:-17px;
+    margin-top:-2px;
+    width:100%;
+}
+.second_table{
+    float:left;
+    height:auto;
+    margin-top:-17px;
+    margin-top:-1px;
+    width:100%;
+}
+#spc{
+    font-size:8px!important;
+}
+.agent_position2{
+    height:auto;
+    width:100px!important;
+}
+.agent_position3{
+    height:auto;
+    width:100px!important;
+}
+.agent_width2{
+    height:auto;
+    width: 300px!important;
+}
+.signature_width2{
+    height:auto;
+    width:60px!important;
+
+}
+.signature_width3{
+    height:auto;
+    width:60px!important;
+}
+td{
+    height:20px;
+}
+.table-bordered{
+    width:100%;
+    margin-right:-2px!important;
+}
+#border_right_none{
+    border-right:none!important;
+}
+
+#spc_text{
+    width:auto;
+    border:none;
+    background-color: pink;
+    height:auto;
+}
+#c_lot_area{
+    margin-bottom:2px;
+}
+#c_mod{
+    margin-bottom:2px;
+}
+#c_house_price_sqm{
+    margin-bottom:2px;
+}
+#c_floor_area{
+    margin-bottom:2px;
+}

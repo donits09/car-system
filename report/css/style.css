@@ -1,0 +1,436 @@
+body{
+    font-size:12px;
+}
+.investment_value{
+    width:100%;
+    background-color:black;
+    color:white;
+    text-align:center;
+    display:inline-block;
+    padding-left:8px;
+    font-weight:bold;
+    font-size:12px;
+}
+#bottom_space{
+    margin-bottom:3px;
+}
+.control-label{
+    display: inline-block;
+    width: auto;
+    font-style:italic;
+    margin-bottom:0px;
+    font-size:11.5px;
+}
+.form-control{
+    background-color:#E0E0E0;
+    border-radius: 0px;
+    margin-bottom:-12px;
+    height:auto!important;
+    padding-top:0px!important;
+    padding-bottom:0px!important;
+    text-transform: uppercase!important;
+    font-size:12px!important;
+}
+#tcp_coverage{
+	background-color:black;
+    color:white;
+
+}
+.control-label2{
+    display: inline-block;
+    width: auto;
+    font-style:italic;
+    margin-bottom:8px;
+    font-size:10px;
+    margin-top:2px;
+}
+#card-payment{
+    height:123px;
+    float:left;
+}
+.others_title{
+    width:100%;
+    background-color:black;
+    color:white;
+    text-align:left;
+    display:inline-block;
+    padding-left:7px;
+    height:auto;
+}
+#lbl_div_others{
+    width:15%;
+    height:auto;
+    float:left;
+}
+#lbl_add_cost{
+    margin-bottom:7px;
+    padding-left:7px;
+}
+#lbl2{
+    margin-top:-11px;
+    padding-left:7px;
+    font-size:10px!important;
+    font-style:normal;
+    margin-bottom:2px;
+    font-style:italic;
+    font-weight:normal; 
+    font-size:8px!important;
+}
+#lbl_units{
+    width:12%;
+    height:auto;
+    float:left;
+    margin-top:15px;
+    font-size:8px!important;
+}
+#lbl_units_line{
+    margin-bottom:7px;
+    font-weight:normal;
+}
+#rdolight{
+    font-weight:normal!important;
+    margin-bottom:5px;
+}
+#rdo20meter{
+    font-weight:normal!important;
+    margin-bottom:5px;
+}
+.rdo_buttons{
+    width:auto;
+    height:auto;
+    float:left;
+    margin-top:0px;
+    margin-left:45px;
+    margin-right:80px;
+    font-size:10px!important;
+}
+#add_cost_txtbox{
+    margin-bottom:5px;
+}
+.lbl_div_others_txtbox{
+    width:23.5%;
+    height:auto;
+    float:left;
+    font-size:8px!important;
+    margin-top:-2px;
+}
+#right_txtbox{
+    margin-bottom:16.8px;
+}
+#processing_fee{
+    padding-top:5px;
+    padding-bottom:-25px;
+}
+.vatlbl{
+    text-align:center;
+    margin-top:-5px;
+    width:auto;
+    height:auto;
+    font-style:italic;
+    font-size:9px;
+    margin-left:-25px;
+}
+.dp_sched{
+	width:28%;
+	border:solid 1px black;
+    margin-top:-1px;
+	display:inline-block;
+	margin-left:3px;
+    height:305px;
+    padding-top:0px!important;
+}
+.titles{
+	background-color:black;
+    color:white;
+	font-weight:bolder;
+	text-align:center;
+	margin-bottom:5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    height:30px;
+    line-height: 20px;
+    font-size:12px;
+}
+.titles2{
+	background-color:black;
+    color:white;
+	font-weight:bolder;
+	text-align:center;
+    padding-right: 0px!important;
+    padding-bottom: 3px;
+    padding-left: 0px!important;
+    height:15px;
+    line-height: 20px;
+    font-size:12px;
+}
+.ma{
+    margin-top:-1px;
+	width:28.1%;
+	border:solid 1px black;
+	display:inline-block;
+	margin-left:3px;
+    height:305px;
+    padding-top:0px!important;
+}
+.ma_sub{
+	background-color:black;
+    text-align:center;
+    font-size:6.5px;
+    color:white;
+    margin-bottom:5px;
+    line-height:13px;
+    border:black solid 1px;
+}
+.light{
+    font-size:10px;
+}
+#txtothers{
+    margin-top:-2px!important;
+    margin-left:1px!important;
+    margin-bottom:-15px;
+    width:40px;
+}
+.dp_container{
+    padding-left:7px;
+    padding-right:3px;
+}
+.dp_container2{
+    padding-left:4px;
+    padding-right:3px;
+}
+#lbl_dp{
+    margin-top:20px;
+    margin-bottom:-5px;
+}
+#title_sub{
+    text-align:center;
+    width:100%;
+    height:20px;
+    line-height:20px;
+    color:white;
+    background-color:black;
+    margin-top:14px;
+    margin-bottom:-3px;
+}
+.sales{
+	width:41.9%;
+    padding:none;
+	display:inline-block;
+	margin-left:3px;
+    margin-top:-1px;
+    margin-bottom:none!important;
+    height:20px;
+}
+.titles3{
+	background-color:black;
+    color:white;
+	font-weight:bolder;
+	text-align:center;
+    padding-right: 0px;
+    padding-bottom: 3px;
+    padding-left: 0px;
+    height:32px;
+    line-height: 20px;
+    padding-top:5px;
+    padding-bottom:5px;
+    font-size:12px;
+}
+.first_table{
+    float:left;
+    height:auto;
+    margin-top:-17px;
+    margin-top:-2px;
+    width:100%;
+    text-align:center;
+}
+.second_table{
+    float:left;
+    height:auto;
+    margin-top:-17px;
+    margin-top:-1px;
+    width:100%;
+    text-align:center;
+}
+#border_right_none{
+    border-right:none!important;
+}
+.agent_position3{
+    height:auto;
+    width:100px!important;
+}
+.signature_width3{
+    height:auto;
+    width:60px!important;
+}
+#spc{
+    font-size:8px!important;
+}
+.agent_position2{
+    height:auto;
+    width:100px!important;
+}
+.table-bordered{
+    width:100%;
+    margin-right:-2px!important;
+}
+.signature_width2{
+    height:auto;
+    width:60px!important;
+}
+#tblborder{
+    border-left: black 1px solid!important;
+    border-right: black 1px solid!important;
+    border-bottom: black 1px solid!important;
+    margin-top:-5px;
+    margin-left:1px;
+}
+.notes{
+    font-style:italic;
+    font-size:7px!important;
+    border-bottom:black 1px solid!important;
+    border-top:none!important;
+    text-align:center;
+    line-height:8px;
+    padding-top:8px;
+    padding-bottom:8px;
+    background-color:gainsboro;
+    margin-right:-2px;
+    margin-top:-2px;
+}
+.approval{
+    float:left;
+    text-align:left;
+    width:100%;
+    height:auto;
+    padding-left:10px;
+    padding-right:5px;
+    margin-top:-29px;
+}
+.client_conforme{
+    float:left;
+    text-align:left;
+    width:100%;
+    padding-left:4px;
+    padding-right:5px;
+    margin-top:-1px;
+    font-size:8px!important;
+}
+.rec{
+    height:60px;
+    margin-top:-1px;
+}
+.rec_app{
+    float:left;
+    text-align:left;
+    width:100%;
+    margin-bottom:10px;
+    padding-left:4px;
+    padding-right:5px;
+    margin-top:-1px;
+    font-size:8px!important;
+    border-top: black 1px solid!important;
+}
+.coo_name{
+    width:100%;
+    height:auto;
+    margin-top:10px;
+    text-align:center;
+    font-size:10px;
+    font-weight:bold;
+    margin-bottom:-5px;
+}
+.buyers_name{
+    border:none;
+    width:100%;
+    text-align:center;
+    font-size:10px;
+    margin-top:5px;
+}
+.txtSignature{
+    width: 100%;
+    font-size:8px!important;
+    text-align:center;
+    border-right:none;
+    border-left:none;
+    border-top:none;
+    border-bottom:none;
+}
+.rem{
+    width:100%;
+    margin-left:-1px;
+    margin-top:-1px;
+    border-left:1px solid black;
+    padding-left:-1px!important;
+}
+.tablerem{
+    border:1px solid black;
+    margin-left:7px;
+    margin-top:-2px;
+    height:120px;
+    width:49.1%;
+}
+.tablerem_checked_verfied{
+    height:120px;
+    border:1px solid black;
+    width:30%;
+    margin-left:-1px;
+    margin-top:-2px;
+}
+.tablerem_cashier{
+    height:120px;
+    border:1px solid black;
+    width:19.5%;
+    margin-left:-1px;
+    margin-top:-2px;
+}
+.rightbdarch2{
+    border-right:none;
+    border-top:none!important;
+    border-left:1px solid black;
+    padding-right:none!important;
+    padding-left:none!important;
+    padding-bottom:none!important;
+}
+.rightbdarch{
+    border-right:none;
+    border-left:1px solid black;
+    border-bottom:1px solid black;
+    padding-right:none!important;
+    padding-left:none!important;
+    padding-bottom:none!important;
+}
+.rightbd{
+    padding-right:none!important;
+    padding-left:none!important;
+    padding-bottom:none!important;
+}
+.doc_title_last{
+	width:100%;
+    background-color:black;
+    color:white;
+    text-align:left;
+    display:inline-block;
+    padding-left:5px;
+    margin-top:-5px!important;
+    font-size:12px;
+}
+.doc_title_lastrem{
+	width:100%;
+    background-color:black;
+    color:white;
+    text-align:left;
+    display:inline-block;
+    padding-left:10px;
+    margin-top:-5px!important;
+}
+.test{
+    height:15px;
+    width:100%;
+}
+#payment_details{
+    border-right:none!important;
+    height:305px;
+}
+#withbd{
+    border:1px solid black!important;
+}
