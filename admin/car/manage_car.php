@@ -15,6 +15,12 @@
             $c_car_paydate = $result["c_car_paydate"];
             $c_encoded_by= $result["c_encoded_by"];
         }
+    }else{
+        if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
+            $c_account_no = $_GET['c_account_no'];
+        } else {
+            $c_account_no = null;
+        }
     }
 ?>
 <form id="car-form">

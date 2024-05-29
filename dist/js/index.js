@@ -41,7 +41,6 @@ function searchBuyer(type) {
         loc = phase + block + lot;
 
         formData.append('loc', loc); 
-        alert(loc);
     } else if (type === 'last-name') {
         var last_name = document.getElementById('last_name').value;
         formData.append('last_name', last_name);

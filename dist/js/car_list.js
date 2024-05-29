@@ -10,9 +10,10 @@ $(document).ready(function() {
         var accountId = $(this).data('id');
         loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
     });
-
+   
     $('#create_new').click(function() {
-        loadModal('Create New Car', 'manage_car.php', '#createCarModal');
+        var accountNo = $(this).data('account-no');
+        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
     });
 
     $(document).on('click', '.delete_data', function() {
