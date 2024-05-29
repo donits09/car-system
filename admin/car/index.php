@@ -1,187 +1,204 @@
-<?php 
+
+<?php
     include('../../config.php');
-    include('../../inc/header.php'); 
+    include('../../inc/header.php');    
+
+    $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
+    $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
+    $l_lot = isset($_GET["lot"]) ? $_GET["lot"] : '' ;
+
+    $l_acc_no = isset($_GET["acc_no"]) ? $_GET["acc_no"] : '' ;
+    $last_name = isset($_GET["last_name"]) ? $_GET["last_name"] : '' ;
+
+    if ($l_acc_no != ''){
+        $l_find = $l_acc_no;
+        
+    }elseif($last_name != ''){
+        $l_find = $last_name;
+    }else{
+    if ($l_block == ''):
+        $l_find = sprintf("%03d", (int)$l_site);
+    else:
+        
+        if ($l_lot == ''):
+            $l_find = sprintf("%03d%03d", (int)$l_site, (int)$l_block);	
+        else:
+            $l_find = sprintf("%03d%03d%02d", (int)$l_site, (int)$l_block, (int)$l_lot);
+            
+        endif;
+    endif;
+    }
 ?>
 
-<div class="card card-outline card-primary">
-    <div class="card-header">
-        <h3 class="card-title"><b><i>CAR Encoding</i></b></h3>
-        <div class="card-tools">
-            <button id="create_new" class="btn btn-flat btn-primary" style="font-size:14px;">
-                <span class="fas fa-plus"></span>&nbsp;&nbsp;Create New
-            </button>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="container-fluid">
-            <table class="table table-bordered table-striped" id="data-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Account No.</th>
-                        <th>Payment Type</th>
-                        <th>Amount</th>
-                        <th>CAR No.</th>
-                        <th>Pay Date</th>
-                        <th>Encoder</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php 
-                    $i = 1;
-                    $car_list = "SELECT * FROM t_car_payment ORDER BY c_car_paydate ASC";
-                    $car_result = odbc_exec($conn, $car_list);
-                    while ($row = odbc_fetch_array($car_result)): 
-                    ?>
-                    <tr>
-                        <td class="text-center"><?php echo $i++; ?></td>
-                        <td class="text-center"><?php echo $row['c_account_no']; ?></td>
-                        <td class="text-center"><?php echo $row['c_car_type']; ?></td>
-                        <td class="text-center"><?php echo $row['c_car_amount']; ?></td>
-                        <td class="text-center"><?php echo $row['c_car_no']; ?></td>
-                        <td class="text-center"><?php echo $row['c_car_paydate']; ?></td>
-                        <td class="text-center"><?php echo $row['c_encoded_by']; ?></td>
-                        <td align="center">
-                            <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                Action
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu" role="menu">
-                                <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                                    <span class="fa fa-eye text-primary"></span> View
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                   data-id="<?php echo $row['id']; ?>" 
-                                   data-account-no="<?php echo $row['c_account_no']; ?>" 
-                                   data-payment-type="<?php echo $row['c_car_type']; ?>" 
-                                   data-amount="<?php echo $row['c_car_amount']; ?>" 
-                                   data-car-no="<?php echo $row['c_car_no']; ?>" 
-                                   data-pay-date="<?php echo $row['c_car_paydate']; ?>" 
-                                   data-encoder="<?php echo $row['c_encoded_by']; ?>">
-                                    <span class="fa fa-edit text-primary"></span> Edit
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>">
-                                    <span class="fa fa-trash text-danger"></span> Delete
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- View Modal -->
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewModalLabel">CAR Payment Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Content will be loaded dynamically here -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Create Modal -->
-<div class="modal fade" id="createCarModal" tabindex="-1" role="dialog" aria-labelledby="createCarModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createCarModalLabel">Create New Car</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Content will be loaded dynamically here -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <!-- Add save button or any other buttons here -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Car Details</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Form for editing car details -->
-                <form id="edit-car-form">
-                    <div class="form-group">
-                        <label for="edit-account-no">Account No.</label>
-                        <input type="text" class="form-control" id="edit-c-account-no" name="c_account_no" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-payment-type">Payment Type</label>
-                        <select class="form-control" id="edit-c-car-type" name="c_car_type" required>
-                            <option value=""></option>
-                            <!-- Options will be dynamically populated via PHP or JavaScript -->
+<link rel="stylesheet" href="../../dist/css/index.css">
+<div class="cont_wrapper">
+    <div class="pd-ltr-20">
+        <div class="card">
+        <!-- Dropdown 'to Par -->
+        <table class="table">
+            
+            <form id="search-type-form">
+                <div class="row align-items-end">
+                    <div class="col-md-3 form-group">
+                        <label for="search_type" class="control-label">Search By:</label>
+                        <select id="search_type" class="custom-select form-control" onchange="toggleForm()">
+                            <option value="" selected>--SELECT--</option>
+                            <option value="account">Account #</option>
+                            <option value="location">Location</option>
+                            <option value="last-name">Last Name</option>
                         </select>
+                        
                     </div>
-                    <div class="form-group">
-                        <label for="edit-amount">Amount</label>
-                        <input type="text" class="form-control" id="edit-c-car-amount" name="c_car_amount" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-car-no">CAR No.</label>
-                        <input type="text" class="form-control" id="edit-c-car-no" name="c_car_no" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-pay-date">Pay Date</label>
-                        <input type="date" class="form-control" id="edit-c-car-paydate" name="c_car_paydate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-encoder">Encoder</label>
-                        <input type="text" class="form-control" id="edit-c-encoded-by" name="c_encoded_by" required>
-                    </div>
-                    <input type="hidden" id="edit-id" name="id">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                </div>
+            </form>
+        </table>
 
-<!-- Confirm Modal -->
-<div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirm_modal_label">Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <!-- By Account # -->
+        <form id="account-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('account')">
+            <hr>
+            <div class="row align-items-end">
+                <div class="col-md-3 form-group">
+                    <label for="acc_no" class="control-label">Account #</label>
+                    <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11">
+                </div>
+                <div class="col-md-3 form-group">
+                    <button type="submit" class="btn btn-primary"><i class="dw dw-search"></i> Find Account</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <!-- Modal body content goes here -->
+        </form>
+
+        <!-- By Location -->
+        <form id="location-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('location')">
+            <hr>
+            <div class="row align-items-end">
+                <div class="col-md-3 form-group">
+                    <label for="phase" class="control-label">Phase</label>
+                    <select name="phase" id="phase" class="custom-select form-control" autocomplete="off">
+                        <option value="" selected>--SELECT--</option>
+                        <?php
+                        $sql = "SELECT * FROM t_projects ORDER BY c_acronym";
+                        $results = odbc_exec($conn, $sql);
+                        while ($row = odbc_fetch_array($results)) {
+                            echo '<option value="' . $row['c_code'] . '">' . $row['c_acronym'] . '</option>';
+                        }
+                        ?>
+                    </select>
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="block" class="control-label">Block</label>
+                    <input type="number" id="block" name="block" class="form-control">
+                </div>
+                <div class="col-md-2 form-group">
+                    <label for="lot" class="control-label">Lot</label>
+                    <input type="number" id="lot" name="lot" class="form-control">
+                </div>
+                <div class="col-md-2 form-group">
+                    <button type="submit" class="btn btn-primary"><i class="dw dw-search"></i> Search Location</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirm">Confirm</button>
+        </form>
+
+        <!-- By Last Name -->
+        <form id="last-name-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('last-name')">
+            <hr>
+            <div class="row align-items-end">
+                <div class="col-md-3 form-group">
+                    <label for="last_name" class="control-label">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control">
+                </div>
+                <div class="col-md-3 form-group">
+                    <button type="submit" class="btn btn-primary"><i class="dw dw-search"></i> Find Surname</button>
+                </div>
+            </div>
+        </form>
+        </div>
+        <br>
+        <div class="container mt-5">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="buyer-details-tab" data-bs-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="car-list-tab" data-bs-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Car List</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
+                    <div class="card mt-3">
+                        <div class="pd-20">
+                            <h2 class="text-blue h4">Buyer's Details</h2>
+                        </div>
+                        <div class="container">
+                            <form class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="acc_no" class="form-label">Account No.</label>
+                                    <input type="text" class="form-control" id="buyer_acc_no" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="date_of_sale" class="form-label">Date of Sale</label>
+                                    <input type="text" class="form-control" id="buyer_date_of_sale" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="acc_status" class="form-label">Account Status</label>
+                                    <input type="text" class="form-control" id="buyer_acc_status" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="lname" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="buyer_lname" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="buyer_fname" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="mname" class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" id="buyer_mname" readonly>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="buyer_address" readonly>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="remarks" class="form-label">Remarks</label>
+                                    <textarea class="form-control" rows="10" cols="50" id="buyer_remarks" readonly></textarea>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
+                    <div class="card mt-3">
+                        <div class="pd-20">
+                            <h2 class="text-blue h4">Car List</h2>
+                            <button id="create_new" class="btn btn-flat btn-primary" style="font-size:14px;">
+                                <span class="fas fa-plus"></span>&nbsp;&nbsp;Create New
+                            </button>
+                            <hr>
+                        </div>
+                        <div class="container">
+                        <table class="table table-bordered table-striped" id="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Account No.</th>
+                                    <th>Payment Type</th>
+                                    <th>Amount</th>
+                                    <th>CAR No.</th>
+                                    <th>Pay Date</th>
+                                    <th>Encoder</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="car-list-body">
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        <?php include ('main_modals.php'); ?>
     </div>
 </div>
 <script src="../../dist/js/index.js"></script>
-
-</html>
+<script src="../../dist/js/car_list.js"></script>

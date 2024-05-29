@@ -1,0 +1,132 @@
+<style>
+    .btn.btn-modal {
+        margin-left:10%;
+        margin-right:10%;
+        margin-bottom: 5%;
+        background-color: black;
+        color:white;
+        margin-top:0;
+    }
+    .modal-header.close{
+        display: none;
+    }
+</style>
+
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">CAR Payment Details</h5>
+            </div>
+            <div class="modal-body">
+            </div>
+            <button onclick="closeModal()" class="btn btn-modal" data-dismiss="modal">Close
+                <span class="fa fa-close text-primary"></span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createCarModal" tabindex="-1" role="dialog" aria-labelledby="createCarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createCarModalLabel">Create New Car</h5>
+                <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Car Details</h5>
+                <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-car-form">
+                    <div class="form-group">
+                        <label for="edit-account-no">Account No.</label>
+                        <input type="text" class="form-control" id="edit-c-account-no" name="c_account_no" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-payment-type">Payment Type</label>
+                        <select class="form-control" id="edit-c-car-type" name="c_car_type" required>
+                            <option value=""></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-amount">Amount</label>
+                        <input type="text" class="form-control" id="edit-c-car-amount" name="c_car_amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-car-no">CAR No.</label>
+                        <input type="text" class="form-control" id="edit-c-car-no" name="c_car_no" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-pay-date">Pay Date</label>
+                        <input type="date" class="form-control" id="edit-c-car-paydate" name="c_car_paydate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-encoder">Encoded by</label>
+                        <input type="text" class="form-control" id="edit-c-encoded-by" name="c_encoded_by" required>
+                    </div>
+                    <input type="hidden" id="edit-id" name="id">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </>
+</div>
+
+<div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirm_modal_label">Confirmation</h5>
+                <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="multipleResultsModal" tabindex="-1" role="dialog" aria-labelledby="multipleResultsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="multipleResultsModalLabel">Select Buyer</h5>
+        <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Account No</th>
+              <th>Last Name</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="multipleResultsBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

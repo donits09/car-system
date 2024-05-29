@@ -7,7 +7,6 @@
         $stmt = odbc_prepare($conn, $get_car_query);
         odbc_execute($stmt, array($accountId));
 
-
         while ($result = odbc_fetch_array($stmt)){
             $c_account_no = $result["c_account_no"];
             $c_car_type = $result["c_car_type"];
@@ -17,29 +16,31 @@
             $c_encoded_by= $result["c_encoded_by"];
         }
     }
-    ?>
+?>
 <form id="car-form">
-<input type="text" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
+<input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="form-group">
         <label for="account_no">Account No.</label>
         <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo isset($c_account_no) ? $c_account_no :"" ?>" required>
     </div>
     <div class="form-group">
         <label for="payment_type">Payment Type</label>
-        <select class="form-control" id="c_car_type" name="c_car_type" value="<?php echo isset($c_car_type) ? $c_car_type :"" ?>" required>
-            <option value=""> </option>
-            <?php
-            $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type ORDER BY id ASC";
-            $type_result = odbc_exec($conn, $car_type_query);
-            while ($row = odbc_fetch_array($type_result)):
-            ?>
-                <option value="<?php echo htmlspecialchars($row['c_payment_type']); ?>">
-                    <?php echo htmlspecialchars($row['c_payment_type']); ?>
-                </option>
-            <?php
-            endwhile;
-            ?>
-        </select>
+        <select class="form-control" id="c_car_type" name="c_car_type" value="<?php echo isset($c_car_type) ? $c_car_type : "" ?>" required>
+    <option value=""></option>
+    <?php
+    $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type ORDER BY id ASC";
+    $type_result = odbc_exec($conn, $car_type_query);
+    while ($row = odbc_fetch_array($type_result)):
+        $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'selected' : '';
+    ?>
+        <option value="<?php echo htmlspecialchars($row['c_payment_type']); ?>" <?php echo $selected; ?>>
+            <?php echo htmlspecialchars($row['c_payment_type']); ?>
+        </option>
+    <?php
+    endwhile;
+    ?>
+</select>
+
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
@@ -59,7 +60,6 @@
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
-
 <script>
     $(function(){
         $('#car-form').submit(function(e){

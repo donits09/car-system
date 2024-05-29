@@ -8,3 +8,17 @@
 .cont_wrapper{
     margin:10%;
 }
+.modal-dialog.large {
+    width: 80% !important;
+    max-width: unset;
+}
+.modal-dialog.mid-large {
+    width: 50% !important;
+    max-width: unset;
+}
+.card{
+    padding:10px;
+}
+form{
+    width: 100%;
+}
