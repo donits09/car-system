@@ -36,7 +36,6 @@
         <div class="card">
         <!-- Dropdown 'to Par -->
         <table class="table">
-            
             <form id="search-type-form">
                 <div class="row align-items-end">
                     <div class="col-md-3 form-group">

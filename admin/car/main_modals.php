@@ -1,3 +1,4 @@
+
 <style>
     .btn.btn-modal {
         margin-left:10%;
@@ -10,6 +11,9 @@
     .modal-header.close{
         display: none;
     }
+    .btn.btn-secondary.customized-modal{
+        border-radius: 100px;
+    }
 </style>
 
 <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
@@ -17,22 +21,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="viewModalLabel">CAR Payment Details</h5>
+                <button onclick="closeModal()" class="btn customized-modal" data-dismiss="modal">x</button>
             </div>
             <div class="modal-body">
             </div>
-            <button onclick="closeModal()" class="btn btn-modal" data-dismiss="modal">Close
-                <span class="fa fa-close text-primary"></span>
-            </button>
+            
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="createCarModal" tabindex="-1" role="dialog" aria-labelledby="createCarModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createCarModalLabel">Create New Car</h5>
-                <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
+                <button onclick="closeModal()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
             </div>
@@ -41,11 +44,11 @@
 </div>
 
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit Car Details</h5>
-                <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
+                <button onclick="closeModal()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
                 <form id="edit-car-form">
@@ -72,7 +75,7 @@
                         <input type="date" class="form-control" id="edit-c-car-paydate" name="c_car_paydate" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit-encoder">Encoded by</label>
+                        <label for="edit-encoder">Encoder</label>
                         <input type="text" class="form-control" id="edit-c-encoded-by" name="c_encoded_by" required>
                     </div>
                     <input type="hidden" id="edit-id" name="id">
@@ -80,7 +83,7 @@
                 </form>
             </div>
         </div>
-    </>
+    </div>
 </div>
 
 <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
@@ -88,14 +91,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirm_modal_label">Confirmation</h5>
-                <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button onclick="closeModal()" class="btn customized-modal" data-dismiss="modal">x</button>
             </div>
             <div class="modal-body">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Cancel</button>
                 <button type="button" class="btn btn-primary" id="confirm">Confirm</button>
             </div>
         </div>
@@ -108,9 +109,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="multipleResultsModalLabel">Select Buyer</h5>
-        <button onclick="closeModal()" class="btn btn-secondary" data-dismiss="modal">Close Modal</button>
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <button onclick="closeModal()" class="btn customized-modal" data-dismiss="modal">x</button>
       </div>
       <div class="modal-body">
         <table class="table table-striped">

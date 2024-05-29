@@ -54,9 +54,11 @@ function searchBuyer(type) {
             var response = JSON.parse(xhr.responseText);
             if (response.status === 'success') {
                 if (Array.isArray(response.data)) {
-                    if ((type === 'last-name' && response.data.length > 1) || (type === 'location' && response.data.length > 1)) {
+                    if (type === 'last-name' && response.data.length > 1) {
                         showMultipleResults(response.data);
-                    } else {
+                    } else if (type === 'location' && response.data.length > 1) {
+                        showMultipleResults(response.data);
+                    }else {
                         fillBuyerDetails(response.data[0]);
                     }
                 } else {
@@ -65,15 +67,16 @@ function searchBuyer(type) {
             } else {
                 alert('No data found');
             }
+            updateCarList();
         } else {
             alert('Error: ' + xhr.status);
         }
-        updateCarList(response.data); 
     };
     xhr.send();
+    
     return false;
+   
 }
-
 function updateCarList() {
     const accountNo = document.getElementById('buyer_acc_no').value;
     fetch(`car_list.php?account_no=${accountNo}`)
