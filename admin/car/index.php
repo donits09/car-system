@@ -30,7 +30,6 @@
     endif;
     }
 ?>
-
 <link rel="stylesheet" href="../../dist/css/index.css">
 <div class="cont_wrapper">
     <div class="pd-ltr-20">
@@ -170,13 +169,13 @@
                         <div class="card mt-3">
                             <div class="pd-20">
                                 <h2 class="text-blue h4">Car List</h2>
-                                <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="" style="font-size:14px;">
+                                <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                                     <span class="fa fa-edit text-primary"></span> Create New CAR
                                 </a>
-                                <a id="export_csv" class="btn btn-flat btn-primary" href="javascript:void(0)" style="font-size:14px;">
+                                <a id="export_csv" class="btn btn-flat btn-primary" href="javascript:void(0)">
                                     <span class="fa fa-download text-primary"></span> Export as CSV
                                 </a>
-                                <a id="export_pdf" class="btn btn-flat btn-primary ml-2" href="javascript:void(0)" style="font-size:14px;">
+                                <a id="export_pdf" class="btn btn-flat btn-primary" href="javascript:void(0)">
                                     <span class="fa fa-download text-primary"></span> Export as PDF
                                 </a>
                                 <div class="pd-20">
@@ -216,7 +215,6 @@ $(document).ready(function() {
 
     updateAccountNo();
 
-    // Use the correct event and attribute for Bootstrap 5
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
     });

@@ -31,7 +31,7 @@ if(isset($_GET['id']) && $_GET['id'] > 0){
                 </tr>
                 <tr>
                     <th>Amount:</th>
-                    <td><?php echo $row['c_car_amount']; ?></td>
+                    <td><?php echo number_format($row['c_car_amount'],2); ?></td>
                 </tr>
                 <tr>
                     <th>CAR No.:</th>

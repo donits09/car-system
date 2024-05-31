@@ -1,7 +1,7 @@
 
-/* *{
-    font-size:14px;
-} */
+*{
+    font-size:12px;
+}
 #data-table{
     text-align: center;
 }
@@ -21,4 +21,7 @@
 }
 form{
     width: 100%;
+}
+.btn.btn-flat.btn-primary{
+    font-size:12px;
 }

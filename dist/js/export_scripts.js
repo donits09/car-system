@@ -3,11 +3,19 @@
 function convertToCSV(table) {
     let rows = table.querySelectorAll('tr');
     let csv = [];
+    
+    let headers = [];
+    let headerCols = rows[0].querySelectorAll('th');
+    for (let i = 0; i < headerCols.length; i++) {
+        let header = headerCols[i].innerText.replace(/"/g, '""');
+        headers.push('"' + header + '"');
+    }
+    csv.push(headers.join(','));
+    
+    for (let i = 1; i < rows.length; i++) {
+        let row = [], cols = rows[i].querySelectorAll('td');
 
-    for (let i = 0; i < rows.length; i++) {
-        let row = [], cols = rows[i].querySelectorAll('td, th');
-
-        for (let j = 0; j < cols.length - 1; j++) {
+        for (let j = 0; j < cols.length; j++) {
             let data = cols[j].innerText.replace(/"/g, '""');
             row.push('"' + data + '"');
         }
@@ -18,14 +26,12 @@ function convertToCSV(table) {
     return csv.join('\n');
 }
 
-
 function downloadCSV(csv, filename) {
     let csvFile;
     let downloadLink;
 
     csvFile = new Blob([csv], {type: 'text/csv'});
     downloadLink = document.createElement('a');
-
 
     downloadLink.download = filename;
     downloadLink.href = window.URL.createObjectURL(csvFile);
@@ -38,10 +44,12 @@ function downloadCSV(csv, filename) {
 document.getElementById('export_csv').addEventListener('click', function() {
     let table = document.getElementById('data-table');
     let csv = convertToCSV(table);
-    let filename = 'car_list.csv';
+    let today = new Date();
+    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
 
     downloadCSV(csv, filename);
 });
+
 
 // EXPORT TO PDF
 function exportPDF() {
@@ -75,3 +83,4 @@ function exportPDF() {
 document.getElementById('export_pdf').addEventListener('click', function() {
     exportPDF();
 });
+
