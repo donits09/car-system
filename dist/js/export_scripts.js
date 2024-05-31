@@ -3,19 +3,18 @@
 function convertToCSV(table) {
     let rows = table.querySelectorAll('tr');
     let csv = [];
-    
-    let headers = [];
-    let headerCols = rows[0].querySelectorAll('th');
-    for (let i = 0; i < headerCols.length; i++) {
-        let header = headerCols[i].innerText.replace(/"/g, '""');
-        headers.push('"' + header + '"');
-    }
-    csv.push(headers.join(','));
-    
-    for (let i = 1; i < rows.length; i++) {
-        let row = [], cols = rows[i].querySelectorAll('td');
 
-        for (let j = 0; j < cols.length; j++) {
+    let today = new Date();
+    let dateStr = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+    let title = `CAR LIST AS OF ${dateStr}`;
+    csv.push(title); 
+
+    csv.push(''); 
+
+    for (let i = 0; i < rows.length; i++) {
+        let row = [], cols = rows[i].querySelectorAll('td, th');
+
+        for (let j = 0; j < cols.length - 1; j++) {
             let data = cols[j].innerText.replace(/"/g, '""');
             row.push('"' + data + '"');
         }
@@ -45,7 +44,9 @@ document.getElementById('export_csv').addEventListener('click', function() {
     let table = document.getElementById('data-table');
     let csv = convertToCSV(table);
     let today = new Date();
-    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
+
+    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
+    console.log('CSV Filename:', filename);
 
     downloadCSV(csv, filename);
 });

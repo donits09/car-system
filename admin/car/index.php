@@ -1,7 +1,20 @@
+<?php
+session_start();
+require_once('../../config.php');
+
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+    require_once('../../auth/logout.php');
+    exit();
+}
+
+if (isset($_SESSION['username'])) {
+    echo "Username: " . $_SESSION['username'];
+}
+?>
 
 
 <?php
-    include('../../config.php');
+
     include('../../inc/header.php');    
 
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
@@ -31,6 +44,7 @@
     }
 ?>
 <link rel="stylesheet" href="../../dist/css/index.css">
+<p><a href="../../auth/logout.php">Logout</a></p>
 <div class="cont_wrapper">
     <div class="pd-ltr-20">
         <div class="card">

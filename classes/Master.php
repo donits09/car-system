@@ -7,6 +7,26 @@ Class Master{
         $this->conn = odbc_connect($dsn, $user, $pass);
     }
 
+	function save_car_users(){
+		extract($_POST);
+	
+		$values = "'$c_employee_code', '$c_password','$c_realname','$c_group','$c_department','$c_user_type";
+		$insert = "INSERT INTO t_car_users (c_employee_code,c_password,c_realname,c_group,c_department,c_user_type) VALUES ($values)";
+		$save = odbc_exec($this->conn, $insert);
+	
+		$resp = array(); //
+	
+		if($save){
+			$resp['status'] = 'success';
+			$resp['msg'] = "New User Successfully saved.";
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = odbc_errormsg($this->conn);
+		}
+	
+
+		echo json_encode($resp);
+	}
 	function delete_car(){
 		$resp = array();
 	
@@ -185,7 +205,9 @@ switch ($action) {
 	case 'delete_car':
 		echo $Master->delete_car();
 	break;
-
+	case 'save_car_users':
+		echo $Master->save_car_users();
+	break;
 	default:
 	break;
 }

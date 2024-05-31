@@ -13,8 +13,11 @@ if (!$conn) {
     die("Connection failed: " . odbc_errormsg());
 }
 
-date_default_timezone_set('Asia/Manila');
 
+function redirect($url) {
+    header("Location: $url");
+    exit();
+}
 ?>
 
 
