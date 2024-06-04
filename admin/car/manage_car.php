@@ -1,4 +1,5 @@
 <?php 
+    session_start();
     include('../../config.php');
 
     $c_account_no = null;
@@ -7,6 +8,7 @@
     $c_car_no = '';
     $c_car_paydate = date('Y-m-d');
     $c_encoded_by = '';
+    $c_tran_date = date('Y-m-d H:i:s');
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
@@ -38,7 +40,7 @@
             <select class="form-control" id="c_car_type" name="c_car_type" style="width: calc(100% - 40px);" required>
                 <option value=""></option>
                 <?php
-                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type ORDER BY id ASC";
+                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
                 $type_result = odbc_exec($conn, $car_type_query);
                 while ($row = odbc_fetch_array($type_result)) {
                     $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'selected' : '';
@@ -67,103 +69,55 @@
         <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required>
     </div>
     <div class="form-group">
-        <label for="encoder">Encoder</label>
-        <input type="text" class="form-control" id="c_encoded_by" name="c_encoded_by" value="<?php echo htmlspecialchars($c_encoded_by) ?>" required>
+        <label for="encoder">Encoded by</label>
+        <input type="text" class="form-control" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
+    </div>
+    <div class="form-group">
+        <label for="encoder">Transaction date</label>
+        <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
-
-
 <script>
-  document.getElementById("addPaymentTypeBtn").addEventListener("click", function() {
-    var selectBox = document.getElementById("c_car_type");
-    var textBox = document.getElementById("new_payment_type");
-    var button = document.getElementById("addPaymentTypeBtn");
-
-    if (textBox.style.display === "none" || textBox.style.display === "") {
-
-        selectBox.style.display = "none";
-        textBox.style.display = "block";
-        textBox.focus();
-
-        button.innerHTML = "Cancel";
-        button.classList.remove("btn-outline-secondary");
-        button.classList.add("btn-danger");
-
-        selectBox.removeAttribute("required");
-        textBox.setAttribute("required", "required");
-    } else {
-
-        selectBox.style.display = "block";
-        textBox.style.display = "none";
-
-        button.innerHTML = '<i class="fas fa-plus"></i>';
-        button.classList.remove("btn-danger");
-        button.classList.add("btn-outline-secondary");
-
-        textBox.removeAttribute("required");
-        selectBox.setAttribute("required", "required");
-
-        textBox.value = "";
-    }
-});
-
-
-</script>
-
-<script>
-   $(document).ready(function() {
+$(document).ready(function() {
     $('#car-form').submit(function(e) {
         e.preventDefault();
-        var _this = $(this);
+       
+        if (confirm("Are you sure you want to save this car payment?")) {
+            var _this = $(this);
 
-        var c_car_type = $('#c_car_type').is(':visible') ? $('#c_car_type').val() : $('#new_payment_type').val();
+            start_loader();
 
-        start_loader();
-
-        $.ajax({
-            url: "../../classes/Master.php?f=save_car_payment",
-            data: new FormData(_this[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                console.log(resp); // Log the response to see its content
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        //location.reload();
-                    }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
+            $.ajax({
+                url: _base_url_+"classes/Master.php?f=save_car_payment",
+                data: new FormData(_this[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: function(err) {
+                    console.log(err);
+                    alert_toast("An error occurred.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    console.log(resp); 
+                    if (resp && resp.status === 'success') {
+                        alert_toast(resp.msg, 'success');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else if (resp && resp.status === 'failed' && resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    } else {
+                        alert_toast("An unexpected error occurred", 'error');
+                    }
+                    end_loader();
                 }
-                end_loader();
-            }
 
-        });
+            });
+        }
     });
 });
-
 </script>
-<script>
-    function checkAddNew() {
-        var selectBox = document.getElementById("c_car_type");
-        var textBox = document.getElementById("new_payment_type");
-        if (selectBox.value == "add_new") {
-            selectBox.style.display = "none";
-            textBox.style.display = "block";
-        } else {
-            selectBox.style.display = "block";
-            textBox.style.display = "none";
-        }
-    }
-    </script>

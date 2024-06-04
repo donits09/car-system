@@ -1,3 +1,4 @@
+
 <?php
 require_once('../config.php');
 require_once('session_auth.php');
@@ -33,7 +34,7 @@ check_session();
         padding-top: 5%;
     }
     .card-container {
-        width: 400px;
+        width: auto;
         margin: 0 auto;
         margin-top: 50px;
     }

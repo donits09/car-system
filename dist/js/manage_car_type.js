@@ -1,25 +1,20 @@
-
-
 $(document).ready(function() {
     $(document).on('click', '.edit_data', function() {
-        var accountId = $(this).data('id');
-        loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#editModal');
+        var carId = $(this).data('payment-id');
+        var carType = $(this).data('payment-type');
+        loadModal('Edit Car Type Details', 'manage_car.php?id=' + carId + '&type=' + carType, '#createCarModal');
     });
 
-    $(document).on('click', '.view_data', function() {
-        var accountId = $(this).data('id');
-        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
-    });
-   
     $('#create_new').click(function() {
-        var accountNo = $(this).data('account-no');
-        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
+        loadModal('Create New Car Type', 'manage_car_type.php','#createCarModal');
     });
 
     $(document).on('click', '.delete_data', function() {
-        var carId = $(this).data('id');
-        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId]);
+        var carId = $(this).data('id'); 
+        _conf("Are you sure you want to delete car type #" + carId + "?", 'delete_car_type', [carId]); 
     });
+
+    $('#data-table').DataTable();
 
     function loadModal(title, url, modalId) {
         start_loader();
@@ -48,30 +43,27 @@ $(document).ready(function() {
         $('#confirm_modal').modal('show');
     };
 
-    function delete_car(carId) {
+    function delete_car_type(carId) {
+        console.log("Car ID:", carId); 
         start_loader();
         $.ajax({
-            url: "../classes/Master.php?f=delete_car",
-            method: "POST",
+            url: _base_url_ + "classes/Master.php?f=delete_car_type",
+            method:"POST",
             data: { carId: carId },
-            dataType: "json",
+            dataType:"json",
             error: function(err) {
                 console.log(err);
-                alert_toast("An error occurred.", 'error');
+                alert("An error occurred.");
                 end_loader();
             },
             success: function(resp) {
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        //location.reload();
-                    }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                if (typeof resp === 'object' && resp.status === 'success') {
+                    alert(resp.msg);
+                    location.reload();
                 } else {
-                    alert_toast("An unexpected error occurred", 'error');
+                    alert("An error occurred.");
+                    end_loader();
                 }
-                end_loader();
             }
         });
     }

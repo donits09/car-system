@@ -4,7 +4,7 @@ if(!defined('DB_USERNAME')) define('DB_USERNAME',"root");
 if(!defined('DB_PASSWORD')) define('DB_PASSWORD',"");
 if(!defined('DB_NAME')) define('DB_NAME',"CAR_TESTDB");
 if(!defined('DB_SERVER')){
-    require_once("../config.php");
+    require_once("<?php echo base_url ?>config.php");
 }
 class DBConnection{
 

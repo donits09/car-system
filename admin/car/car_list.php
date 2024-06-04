@@ -5,7 +5,6 @@ $account_no = $_GET['account_no'];
 $car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ?";
 
 $stmt = odbc_prepare($conn, $car_list);
-
 if ($stmt && odbc_execute($stmt, array($account_no))) {
     $i = 1;
     while ($row = odbc_fetch_array($stmt)): 
