@@ -1,8 +1,3 @@
-<?php if($_settings->chk_flashdata('success')): ?>
-<script>
-	alert_toast("<?php echo $_settings->flashdata('success') ?>",'success')
-</script>
-<?php endif;?>
 
 <?php
 ini_set('date.timezone','Asia/Manila');
@@ -22,6 +17,30 @@ if (!$conn) {
 date_default_timezone_set('Asia/Manila');
 
 ?>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .hidden-button {
+        display: none;
+    }
+</style>
 <div class="card card-outline rounded-0 card-maroon">
 		<div class="card-header">
 			<h5 class="card-title"><b><i>List of Agents</b></i></h5>
@@ -52,27 +71,21 @@ date_default_timezone_set('Asia/Manila');
 						<tbody>
 						<?php 
 							$i = 1;
-							$sql = "SELECT t_commission.c_code, t_commission.c_amount, t_commission.c_account_no, t_commission.c_rate, t_buyers_account.c_net_tcp from t_agents left join t_commission on t_agents.c_code = t_commission.c_code left join t_buyers_account on t_commission.c_account_no = t_buyers_account.c_account_no where t_commission.c_date_of_sale >= '2021-01-22' order by t_commission.c_date_of_sale";
+							$sql = "SELECT * FROM t_agents order by c_hire_date";
 							$comm_result = odbc_exec($conn, $sql);
-							while ($row = odbc_fetch_array($comm_result)): 
+                            while ($row = odbc_fetch_array($comm_result)): 
 							?>
 							<tr>
 								<td class="text-center"><?php echo $i++; ?></td>
 								<td class=""><?php echo $row['c_code'] ?></td>
-								<td class=""><?php echo $row['c_account_no'] ?></td>
-								<td class=""><?php echo $row['c_amount'] ?></td>
+								<td class=""><?php echo $row['c_last_name'] . ', '. $row['c_first_name'] . ' '. $row['c_middle_initial']  ?></td>
+								<td class=""><?php echo $row['c_position'] ?></td>
 								<td align="center">
-									<button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-										Action
-									<span class="sr-only">Toggle Dropdown</span>
-									</button>
-									<div class="dropdown-menu" role="menu">
-										<a class="dropdown-item view_data" href="javascript:void(0)" data-id ="<?php echo $row['id'] ?>"><span class="fa fa-eye text-dark"></span> View</a>
-									<div class="dropdown-divider"></div>
-										<a class="dropdown-item edit_data" href="javascript:void(0)" data-id ="<?php echo $row['id'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
-									<div class="dropdown-divider"></div>
-										<a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"  data-name="<?php echo $row['name'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
-									</div>
+									
+										<button><a class="edit_data" href="javascript:void(0)" data-id ="<?php echo $row['c_code'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+                                        </button>
+										<button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['c_code'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                        </button>
 								</td>
 							</tr>
 							<?php endwhile; ?>
@@ -86,16 +99,13 @@ date_default_timezone_set('Asia/Manila');
 		$('.table').dataTable();
 	})
 	$('#create_new').click(function(){
-		uni_modal("Add New Account","accounts/manage_account.php",'mid-large')
+		uni_modal("Add New Agent","commission_voucher/new_agent.php",'mid-large')
 	})
 	$('.edit_data').click(function(){
-		uni_modal("Update Account Details","accounts/manage_account.php?id="+$(this).attr('data-id'),'mid-large')
+		uni_modal("Update Agent Details","commission_voucher/new_agent.php?id="+$(this).attr('data-id'),'mid-large')
 	})
 	$('.delete_data').click(function(){
-		_conf("Are you sure you want to delete this from Chart of Accounts permanently?","delete_account",[$(this).attr('data-id')])
-	})
-	$('.view_data').click(function(){
-		uni_modal("Account Details","accounts/view_account.php?id="+$(this).attr('data-id'),'mid-large')
+		_conf("Are you sure you want to delete this permanently?","delete_agent",[$(this).attr('data-id')])
 	})
 	$('.table td, .table th').addClass('py-1 px-2 align-middle')
 	$('.table').dataTable({

@@ -1,7 +1,41 @@
 
 <?php
-  require_once('inc.php');
+if(!defined('base_url')) define('base_url','http://localhost/CAR/');
+if(!defined('base_app')) define('base_app', str_replace('\\','/',__DIR__).'/' );
+
+if(!defined('DB_SERVER')) define('DB_SERVER',"localhost");
+
+if(!defined('DB_USERNAME')) define('DB_USERNAME',"root");
+if(!defined('DB_PASSWORD')) define('DB_PASSWORD',"");
+if(!defined('DB_NAME')) define('DB_NAME',"CAR_TESTDB");
 ?>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    .hidden-button {
+        display: none;
+    }
+</style>
+
+</head>
 <?php
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
@@ -25,7 +59,7 @@ date_default_timezone_set('Asia/Manila');
 
 $l_acct_no = isset($_GET["acct_no"]) ? $_GET["acct_no"] : '' ;
 
-
+$l_agent_data = [];
 if ($l_acct_no != ''){
     $l_find = $l_acct_no;
 
@@ -44,7 +78,7 @@ if ($l_acct_no != ''){
 		$row_count++;
 	}
 
-	$l_reserved = $l_rst['c_reservation'];
+	$l_reservation = $l_rst['c_reservation'];
 	if ($row_count > 0) {
 		$l_earnest = $l_rst['c_reservation'];
 		$total_paid = 0; // Initialize a variable to store the total paid amount
@@ -54,10 +88,20 @@ if ($l_acct_no != ''){
 				$total_paid += intval($l_rst1['c_amount_paid']);
 			}
 		}
-		$l_reserved = $l_earnest + $total_paid;
+		$l_reservation = $l_earnest + $total_paid;
 	}
 
     $l_account_no = $l_rst['c_account_no'];
+    $lot_area = $l_rst['c_lot_area'];
+    $flr_area = $l_rst['c_floor_area'];
+    $lot_price_sqm = $l_rst['c_price_sqm'];
+    $hse_price_sqm = $l_rst['c_house_price_sqm'];
+    $lot_discount = $l_rst['c_lot_discount'];
+    $lot_disc_amt = $l_rst['c_lot_discount_amount'];
+    $hse_discount = $l_rst['c_h_discount'];
+    $hse_disc_amt = $l_rst['c_h_discount_amount'];
+    $tcp_disc_amt = $l_rst['c_tcp_discount_amount'];
+    $tcp_discount = $l_rst['c_tcp_discount'];
     $l_location = substr($l_account_no, 0, 3) . ' ' . substr($l_account_no, 3, 3) . ' ' . substr($l_account_no, 6, 2);
 	$l_name = $l_rst['c_b1_last_name'] . ', ' . $l_rst['c_b1_first_name'] . ' ' . $l_rst['c_b1_middle_name'];
 	if($l_rst['c_b2_last_name'] != ''){
@@ -235,7 +279,7 @@ if ($l_acct_no != ''){
     </style>
     <script>
         let currentRow;
-
+        
         function displayData(pos, code, name, amount, rate, whtax, row) {
             document.getElementById('pos').value = pos;
             document.getElementById('code').value = code;
@@ -249,7 +293,13 @@ if ($l_acct_no != ''){
             }
             row.classList.add('highlight');
             currentRow = row;
+            showButton();
         }
+
+        function showButton() {
+            document.getElementById('generateButton').style.display = 'block';
+        }
+        
     </script>
 </head>
 <body>
@@ -276,62 +326,62 @@ if ($l_acct_no != ''){
 		</form>
 
 
-        <form action="<?php base_url ?>commission_voucher/generate_pdf.php" method="post"  target="_blank" id="print-commission">
+        <form action="generate_pdf.php" method="post"  target="_blank" id="print-commission">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-4">        
                         <div class="form-group">
                             <label class="control-label">Account No: </label>
-                            <input type="text" class="required" name="account_no" id="account_no" value="<?php echo $l_acct_no ?>" readonly>
+                            <input type="text" class="required" name="account_no" id="account_no" value="<?php echo isset($l_acct_no) ? $l_acct_no : ''  ?>" readonly>
                         </div>
                         
                     </div>
                     <div class="col-md-8">        
                         <div class="form-group">
                             <label class="control-label">Location: </label>
-                            <input type="text" class="required long-textbox" name="location" id="location" value="<?php echo $l_location ?>" readonly>    
+                            <input type="text" class="required long-textbox" name="location" id="location" value="<?php echo isset($l_location) ? $l_location : '' ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-6">        
                         <div class="form-group">
                             <label class="control-label">Account Status: </label>
-                            <input type="text" class="" name="account_status" id="account_status" value="<?php echo $l_status ?>" readonly>    
+                            <input type="text" class="" name="account_status" id="account_status" value="<?php echo  isset($l_status) ? $l_status : '' ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-6">        
                         <div class="form-group">
                             <label class="control-label">Date of Sale: </label>
-                            <input type="text" class="" name="date_of_sale" id="date_of_sale" value="<?php echo $l_date_of_sale ?>" readonly>    
+                            <input type="text" class="" name="date_of_sale" id="date_of_sale" value="<?php echo isset($l_date_of_sale) ? $l_date_of_sale : '' ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-6">        
                         <div class="form-group">
                             <label class="control-label">Buyer 1: </label>
-                            <input type="text" class="" name="buyer1" id="buyer1" value="<?php echo $l_name ?>" readonly>    
+                            <input type="text" class="" name="buyer1" id="buyer1" value="<?php echo isset($l_name) ? $l_name :'' ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-6">        
                         <div class="form-group">
                             <label class="control-label">Network: </label>
-                            <input type="text" class="" name="network" id="network" value="<?php echo $l_network ?>" readonly>    
+                            <input type="text" class="" name="network" id="network" value="<?php echo isset($l_network) ? $l_network : '' ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-6">        
                         <div class="form-group">
                             <label class="control-label">Buyer 2: </label>
-                            <input type="text" class="" name="buyer2" id="buyer2" value="<?php echo $l_name2 ?>" readonly>    
+                            <input type="text" class="" name="buyer2" id="buyer2" value="<?php echo isset($l_name2) ? $l_name2 : '' ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-6">        
                         <div class="form-group">
                             <label class="control-label">Division: </label>
-                            <input type="text" class="" name="division" id="division" value="<?php echo $l_division ?>" readonly>    
+                            <input type="text" class="" name="division" id="division" value="<?php echo isset($l_division) ? $l_division : '' ?>" readonly>    
                         </div>
                         
                     </div>
@@ -374,7 +424,7 @@ if ($l_acct_no != ''){
                             <input type="text" id="whtax" name="whtax" readonly>
                         </div>
                     </div>    
-                </form>
+                
                 </div>
                 <div class="row">
                     <table class="table table-bordered table-stripped" id="data-table" style="text-align:center;width:100%;">
@@ -397,7 +447,8 @@ if ($l_acct_no != ''){
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($l_agent_data as $row): ?>
+                            <?php 
+                                foreach ($l_agent_data as $row): ?>
                                 <tr onclick="displayData('<?php echo $row['pos']; ?>', '<?php echo $row['code']; ?>', '<?php echo $row['name']; ?>', '<?php echo number_format($row['amount'],2); ?>', '<?php echo $row['rate']; ?>', '<?php echo $row['whtax']; ?>', this)">
                                     <td><?php echo $row['pos']; ?></td>
                                     <td><?php echo $row['code']; ?></td>
@@ -415,21 +466,21 @@ if ($l_acct_no != ''){
                     <div class="col-md-4">        
                         <div class="form-group">
                             <label class="control-label">Net TCP: </label>
-                            <input type="text" class="" name="net_tcp" id="net_tcp" value="<?php echo  number_format($l_net_tcp) ?>" readonly>    
+                            <input type="text" class="" name="net_tcp" id="net_tcp" value="<?php echo  number_format( isset($l_net_tcp) ? $l_net_tcp : 0,2) ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-4">        
                         <div class="form-group">
                             <label class="control-label">Down %: </label>
-                            <input type="text" class="" name="down_percent" id="down_percent" value="<?php echo $l_down_per ?>" readonly>    
+                            <input type="text" class="" name="down_percent" id="down_percent" value="<?php echo isset($l_down_per) ? $l_down_per : 0 ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-4">        
                         <div class="form-group">
                             <label class="control-label"># Payments: </label>
-                            <input type="text" class="" name="no_payment" id="no_payment" value="<?php echo $l_no_payment ?>" readonly>    
+                            <input type="text" class="" name="no_payment" id="no_payment" value="<?php echo isset($l_no_payment) ? $l_no_payment : 0 ?>" readonly>    
                         </div>
                         
                     </div>
@@ -438,21 +489,21 @@ if ($l_acct_no != ''){
                     <div class="col-md-4">        
                         <div class="form-group">
                             <label class="control-label">Reservation: </label>
-                            <input type="text" class="" name="reservation" id="reservation" value="<?php echo  number_format($l_reserved) ?>" readonly>    
+                            <input type="text" class="" name="reservation" id="reservation" value="<?php echo  number_format(isset($l_reservation) ? $l_reservation : 0) ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-4">        
                         <div class="form-group">
                             <label class="control-label">Net DP: </label>
-                            <input type="text" class="" name="net_dp" id="net_dp" value="<?php echo number_format($l_net_dp,2) ?>" readonly>    
+                            <input type="text" class="" name="net_dp" id="net_dp" value="<?php echo number_format(isset($l_net_dp)? $l_net_dp : 0,2) ?>" readonly>    
                         </div>
                         
                     </div>
                     <div class="col-md-4">        
                         <div class="form-group">
                             <label class="control-label">Due Commission: </label>
-                            <input type="text" class="" name="due_commission" id="due_commission" value="<?php echo $commission_percentage ?>">    
+                            <input type="text" class="" name="due_commission" id="due_commission" value="<?php echo isset($commission_percentage) ? $commission_percentage : 0 ?>">    
                         </div>
                         
                     </div>
@@ -474,8 +525,7 @@ if ($l_acct_no != ''){
                     </div>
 
                     <div class="col-md-4">        
-                       <button> Print </button>
-                        
+                        <button id="generateButton" class="btn btn-primary hidden-button">Print Commission</button>
                     </div>
                     
                 </div>
@@ -484,7 +534,7 @@ if ($l_acct_no != ''){
                     <div class="col-md-12">        
 						<div class="form-group">
                             <label for="remarks">Remarks:</label>
-                            <textarea id="remarks" name="remarks" rows="20" cols="150" ><?php echo $l_remarks ?></textarea>
+                            <textarea id="remarks" name="remarks" rows="20" cols="150" ><?php echo isset($l_remarks) ? $l_remarks : '' ?></textarea>
                         </div>
                         
                     </div>
