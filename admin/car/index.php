@@ -3,7 +3,7 @@ session_start();
 require_once('../../config.php');
 
 if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
-    require_once('../../auth/logout.php');
+    require_once('../logout.php');
     exit();
 }
 
