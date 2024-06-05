@@ -178,7 +178,3 @@ function selectBuyer(buyer) {
 
     $('#multipleResultsModal').modal('hide');
 }
-
-$(document).ready(function() {
-    $('#data-table').DataTable();
-});

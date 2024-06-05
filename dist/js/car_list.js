@@ -3,7 +3,7 @@
 $(document).ready(function() {
     $(document).on('click', '.edit_data', function() {
         var accountId = $(this).data('id');
-        loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#editModal');
+        loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
     });
 
     $(document).on('click', '.view_data', function() {
@@ -18,7 +18,8 @@ $(document).ready(function() {
 
     $(document).on('click', '.delete_data', function() {
         var carId = $(this).data('id');
-        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId]);
+        var carNo = $(this).data('car-no');
+        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId, carNo]);
     });
 
     function loadModal(title, url, modalId) {
@@ -48,12 +49,12 @@ $(document).ready(function() {
         $('#confirm_modal').modal('show');
     };
 
-    function delete_car(carId) {
+    function delete_car(carId, carNo) {
         start_loader();
         $.ajax({
-            url: "../classes/Master.php?f=delete_car",
+            url: "../../classes/Master.php?f=delete_car",
             method: "POST",
-            data: { carId: carId },
+            data: { carId: carId, carNo: carNo },
             dataType: "json",
             error: function(err) {
                 console.log(err);
@@ -65,6 +66,7 @@ $(document).ready(function() {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
                         //location.reload();
+                        $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
                     }, 2000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');

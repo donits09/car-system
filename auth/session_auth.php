@@ -13,7 +13,7 @@ function check_session() {
             header('Location: ../admin/car/index.php');
             exit();
         } elseif ($c_group == 2) {
-            header('Location: ../admin/manage_car.php');
+            header('Location: ../admin/car/index.php');
             exit();
         }
     }

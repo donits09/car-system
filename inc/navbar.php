@@ -48,8 +48,6 @@ if (isset($_SESSION['username'])) {
                 <?php echo htmlspecialchars($c_realname); ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <!-- <a class="dropdown-item" href="#">Profile</a>
-                <div class="dropdown-divider"></div> -->
                 <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
             </div>
         </li>
