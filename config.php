@@ -1,11 +1,12 @@
 <?php
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
+define('base_url','http://localhost/car/');
 
-
-$dsn = "PostgreSQL30"; // Replace with your DSN name
-$user = "postgres";    // Replace with your database username
-$pass = "admin12345";    // Replace with your database password
+global $dsn, $user, $pass;
+$dsn = "PostgreSQL30"; 
+$user = "postgres";    
+$pass = "admin12345";    
 
 $conn = odbc_connect($dsn, $user, $pass);
 
@@ -19,5 +20,3 @@ function redirect($url) {
     exit();
 }
 ?>
-
-

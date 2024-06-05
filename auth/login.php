@@ -1,7 +1,7 @@
 <?php
 require_once('../config.php');
 require_once('session_auth.php');
-
+include('../inc/header.php');     
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -28,24 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 check_session();
 ?>
 
-<style>
-    .login_padding {
-        padding-top: 5%;
-    }
-    .card-container {
-        width: 400px;
-        margin: 0 auto;
-        margin-top: 50px;
-    }
-</style>
-
+<link rel="stylesheet" href="<?php echo base_url ?>dist/css/login.css">
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container login_padding">

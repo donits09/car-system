@@ -1,0 +1,13 @@
+.navbar{
+    background-color:#0038a5;
+}
+.navbar-nav .nav-link,
+.navbar-brand,
+.navbar-toggler {
+    color: white !important;
+}
+.navbar-brand img {
+    max-height: 40px; 
+    margin-right: 10px;
+    border-radius: 50%;
+}
