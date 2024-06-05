@@ -3,13 +3,23 @@ session_start();
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
-    if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
-        require_once('../../auth/logout.php');
-        exit();
-    }
-// if (isset($_SESSION['username'])) {
-//     echo "Username: " . $_SESSION['username'];
-// }
+
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+    require_once('../logout.php');
+    exit();
+}
+
+if (isset($_SESSION['username'])) {
+    echo "Username: " . $_SESSION['username'];
+}
+?>
+
+
+<?php
+
+    include('../../inc/header.php');    
+
+
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
     $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
     $l_lot = isset($_GET["lot"]) ? $_GET["lot"] : '' ;

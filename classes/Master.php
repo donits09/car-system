@@ -7,8 +7,117 @@ Class Master{
         $this->conn = odbc_connect($dsn, $user, $pass);
     }
 
-	function delete_car() {
+	/* function save_car_users() {
 		extract($_POST);
+		$data = "c_employee_code, c_password, c_realname, c_group, c_department";
+		$values = "'$c_employee_code', '$c_password', '$c_realname', '$c_group', '$c_department'";
+		$resp = array();
+	
+		if (empty($id)) {
+			$insert = "INSERT INTO t_car_users ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				$resp['status'] = 'success';
+				$resp['msg'] = "Add user successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$update = "UPDATE t_car_users SET 
+						c_employee_code = '$c_employee_code',
+						c_password = '$c_password',
+						c_realname = '$c_realname',
+						c_group = '$c_group',
+						c_department = '$c_department'
+					  WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				$resp['status'] = 'success';
+				$resp['msg'] = "User successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+	
+		echo json_encode($resp);
+	} */
+
+	function save_car_users() {
+		extract($_POST);
+		$data = "c_employee_code, c_password, c_realname, c_group, c_department";
+		$hashed_password = password_hash($c_password, PASSWORD_BCRYPT); // Hash the password
+		$values = "'$c_employee_code', '$hashed_password', '$c_realname', '$c_group', '$c_department'";
+		$resp = array();
+	
+		if (empty($id)) {
+			$insert = "INSERT INTO t_car_users ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				$resp['status'] = 'success';
+				$resp['msg'] = "Add user successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$update = "UPDATE t_car_users SET 
+						c_employee_code = '$c_employee_code',
+						c_password = '$hashed_password', // Update hashed password
+						c_realname = '$c_realname',
+						c_group = '$c_group',
+						c_department = '$c_department'
+					  WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				$resp['status'] = 'success';
+				$resp['msg'] = "User successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+	
+		echo json_encode($resp);
+	}	
+
+	function delete_user(){
+		$resp = array();
+	
+		if(isset($_POST['userId'])) {
+			$userId = $_POST['userId'];
+			$sql = "DELETE FROM t_car_users WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if($stmt) {
+				$result = @odbc_execute($stmt, array($userId)); 
+	
+				if ($result) {
+					$resp['status'] = 'success';
+					$resp['msg'] = "Car payment successfully deleted.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Car ID not provided.';
+		}
+	
+		echo json_encode($resp);
+	}	
+
+	function delete_car(){
+
 		$resp = array();
 	
 		if (isset($carId) && isset($carNo)) {
@@ -121,6 +230,13 @@ $action = !isset($_GET['f']) ? 'none' : strtolower($_GET['f']);
 	case 'delete_car':
 		echo $Master->delete_car();
 	break;
+	case 'save_car_users':
+		echo $Master->save_car_users();
+	break;
+	case 'delete_user':
+		echo $Master->delete_user();
+	break;
+
 	default:
 	break;
 	}
