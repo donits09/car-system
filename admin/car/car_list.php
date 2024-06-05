@@ -39,7 +39,11 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                 <span class="fa fa-edit text-primary"></span> Edit
             </a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>">
+            <div class="card-tools">
+                <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $c_account_no; ?>", target="_blank"><span class="fas fa-print"></span> Print</a>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo $row['c_car_no']; ?>">
                 <span class="fa fa-trash text-danger"></span> Delete
             </a>
         </div>

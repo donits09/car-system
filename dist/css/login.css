@@ -1,0 +1,17 @@
+*{
+    font-size:15px;
+}
+.login_padding {
+    padding-top: 10%;
+}
+.card-container {
+    width: 400px;
+.login_padding {
+    padding-top: 5%;
+}
+.card-container {
+    width: auto;
+
+    margin: 0 auto;
+    margin-top: 50px;
+}

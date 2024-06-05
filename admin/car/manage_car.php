@@ -1,4 +1,12 @@
+<style>
+    .dropdown-item.active {
+        background-color: #007bff;
+        color: #ffffff;
+    }
+</style>
+
 <?php 
+    session_start();
     include('../../config.php');
 
     $c_account_no = null;
@@ -7,6 +15,7 @@
     $c_car_no = '';
     $c_car_paydate = date('Y-m-d');
     $c_encoded_by = '';
+    $c_tran_date = date('Y-m-d H:i:s');
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
@@ -27,31 +36,33 @@
     }
 ?>
 <form id="car-form">
-    <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
+    <input type="text" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="form-group">
         <label for="account_no">Account No.</label>
         <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" required>
     </div>
     <div class="form-group">
-        <label for="payment_type">Payment Type</label>
-        <div class="input-group">
-            <select class="form-control" id="c_car_type" name="c_car_type" style="width: calc(100% - 40px);" required>
-                <option value=""></option>
-                <?php
-                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type ORDER BY id ASC";
-                $type_result = odbc_exec($conn, $car_type_query);
-                while ($row = odbc_fetch_array($type_result)) {
-                    $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'selected' : '';
-                    echo "<option value='".($row['c_payment_type'])."' $selected>".($row['c_payment_type'])."</option>";
-                }
-                ?>
-            </select>
-            <!-- <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="button" id="addPaymentTypeBtn"><i class="fas fa-plus"></i></button>
-            </div> -->
+    <label for="c_car_type">Payment Type</label>
+    <div class="dropdown">
+        <input type="text" class="form-control" id="c_car_type" name="c_car_type" style="width: calc(100% - 40px);" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
+        <div class="dropdown-menu w-100" id="comboBoxMenu">
+            <?php
+            $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+            $type_result = odbc_exec($conn, $car_type_query);
+            while ($row = odbc_fetch_array($type_result)) {
+                $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'active' : '';
+                echo "<a class='dropdown-item $selected' href='#' data-value='".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."</a>";
+            }
+            ?>
         </div>
-        <!-- <input type="text" class="form-control" id="new_payment_type" name="new_payment_type" style="display: none;"> -->
+        <script>
+        var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
+        if (idValue) {
+            $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');
+        }
+        </script>
     </div>
+</div>
 
     <div class="form-group">
         <label for="amount">Amount</label>
@@ -67,61 +78,70 @@
         <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required>
     </div>
     <div class="form-group">
-        <label for="encoder">Encoder</label>
-        <input type="text" class="form-control" id="c_encoded_by" name="c_encoded_by" value="<?php echo htmlspecialchars($c_encoded_by) ?>" required>
+        <label for="encoder">Encoded by</label>
+        <input type="text" class="form-control" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
     </div>
+    <div class="form-group">
+        <label for="encoder">Transaction date</label>
+        <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
+    </div>
+   
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
-
-
 <script>
-  document.getElementById("addPaymentTypeBtn").addEventListener("click", function() {
-    var selectBox = document.getElementById("c_car_type");
-    var textBox = document.getElementById("new_payment_type");
-    var button = document.getElementById("addPaymentTypeBtn");
+    $(document).ready(function () {
+        $('#c_car_type').on('input', function () {
+            var input = $(this).val().toLowerCase();
+            var hasVisibleOptions = false;
+            $('#comboBoxMenu .dropdown-item').each(function () {
+                if ($(this).text().toLowerCase().startsWith(input)) {
+                    $(this).show();
+                    hasVisibleOptions = true;
+                } else {
+                    $(this).hide();
+                }
+            });
 
-    if (textBox.style.display === "none" || textBox.style.display === "") {
+            if (hasVisibleOptions) {
+                $('#comboBoxMenu').show();
+            } else {
+                $('#comboBoxMenu').hide();
+            }
+        });
 
-        selectBox.style.display = "none";
-        textBox.style.display = "block";
-        textBox.focus();
+        $('#comboBoxMenu').on('click', '.dropdown-item', function () {
+            var selectedText = $(this).data('value');
+            $('#c_car_type').val(selectedText);
+            $('#comboBoxMenu').hide();
+        });
 
-        button.innerHTML = "Cancel";
-        button.classList.remove("btn-outline-secondary");
-        button.classList.add("btn-danger");
+        $('#c_car_type').on('click', function () {
+            $('#comboBoxMenu').show();
+        });
 
-        selectBox.removeAttribute("required");
-        textBox.setAttribute("required", "required");
-    } else {
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.dropdown').length) {
+                $('#comboBoxMenu').hide();
+            }
+        });
+    });
 
-        selectBox.style.display = "block";
-        textBox.style.display = "none";
-
-        button.innerHTML = '<i class="fas fa-plus"></i>';
-        button.classList.remove("btn-danger");
-        button.classList.add("btn-outline-secondary");
-
-        textBox.removeAttribute("required");
-        selectBox.setAttribute("required", "required");
-
-        textBox.value = "";
+    function submitForm() {
+        var selectedOption = document.getElementById('c_car_type').value;
+        alert('You selected: ' + selectedOption);
     }
-});
-
-
 </script>
-
 <script>
-   $(document).ready(function() {
+$(document).ready(function() {
     $('#car-form').submit(function(e) {
         e.preventDefault();
-        var _this = $(this);
+       
+        if (confirm("Are you sure you want to save this car payment?")) {
+            var _this = $(this);
 
-        var c_car_type = $('#c_car_type').is(':visible') ? $('#c_car_type').val() : $('#new_payment_type').val();
+            start_loader();
 
-        start_loader();
-
-        $.ajax({
+            $.ajax({
             url: "../../classes/Master.php?f=save_car_payment",
             data: new FormData(_this[0]),
             cache: false,
@@ -135,7 +155,7 @@
                 end_loader();
             },
             success: function(resp) {
-                console.log(resp); // Log the response to see its content
+                console.log(resp); 
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
@@ -150,20 +170,7 @@
             }
 
         });
+        }
     });
 });
-
 </script>
-<script>
-    function checkAddNew() {
-        var selectBox = document.getElementById("c_car_type");
-        var textBox = document.getElementById("new_payment_type");
-        if (selectBox.value == "add_new") {
-            selectBox.style.display = "none";
-            textBox.style.display = "block";
-        } else {
-            selectBox.style.display = "block";
-            textBox.style.display = "none";
-        }
-    }
-    </script>
