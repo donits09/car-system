@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once('../../config.php');
+include('../../inc/navbar.php');    
+include('../../inc/header.php');     
 
 if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     require_once('../logout.php');
@@ -16,6 +18,7 @@ if (isset($_SESSION['username'])) {
 <?php
 
     include('../../inc/header.php');    
+
 
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
     $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
@@ -33,7 +36,6 @@ if (isset($_SESSION['username'])) {
     if ($l_block == ''):
         $l_find = sprintf("%03d", (int)$l_site);
     else:
-        
         if ($l_lot == ''):
             $l_find = sprintf("%03d%03d", (int)$l_site, (int)$l_block);	
         else:
@@ -44,7 +46,6 @@ if (isset($_SESSION['username'])) {
     }
 ?>
 <link rel="stylesheet" href="../../dist/css/index.css">
-<p><a href="../../auth/logout.php">Logout</a></p>
 <div class="cont_wrapper">
     <div class="pd-ltr-20">
         <div class="card">
@@ -60,7 +61,6 @@ if (isset($_SESSION['username'])) {
                             <option value="location">Location</option>
                             <option value="last-name">Last Name</option>
                         </select>
-                        
                     </div>
                 </div>
             </form>
@@ -75,7 +75,7 @@ if (isset($_SESSION['username'])) {
                     <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11">
                 </div>
                 <div class="col-md-3 form-group">
-                    <button type="submit" class="btn btn-primary"><i class="dw dw-search"></i> Find Account</button>
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Find Account</button>
                 </div>
             </div>
         </form>
@@ -106,7 +106,7 @@ if (isset($_SESSION['username'])) {
                     <input type="number" id="lot" name="lot" class="form-control">
                 </div>
                 <div class="col-md-2 form-group">
-                    <button type="submit" class="btn btn-primary"><i class="dw dw-search"></i> Search Location</button>
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search Location</button>
                 </div>
             </div>
         </form>
@@ -120,7 +120,7 @@ if (isset($_SESSION['username'])) {
                     <input type="text" id="last_name" name="last_name" class="form-control">
                 </div>
                 <div class="col-md-3 form-group">
-                    <button type="submit" class="btn btn-primary"><i class="dw dw-search"></i> Find Surname</button>
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Find Surname</button>
                 </div>
             </div>
         </form>
@@ -181,16 +181,17 @@ if (isset($_SESSION['username'])) {
                     </div>
                     <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                         <div class="card mt-3">
-                            <div class="pd-20">
+                            <div class="pd-20" id="car-btn">
+                            
                                 <h2 class="text-blue h4">Car List</h2>
-                                <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                                    <span class="fa fa-edit text-primary"></span> Create New CAR
+                                <button type="button" id="create_new" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal">
+                                <span class="fa fa-edit"></span> Create New CAR
+                                </button>
+                                <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
+                                    <span class="fa fa-download"></span> Export as CSV
                                 </a>
-                                <a id="export_csv" class="btn btn-flat btn-primary" href="javascript:void(0)">
-                                    <span class="fa fa-download text-primary"></span> Export as CSV
-                                </a>
-                                <a id="export_pdf" class="btn btn-flat btn-primary" href="javascript:void(0)">
-                                    <span class="fa fa-download text-primary"></span> Export as PDF
+                                <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
+                                    <span class="fa fa-download"></span> Export as PDF
                                 </a>
                                 <div class="pd-20">
                                 <hr>
@@ -217,7 +218,7 @@ if (isset($_SESSION['username'])) {
                     </div>
                 </div>
             </div>
-            <?php include ('main_modals.php'); ?>
+            <?php include ('../modals/main_modals.php'); ?>
     </div>
 </div>
 <script>

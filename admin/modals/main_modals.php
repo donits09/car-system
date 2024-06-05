@@ -1,21 +1,4 @@
-
-<style>
-    .btn.btn-modal {
-        margin-left:10%;
-        margin-right:10%;
-        margin-bottom: 5%;
-        background-color: black;
-        color:white;
-        margin-top:0;
-    }
-    .modal-header.close{
-        display: none;
-    }
-    .btn.btn-secondary.customized-modal{
-        border-radius: 100px;
-    }
-</style>
-
+<link rel="stylesheet" href="../../dist/css/modals.css">
 <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -75,8 +58,8 @@
                         <input type="date" class="form-control" id="edit-c-car-paydate" name="c_car_paydate" required>
                     </div>
                     <div class="form-group">
-                        <label for="edit-encoder">Encoder</label>
-                        <input type="text" class="form-control" id="edit-c-encoded-by" name="c_encoded_by" required>
+                        <label for="edit-encoder">Encoded by</label>
+                        <input type="text" class="form-control" id="edit-c-encoded-by" name="c_encoded_by" readonly>
                     </div>
                     <input type="hidden" id="edit-id" name="id">
                     <button type="submit" class="btn btn-primary">Save Changes</button>

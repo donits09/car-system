@@ -1,8 +1,11 @@
 <?php
 require_once('../config.php');
 require_once('session_auth.php');
+include('../inc/header.php');  
+
 
 /* if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -49,9 +52,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 check_session();
 ?>
-
-<?php include('../inc/header.php')?>
 <link rel="stylesheet" href="../dist/css/login.css">
+<link rel="stylesheet" href="<?php echo base_url ?>dist/css/login.css">
 
 <body>
     <div class="container login_padding">
@@ -80,3 +82,4 @@ check_session();
         </div>
     </div>
 </body>
+
