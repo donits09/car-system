@@ -1,23 +1,19 @@
 <?php
 session_start();
 require_once('../../config.php');
+include('../../inc/header.php');
+include('../../inc/navbar.php');    
+include('manage_user.php');
 
-if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     require_once('../logout.php');
     exit();
 }
 
-if (isset($_SESSION['username'])) {
-    echo "Username: " . $_SESSION['username'];
-}
-
-include('../../inc/header.php');
-include('manage_user.php');
 
 ?>
 
 <link rel="stylesheet" href="../../dist/css/index.css">
-<p><a href="../../auth/logout.php">Logout</a></p>
     <div class="container mt-5">
         <div class="card mt-3">
             <div class="pd-20">
@@ -71,14 +67,14 @@ include('manage_user.php');
                                 </button>
                                 <div class="dropdown-menu" role="menu">
                                     <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                    data-id="<?php echo $row['id']; ?>"
-                                    data-employee_code="<?php echo $row['c_employee_code']; ?>" 
-                                    data-password="<?php echo $row['c_password']; ?>" 
-                                    data-realname="<?php echo $row['c_realname']; ?>" 
-                                    data-group="<?php echo $row['c_group']; ?>" 
-                                    data-department="<?php echo $row['c_department']; ?>">
-                                    <span class="fa fa-edit text-primary"></span> Edit</a>
-                                    <div class="dropdown-divider"></div>
+                                        data-id="<?php echo $row['id']; ?>"
+                                        data-employee_code="<?php echo $row['c_employee_code']; ?>" 
+                                        data-password="<?php echo $row['c_password']; ?>" 
+                                        data-realname="<?php echo $row['c_realname']; ?>" 
+                                        data-group="<?php echo $row['c_group']; ?>" 
+                                        data-department="<?php echo $row['c_department']; ?>">
+                                        <span class="fa fa-edit text-primary"></span> Edit
+                                    </a>
                                     <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
                                 </div>
                             </td>
