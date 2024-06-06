@@ -5,53 +5,30 @@ include('../inc/header.php');
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM t_car_users WHERE c_employee_code='$username' AND c_password='$password'";
+    $query = "SELECT * FROM t_car_users WHERE c_employee_code='$username'";
     $result = odbc_exec($conn, $query);
 
-    if ($result) {
-        if (odbc_num_rows($result) > 0) {
-            $user_data = odbc_fetch_array($result);
+    if ($result && odbc_num_rows($result) > 0) {
+        $user_data = odbc_fetch_array($result);
+        $hashed_password = $user_data['c_password'];
+
+        if (password_verify($password, $hashed_password)) {
             $c_group = $user_data['c_group'];
-            
             initialize_session($username, $c_group);
             check_session();
         } else {
             $error = "Invalid username or password";
         }
     } else {
-        $error = "Error: " . odbc_errormsg($conn);
+        $error = "Invalid username or password";
     }
 }
 
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     $username = $_POST['username'];
-//     $password = $_POST['password'];
-
-//     $query = "SELECT * FROM t_car_users WHERE c_employee_code='$username'";
-//     $result = odbc_exec($conn, $query);
-
-//     if ($result && odbc_num_rows($result) > 0) {
-//         $user_data = odbc_fetch_array($result);
-//         $hashed_password = $user_data['c_password'];
-
-//         if (password_verify($password, $hashed_password)) {
-//             $c_group = $user_data['c_group'];
-//             initialize_session($username, $c_group);
-//             check_session();
-//         } else {
-//             $error = "Invalid username or password";
-//         }
-//     } else {
-//         $error = "Invalid username or password";
-//     }
-// }
-
-// check_session();
-// ?>
+check_session();
+?>
 <link rel="stylesheet" href="../dist/css/login.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/login.css">
 
@@ -70,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="text" class="form-control" id="username" name="username" placeholder="Employee ID" required>
                             </div>
                             <div class="form-group pt-2">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="*************" required>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="***********" required>
                             </div>
                             <div class="form-group pt-4">
                                 <button type="submit" class="btn btn-primary btn-block">Login</button>
@@ -82,4 +59,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </body>
-
