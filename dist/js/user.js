@@ -11,20 +11,20 @@ $(document).ready(function() {
     $('.edit_data').on('click', function() {
         var id = $(this).data('id');
         var employee_code = $(this).data('employee_code');
-        var password = $(this).data('password');
+        var password = $(this).data('password'); // Get the password, but don't use it
         var realname = $(this).data('realname');
         var group = $(this).data('group');
         var department = $(this).data('department');
-
+    
         $('#edit_user_id').val(id);
         $('#edit_employee_code').val(employee_code);
-        $('#edit_password').val(password);
+        $('#edit_password').val(''); // Always set the password field to blank
         $('#edit_realname').val(realname);
         $('#edit_group').val(group);
         $('#edit_department').val(department);
-
+    
         $('#editUserModal').modal('show');
-    });
+    });       
 
     $('#addUserForm').submit(function(e) {
         e.preventDefault();
@@ -52,8 +52,8 @@ $(document).ready(function() {
                     setTimeout(function() {
                         location.reload();
                     }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed') {
+                    alert_toast(' &#10060;' + resp.msg, 'failed');
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
@@ -88,8 +88,8 @@ $(document).ready(function() {
                     setTimeout(function() {
                         location.reload();
                     }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed') {
+                    alert_toast(' &#10060;' + resp.msg, 'failed');
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }

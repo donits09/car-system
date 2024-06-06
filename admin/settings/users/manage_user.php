@@ -64,7 +64,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit_password" class="form-label">Password</label>
-                        <input type="text" class="form-control" id="edit_password" name="c_password" required>
+                        <input type="password" class="form-control" id="edit_password" name="c_password">
                     </div>
                     <div class="mb-3">
                         <label for="edit_realname" class="form-label">Name</label>
@@ -92,6 +92,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

@@ -1,23 +1,18 @@
 
-<?php
-ini_set('date.timezone','Asia/Manila');
-date_default_timezone_set('Asia/Manila');
-
-
-$dsn = "PostgreSQL30"; // Replace with your DSN name
-$user = "postgres";    // Replace with your database username
-$pass = "admin12345";    // Replace with your database password
-
-$conn = odbc_connect($dsn, $user, $pass);
-
-if (!$conn) {
-    die("Connection failed: " . odbc_errormsg());
+<?php 
+session_start();
+require_once('../../config.php');
+include('../../inc/navbar.php');    
+include('../../inc/header.php');   
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+    require_once('../logout.php');
+    exit();
 }
 
-date_default_timezone_set('Asia/Manila');
-
+if (isset($_SESSION['username'])) {
+    echo "Username: " . $_SESSION['username'];
+}
 ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <style>
     table {
         width: 100%;
@@ -102,7 +97,7 @@ date_default_timezone_set('Asia/Manila');
 		uni_modal("Add New Agent","commission_voucher/new_agent.php",'mid-large')
 	})
 	$('.edit_data').click(function(){
-		uni_modal("Update Agent Details","commission_voucher/new_agent.php?id="+$(this).attr('data-id'),'mid-large')
+		uni_modal("Update Agent Details","commission_voucher/new_agent.php?id="+$(this).attr('id'),'mid-large')
 	})
 	$('.delete_data').click(function(){
 		_conf("Are you sure you want to delete this permanently?","delete_agent",[$(this).attr('data-id')])
