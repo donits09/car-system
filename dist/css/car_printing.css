@@ -1,5 +1,93 @@
-#car_copy{
-    height:280px;
-    width:670px;
-    border:none;
+body {
+    position: relative;
+    font-size: 8px !important;
+}
+.container {
+    position: relative;
+    width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 2; 
+}
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 280px;
+    width: 670px;
+    z-index: 1;
+    object-fit: cover;
+}
+input {
+    border: none;
+    width: 100px;
+    text-align: left;
+    background-color: transparent;
+}
+textarea{
+    width: 100px;
+    text-align: left;
+    font-weight: 300;
+    border: none;
+    background-color: transparent;
+    font-size: 11px !important;
+}
+#c_current_date {
+    float: right;
+    margin-top: 85px;
+    margin-right: -140px;
+}
+#c_car_type {
+    float: right;
+    margin-top: 185px;
+    margin-right: -160px;
+    width: 300px;
+}
+#c_car_amount {
+    float: right;
+    margin-top: 170px;
+    margin-right: -310px;
+    width: 140px;
+}
+#c_car_amount_words {
+    float: right;
+    margin-top: 138px;
+    margin-right: -290px;
+    width: 340px;
+    height: auto;
+    line-height: 1.2em;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+#c_car_no {
+    float: right;
+    margin-top: 60px;
+    margin-right: -370px;
+    width: 80px;
+}
+#c_received {
+    text-transform: uppercase;
+    float: right;
+    margin-top: 100px;
+    margin-right: -200px;
+    width: 230px;
+    text-align: center;
+}
+#c_address {
+    text-transform: uppercase;
+    float: right;
+    margin-top: 115px;
+    margin-right: -370px;
+    width: 350px;
+    text-align: center;
+}
+#c_encoded_by {
+    text-transform: uppercase;
+    float: right;
+    margin-top: 210px;
+    margin-right: -400px;
+    width: 150px;
+    text-align: center;
+    font-size: 10px !important;
 }
