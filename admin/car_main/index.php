@@ -112,6 +112,7 @@ include('../../inc/header.php');
     </div>
 </div>
 <script src="../../dist/js/table.js"></script>
+
 <script>
 $(document).ready(function() {
     function updateAccountNo() {
@@ -123,10 +124,14 @@ $(document).ready(function() {
         updateAccountNo();
     });
 });
-$(document).on('click', '.view_data', function() {
+
+$(document).ready(function() {
+    $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
         loadModal('Car Payment Details', 'view_car.php?id=' + accountId, '#viewModal');
     });
+});
+
 
     
 function loadModal(title, url, modalId) {
@@ -150,4 +155,5 @@ function loadModal(title, url, modalId) {
 
 
 </script>
-<!-- <script src="../../../dist/js/manage_car_type.js"></script> -->
+<script src="<?php echo base_url; ?>dist/js/table.js"></script>
+<script src="<?php echo base_url; ?>dist/js/car_main_list.js"></script>
