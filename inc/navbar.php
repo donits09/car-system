@@ -37,7 +37,7 @@ function isActive($page) {
         <li class="nav-item<?php echo isActive('car_list'); ?>">
           <a class="nav-link" href="<?php echo base_url ?>admin/car?page=car_list">Home</a>
         </li>
-        <li class="nav-item active">
+        <li class="nav-item <?php echo isActive('user'); ?>">
           <a class="nav-link" href="<?php echo base_url ?>admin/user?page=index">System User</a>
         </li>
         <li class="nav-item dropdown<?php echo isActive('car_main'); ?>">
