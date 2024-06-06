@@ -65,7 +65,7 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        //location.reload();
+                        location.reload();
                         $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
                     }, 2000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
@@ -78,7 +78,7 @@ $(document).ready(function() {
         });
     }
 
-    window.uni_modal = function($title = '', $url = '', $size = '') {
-        loadModal($title, $url, '#uni_modal', $size);
-    };
+    // window.uni_modal = function($title = '', $url = '', $size = '') {
+    //     loadModal($title, $url, '#uni_modal', $size);
+    // };
 });

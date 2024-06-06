@@ -50,7 +50,7 @@ include('../../../inc/header.php');
                                         <span class="fa fa-edit text-primary"></span> Edit
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>">
+                                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-type="<?php echo $row['c_payment_type']; ?>">
                                         <span class="fa fa-trash text-danger"></span> Delete
                                     </a>
                                 </div>
@@ -67,4 +67,5 @@ include('../../../inc/header.php');
     </div>
     <?php include ('../../modals/main_modals.php'); ?>
 </div>
+<script src="../../../dist/js/table.js"></script>
 <script src="../../../dist/js/manage_car_type.js"></script>
