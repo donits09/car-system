@@ -1,6 +1,9 @@
 .navbar{
     background-color:#0038a5;
 }
+.nav-item.active .nav-link {
+    text-decoration: underline!important;
+  }
 .navbar-nav .nav-link,
 .navbar-brand,
 .navbar-toggler {
@@ -10,4 +13,4 @@
     max-height: 40px; 
     margin-right: 10px;
     border-radius: 50%;
-}
+}    

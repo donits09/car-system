@@ -18,6 +18,12 @@ function check_session() {
 
             exit();
         }
+        elseif ($c_group == 3) {
+
+            header('Location: ../admin2/index.php');
+
+            exit();
+        }
     }
 }
 ?>

@@ -127,8 +127,7 @@ Class Master{
 		echo json_encode($resp);
 	}	
 
-	function delete_car(){
-
+	function delete_car($carId, $carNo) {
 		$resp = array();
 	
 		if (isset($carId) && isset($carNo)) {
@@ -155,12 +154,45 @@ Class Master{
 			$resp['msg'] = 'Car ID or Car No not provided.';
 		}
 	
+		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
 	
+	function delete_car_type($carTypeId, $carType) {
+		$resp = array();
+	
+		if (isset($carTypeId) && isset($carType)) {
+			$sql = "DELETE FROM t_car_type WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($carTypeId)); 
+	
+				if ($result) {
+					$this->car_logs('Car Type Management', "DELETED - $carType");
+					$resp['status'] = 'success';
+					$resp['msg'] = "Car payment type successfully deleted.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Car type not provided.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
 	
 	function save_car_payment() {
 		extract($_POST);
+		$c_car_amount = str_replace(',', '', $c_car_amount);
+	
 		$car_type_check = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_car_type'";
 		$check_result = odbc_exec($this->conn, $car_type_check);
 	
@@ -211,7 +243,46 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
+	
 
+	function save_car_type() {
+		extract($_POST);
+	
+		$data = "c_payment_type, status";
+		$values = "'$c_payment_type','0'";
+		$resp = array();
+	
+		if (empty($id)) {
+			$this->car_logs('Car Type Management', "ADDED - $c_payment_type");
+			$insert = "INSERT INTO t_car_type ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				$resp['status'] = 'success';
+				$resp['msg'] = "New car type successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$update = "UPDATE t_car_type SET 
+						c_payment_type = '$c_payment_type',
+						status = '$status'
+					  WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				$this->car_logs('Car Type Management', "UPDATED - $c_payment_type");
+				$resp['status'] = 'success';
+				$resp['msg'] = "Car type successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+	
+		echo json_encode($resp);
+	}
 	public function car_logs($module, $notes){
 		require_once('../auth/session_auth.php');
 		$username = $_SESSION['username'];
@@ -234,20 +305,33 @@ Class Master{
 
 $Master = new Master();
 $action = !isset($_GET['f']) ? 'none' : strtolower($_GET['f']);
-	switch ($action) {
-	case 'save_car_payment':
-		echo $Master->save_car_payment();
-	break;
-	case 'delete_car':
-		echo $Master->delete_car();
-	break;
-	case 'save_car_users':
-		echo $Master->save_car_users();
-	break;
-	case 'delete_user':
-		echo $Master->delete_user();
-	break;
-
-	default:
-	break;
-	}
+switch ($action) {
+    case 'save_car_payment':
+        echo $Master->save_car_payment();
+        break;
+	case 'save_car_type':
+		echo $Master->save_car_type();
+		break;
+    case 'delete_car':
+        if (isset($_POST['carId']) && isset($_POST['carNo'])) {
+            echo $Master->delete_car($_POST['carId'], $_POST['carNo']);
+        } else {
+            echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
+        }
+        break;
+	case 'delete_car_type':
+		if (isset($_POST['carTypeId']) && isset($_POST['carType'])) {
+			echo $Master->delete_car_type($_POST['carTypeId'], $_POST['carType']);
+		} else {
+			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
+		}
+		break;
+    case 'save_car_users':
+        echo $Master->save_car_users();
+        break;
+    case 'delete_user':
+        echo $Master->delete_user();
+        break;
+    default:
+        break;
+}
