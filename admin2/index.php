@@ -2,11 +2,8 @@
 session_start();
 require_once('../config.php');
 include('../inc/navbar.php');    
-include('../inc/header.php');     
-
-
+include('../inc/header_jude.php');     
 ?>
-
 <body>
 	<?php $page = isset($_GET['page']) ? $_GET['page'] : 'admin_dash';  ?>
 		<section class="content">
