@@ -4,29 +4,6 @@ require_once('session_auth.php');
 include('../inc/header.php');  
 
 
-/* if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    $query = "SELECT * FROM t_car_users WHERE c_employee_code='$username' AND c_password='$password'";
-    $result = odbc_exec($conn, $query);
-
-    if ($result) {
-        if (odbc_num_rows($result) > 0) {
-            $user_data = odbc_fetch_array($result);
-            $c_group = $user_data['c_group'];
-            
-            initialize_session($username, $c_group);
-            check_session();
-        } else {
-            $error = "Invalid username or password";
-        }
-    } else {
-        $error = "Error: " . odbc_errormsg($conn);
-    }
-} */
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
