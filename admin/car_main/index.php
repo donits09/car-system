@@ -101,8 +101,7 @@ include('../../inc/header.php');
         <?php include ('../modals/main_modals.php'); ?>
     </div>
 </div>
-<script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/car_main_list.js"></script>
+
 <script>
 $(document).ready(function() {
     function updateAccountNo() {
@@ -114,9 +113,14 @@ $(document).ready(function() {
         updateAccountNo();
     });
 });
-$(document).on('click', '.view_data', function() {
+
+$(document).ready(function() {
+    $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
         loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
     });
+});
+
 </script>
-<!-- <script src="../../../dist/js/manage_car_type.js"></script> -->
+<script src="<?php echo base_url; ?>dist/js/table.js"></script>
+<script src="<?php echo base_url; ?>dist/js/car_main_list.js"></script>
