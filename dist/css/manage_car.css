@@ -1,4 +1,8 @@
 
-#trandate{
+.hidden_fields{
     display:none;
+}
+.dropdown-item.active {
+    background-color: #007bff;
+    color: #ffffff;
 }
