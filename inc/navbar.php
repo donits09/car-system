@@ -35,6 +35,9 @@ if (isset($_SESSION['username'])) {
         <li class="nav-item active">
           <a class="nav-link" href="<?php echo base_url ?>admin/car?page=car_list">Home</a>
         </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="<?php echo base_url ?>admin/user?page=index">System User</a>
+        </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Settings

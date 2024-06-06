@@ -8,10 +8,6 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     require_once('../logout.php');
     exit();
 }
-
-if (isset($_SESSION['username'])) {
-    echo "Username: " . $_SESSION['username'];
-}
 ?>
 
 
