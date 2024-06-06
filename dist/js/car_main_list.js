@@ -15,7 +15,7 @@ $(document).ready(function() {
         var accountNo = $(this).data('account-no');
         loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
     });
-
+    
     $(document).on('click', '.delete_data', function() {
         var carId = $(this).data('id');
         var carNo = $(this).data('car-no');

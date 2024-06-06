@@ -8,18 +8,6 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     require_once('../logout.php');
     exit();
 }
-
-if (isset($_SESSION['username'])) {
-    echo "Username: " . $_SESSION['username'];
-}
-?>
-
-
-<?php
-
-    include('../../inc/header.php');    
-
-
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
     $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
     $l_lot = isset($_GET["lot"]) ? $_GET["lot"] : '' ;
@@ -45,6 +33,7 @@ if (isset($_SESSION['username'])) {
     endif;
     }
 ?>
+<link rel="stylesheet" href="../../dist/css/table.css">
 <link rel="stylesheet" href="../../dist/css/index.css">
 <div class="cont_wrapper">
     <div class="pd-ltr-20">
@@ -190,13 +179,13 @@ if (isset($_SESSION['username'])) {
                                 <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
                                     <span class="fa fa-download"></span> Export as CSV
                                 </a>
-                                <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
+                                <!-- <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
                                     <span class="fa fa-download"></span> Export as PDF
-                                </a>
+                                </a> -->
                                 <div class="pd-20">
                                 <hr>
                             </div>
-                            <div class="container">
+                            <div class="table-container">
                                 <table class="table table-bordered table-striped" id="data-table">
                                     <thead>
                                         <tr>
@@ -221,21 +210,20 @@ if (isset($_SESSION['username'])) {
             <?php include ('../modals/main_modals.php'); ?>
     </div>
 </div>
+<script src="../../dist/js/table.js"></script>
+<script src="../../dist/js/index.js"></script>
+<script src="../../dist/js/car_list.js"></script>
+<script src="../../dist/js/export_scripts.js"></script>
+<script src="../../dist/js/manage_car.js"></script>
 <script>
 $(document).ready(function() {
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
         $('#create_new').attr('data-account-no', accountNo);
     }
-
     updateAccountNo();
-
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
     });
 });
-
 </script>
-<script src="../../dist/js/index.js"></script>
-<script src="../../dist/js/car_list.js"></script>
-<script src="../../dist/js/export_scripts.js"></script>
