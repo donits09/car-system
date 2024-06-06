@@ -98,11 +98,20 @@ include('../../inc/header.php');
                 ?>
             </tbody>
         </table>
-        <?php include ('../modals/main_modals.php'); ?>
+        <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button onclick="closeModal()" class="btn customized-modal" data-dismiss="modal">x</button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/car_main_list.js"></script>
 <script>
 $(document).ready(function() {
     function updateAccountNo() {
@@ -116,7 +125,29 @@ $(document).ready(function() {
 });
 $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
-        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
+        loadModal('Car Payment Details', 'view_car.php?id=' + accountId, '#viewModal');
     });
+
+    
+function loadModal(title, url, modalId) {
+    start_loader();
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(response) {
+            $(modalId + ' .modal-body').html(response);
+            $(modalId + ' .modal-title').text(title);
+            $(modalId).modal('show');
+            end_loader();
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert("An error occurred while loading data.");
+            end_loader();
+        }
+    });
+}
+
+
 </script>
 <!-- <script src="../../../dist/js/manage_car_type.js"></script> -->
