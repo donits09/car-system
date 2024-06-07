@@ -30,10 +30,13 @@
 ?>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="car-form">
+    <?php
+        $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
+    ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" readonly>
+        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?>>
     </div>
     <div class="form-group">
     <label for="c_car_type">Payment Type</label>

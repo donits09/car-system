@@ -1,4 +1,24 @@
+
 <link rel="stylesheet" href="../../dist/css/modals.css">
+<!-- <style>
+    .btn.btn-modal {
+        margin-left:10%;
+        margin-right:10%;
+        margin-bottom: 5%;
+        background-color: black;
+        color:white;
+        margin-top:0;
+    }
+    .modal-header.close{
+        display: none;
+    }
+    .btn.btn-secondary.customized-modal{
+        border-radius: 100px;
+    }
+    .modal-content{
+        color:black!important;
+    }
+</style> -->
 <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -79,7 +99,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirm">Confirm</button>
+                <button type="button" class="btn btn-danger" id="confirm">Delete</button>
             </div>
         </div>
     </div>
