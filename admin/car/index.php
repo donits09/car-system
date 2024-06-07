@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 ?>
 
 
-<?php
+<div?php
 
     include('../../inc/header.php');    
 
@@ -43,9 +43,9 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 ?>
 <link rel="stylesheet" href="../../dist/css/table.css">
 <link rel="stylesheet" href="../../dist/css/index.css">
-<div class="cont_wrapper">
-    <div class="pd-ltr-20">
-        <div class="card">
+<div class="container mt-5">
+    <div class="card mt-3">
+        <div class="pd-20">
         <!-- Dropdown 'to Par -->
         <table class="table">
             <form id="search-type-form">
@@ -122,7 +122,6 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
             </div>
         </form>
         </div>
-        <br>
             <div class="container mt-5">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -216,6 +215,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                 </div>
             </div>
             <?php include ('../modals/main_modals.php'); ?>
+        </div>
     </div>
 </div>
 <script src="../../dist/js/table.js"></script>
