@@ -40,12 +40,12 @@ function isActive($page) {
         <li class="nav-item <?php echo isActive('user'); ?>">
           <a class="nav-link" href="<?php echo base_url ?>admin/user?page=index">System User</a>
         </li>
-        <li class="nav-item dropdown<?php echo isActive('car_main'); ?>">
+        <li class="nav-item dropdown<?php echo isActive('car_type'); ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Files
+            Settings
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="<?php echo base_url; ?>admin/car_main?page=index">Car List</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">Car Type</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive('car_reports'); ?>">
@@ -56,12 +56,12 @@ function isActive($page) {
                 <a class="dropdown-item" href="">Car List</a>
             </div>
         </li>
-        <li class="nav-item dropdown<?php echo isActive('car_type'); ?>">
+        <li class="nav-item dropdown<?php echo isActive('all_car_list'); ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Settings
+            Files
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">Car Type</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/car?page=view_car">Car List</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive('profile'); ?>">
