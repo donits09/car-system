@@ -81,6 +81,7 @@ $(document).ready(function() {
         }
     });
 });
+
 var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
 if (idValue) {
     $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');

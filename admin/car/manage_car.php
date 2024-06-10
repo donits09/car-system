@@ -9,6 +9,7 @@
     $c_car_paydate = date('Y-m-d');
     $c_encoded_by = '';
     $c_tran_date = date('Y-m-d H:i:s');
+    $c_mop = '';
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
@@ -23,10 +24,9 @@
             $c_car_no = $result["c_car_no"];
             $c_car_paydate = $result["c_car_paydate"];
             $c_encoded_by = $result["c_encoded_by"];
+            $c_mop = $result["c_mop"];
         }
-    } else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
-        $c_account_no = $_GET['c_account_no'];
-    }
+    } 
 ?>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="car-form">
@@ -36,12 +36,16 @@
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?>>
+        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> required>
+    </div>
+    <div class="form-group">
+        <label for="car_no">CAR No.</label>
+        <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" pattern="\d{1,6}" required>
     </div>
     <div class="form-group">
     <label for="c_car_type">Payment Type</label>
     <div class="dropdown">
-        <input type="text" class="form-control" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
+        <input type="text" class="form-control" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
             <div class="dropdown-menu w-100" id="comboBoxMenu">
                 <?php
                 $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
@@ -55,13 +59,40 @@
         </div>
     </div>
     <div class="form-group">
-    <label for="amount">Amount</label>
-            <input type="number" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" required>
+        <label for="name">Name</label>
+        <?php
+            $c_buyer_acc = !empty($c_account_no) ? $c_account_no : '';
+
+            if (!empty($c_buyer_acc)) {
+                $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
+                $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
+                
+                if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
+                    $buyer_details = odbc_fetch_array($buyer_stmt);
+                    
+                    if ($buyer_details) {
+                        echo '<input type="text" class="form-control" value="' . htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]) . '" readonly>';
+                    } else {
+                        echo "Unknown";
+                    }
+                } else {
+                    echo "Unknown";
+                }
+            } 
+        ?>
     </div>
     <div class="form-group">
-        <label for="car_no">CAR No.</label>
-        <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" pattern="\d{1,6}" required>
+        <label for="amount">Amount</label>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" required>
     </div>
+    
+    <div class="form-group">
+    <label for="c_mop">Mode of Payment</label>
+    <select class="form-control" id="c_mop" name="c_mop" required>
+        <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
+        <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
+    </select>
+</div>
     <div class="form-group">
         <label for="pay_date">Pay Date</label>
         <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required>

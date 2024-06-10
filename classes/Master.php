@@ -204,8 +204,8 @@ Class Master{
 			}
 		}
 	
-		$data = "c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated";
-		$values = "'$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date'";
+		$data = "c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop";
+		$values = "'$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop'";
 		$resp = array();
 	
 		if (empty($id)) {
@@ -227,7 +227,8 @@ Class Master{
 						c_car_paydate = '$c_car_paydate',
 						c_car_amount = '$c_car_amount',
 						c_encoded_by = '$c_encoded_by',
-						c_tran_updated = '$c_tran_date'
+						c_tran_updated = '$c_tran_date',
+						c_mop = '$c_mop'
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	
@@ -244,7 +245,89 @@ Class Master{
 		echo json_encode($resp);
 	}
 	
+	function save_other_car_payment() {
+		extract($_POST);
+	
+		$c_car_amount = str_replace(',', '', $c_car_amount);
 
+		$car_type_check = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_car_type'";
+		$check_result = odbc_exec($this->conn, $car_type_check);
+	
+		if (odbc_num_rows($check_result) == 0) {
+			$insert_car_type = "INSERT INTO t_car_type (c_payment_type, status) VALUES ('$c_car_type', 0)";
+			$insert_result = odbc_exec($this->conn, $insert_car_type);
+			if (!$insert_result) {
+				error_log("Failed to insert new car type: " . odbc_errormsg($this->conn));
+			}
+		}
+	
+		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
+		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
+	
+		if ($maxIdResult) {
+			$row = odbc_fetch_array($maxIdResult);
+			$maxId = $row['max_id'] + 1; 
+		} else {
+			$maxId = 1; 
+			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
+		}
+	
+		$data = "id, c_car_no, c_name, c_phase, c_block, c_lot";
+		$values = "'$maxId', '$c_car_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
+
+		$c_account_no = '';
+		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop";
+		$values1 = "'$maxId', '$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop'";
+	
+		$resp = array();
+	
+		if (empty($id)) {
+			$this->car_logs('Car Management', "ADDED - CAR#");
+			$insert = "INSERT INTO t_other_car_payment ($data) VALUES ($values)";
+			$insert1 = "INSERT INTO t_car_payment ($data1) VALUES ($values1)";
+			$save = odbc_exec($this->conn, $insert);
+			$save1 = odbc_exec($this->conn, $insert1);
+	
+			if ($save && $save1) {
+				$resp['status'] = 'success';
+				$resp['msg'] = "New car payment successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else { 
+			$update = "UPDATE t_other_car_payment SET 
+						c_car_no = '$c_car_no',
+						c_name = '$c_name',
+						c_phase = '$c_phase',
+						c_block = '$c_block',
+						c_lot = '$c_lot'
+					  WHERE id = '$id'";
+			$update1 = "UPDATE t_car_payment SET 
+						c_car_type = '$c_car_type',
+						c_car_no = '$c_car_no',
+						c_car_paydate = '$c_car_paydate',
+						c_car_amount = '$c_car_amount',
+						c_encoded_by = '$c_encoded_by',
+						c_tran_updated = '$c_tran_date',
+						c_mop = '$c_mop'
+					  WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+			$save1 = odbc_exec($this->conn, $update1);
+	
+			if ($save && $save1) {
+				$this->car_logs('Car Management', "UPDATED - CAR#");
+				$resp['status'] = 'success';
+				$resp['msg'] = "Car payment record successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+	
+		echo json_encode($resp);
+	}
+	
 	function save_car_type() {
 		extract($_POST);
 	
@@ -309,6 +392,9 @@ switch ($action) {
     case 'save_car_payment':
         echo $Master->save_car_payment();
         break;
+	case 'save_other_car_payment':
+		echo $Master->save_other_car_payment();
+		break;
 	case 'save_car_type':
 		echo $Master->save_car_type();
 		break;

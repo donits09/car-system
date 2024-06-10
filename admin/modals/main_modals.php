@@ -1,24 +1,5 @@
 
 <link rel="stylesheet" href="../../dist/css/modals.css">
-<!-- <style>
-    .btn.btn-modal {
-        margin-left:10%;
-        margin-right:10%;
-        margin-bottom: 5%;
-        background-color: black;
-        color:white;
-        margin-top:0;
-    }
-    .modal-header.close{
-        display: none;
-    }
-    .btn.btn-secondary.customized-modal{
-        border-radius: 100px;
-    }
-    .modal-content{
-        color:black!important;
-    }
-</style> -->
 <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -44,7 +25,7 @@
         </div>
     </div>
 </div>
-
+<!-- 
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -86,7 +67,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
     <div class="modal-dialog" role="document">

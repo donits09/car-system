@@ -4,15 +4,18 @@ include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
 ?>
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
-<div class="cont_wrapper">
-    <div class="card">
-        <div class="pd-20" id="car-btn">
-            <h2 class="text-blue h4">Car List</h2>
+<div class="container mt-5">
+    <div class="card mt-3">
+        <div class="pd-20">
+        <!-- <div class="pd-20" id="car-btn"> -->
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                 <span class="fa fa-edit"></span> Create New Payment 
+            </a>
+            <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
+                <span class="fa fa-edit"></span> Create Other Payment 
             </a>
             <div class="pd-20">
             <hr>
@@ -21,11 +24,15 @@ include('../../inc/header.php');
             <table class="table table-bordered table-striped" id="data-table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>No</th>
                         <th>Account No.</th>
-                        <th>Payment Type</th>
-                        <th>Amount</th>
                         <th>CAR No.</th>
+                        <th>Payment Type</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Amount</th>
+                        <th>MoP</th>
+                        <th>Transaction Date</th>
                         <th>Pay Date</th>
                         <th>Encoder</th>
                         <th>Action</th>
@@ -33,7 +40,12 @@ include('../../inc/header.php');
                 </thead>
                 <tbody id="car-type-body">
                     <?php
-                    $car_list = "SELECT * FROM t_car_payment";
+                    $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
+                    b.c_block, b.c_lot
+                        FROM t_car_payment a
+                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no;
+                        ";
                     $stmt = odbc_prepare($conn, $car_list);
                     
                     if ($stmt && odbc_execute($stmt)) {
@@ -42,10 +54,108 @@ include('../../inc/header.php');
                     ?>
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
-                                <td class="text-center"><?php echo htmlspecialchars($row['c_account_no']); ?></td>
-                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
-                                <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+                                <td class="text-center">
+                                    <?php 
+                                    echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); 
+                                    ?>
+                                </td>
                                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
+                                <td class="text-center">
+                                    <?php
+                                        $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
+
+                                        if (!empty($c_buyer_acc)) {
+                                            $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
+                                            $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
+                                            
+                                            if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
+                                                $buyer_details = odbc_fetch_array($buyer_stmt);
+                                                
+                                                if ($buyer_details) {
+                                                    echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
+                                                } else {
+                                                    echo "Unknown";
+                                                }
+                                            } else {
+                                                echo "Unknown";
+                                            }
+                                        } else {
+                                            echo htmlspecialchars($row['c_name']);
+                                        }
+                                        ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $c_account_no = $row['c_account_no'];
+
+                                    try {
+                                        if (!empty($c_account_no)) {
+                                            $c_phase = substr($c_account_no, 0, 3);
+                                            $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
+                                            $c_lot = substr($c_account_no, 6, 2);
+
+                                            $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                                            $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+
+                                            if (odbc_execute($phase_stmt, array($c_phase))) {
+                                                $phase_details = odbc_fetch_array($phase_stmt);
+
+                                                if ($phase_details) {
+                                                    echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                } else {
+                                                    echo "-----";
+                                                }
+                                            } else {
+                                                echo "-----";
+                                            }
+                                        } else {
+                                            $c_phase = $row['c_phase'];
+                                            $c_block = $row['c_block'];
+                                            $c_lot = $row['c_lot'];
+
+                                            if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
+                                                echo "-------------";
+                                            } else {
+                                                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                                                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+
+                                                if (odbc_execute($phase_stmt, array($c_phase))) {
+                                                    $phase_details = odbc_fetch_array($phase_stmt);
+
+                                                    if ($phase_details) {
+                                                        echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                    } else {
+                                                        echo "-----";
+                                                    }
+                                                } else {
+                                                    echo "-----";
+                                                }
+                                            }
+                                        }
+                                    } catch (Exception $e) {
+                                        echo "-----";
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['c_mop'] == 1) {
+                                        echo "Cash";
+                                    } elseif ($row['c_mop'] == 2) {
+                                        echo "Check";
+                                    } else {
+                                        echo "Unknown";
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center tran-date">
+                                    <?php
+                                    $dateTime = new DateTime($row['c_tran_date']);
+                                    echo htmlspecialchars($dateTime->format('Y-m-d')); 
+                                    ?>
+                                </td>
                                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                                 <td class="text-center">
                                     <?php
@@ -118,3 +228,4 @@ $(document).ready(function() {
         updateAccountNo();
     });
 });
+</script>
