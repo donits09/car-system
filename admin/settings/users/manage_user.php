@@ -17,7 +17,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="text" class="form-control" id="c_password" name="c_password" required>
+                        <input type="password" class="form-control" id="c_password" name="c_password" required>
                     </div>
                     <div class="mb-3">
                         <label for="realname" class="form-label">Name</label>
@@ -65,6 +65,7 @@
                     <div class="mb-3">
                         <label for="edit_password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="edit_password" name="c_password">
+                        <small><i>Leave this blank if you dont want to change the password.</i></small>
                     </div>
                     <div class="mb-3">
                         <label for="edit_realname" class="form-label">Name</label>

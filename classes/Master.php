@@ -4,6 +4,7 @@ Class Master{
 
     public function __construct() {
         require_once('../config.php');
+		global $dsn, $user, $pass;
         $this->conn = odbc_connect($dsn, $user, $pass);
     }
 
@@ -11,7 +12,7 @@ Class Master{
 		extract($_POST);
 		$resp = array();
 	
-		if (empty($id)) {  // Insert new user
+		if (empty($id)) {
 			$check_query = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_employee_code'";
 			$check_result = odbc_exec($this->conn, $check_query);
 	
@@ -29,14 +30,14 @@ Class Master{
 			$save = odbc_exec($this->conn, $insert);
 	
 			if ($save) {
-				$this->car_logs('Car Users', "ADDED - User : $c_employee_code");
+				$this->car_logs('Car Users', "ADDED - $c_employee_code - $c_realname");
 				$resp['status'] = 'success';
 				$resp['msg'] = "User successfully saved.";
 			} else {
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
-		} else {  // Update existing user
+		} else {
 			$check_query = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_employee_code' AND id != '$id'";
 			$check_result = odbc_exec($this->conn, $check_query);
 	
@@ -47,7 +48,6 @@ Class Master{
 				return;
 			}
 	
-			// Initialize update query parts
 			$update_fields = array(
 				"c_employee_code = '$c_employee_code'",
 				"c_realname = '$c_realname'",
@@ -55,18 +55,16 @@ Class Master{
 				"c_department = '$c_department'"
 			);
 	
-			// Check if password is provided
 			if (!empty($c_password)) {
 				$hashed_password = password_hash($c_password, PASSWORD_BCRYPT);
 				$update_fields[] = "c_password = '$hashed_password'";
 			}
 	
-			// Build the update query
 			$update_query = "UPDATE t_car_users SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update_query);
 	
 			if ($save) {
-				$this->car_logs('Car Users', "UPDATE - User : $c_employee_code");
+				$this->car_logs('Car Users', "UPDATE - $c_employee_code - $c_realname");
 				$resp['status'] = 'success';
 				$resp['msg'] = "User successfully updated.";
 			} else {
@@ -83,18 +81,18 @@ Class Master{
 	
 		if (isset($_POST['userId'])) {
 			$userId = $_POST['userId'];
-	
-			// Fetch the employee code before deleting the user
-			$fetchSql = "SELECT c_employee_code FROM t_car_users WHERE id = ?";
+			$fetchSql = "SELECT * FROM t_car_users WHERE id = ?";
 			$fetchStmt = odbc_prepare($this->conn, $fetchSql);
 	
 			if ($fetchStmt) {
 				$fetchResult = odbc_execute($fetchStmt, array($userId));
 				$c_employee_code = null;
+				$c_realname = null;
 	
 				if ($fetchResult) {
 					$row = odbc_fetch_array($fetchStmt);
 					$c_employee_code = $row['c_employee_code'];
+					$c_realname = $row['c_realname'];
 				}
 	
 				$sql = "DELETE FROM t_car_users WHERE id = ?";
@@ -104,7 +102,7 @@ Class Master{
 					$result = @odbc_execute($stmt, array($userId));
 	
 					if ($result) {
-						$this->car_logs('Car Users', "DELETED - User : $c_employee_code");
+						$this->car_logs('Car Users', "DELETED - $c_employee_code - $c_realname");
 						$resp['status'] = 'success';
 						$resp['msg'] = "Car payment successfully deleted.";
 					} else {

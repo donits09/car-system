@@ -33,6 +33,10 @@ check_session();
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/login.css">
 
 <body>
+    <div class="header">
+        <h1>Welcome Back!</h1>
+        <!-- <p>Log in to continue</p> -->
+    </div>
     <div class="container login_padding">
         <div class="row justify-content-center">
             <div class="col-md-4">
