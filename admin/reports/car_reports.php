@@ -17,7 +17,7 @@ include('../../inc/header.php');
         <hr>
         <div class="sub_container">
             <div class="date_container">
-                Search by Transaction Date<hr>
+                <b>Search by Transaction Date</b><hr>
                 <div class="pd-20">
                     <label for="start_date">Start Date:</label>
                     <input type="date" id="start_date" class="form-control" />

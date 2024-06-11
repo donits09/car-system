@@ -203,9 +203,19 @@ Class Master{
 				error_log("Failed to insert new car type: " . odbc_errormsg($this->conn));
 			}
 		}
+		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
+		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
-		$data = "c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop";
-		$values = "'$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop'";
+		if ($maxIdResult) {
+			$row = odbc_fetch_array($maxIdResult);
+			$maxId = $row['max_id'] + 1; 
+		} else {
+			$maxId = 1; 
+			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
+		}
+	
+		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop";
+		$values = "'$maxId','$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop'";
 		$resp = array();
 	
 		if (empty($id)) {

@@ -60,26 +60,7 @@
     </div>
     <div class="form-group">
         <label for="name">Name</label>
-        <?php
-            $c_buyer_acc = !empty($c_account_no) ? $c_account_no : '';
-
-            if (!empty($c_buyer_acc)) {
-                $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
-                $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
-                
-                if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
-                    $buyer_details = odbc_fetch_array($buyer_stmt);
-                    
-                    if ($buyer_details) {
-                        echo '<input type="text" class="form-control" value="' . htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]) . '" readonly>';
-                    } else {
-                        echo "Unknown";
-                    }
-                } else {
-                    echo "Unknown";
-                }
-            } 
-        ?>
+        <input type="text" class="form-control" id="buyer_name" name="buyer_name" readonly>
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
