@@ -1,11 +1,22 @@
 
 
 $(document).ready(function() {
+    // $(document).on('click', '.edit_data', function() {
+    //     var accountId = $(this).data('id');
+    //     loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+    // });
+
     $(document).on('click', '.edit_data', function() {
         var accountId = $(this).data('id');
-        loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+        var accountNo = $(this).data('account-no');
+    
+        if (accountNo === "" || accountNo === null || accountNo === undefined) {
+            loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
+        } else {
+            loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+        }
     });
-
+    
     $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
         loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
@@ -14,6 +25,10 @@ $(document).ready(function() {
     $('#create_new').click(function() {
         var accountNo = $(this).data('account-no');
         loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
+    });
+    
+    $('#create_other_new').click(function() {
+        loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
     });
 
     $(document).on('click', '.delete_data', function() {

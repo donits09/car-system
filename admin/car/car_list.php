@@ -11,6 +11,7 @@
         $i = 1;
         while ($row = odbc_fetch_array($stmt)): 
 ?>
+
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <tr>
     <td class="text-center"><?php echo $i++; ?></td>

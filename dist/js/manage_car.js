@@ -40,48 +40,81 @@ function submitForm() {
     alert('You selected: ' + selectedOption);
 }
 
+
 $(document).ready(function() {
     $('#car-form').submit(function(e) {
         e.preventDefault();
-       
+
+        const buyerName = $('#buyer_name').val();
+        if (!buyerName || buyerName === 'Unknown') {
+            alert('Name field is required.');
+            return;
+        }
+
         if (confirm("Are you sure you want to save this car payment?")) {
             var _this = $(this);
 
             start_loader();
 
             $.ajax({
-            url: "../../classes/Master.php?f=save_car_payment",
-            data: new FormData(_this[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                console.log(resp); 
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        location.reload();
-                    }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
+                url: "../../classes/Master.php?f=save_car_payment",
+                data: new FormData(_this[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: function(err) {
+                    console.log(err);
+                    alert_toast("An error occurred.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    console.log(resp); 
+                    if (resp && resp.status === 'success') {
+                        alert_toast(resp.msg, 'success');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 2000);
+                    } else if (resp && resp.status === 'failed' && resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    } else {
+                        alert_toast("An unexpected error occurred", 'error');
+                    }
+                    end_loader();
                 }
-                end_loader();
-            }
-
-        });
+            });
         }
     });
+
+    $('#c_account_no').on('input', function() {
+        const accountNo = $(this).val();
+        const buyerNameField = $('#buyer_name');
+
+        if (accountNo.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/get_buyer_details.php',
+                data: { account_no: accountNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        buyerNameField.val(response.name);
+                        buyerNameField.removeAttr('required');
+                    } else {
+                        buyerNameField.val('Unknown');
+                        buyerNameField.attr('required', 'required');
+                    }
+                }
+            });
+        } else {
+            buyerNameField.val('');
+            buyerNameField.attr('required', 'required');
+        }
+    });
+
+    var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
+    if (idValue) {
+        $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');
+    }
 });
-var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
-if (idValue) {
-    $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');
-}

@@ -9,13 +9,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     exit();
 }
 ?>
-
-
-<div?php
-
-    include('../../inc/header.php');    
-
-
+<?php
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
     $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
     $l_lot = isset($_GET["lot"]) ? $_GET["lot"] : '' ;
@@ -186,9 +180,9 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                                 <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
                                     <span class="fa fa-download"></span> Export as CSV
                                 </a>
-                                <!-- <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
+                                <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
                                     <span class="fa fa-download"></span> Export as PDF
-                                </a> -->
+                                </a>
                                 <div class="pd-20">
                                 <hr>
                             </div>
