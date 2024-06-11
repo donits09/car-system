@@ -212,20 +212,26 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
         </div>
     </div>
 </div>
-<script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/index.js"></script>
-<script src="../../dist/js/car_list.js"></script>
-<script src="../../dist/js/export_scripts.js"></script>
-<script src="../../dist/js/manage_car.js"></script>
 <script>
 $(document).ready(function() {
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
         $('#create_new').attr('data-account-no', accountNo);
     }
-    updateAccountNo();
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
     });
+    updateAccountNo();
+    $('#buyer_acc_no').on('change', function() {
+        updateAccountNo();
+    });
 });
+
 </script>
+
+<script src="../../dist/js/table.js"></script>
+<script src="../../dist/js/index.js"></script>
+<script src="../../dist/js/car_list.js"></script>
+<script src="../../dist/js/export_scripts.js"></script>
+<script src="../../dist/js/manage_car.js"></script>
+
