@@ -1,17 +1,26 @@
 <?php
-    session_start();
-    include('../../config.php');
+session_start();
+include('../../config.php');
 
-    $account_no = $_GET['account_no'];
-    $car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ?";
+$account_no = $_GET['account_no'];
+$car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ?";
 
-    $stmt = odbc_prepare($conn, $car_list);
+$stmt = odbc_prepare($conn, $car_list);
+$hasRows = false;
 
-    if ($stmt && odbc_execute($stmt, array($account_no))) {
+if ($stmt && odbc_execute($stmt, array($account_no))) {
+    while ($row = odbc_fetch_array($stmt)) {
+        if (!empty($row['c_account_no'])) {
+            $hasRows = true;
+            break; 
+        }
+    }
+
+    if ($hasRows) {
+        odbc_execute($stmt, array($account_no));
         $i = 1;
         while ($row = odbc_fetch_array($stmt)): 
 ?>
-
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <tr>
     <td class="text-center"><?php echo $i++; ?></td>
@@ -56,8 +65,6 @@
                     <span class="fas fa-print"></span> Print
                 </a>
             </div>
-
-
             <div class="dropdown-divider"></div>
             <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo $row['c_car_no']; ?>">
                 <span class="fa fa-trash text-danger"></span> Delete
@@ -66,8 +73,7 @@
     </td>
 </tr>
 <?php 
-    endwhile; 
-} else {
-    echo "Error executing query.";
+        endwhile; 
+    }
 }
 ?>

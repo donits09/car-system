@@ -43,7 +43,9 @@ function searchBuyer(type) {
         formData.append('loc', loc); 
     } else if (type === 'last-name') {
         var last_name = document.getElementById('last_name').value;
+        var first_name = document.getElementById('first_name').value;
         formData.append('last_name', last_name);
+        formData.append('first_name', first_name); 
     }
 
     var xhr = new XMLHttpRequest();
@@ -57,7 +59,7 @@ function searchBuyer(type) {
                         showMultipleResults(response.data);
                     } else if (type === 'location' && response.data.length > 1) {
                         showMultipleResults(response.data);
-                    }else {
+                    } else {
                         fillBuyerDetails(response.data[0]);
                     }
                 } else {
@@ -66,7 +68,7 @@ function searchBuyer(type) {
             } else {
                 alert('No data found');
             }
-            updateCarList();
+            updateCarList(); 
         } else {
             alert('Error: ' + xhr.status);
         }
@@ -74,7 +76,6 @@ function searchBuyer(type) {
     xhr.send();
     
     return false;
-   
 }
 function updateCarList() {
     const accountNo = document.getElementById('buyer_acc_no').value;
@@ -84,6 +85,7 @@ function updateCarList() {
             document.getElementById('car-list-body').innerHTML = data;
         });
 }
+
 function fillBuyerDetails(data) {
     document.getElementById('buyer_acc_no').value = data.c_account_no;
     document.getElementById('buyer_date_of_sale').value = data.c_date_of_sale; 
@@ -155,7 +157,6 @@ function showMultipleResults(data, page) {
 
     paginationHtml += '</ul></nav>';
 
-
     modalBody.insertAdjacentHTML('beforeend', paginationHtml);
 
     $('#multipleResultsModal').modal('show');
@@ -177,6 +178,7 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
 
     $('#multipleResultsModal').modal('hide');
+    updateCarList();
 }
 
 (function() {
@@ -185,10 +187,8 @@ function selectBuyer(buyer) {
     const table = tableContainer.querySelector('table');
     
     function adjustZoom(delta) {
-      zoomLevel += delta;
-      table.style.transform = `scale(${zoomLevel})`;
-      tableContainer.scrollLeft += 100 * delta; 
+        zoomLevel += delta;
+        table.style.transform = `scale(${zoomLevel})`;
+        tableContainer.scrollLeft += 100 * delta; 
     }
-  
-  })();
-  
+})();

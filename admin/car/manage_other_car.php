@@ -36,6 +36,13 @@
         }
     } 
 ?>
+<style>
+.bold-text {
+    padding: 5px;
+    font-size: 11px;
+    font-style: italic;
+}
+</style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="other-car-form">
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
@@ -95,7 +102,8 @@
     </div>
     <div class="form-group">
         <label for="car_no">CAR No.</label>
-        <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" pattern="\d{1,6}" required>
+        <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" required>
+        <div id="car_no_error" class="text-danger"></div>
     </div>
     <div class="form-group">
     <label for="c_mop">Mode of Payment</label>
@@ -130,6 +138,39 @@
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
+<script>
+$(document).ready(function() {
+    $('#c_car_no').on('input', function() {
+        const carNo = $(this).val();
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text');
+            $('#other-car-form button[type="submit"]').attr('disabled', true);
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/check_car_no.php',
+                data: { car_no: carNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text');
+                        $('#other-car-form button[type="submit"]').attr('disabled', true);
+                    } else {
+                        $('#car_no_error').text('').removeClass('bold-text');
+                        $('#other-car-form button[type="submit"]').attr('disabled', false);
+                    }
+                }
+            });
+        }
+    });
+
+    $('#other-car-form').on('submit', function(e) {
+        if ($('#car_no_error').text().length > 0) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
 <script>
     $(document).ready(function() {
     $('#other-car-form').submit(function(e) {

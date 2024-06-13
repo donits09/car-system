@@ -37,6 +37,8 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 ?>
 <link rel="stylesheet" href="../../dist/css/table.css">
 <link rel="stylesheet" href="../../dist/css/index.css">
+
+<body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
@@ -50,7 +52,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                             <option value="" selected>--SELECT--</option>
                             <option value="account">Account #</option>
                             <option value="location">Location</option>
-                            <option value="last-name">Last Name</option>
+                            <option value="last-name">Name</option>
                         </select>
                     </div>
                 </div>
@@ -66,7 +68,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                     <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11">
                 </div>
                 <div class="col-md-3 form-group">
-                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Find Account</button>
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search Account</button>
                 </div>
             </div>
         </form>
@@ -111,7 +113,11 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                     <input type="text" id="last_name" name="last_name" class="form-control">
                 </div>
                 <div class="col-md-3 form-group">
-                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Find Surname</button>
+                    <label for="first_name" class="control-label">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control">
+                </div>
+                <div class="col-md-3 form-group">
+                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search Name</button>
                 </div>
             </div>
         </form>
@@ -228,10 +234,10 @@ $(document).ready(function() {
 });
 
 </script>
-
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <script src="../../dist/js/car_list.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/manage_car.js"></script>
+
 
