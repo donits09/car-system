@@ -108,14 +108,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
-
 <script>
-    $('#c_account_no').on('input', function() {
-        const accountNo = $(this).val();
-    });
 $(document).ready(function() {
     function fetchBuyerDetails(accountNo) {
-
         const buyerNameField = $('#buyer_name');
 
         if (accountNo.length > 0) {

@@ -4,7 +4,8 @@ document.getElementById('filter').addEventListener('click', function() {
     let rows = document.querySelectorAll('#car-type-body tr');
     
     rows.forEach(row => {
-        let payDate = new Date(row.querySelector('.tran-date').textContent);
+        let dateText = row.querySelector('.tran-date').textContent.trim();
+        let payDate = new Date(dateText + 'T00:00:00');
         if ((isNaN(startDate) || payDate >= startDate) && (isNaN(endDate) || payDate <= endDate)) {
             row.style.display = '';
         } else {
