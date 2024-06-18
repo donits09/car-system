@@ -192,3 +192,80 @@ function selectBuyer(buyer) {
         tableContainer.scrollLeft += 100 * delta; 
     }
 })();
+
+function validateNumberInput(event) {
+    const input = event.target;
+    const value = input.value;
+
+    input.value = value.replace(/\D/g, '');
+}
+
+function filterTable() {
+    var input, filter, table, tbody, tr, td, i, txtValue;
+    input = document.getElementById("searchInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("car-list-table");
+    tbody = table.getElementsByTagName("tbody")[0]; 
+
+    tr = tbody.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+        tds = tr[i].getElementsByTagName("td");
+        var found = false;
+        for (var j = 0; j < tds.length; j++) {
+            td = tds[j];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (found) {
+            tr[i].style.display = ""; 
+        } else {
+            tr[i].style.display = "none"; 
+        }
+    }
+    calculateTotalAmount();
+}
+function calculateTotalAmount() {
+    var table = document.getElementById("car-list-table");
+    var tbody = table.getElementsByTagName("tbody")[0];
+    var rows = tbody.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") {
+            var amountCell = rows[i].getElementsByTagName("td")[6]; 
+            if (amountCell) {
+                var amountValue = amountCell.textContent.trim().replace(',', '');
+                total += parseFloat(amountValue);
+            }
+        }
+    }
+
+    document.getElementById("totalAmount").textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+}
+
+function searchAndCalculateTotal(event, type) {
+    event.preventDefault();
+    searchBuyer(type);
+
+    setTimeout(function() {
+        calculateTotalAmount();
+    }, 300);
+}
+
+document.getElementById("searchAcc").addEventListener("click", function(event) {
+    searchAndCalculateTotal(event, 'account');
+});
+
+document.getElementById("searchLoc").addEventListener("click", function(event) {
+    searchAndCalculateTotal(event, 'location');
+});
+
+document.getElementById("searchName").addEventListener("click", function(event) {
+    searchAndCalculateTotal(event, 'last-name');
+});

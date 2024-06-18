@@ -86,7 +86,7 @@ include('../../inc/header.php');
                                         ?>
                                 </td>
                                 <td>
-                                    <?php
+                                <?php
                                     $c_account_no = $row['c_account_no'];
 
                                     try {
@@ -136,7 +136,7 @@ include('../../inc/header.php');
                                     } catch (Exception $e) {
                                         echo "-----";
                                     }
-                                    ?>
+                                ?>
                                 </td>
                                 <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
                                 <td class="text-center">
@@ -208,6 +208,13 @@ include('../../inc/header.php');
                     }
                     ?>
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="6" class="text-right" id="totalAmt">Total amount:</th>
+                        <th id="totalAmount" class="text-center"></th>
+                        <th colspan="5"></th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
         <?php include ('../modals/main_modals.php'); ?>
@@ -227,9 +234,7 @@ $(document).ready(function() {
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
     });
-});
-</script>
-<script>
+
     $('#c_account_no').on('input', function() {
         const accountNo = $(this).val();
         const buyerNameField = $('#buyer_name');
@@ -255,4 +260,21 @@ $(document).ready(function() {
             buyerNameField.attr('required', 'required');
         }
     });
+    var table = $('#data-table').DataTable();
+    function calculateTotalAmount() {
+        let totalAmount = 0;
+        table.rows({ filter: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
+            var data = this.data();
+            var amount = parseFloat(data[6].replace(/,/g, ''));
+            if (!isNaN(amount)) {
+                totalAmount += amount;
+            }
+        });
+        $('#totalAmount').text(totalAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'));
+    }
+    calculateTotalAmount();
+    table.on('draw', function() {
+        calculateTotalAmount();
+    });
+});
 </script>

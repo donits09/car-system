@@ -72,11 +72,11 @@
         </div>
         <div class="col-md-3 form-group">
             <label for="c_block" class="control-label">Block</label>
-            <input type="number" id="c_block" name="c_block" class="form-control" value="<?php echo htmlspecialchars($c_block); ?>">
+            <input type="number" id="c_block" name="c_block" class="form-control" value="<?php echo htmlspecialchars($c_block); ?>" oninput="validateNumberInput(event)">
         </div>
         <div class="col-md-3 form-group">
             <label for="c_lot" class="control-label">Lot</label>
-            <input type="number" id="c_lot" name="c_lot" class="form-control" value="<?php echo htmlspecialchars($c_lot); ?>">
+            <input type="number" id="c_lot" name="c_lot" class="form-control" value="<?php echo htmlspecialchars($c_lot); ?>" oninput="validateNumberInput(event)">
         </div>
     </div>
 
@@ -98,11 +98,11 @@
         </div>
     <div class="form-group">
     <label for="amount">Amount</label>
-            <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" required>
+            <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" oninput="validateNumberInput(event)" required>
     </div>
     <div class="form-group">
         <label for="car_no">CAR No.</label>
-        <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" required>
+        <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
         <div id="car_no_error" class="text-danger"></div>
     </div>
     <div class="form-group">
