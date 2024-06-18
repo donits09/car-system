@@ -53,13 +53,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     label{
         color:black;
     }
-   
-    .blue-text {
-        color: blue;
-    }
-    .orange-text {
-        color: orange;
-    }
+
     .container {
     width: 100%;
     }
@@ -80,6 +74,9 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
         transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    #search-tbl{
+        border: none !important;
     }
 </style>
 
@@ -182,7 +179,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                         <div class="pd-20">
                             <h2 class="text-blue h4">Buyer's Details</h2>
                         </div>
-                        <div class="container search-tbl">
+                        <div class="container">
                             <form class="row g-3">
                                 <div class="col-md-4">
                                     <label for="acc_no" class="form-label">Account No.</label>
@@ -234,13 +231,13 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                                 <span class="fa fa-download"></span> Export as PDF
                             </a>
                             <hr>
-                            <div class="container">
+                            <div class="container" id="search-tbl">
                                 <table>
                                     <tr>
-                                        <td style="width:80%;">
-                                            <label for="remarks" class="form-label">Search:</label>
+                                        <td style="width:80%;border:none;">
+                                            <label for="remarks" class="form-label" style="float:right;">Search:</label>
                                         </td>
-                                        <td style="padding-right:50px; padding-bottom:15px;">
+                                        <td style="padding-right:50px; padding-bottom:15px;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
                                         </td>
                                     </tr>
