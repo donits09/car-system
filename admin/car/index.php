@@ -57,7 +57,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     .container {
     width: 100%;
     }
-    .form-label {
+    /* .form-label {
         display: inline-block;
         margin-bottom: 0.5rem;
     }
@@ -77,7 +77,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     }
     #search-tbl{
         border: none !important;
-    }
+    } */
 </style>
 
 <body>
@@ -109,9 +109,11 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                     <label for="acc_no" class="control-label">Account #</label>
                     <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11" oninput="validateNumberInput(event)">
                 </div>
-                <button type="submit" id="searchAcc" class="btn btn-primary" onclick="searchAndCalculateTotal(event, 'account')">
-                    <span class="fa fa-search"></span> Search Account
-                </button>
+                <div class="col-md-3 form-group">
+                    <button type="submit" id="searchAcc" class="btn btn-primary" onclick="calculateTotalAmount()">
+                        <span class="fa fa-search"></span> Search Account
+                    </button>
+                </div>
             </div>
         </form>
 
@@ -222,8 +224,10 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                     <div class="card mt-3">
                         <div class="container">
                             <h2 class="text-blue h4">Car List</h2>
-                            <button type="button" id="create_new" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal">
-                            <span class="fa fa-edit"></span> Create New CAR
+                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
+                                <span class="fa fa-edit"></span> Create New CAR
+                            </button>
+                            
                             </button>
                             <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as CSV
@@ -232,13 +236,13 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                                 <span class="fa fa-download"></span> Export as PDF
                             </a>
                             <hr>
-                            <div class="container" id="search-tbl">
+                            <div class="container">
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">
                                             <label for="remarks" class="form-label" style="float:right;">Search:</label>
                                         </td>
-                                        <td style="padding-right:50px; padding-bottom:15px;border:none;">
+                                        <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
                                         </td>
                                     </tr>
@@ -283,21 +287,25 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     </div>
 </div>
 <script>
-$(document).ready(function() {
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        $('#create_new').attr('data-account-no', accountNo);
+        console.log(accountNo);
+        $('#create_new').data('account-no', accountNo); 
     }
+</script>
+<script>
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
     });
+
     $('#buyer_acc_no').on('change', function() {
         updateAccountNo();
     });
+
     document.getElementById("searchInput").addEventListener("input", function() {
         filterTable();
     });
-});
+
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>

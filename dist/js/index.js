@@ -69,6 +69,7 @@ function searchBuyer(type) {
                 alert('No data found');
             }
             updateCarList(); 
+            calculateTotalAmount();
         } else {
             alert('Error: ' + xhr.status);
         }
@@ -179,19 +180,8 @@ function selectBuyer(buyer) {
 
     $('#multipleResultsModal').modal('hide');
     updateCarList();
+    calculateTotalAmount();
 }
-
-(function() {
-    let zoomLevel = 1;
-    const tableContainer = document.querySelector('.table-container');
-    const table = tableContainer.querySelector('table');
-    
-    function adjustZoom(delta) {
-        zoomLevel += delta;
-        table.style.transform = `scale(${zoomLevel})`;
-        tableContainer.scrollLeft += 100 * delta; 
-    }
-})();
 
 function validateNumberInput(event) {
     const input = event.target;
@@ -255,7 +245,7 @@ function searchAndCalculateTotal(event, type) {
 
     setTimeout(function() {
         calculateTotalAmount();
-    }, 300);
+    }, 150);
 }
 
 document.getElementById("searchAcc").addEventListener("click", function(event) {

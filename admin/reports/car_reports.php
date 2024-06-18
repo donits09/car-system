@@ -37,7 +37,7 @@ $current_date = date('Y-m-d');
         </div>
         <hr>
         <div class="table-container">
-            <table class="table table-bordered table-striped" id="data-table">
+            <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
                         <th>No</th>
