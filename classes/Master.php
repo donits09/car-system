@@ -290,7 +290,7 @@ Class Master{
 		$resp = array();
 	
 		if (empty($id)) {
-			$this->car_logs('Car Management', "ADDED - CAR#");
+			$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
 			$insert = "INSERT INTO t_other_car_payment ($data) VALUES ($values)";
 			$insert1 = "INSERT INTO t_car_payment ($data1) VALUES ($values1)";
 			$save = odbc_exec($this->conn, $insert);

@@ -96,3 +96,22 @@ document.getElementById('export_csv').addEventListener('click', function() {
     downloadCSV(csv, filename);
 });
 
+document.getElementById('export_pdf').addEventListener('click', function() {
+    let startDate = document.getElementById('start_date').value;
+    let endDate = document.getElementById('end_date').value;
+
+    if (!startDate) {
+        let today = new Date();
+        startDate = today.toISOString().split('T')[0];
+    }
+
+    if (!endDate) {
+        let today = new Date();
+        endDate = today.toISOString().split('T')[0];
+    }
+
+    let url = `../../print/pdf_report.php?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+
+    window.open(url, '_blank');
+});
+

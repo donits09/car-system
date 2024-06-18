@@ -3,6 +3,7 @@ session_start();
 include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
+$current_date = date('Y-m-d');
 ?>
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
@@ -20,9 +21,9 @@ include('../../inc/header.php');
                 <b>Search by Transaction Date</b><hr>
                 <div class="pd-20">
                     <label for="start_date">Start Date:</label>
-                    <input type="date" id="start_date" class="form-control" />
+                    <input type="date" id="start_date" class="form-control" value="<?php echo $current_date; ?>" />
                     <label for="end_date" class="mt-2">End Date:</label>
-                    <input type="date" id="end_date" class="form-control" />
+                    <input type="date" id="end_date" class="form-control" value="<?php echo $current_date; ?>" />
                     <button id="filter" class="btn btn-primary mt-2">Filter</button>
                     <button id="reset" class="btn btn-secondary mt-2">Reset</button>
                 </div>
@@ -30,7 +31,7 @@ include('../../inc/header.php');
             <div class="btn_container">
                 <!-- <button class="btn btn-primary mt-2">Print</button>
                 <button class="btn btn-secondary mt-2">Copy</button> -->
-                <button class="btn btn-danger mt-2">Export as PDF</button>
+                <button id="export_pdf" class="btn btn-danger mt-2" href="javascript:void(0)">Export as PDF</button>
                 <button id="export_csv" class="btn btn-flat btn-success mt-2" href="javascript:void(0)">Export as CSV</button>
             </div>
         </div>

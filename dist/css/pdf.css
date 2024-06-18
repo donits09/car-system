@@ -1,0 +1,31 @@
+body { 
+    font-family: DejaVu Sans, sans-serif; 
+}
+header { 
+    text-align: center; margin-bottom: 20px; 
+}
+h2, h5, h3, p { 
+    margin: 2px 0; padding: 0; 
+}
+.encoded_by {
+    font-size: 12px;
+    text-align: right;
+}
+.pdf-font {
+    font-size: 12px;
+}
+table { 
+    width: 100%; border-collapse: collapse; 
+}
+th, td { 
+    border: 1px solid black; 
+    padding: 8px; 
+    text-align: center; 
+}
+th { 
+    background-color: #f2f2f2; 
+    font-size: 12px;
+}
+tfoot td { 
+    font-weight: bold; 
+}

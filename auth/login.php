@@ -34,7 +34,7 @@ check_session();
 
 <body>
     <div class="header">
-        <h1>Welcome Back!</h1>
+        <h1>Welcome Bitch!</h1>
         <!-- <p>Log in to continue</p> -->
     </div>
     <div class="container login_padding">

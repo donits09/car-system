@@ -87,32 +87,6 @@ $(document).ready(function() {
         }
     });
 
-    $('#c_account_no').on('input', function() {
-        const accountNo = $(this).val();
-        const buyerNameField = $('#buyer_name');
-
-        if (accountNo.length > 0) {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
-                data: { account_no: accountNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        buyerNameField.val(response.name);
-                        buyerNameField.removeAttr('required');
-                    } else {
-                        buyerNameField.val('Unknown');
-                        buyerNameField.attr('required', 'required');
-                    }
-                }
-            });
-        } else {
-            buyerNameField.val('');
-            buyerNameField.attr('required', 'required');
-        }
-    });
-
     var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
     if (idValue) {
         $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');
