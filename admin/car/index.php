@@ -37,6 +37,53 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 ?>
 <link rel="stylesheet" href="../../dist/css/table.css">
 <link rel="stylesheet" href="../../dist/css/index.css">
+<style>
+    .table-container {
+        margin-bottom: 20px;
+    }
+
+    .table-container label {
+        margin-right: 10px; 
+    }
+
+    .table-container input[type="text"] {
+        width: 150px;
+        padding: 5px; 
+    }
+    label{
+        color:black;
+    }
+   
+    .blue-text {
+        color: blue;
+    }
+    .orange-text {
+        color: orange;
+    }
+    .container {
+    width: 100%;
+    }
+    .form-label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+</style>
+
+<body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
@@ -50,7 +97,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                             <option value="" selected>--SELECT--</option>
                             <option value="account">Account #</option>
                             <option value="location">Location</option>
-                            <option value="last-name">Last Name</option>
+                            <option value="last-name">Name</option>
                         </select>
                     </div>
                 </div>
@@ -63,11 +110,11 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
             <div class="row align-items-end">
                 <div class="col-md-3 form-group">
                     <label for="acc_no" class="control-label">Account #</label>
-                    <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11">
+                    <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11" oninput="validateNumberInput(event)">
                 </div>
-                <div class="col-md-3 form-group">
-                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Find Account</button>
-                </div>
+                <button type="submit" id="searchAcc" class="btn btn-primary" onclick="searchAndCalculateTotal(event, 'account')">
+                    <span class="fa fa-search"></span> Search Account
+                </button>
             </div>
         </form>
 
@@ -90,14 +137,14 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                 </div>
                 <div class="col-md-2 form-group">
                     <label for="block" class="control-label">Block</label>
-                    <input type="number" id="block" name="block" class="form-control">
+                    <input type="number" id="block" name="block" class="form-control" min="0" step="1" oninput="validateNumberInput(event)">
                 </div>
                 <div class="col-md-2 form-group">
                     <label for="lot" class="control-label">Lot</label>
-                    <input type="number" id="lot" name="lot" class="form-control">
+                    <input type="number" id="lot" name="lot" class="form-control" min="0" step="1" oninput="validateNumberInput(event)">
                 </div>
                 <div class="col-md-2 form-group">
-                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Search Location</button>
+                    <button type="submit" id="searchLoc" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Location</button>
                 </div>
             </div>
         </form>
@@ -111,90 +158,108 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                     <input type="text" id="last_name" name="last_name" class="form-control">
                 </div>
                 <div class="col-md-3 form-group">
-                    <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Find Surname</button>
+                    <label for="first_name" class="control-label">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control">
+                </div>
+                <div class="col-md-3 form-group">
+                    <button type="submit" id="searchName" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Name</button>
                 </div>
             </div>
         </form>
         </div>
-            <div class="container mt-5">
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link active" id="buyer-details-tab" data-bs-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <a class="nav-link" id="car-list-tab" data-bs-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Car List</a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
-                        <div class="card mt-3">
-                            <div class="pd-20">
-                                <h2 class="text-blue h4">Buyer's Details</h2>
-                            </div>
-                            <div class="container">
-                                <form class="row g-3">
-                                    <div class="col-md-4">
-                                        <label for="acc_no" class="form-label">Account No.</label>
-                                        <input type="text" class="form-control" id="buyer_acc_no" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="date_of_sale" class="form-label">Date of Sale</label>
-                                        <input type="text" class="form-control" id="buyer_date_of_sale" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="acc_status" class="form-label">Account Status</label>
-                                        <input type="text" class="form-control" id="buyer_acc_status" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="lname" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="buyer_lname" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="fname" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="buyer_fname" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="mname" class="form-label">Middle Name</label>
-                                        <input type="text" class="form-control" id="buyer_mname" readonly>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="address" class="form-label">Address</label>
-                                        <input type="text" class="form-control" id="buyer_address" readonly>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="remarks" class="form-label">Remarks</label>
-                                        <textarea class="form-control" rows="10" cols="50" id="buyer_remarks" readonly></textarea>
-                                    </div>
-                                </form>
-                            </div>
+        <div class="container mt-5">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="buyer-details-tab" data-bs-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="car-list-tab" data-bs-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Car List</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
+                    <div class="card mt-3">
+                        <div class="pd-20">
+                            <h2 class="text-blue h4">Buyer's Details</h2>
+                        </div>
+                        <div class="container search-tbl">
+                            <form class="row g-3">
+                                <div class="col-md-4">
+                                    <label for="acc_no" class="form-label">Account No.</label>
+                                    <input type="text" class="form-control" id="buyer_acc_no" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="date_of_sale" class="form-label">Date of Sale</label>
+                                    <input type="text" class="form-control" id="buyer_date_of_sale" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="acc_status" class="form-label">Account Status</label>
+                                    <input type="text" class="form-control" id="buyer_acc_status" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="lname" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="buyer_lname" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="buyer_fname" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="mname" class="form-label">Middle Name</label>
+                                    <input type="text" class="form-control" id="buyer_mname" readonly>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="buyer_address" readonly>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="remarks" class="form-label">Remarks</label>
+                                    <textarea class="form-control" rows="10" cols="50" id="buyer_remarks" readonly></textarea>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
-                        <div class="card mt-3">
-                            <div class="pd-20" id="car-btn">
-                            
-                                <h2 class="text-blue h4">Car List</h2>
-                                <button type="button" id="create_new" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal">
-                                <span class="fa fa-edit"></span> Create New CAR
-                                </button>
-                                <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
-                                    <span class="fa fa-download"></span> Export as CSV
-                                </a>
-                                <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
-                                    <span class="fa fa-download"></span> Export as PDF
-                                </a>
-                                <div class="pd-20">
-                                <hr>
+                </div>
+                <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
+                    <div class="card mt-3">
+                        <div class="container">
+                            <h2 class="text-blue h4">Car List</h2>
+                            <button type="button" id="create_new" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal">
+                            <span class="fa fa-edit"></span> Create New CAR
+                            </button>
+                            <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
+                                <span class="fa fa-download"></span> Export as CSV
+                            </a>
+                            <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
+                                <span class="fa fa-download"></span> Export as PDF
+                            </a>
+                            <hr>
+                            <div class="container">
+                                <table>
+                                    <tr>
+                                        <td style="width:80%;">
+                                            <label for="remarks" class="form-label">Search:</label>
+                                        </td>
+                                        <td style="padding-right:50px; padding-bottom:15px;">
+                                            <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
+
                             <div class="table-container">
-                                <table class="table table-bordered table-striped" id="data-table">
-                                    <thead>
+                                <table class="table table-bordered table-striped" id="car-list-table">
+                                    <thead class="table-dark">
                                         <tr>
-                                            <th>#</th>
+                                            <th>No</th>
                                             <th>Account No.</th>
-                                            <th>Payment Type</th>
-                                            <th>Amount</th>
                                             <th>CAR No.</th>
+                                            <th>Payment Type</th>
+                                            <th>Name</th>
+                                            <th>Location</th>
+                                            <th>Amount</th>
+                                            <th>MoP</th>
+                                            <th>Transaction Date</th>
                                             <th>Pay Date</th>
                                             <th>Encoder</th>
                                             <th>Action</th>
@@ -202,30 +267,42 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                                     </thead>
                                     <tbody id="car-list-body">
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="6" class="text-right">Total Amount:</th>
+                                            <th id="totalAmount" class="text-center"></th>
+                                            <th colspan="5"></th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <?php include ('../modals/main_modals.php'); ?>
+        <?php include ('../modals/main_modals.php'); ?>
         </div>
     </div>
 </div>
-<script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/index.js"></script>
-<script src="../../dist/js/car_list.js"></script>
-<script src="../../dist/js/export_scripts.js"></script>
-<script src="../../dist/js/manage_car.js"></script>
 <script>
 $(document).ready(function() {
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
         $('#create_new').attr('data-account-no', accountNo);
     }
-    updateAccountNo();
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
     });
+    $('#buyer_acc_no').on('change', function() {
+        updateAccountNo();
+    });
+    document.getElementById("searchInput").addEventListener("input", function() {
+        filterTable();
+    });
 });
 </script>
+<script src="../../dist/js/table.js"></script>
+<script src="../../dist/js/index.js"></script>
+<script src="../../dist/js/car_list.js"></script>
+<script src="../../dist/js/export_scripts.js"></script>
+<script src="../../dist/js/manage_car.js"></script>

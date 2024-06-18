@@ -45,7 +45,7 @@ textarea{
 }
 #c_car_amount {
     float: right;
-    margin-top: 170px;
+    margin-top: 165px;
     margin-right: -310px;
     width: 140px;
 }
@@ -86,8 +86,33 @@ textarea{
     text-transform: uppercase;
     float: right;
     margin-top: 210px;
-    margin-right: -400px;
-    width: 150px;
+    margin-right:-580px;
+    width: auto;
     text-align: center;
     font-size: 10px !important;
+}
+#c_loc{
+    text-transform: uppercase;
+    float: right;
+    margin-top: 100px;
+    margin-right: 100px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+}
+#c_acc_no{
+    text-transform: uppercase;
+    float: right;
+    margin-top: 80px;
+    margin-right: 100px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+.dynamic-margin {
+    width: 100px;
+    height: 100px;
+    margin-left:70px;
+    position:absolute;
 }

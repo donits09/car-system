@@ -324,7 +324,7 @@ Class Master{
 			$save1 = odbc_exec($this->conn, $update1);
 	
 			if ($save && $save1) {
-				$this->car_logs('Car Management', "UPDATED - CAR#");
+				$this->car_logs('Car Management', "UPDATED - CAR#$c_car_no");
 				$resp['status'] = 'success';
 				$resp['msg'] = "Car payment record successfully updated.";
 			} else {
@@ -390,8 +390,6 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn) . " [$insert]";
 		}
 	}
-		
-	
 }
 
 $Master = new Master();

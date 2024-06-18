@@ -39,11 +39,11 @@ $current_date = date('Y-m-d');
         <div class="table-container">
             <table class="table table-bordered table-striped" id="data-table">
                 <thead>
-                    <tr>
+                <tr>
                         <th>No</th>
+                        <th>Account No.</th>
                         <th>CAR No.</th>
                         <th>Payment Type</th>
-                        <th>Account No.</th>
                         <th>Name</th>
                         <th>Location</th>
                         <th>Amount</th>
@@ -69,13 +69,13 @@ $current_date = date('Y-m-d');
                     ?>
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
-                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
-                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
                                 <td class="text-center">
                                     <?php 
                                         echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); 
                                     ?>
                                 </td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
                                 <td class="text-center">
                                 <?php
                                     $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';

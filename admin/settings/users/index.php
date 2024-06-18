@@ -122,6 +122,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                             <tr>
                                 <th>#</th>
                                 <th>Employee ID</th>
+                                <th>Name</th>
                                 <th>Log</th>
                                 <th>Date</th>
                                 <th>Time</th>
@@ -150,6 +151,18 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
                                 <td class="text-center"><?php echo $row['c_name']; ?></td>
+                                <td>
+                                <?php
+                                    $c_encoded_by = $_SESSION['username'];
+                                    $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
+                                    $results = odbc_exec($conn, $get_encoder_details_qry);
+
+                                    if ($encoder = odbc_fetch_array($results)) {
+                                        $realname = $encoder["c_realname"];
+                                    }
+                                ?>
+                                <?php echo $realname ?>
+                                </td>
                                 <td class="text-center"><?php echo $row['c_log']; ?></td>
                                 <td class="text-center"><?php echo $row['c_date']; ?></td>
                                 <td class="text-center"><?php echo $row['c_time']; ?></td>
