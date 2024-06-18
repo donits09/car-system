@@ -39,4 +39,3 @@
         var _base_url_ = '<?php echo base_url ?>';
     </script>
 </head>
-
