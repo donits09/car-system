@@ -4,9 +4,10 @@ include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
 ?>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
+<body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
@@ -159,7 +160,7 @@ include('../../inc/header.php');
                                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                                 <td class="text-center">
                                     <?php
-                                    $c_encoded_by = $_SESSION['username'];
+                                    $c_encoded_by = $row['c_encoded_by'];
                                     $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
                                     $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
                                     
@@ -221,9 +222,9 @@ include('../../inc/header.php');
     </div>
 </div>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/car_list.js"></script>
+<script src="../../dist/js/all_car_list.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>
-<script src="../../dist/js/manage_car.js"></script>
+<!-- <script src="../../dist/js/manage_car.js"></script> -->
 <script>
 $(document).ready(function() {
     function updateAccountNo() {
@@ -278,3 +279,6 @@ $(document).ready(function() {
     });
 });
 </script>
+</div>
+</body>
+<?php include('../../inc/footer.php'); ?>

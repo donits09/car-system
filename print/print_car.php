@@ -53,9 +53,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 18px!important;
         }
         textarea {
-            width: 100%; /* Adjust width as needed */
-            overflow: hidden; /* Hide scrollbar if any */
-            resize: none; /* Disable manual resizing */
+            width: 100%;
+            overflow: hidden; 
+            resize: none; 
         }
     </style>
 </head>

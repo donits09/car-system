@@ -56,33 +56,4 @@ $(document).ready(function() {
         });
         $('#confirm_modal').modal('show');
     };
-
-    function delete_car(carId, carNo) {
-        start_loader();
-        $.ajax({
-            url: "../../classes/Master.php?f=delete_car",
-            method: "POST",
-            data: { carId: carId, carNo: carNo },
-            dataType: "json",
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        location.reload();
-                        $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
-                    }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
-                }
-                end_loader();
-            }
-        });
-    }
 });

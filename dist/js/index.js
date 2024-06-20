@@ -49,7 +49,15 @@ function searchBuyer(type) {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'search_buyer.php?' + new URLSearchParams(formData), true);
+    var url = 'search_buyer.php';
+
+    var params = [];
+    formData.forEach(function(value, key) {
+        params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    });
+    var queryString = params.join('&');
+
+    xhr.open('GET', url + '?' + queryString, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);

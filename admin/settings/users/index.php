@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 
 <link rel="stylesheet" href="../../../dist/css/table.css">
 <link rel="stylesheet" href="../../../dist/css/index.css">
-
+<body>
 <div class="container mt-5">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
@@ -176,6 +176,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
         </div>
     </div>
 </div>
-
+</body>
 <script src="../../../dist/js/table.js"></script>
 <script src="../../../dist/js/logs.js"></script>
+<?php include('../../../inc/footer.php'); ?>

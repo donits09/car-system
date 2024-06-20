@@ -169,10 +169,10 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
         <div class="container mt-5">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="buyer-details-tab" data-bs-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
+                    <a class="nav-link active" id="buyer-details-tab" data-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="car-list-tab" data-bs-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Car List</a>
+                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Car List</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -286,6 +286,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
         </div>
     </div>
 </div>
+
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
@@ -294,7 +295,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     }
 </script>
 <script>
-    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
     });
 
@@ -309,6 +310,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
-<script src="../../dist/js/car_list.js"></script>
+<!-- <script src="../../dist/js/car_list.js"></script> -->
 <script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/manage_car.js"></script>
+<?php include('../../inc/footer.php'); ?>

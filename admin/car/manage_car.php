@@ -38,7 +38,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 }
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
-<form id="car-form" method="post" action="save_car_payment.php">
+<form id="car-form" method="post" action="">
     <?php
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>

@@ -8,6 +8,8 @@ $current_date = date('Y-m-d');
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
+
+<body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="main_header">
@@ -24,15 +26,13 @@ $current_date = date('Y-m-d');
                     <input type="date" id="start_date" class="form-control" value="<?php echo $current_date; ?>" />
                     <label for="end_date" class="mt-2">End Date:</label>
                     <input type="date" id="end_date" class="form-control" value="<?php echo $current_date; ?>" />
-                    <button id="filter" class="btn btn-primary mt-2">Filter</button>
-                    <button id="reset" class="btn btn-secondary mt-2">Reset</button>
+                    <button id="filter" class="btn btn-primary mt-2"><span class="fa fa-filter"></span> Filter</button>
+                    <button id="reset" class="btn btn-secondary mt-2"><span class="fa fa-filter"></span> Reset</button>
                 </div>
             </div>
             <div class="btn_container">
-                <!-- <button class="btn btn-primary mt-2">Print</button>
-                <button class="btn btn-secondary mt-2">Copy</button> -->
-                <button id="export_pdf" class="btn btn-danger mt-2" href="javascript:void(0)">Export as PDF</button>
-                <button id="export_csv" class="btn btn-flat btn-success mt-2" href="javascript:void(0)">Export as CSV</button>
+                <button id="export_pdf" class="btn btn-danger mt-2" href="javascript:void(0)"><span class="fa fa-download"></span> Export as PDF</button>
+                <button id="export_csv" class="btn btn-flat btn-success mt-2" href="javascript:void(0)"><span class="fa fa-download"></span> Export as CSV</button>
             </div>
         </div>
         <hr>
@@ -173,7 +173,7 @@ $current_date = date('Y-m-d');
                                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                                 <td class="text-center">
                                     <?php
-                                    $c_encoded_by = $_SESSION['username'];
+                                    $c_encoded_by = $row['c_encoded_by'];
                                     $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
                                     $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
                                     
@@ -196,5 +196,7 @@ $current_date = date('Y-m-d');
         </div>
     </div>
 </div>
+</body>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/reports/car_reports.js"></script>
+<?php include('../../inc/footer.php'); ?>
