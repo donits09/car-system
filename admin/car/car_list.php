@@ -1,13 +1,12 @@
 <?php
 session_start();
+?>
+<?php
 include('../../config.php');
-
 $account_no = $_GET['account_no'];
 $car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ?";
-
 $stmt = odbc_prepare($conn, $car_list);
 $hasRows = false;
-
 if ($stmt && odbc_execute($stmt, array($account_no))) {
     while ($row = odbc_fetch_array($stmt)) {
         if (!empty($row['c_account_no'])) {
@@ -15,7 +14,6 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             break; 
         }
     }
-
     if ($hasRows) {
         odbc_execute($stmt, array($account_no));
         $i = 1;
@@ -124,7 +122,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
     </td>
     <td class="text-center"><?php echo $row['c_car_paydate']; ?></td>
     <?php
-        $c_encoded_by = $_SESSION['username'];
+        $c_encoded_by = $row['c_encoded_by'];
         $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
         $results = odbc_exec($conn, $get_encoder_details_qry);
 

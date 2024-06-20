@@ -22,7 +22,7 @@
     <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
     <div class="form-group">
         <label for="c_payment_type">Payment Type</label>
-        <input type="text" class="form-control" id="c_payment_type" name="c_payment_type" value="<?php echo htmlspecialchars($c_payment_type) ?>" required>
+        <input type="text" class="form-control" id="c_payment_type" name="c_payment_type" value="<?php echo htmlspecialchars($c_payment_type) ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
     <div class="form-group">
         <label for="status">Status</label>

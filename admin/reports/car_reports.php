@@ -5,9 +5,18 @@ include('../../inc/navbar.php');
 include('../../inc/header.php');     
 $current_date = date('Y-m-d');
 ?>
-<link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
-<link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
-<link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
+    <script src="<?php echo base_url; ?>dist/js/jquery-3.5.1.min.js"></script>
+    <script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
+    <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
+    <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
+</head>
+<body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="main_header">
@@ -17,27 +26,25 @@ $current_date = date('Y-m-d');
         </div>
         <hr>
         <div class="sub_container">
-            <div class="date_container">
-                <b>Search by Transaction Date</b><hr>
-                <div class="pd-20">
-                    <label for="start_date">Start Date:</label>
-                    <input type="date" id="start_date" class="form-control" value="<?php echo $current_date; ?>" />
-                    <label for="end_date" class="mt-2">End Date:</label>
-                    <input type="date" id="end_date" class="form-control" value="<?php echo $current_date; ?>" />
-                    <button id="filter" class="btn btn-primary mt-2">Filter</button>
-                    <button id="reset" class="btn btn-secondary mt-2">Reset</button>
+                <div class="date_container">
+                    <b>Search by Transaction Date</b><hr>
+                    <div class="pd-20">
+                        <label for="start_date">Start Date:</label>
+                        <input type="text" id="start_date" class="form-control datepicker" value="<?php echo date('m/d/Y'); ?>" />
+                        <label for="end_date" class="mt-2">End Date:</label>
+                        <input type="text" id="end_date" class="form-control datepicker" value="<?php echo date('m/d/Y'); ?>" />
+                        <button id="filter" class="btn btn-primary mt-2"><span class="fa fa-filter"></span> Filter</button>
+                        <button id="reset" class="btn btn-secondary mt-2"><span class="fa fa-refresh"></span> Reset</button>
+                    </div>
+                </div>
+                <div class="btn_container">
+                    <button id="export_pdf" class="btn btn-danger mt-2" href="javascript:void(0)"><span class="fa fa-download"></span> Export as PDF</button>
+                    <button id="export_csv" class="btn btn-flat btn-success mt-2" href="javascript:void(0)"><span class="fa fa-download"></span> Export as CSV</button>
                 </div>
             </div>
-            <div class="btn_container">
-                <!-- <button class="btn btn-primary mt-2">Print</button>
-                <button class="btn btn-secondary mt-2">Copy</button> -->
-                <button id="export_pdf" class="btn btn-danger mt-2" href="javascript:void(0)">Export as PDF</button>
-                <button id="export_csv" class="btn btn-flat btn-success mt-2" href="javascript:void(0)">Export as CSV</button>
-            </div>
-        </div>
         <hr>
         <div class="table-container">
-            <table class="table table-bordered table-striped" id="data-table">
+            <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
                         <th>No</th>
@@ -59,8 +66,7 @@ $current_date = date('Y-m-d');
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
                     b.c_block, b.c_lot
                         FROM t_car_payment a
-                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no;
-                        ";
+                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_tran_date ASC";
                     $stmt = odbc_prepare($conn, $car_list);
                     
                     if ($stmt && odbc_execute($stmt)) {
@@ -173,7 +179,7 @@ $current_date = date('Y-m-d');
                                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                                 <td class="text-center">
                                     <?php
-                                    $c_encoded_by = $_SESSION['username'];
+                                    $c_encoded_by = $row['c_encoded_by'];
                                     $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
                                     $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
                                     
@@ -196,5 +202,157 @@ $current_date = date('Y-m-d');
         </div>
     </div>
 </div>
+</body>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/reports/car_reports.js"></script>
+<!-- <script src="../../dist/js/car_reports.js"></script> -->
+ <script>
+    $(document).ready(function(){
+    $('.datepicker').datepicker({
+        dateFormat: 'mm/dd/yy',
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    $('#filter').click(function() {
+        let startDate = parseDate($('#start_date').val());
+        let endDate = parseDate($('#end_date').val());
+        let rows = $('#car-type-body tr');
+        
+        rows.each(function() {
+            let dateText = $(this).find('.tran-date').text().trim();
+            let payDate = parseYMDDate(dateText);
+            
+            if ((isNaN(startDate.getTime()) || payDate >= startDate) && (isNaN(endDate.getTime()) || payDate <= endDate)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    });
+
+    $('#reset').click(function() {
+        $('#start_date').val(formatDate(new Date()));
+        $('#end_date').val(formatDate(new Date()));
+        $('#car-type-body tr').show();
+    });
+
+    function parseDate(dateString) {
+        let parts = dateString.split('/');
+        return new Date(parts[2], parts[0] - 1, parts[1]);
+    }
+
+    function parseYMDDate(dateString) {
+        let parts = dateString.split('-');
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
+    function formatDate(date) {
+        let month = ('0' + (date.getMonth() + 1)).slice(-2);
+        let day = ('0' + date.getDate()).slice(-2);
+        let year = date.getFullYear();
+        return month + '/' + day + '/' + year;
+    }
+});
+ </script>
+ <script>
+    function convertToCSV(table) {
+    let rows = table.querySelectorAll('tr');
+    let csv = [];
+
+    let mainHeader = document.querySelector('.main_header');
+    let companyName = mainHeader.querySelector('#header').textContent.trim();
+    let reportTitle = mainHeader.querySelector('#subheader').textContent.trim();
+    let currentDate = mainHeader.querySelector('#current_date').textContent.trim();
+
+    csv.push(`"${companyName}"`);
+    csv.push(`"${reportTitle}"`);
+    csv.push(`"${currentDate}"`);
+    csv.push('');
+
+    csv.push('"No","CAR No.","Payment Type","Account No.","Name","Location","Cash","Check","Transaction Date","Encoder"');
+
+    rows.forEach(row => {
+        let rowData = [];
+        let cols = row.querySelectorAll('td');
+
+        for (let j = 0; j < cols.length; j++) {
+            let data = cols[j].innerText.replace(/"/g, '""');
+
+            if (j === 7) {
+                let paymentType = data.trim();
+                let amount = cols[6].innerText.trim().replace(/"/g, '""');
+
+                if (paymentType === "Cash") {
+                    rowData.push(`"${amount}"`);
+                    rowData.push('""');
+                } else if (paymentType === "Check") {
+                    rowData.push('""');
+                    rowData.push(`"${amount}"`);
+                } else {
+                    rowData.push('""'); 
+                    rowData.push('""'); 
+                }
+            } else if (j !== 6) {
+                rowData.push(`"${data}"`);
+            }
+        }
+
+        csv.push(rowData.join(','));
+    });
+
+    return csv.join('\n');
+}
+
+function downloadCSV(csv, filename) {
+    let csvFile;
+    let downloadLink;
+
+    csvFile = new Blob([csv], {type: 'text/csv'});
+    downloadLink = document.createElement('a');
+
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = 'none';
+    document.body.appendChild(downloadLink);
+
+    downloadLink.click();
+}
+
+document.getElementById('export_csv').addEventListener('click', function() {
+    let table = document.getElementById('data-table');
+    let csv = convertToCSV(table);
+    let today = new Date();
+
+    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
+    console.log('CSV Filename:', filename);
+
+    downloadCSV(csv, filename);
+});
+
+document.getElementById('export_pdf').addEventListener('click', function() {
+    let startDate = document.getElementById('start_date').value;
+    let endDate = document.getElementById('end_date').value;
+
+    if (!startDate) {
+        let today = new Date();
+        startDate = today.toISOString().split('T')[0];
+    }
+
+    if (!endDate) {
+        let today = new Date();
+        endDate = today.toISOString().split('T')[0];
+    }
+
+  
+    console.log(startDate);
+    console.log(endDate);
+
+    let url = `../../print/pdf_report.php?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+
+
+    window.open(url, '_blank');
+});
+
+
+ </script>
+<?php include('../../inc/footer.php'); ?>

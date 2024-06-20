@@ -7,6 +7,7 @@ include('../../../inc/header.php');
 
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
+<body>
 <div class="container mt-5">
     <div class="card mt-3">
         <!-- <div class="pd-20" id="car-btn"> -->
@@ -69,5 +70,7 @@ include('../../../inc/header.php');
     </div>
     <?php include ('../../modals/main_modals.php'); ?>
 </div>
+</body>
 <script src="../../../dist/js/table.js"></script>
 <script src="../../../dist/js/manage_car_type.js"></script>
+<?php include('../../../inc/footer.php'); ?>
