@@ -33,6 +33,8 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
             
         endif;
     endif;
+
+  
     }
 ?>
 <link rel="stylesheet" href="../../dist/css/table.css">
