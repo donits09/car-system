@@ -53,7 +53,7 @@ document.getElementById('export_csv').addEventListener('click', function() {
 
 
 // EXPORT TO PDF
-function exportPDF() {
+/* function exportPDF() {
     const element = document.getElementById('data-table');
     
     const clonedElement = element.cloneNode(true);
@@ -83,5 +83,18 @@ function exportPDF() {
 
 document.getElementById('export_pdf').addEventListener('click', function() {
     exportPDF();
-});
+}); */
 
+
+function exportPDF() {
+    let account_no = document.getElementById('buyer_acc_no').value;
+
+    if (account_no) {
+        let url = `../../print/pdf_buyer.php?id=${encodeURIComponent(account_no)}`;
+        window.open(url, '_blank');
+    } else {
+        console.error('Account number is empty or not found.');
+    }
+}
+
+document.getElementById('export_pdf').addEventListener('click', exportPDF);

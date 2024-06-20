@@ -20,25 +20,30 @@ if (is_null($endDate) || empty($endDate)) {
 
 include('../config.php');
 
+$c_encoded_by = $_SESSION['username'];
+
 if ($startDate == $endDate) {
     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                         a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, 
                         b.c_name, b.c_phase, b.c_block, b.c_lot
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                 WHERE a.c_tran_date::text ILIKE ? ORDER BY a.c_tran_date ASC";
+                 WHERE a.c_tran_date::text ILIKE ? AND a.c_encoded_by = ? 
+                 ORDER BY a.c_tran_date ASC";
     $stmt = odbc_prepare($conn, $car_list);
-    $executeParams = ["%$startDate%"];
+    $executeParams = ["%$startDate%", $c_encoded_by];
 } else {
     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                         a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, 
                         b.c_name, b.c_phase, b.c_block, b.c_lot
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                 WHERE DATE(a.c_tran_date) BETWEEN ? AND ? ORDER BY a.c_tran_date ASC";
+                 WHERE DATE(a.c_tran_date) BETWEEN ? AND ? AND a.c_encoded_by = ?
+                 ORDER BY a.c_tran_date ASC";
     $stmt = odbc_prepare($conn, $car_list);
-    $executeParams = [$startDate, $endDate];
+    $executeParams = [$startDate, $endDate, $c_encoded_by];
 }
+
 
 $carData = [];
 if ($stmt && odbc_execute($stmt, $executeParams)) {
@@ -167,15 +172,14 @@ if (empty($carData)) {
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_block) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_lot) . '</td>';
 
-        $html .= '<td class="pdf-font">' . ($cashAmount ? number_format($cashAmount, 2) : '') . '</td>';
-        $html .= '<td class="pdf-font">' . ($checkAmount ? number_format($checkAmount, 2) : '') . '</td>';
+        $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>';
+        $html .= '<td class="pdf-font">' . number_format($checkAmount, 2) . '</td>';
 
         $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>
         </tr>';
     }
 
-    //TOTAL NG CASH AT CHECK
     $html .= '
     <tfoot>
         <tr>
@@ -196,13 +200,14 @@ $html .= '
         </tbody>
     </table>';
 
-$html .= '
+    $html .= '
     <div class="encoded_by">
         <p>Report By: ';
 
         $c_encoded_by = $_SESSION['username'];
         $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
         $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+
         if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
             $html .= htmlspecialchars($encoder["c_realname"]);
         } else {
@@ -220,6 +225,13 @@ $dompdf->setPaper('legal', 'landscape');
 
 $dompdf->render();
 
-$dompdf->stream("car_payment_report.pdf", ["Attachment" => 0]);
+$dompdf->stream("car_payment.pdf", ["Attachment" => 0]);
 ?>
+
+
+
+
+
+
+
 
