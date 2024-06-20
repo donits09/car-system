@@ -48,3 +48,6 @@
     width: calc(50% - 5px); 
     padding: 10px;
 }
+body{
+    margin-bottom:50px!important;
+}

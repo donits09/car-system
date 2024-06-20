@@ -74,10 +74,10 @@ $(document).ready(function() {
         e.preventDefault();
         var _this = $(this);
 
-        var confirmed = confirm('Are you sure you want to save the changes?');
-        if (!confirmed) {
-            return false;
-        }
+        // var confirmed = confirm('Are you sure you want to save the changes?');
+        // if (!confirmed) {
+        //     return false;
+        // }
         start_loader();
 
         $.ajax({

@@ -227,7 +227,6 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                             <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
                                 <span class="fa fa-edit"></span> Create New CAR
                             </button>
-                            
                             </button>
                             <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as CSV

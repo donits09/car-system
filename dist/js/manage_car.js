@@ -201,7 +201,7 @@ $(document).ready(function() {
             return;
         }
 
-        if (confirm("Are you sure you want to save this car payment?")) {
+        // if (confirm("Are you sure you want to save this car payment?")) {
             var _this = $(this);
 
             start_loader();
@@ -235,7 +235,7 @@ $(document).ready(function() {
                     end_loader();
                 }
             });
-        }
+       // }
     });
 
     

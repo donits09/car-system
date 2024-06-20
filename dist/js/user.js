@@ -28,7 +28,7 @@ $(document).ready(function() {
 
     $('#addUserForm').submit(function(e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to save this car payment?")) {
+        // if (confirm("Are you sure you want to save this car payment?")) {
             var _this = $(this);
 
             start_loader();
@@ -62,13 +62,13 @@ $(document).ready(function() {
                 }
 
             });
-        }
+        //}
     });
 
     $('#editUserForm').submit(function(e) {
         e.preventDefault();
        
-        if (confirm("Are you sure you want to save this car payment?")) {
+        //if (confirm("Are you sure you want to save this car payment?")) {
             var _this = $(this);
             start_loader();
 
@@ -101,7 +101,7 @@ $(document).ready(function() {
                 }
 
             });
-            }
+            //}
         });
 
     

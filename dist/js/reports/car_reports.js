@@ -1,28 +1,3 @@
-document.getElementById('filter').addEventListener('click', function() {
-    let startDate = new Date(document.getElementById('start_date').value);
-    let endDate = new Date(document.getElementById('end_date').value);
-    let rows = document.querySelectorAll('#car-type-body tr');
-    
-    rows.forEach(row => {
-        let dateText = row.querySelector('.tran-date').textContent.trim();
-        let payDate = new Date(dateText + 'T00:00:00');
-        if ((isNaN(startDate) || payDate >= startDate) && (isNaN(endDate) || payDate <= endDate)) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
-    });
-});
-
-document.getElementById('reset').addEventListener('click', function() {
-    document.getElementById('start_date').value = '';
-    document.getElementById('end_date').value = '';
-    let rows = document.querySelectorAll('#car-type-body tr');
-    rows.forEach(row => {
-        row.style.display = '';
-    });
-});
-
 function convertToCSV(table) {
     let rows = table.querySelectorAll('tr');
     let csv = [];
