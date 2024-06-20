@@ -5,7 +5,7 @@
     $c_name = '';
     $c_loc = '';
     $c_car_type = '';
-    $c_car_amount = '';
+    $c_car_amount = 0;
     $c_car_no = '';
     $c_car_paydate = date('Y-m-d');
     $c_encoded_by = '';
@@ -48,7 +48,7 @@
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" required>
+        <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
     
     <div class="row align-items-end">
@@ -83,7 +83,7 @@
     <div class="form-group">
         <label for="c_car_type">Payment Type</label>
         <div class="dropdown">
-            <input type="text" class="form-control" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
+            <input type="text" class="form-control" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" oninput="validateAlphaNumericInput(event)" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
                 <div class="dropdown-menu w-100" id="comboBoxMenu">
                     <?php
                     $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
@@ -97,8 +97,8 @@
             </div>
         </div>
     <div class="form-group">
-    <label for="amount">Amount</label>
-            <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" oninput="validateNumberInput(event)" required>
+        <label for="amount">Amount</label>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
     </div>
     <div class="form-group">
         <label for="car_no">CAR No.</label>
@@ -118,9 +118,9 @@
     </div>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
-        <input type="text" class="hidden_fields" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
+        <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
         <?php
-            $c_encoded_by = $_SESSION['username'];
+            $c_encoded_by = $c_encoded_by;
             $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
             $results = odbc_exec($conn, $get_encoder_details_qry);
 

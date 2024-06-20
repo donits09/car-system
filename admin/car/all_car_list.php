@@ -45,7 +45,8 @@ include('../../inc/header.php');
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
                     b.c_block, b.c_lot
                         FROM t_car_payment a
-                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no;
+                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
+                        ORDER BY c_tran_date DESC;
                         ";
                     $stmt = odbc_prepare($conn, $car_list);
                     

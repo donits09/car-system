@@ -55,7 +55,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group">
         <label for="c_car_type">Payment Type</label>
         <div class="dropdown">
-            <input type="text" class="form-control" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
+            <input type="text" class="form-control" id="c_car_type" name="c_car_type" oninput="validateAlphaNumericInput(event)" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
             <div class="dropdown-menu w-100" id="comboBoxMenu">
                 <?php
                 $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
@@ -70,11 +70,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="buyer_name" name="buyer_name" readonly>
+        <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" oninput="validateNumberInput(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" oninput="validateNumberInputAmt(event)" required>
     </div>
     <div class="form-group">
         <label for="c_mop">Mode of Payment</label>

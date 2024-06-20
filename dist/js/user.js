@@ -1,4 +1,10 @@
+function validateAlphaNumericInput(event) {
+    const input = event.target;
+    let value = input.value;
 
+    value = value.replace(/[^a-zA-Z0-9\s]/g, '');
+    input.value = value;
+}
 
 $(document).ready(function() {
     $('#addUserForm').submit(function(e) {
@@ -145,7 +151,7 @@ $(document).ready(function() {
                 end_loader();
             }
         });
-        $('#confirmDeleteModal').modal('hide');
+        //$('#confirmDeleteModal').modal('hide');
     }
 
 });

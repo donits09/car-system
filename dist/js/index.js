@@ -191,13 +191,6 @@ function selectBuyer(buyer) {
     calculateTotalAmount();
 }
 
-function validateNumberInput(event) {
-    const input = event.target;
-    const value = input.value;
-
-    input.value = value.replace(/\D/g, '');
-}
-
 function filterTable() {
     var input, filter, table, tbody, tr, td, i, txtValue;
     input = document.getElementById("searchInput");

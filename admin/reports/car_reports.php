@@ -204,7 +204,7 @@ $current_date = date('Y-m-d');
 </div>
 </body>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/car_reports.js"></script>
+<!-- <script src="../../dist/js/car_reports.js"></script> -->
  <script>
     $(document).ready(function(){
     $('.datepicker').datepicker({
@@ -343,7 +343,12 @@ document.getElementById('export_pdf').addEventListener('click', function() {
         endDate = today.toISOString().split('T')[0];
     }
 
+  
+    console.log(startDate);
+    console.log(endDate);
+
     let url = `../../print/pdf_report.php?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+
 
     window.open(url, '_blank');
 });
