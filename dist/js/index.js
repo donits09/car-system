@@ -49,7 +49,15 @@ function searchBuyer(type) {
     }
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'search_buyer.php?' + new URLSearchParams(formData), true);
+    var url = 'search_buyer.php';
+
+    var params = [];
+    formData.forEach(function(value, key) {
+        params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    });
+    var queryString = params.join('&');
+
+    xhr.open('GET', url + '?' + queryString, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);
@@ -69,6 +77,7 @@ function searchBuyer(type) {
                 alert('No data found');
             }
             updateCarList(); 
+            calculateTotalAmount();
         } else {
             alert('Error: ' + xhr.status);
         }
@@ -179,25 +188,7 @@ function selectBuyer(buyer) {
 
     $('#multipleResultsModal').modal('hide');
     updateCarList();
-}
-
-(function() {
-    let zoomLevel = 1;
-    const tableContainer = document.querySelector('.table-container');
-    const table = tableContainer.querySelector('table');
-    
-    function adjustZoom(delta) {
-        zoomLevel += delta;
-        table.style.transform = `scale(${zoomLevel})`;
-        tableContainer.scrollLeft += 100 * delta; 
-    }
-})();
-
-function validateNumberInput(event) {
-    const input = event.target;
-    const value = input.value;
-
-    input.value = value.replace(/\D/g, '');
+    calculateTotalAmount();
 }
 
 function filterTable() {
@@ -255,7 +246,7 @@ function searchAndCalculateTotal(event, type) {
 
     setTimeout(function() {
         calculateTotalAmount();
-    }, 300);
+    }, 150);
 }
 
 document.getElementById("searchAcc").addEventListener("click", function(event) {

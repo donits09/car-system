@@ -11,13 +11,18 @@ $l_css_path = file_get_contents($l_css);
 $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : null;
 $endDate = isset($_GET['end_date']) ? $_GET['end_date'] : null;
 
-if (is_null($startDate) || empty($startDate)) {
-    $startDate = date('Y-m-d');
-}
-if (is_null($endDate) || empty($endDate)) {
-    $endDate = date('Y-m-d');
+if ($startDate) {
+    $startDate = date_create_from_format('m/d/Y', $startDate);
+    $startDate = $startDate ? $startDate->format('Y-m-d') : date('Y-m-d');
 }
 
+if ($endDate) {
+    $endDate = date_create_from_format('m/d/Y', $endDate);
+    $endDate = $endDate ? $endDate->format('Y-m-d') : date('Y-m-d');
+}
+
+echo "Start Date: " . $startDate . "<br>";
+echo "End Date: " . $endDate . "<br>";
 include('../config.php');
 
 if ($startDate == $endDate) {

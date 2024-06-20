@@ -12,7 +12,7 @@ main {
 footer {
     background-color: #0038a5;
     color: white;
-    padding: 20px;
+    /* padding: 5px; */
     bottom: 0;
     width: 100%;
     position: fixed;
