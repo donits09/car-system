@@ -129,7 +129,7 @@ Class Master{
 		$resp = array();
 	
 		if (isset($carId) && isset($carNo)) {
-			$sql = "DELETE FROM t_car_payment WHERE id = ?";
+			$sql = "UPDATE t_car_payment SET status = 1 WHERE id = ?";
 			$stmt = odbc_prepare($this->conn, $sql);
 	
 			if ($stmt) {
