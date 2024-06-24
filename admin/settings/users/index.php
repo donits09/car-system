@@ -27,7 +27,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
         <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
             <div class="card mt-3">
                 <div class="pd-20">
-                    <a id="create_new" class="btn btn-flat btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <a id="create_new" class="btn btn-flat btn-primary" href="#" data-toggle="modal" data-target="#addUserModal">
                         <span class="fa fa-edit"></span> Create New User
                     </a>
                     <hr>

@@ -374,6 +374,59 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
+	function save_locked_trans() {
+		extract($_POST);
+		
+		$tran_date = htmlspecialchars($tran_date); 
+		$total_cash = floatval(str_replace(',', '', $total_cash)); 
+		$total_check = floatval(str_replace(',', '', $total_check)); 
+		$total = floatval(str_replace(',', '', $total)); 
+	
+		$data = "tran_date, total_cash, total_check, total, status";
+		$values = "'$tran_date', '$total_cash', $total_check, $total, '1'";
+		$resp = array();
+		$insert = "INSERT INTO t_summary_reports ($data) VALUES ($values)";
+
+		$update = "UPDATE t_car_payment SET e_status = 1 WHERE DATE(c_tran_date) = '$tran_date'";
+		
+		$save = odbc_exec($this->conn, $insert);
+		$save1 = odbc_exec($this->conn, $update);
+	
+		if ($save && $save1) {
+			$resp['status'] = 'success';
+			$resp['msg'] = "Summary report locked successfully.";
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = odbc_errormsg($this->conn);
+		}
+	
+		echo json_encode($resp);
+	}
+	
+	function unlock_trans() {
+		extract($_POST);
+		
+		$tran_date = htmlspecialchars($tran_date); 
+
+		$resp = array();
+		$update = "UPDATE t_summary_reports SET status = 0 WHERE DATE(tran_date) = '$tran_date'";
+
+		$update1 = "UPDATE t_car_payment SET e_status = 0 WHERE DATE(c_tran_date) = '$tran_date'";
+		
+		$save = odbc_exec($this->conn, $update);
+		$save1 = odbc_exec($this->conn, $update1);
+	
+		if ($save && $save1) {
+			$resp['status'] = 'success';
+			$resp['msg'] = "Summary report unlocked successfully.";
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = odbc_errormsg($this->conn);
+		}
+	
+		echo json_encode($resp);
+	}
+	
 	public function car_logs($module, $notes){
 		require_once('../auth/session_auth.php');
 		$username = $_SESSION['username'];
@@ -424,6 +477,12 @@ switch ($action) {
     case 'delete_user':
         echo $Master->delete_user();
         break;
+	case 'save_locked_trans':
+		echo $Master->save_locked_trans();
+		break;
+	case 'unlock_trans':
+		echo $Master->unlock_trans();
+		break;
     default:
         break;
 }
