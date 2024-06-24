@@ -1,42 +1,17 @@
   
 // EXPORT TO CSV
-function convertToCSV(table) {
-    let rows = table.querySelectorAll('tr');
-    let csv = [];
-
-    let today = new Date();
-    let dateStr = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-    let title = `CAR LIST AS OF ${dateStr}`;
-    csv.push(title); 
-
-    csv.push(''); 
-
-    for (let i = 0; i < rows.length; i++) {
-        let row = [], cols = rows[i].querySelectorAll('td, th');
-
-        for (let j = 0; j < cols.length - 1; j++) {
-            let data = cols[j].innerText.replace(/"/g, '""');
-            row.push('"' + data + '"');
-        }
-
-        csv.push(row.join(','));
-    }
-
-    return csv.join('\n');
-}
-
 function downloadCSV(csv, filename) {
-    let csvFile;
-    let downloadLink;
+    var csvFile;
+    var downloadLink;
 
     csvFile = new Blob([csv], {type: 'text/csv'});
-    downloadLink = document.createElement('a');
 
+    downloadLink = document.createElement("a");
     downloadLink.download = filename;
     downloadLink.href = window.URL.createObjectURL(csvFile);
-    downloadLink.style.display = 'none';
-    document.body.appendChild(downloadLink);
+    downloadLink.style.display = "none";
 
+    document.body.appendChild(downloadLink);
     downloadLink.click();
 }
 
@@ -45,47 +20,40 @@ document.getElementById('export_csv').addEventListener('click', function() {
     let csv = convertToCSV(table);
     let today = new Date();
 
-    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
-    console.log('CSV Filename:', filename);
+function exportTableToCSV(filename) {
+    var csv = [];
+ 
+    var date = new Date();
+    var day = ('0' + date.getDate()).slice(-2);
+    var month = ('0' + (date.getMonth() + 1)).slice(-2);
+    var year = date.getFullYear();
+   
+    var currentDate = year + '-' + month + '-' + day;
 
-    downloadCSV(csv, filename);
-});
+    csv.push(`"CAR LIST AS OF ${currentDate}"`);
+    csv.push("");
 
+    var rows = document.querySelectorAll("#car-list-table tr");
 
-// EXPORT TO PDF
-/* function exportPDF() {
-    const element = document.getElementById('data-table');
-    
-    const clonedElement = element.cloneNode(true);
-    clonedElement.setAttribute('style', 'font-size: 8px; font-family: Arial; background-color: white;'); 
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll("td, th");
 
-    const headerCells = clonedElement.querySelectorAll('th:last-child');
-    headerCells.forEach(cell => cell.parentNode.removeChild(cell));
-
-    const rows = clonedElement.getElementsByTagName('tr');
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        if (cells.length > 0) {
-            rows[i].removeChild(cells[cells.length - 1]);
+        for (var j = 0; j < cols.length - 1; j++) {
+            row.push('"' + cols[j].innerText + '"');
         }
+        csv.push(row.join(","));
     }
 
-    const options = {
-        margin: 10,
-        filename: 'car_list.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
+    var finalFilename = filename + year + month + day + ".csv";
 
-    html2pdf().from(clonedElement).set(options).save();
+    downloadCSV(csv.join("\n"), finalFilename);
 }
 
-document.getElementById('export_pdf').addEventListener('click', function() {
-    exportPDF();
-}); */
+document.getElementById("export_csv").addEventListener("click", function () {
+    exportTableToCSV("car_list_asof_");
+});
 
-
+// EXPORT TO PDF
 function exportPDF() {
     let account_no = document.getElementById('buyer_acc_no').value;
 

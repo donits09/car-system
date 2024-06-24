@@ -3,11 +3,12 @@ $c_realname = '';
 
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
-    $get_realname_query = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+    $get_realname_query = "SELECT c_realname, c_group FROM t_car_users WHERE c_employee_code = ?";
     $stmt = odbc_prepare($conn, $get_realname_query);
     if (odbc_execute($stmt, array($username))) {
         if ($result = odbc_fetch_array($stmt)) {
             $c_realname = $result['c_realname'];
+            $c_group = $result['c_group'];
         }
     }
 }
@@ -51,6 +52,7 @@ function isActive($pages) {
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">Car List</a>
             </div>
         </li>
+        <?php if ($c_group == 1) { ?>
         <li class="nav-item dropdown<?php echo isActive(['car_type', 'user']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Settings
@@ -60,6 +62,7 @@ function isActive($pages) {
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users?page=index">System Users</a>
             </div>
         </li>
+        <?php } ?>
         <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Reports

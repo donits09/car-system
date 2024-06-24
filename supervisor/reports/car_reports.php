@@ -255,37 +255,4 @@ $current_date = date('Y-m-d');
 });
  </script>
 
-<script>
-document.getElementById('export_csv').addEventListener('click', function() {
-    let table = document.getElementById('data-table');
-    let csv = convertToCSV(table);
-    let today = new Date();
-
-    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
-    console.log('CSV Filename:', filename);
-
-    downloadCSV(csv, filename);
-});
-
-
-document.getElementById('export_pdf').addEventListener('click', function() {
-    var startDate = $('#start_date').val();
-    var endDate = $('#end_date').val();
-
-    startDate = formatToISO(startDate);
-    endDate = formatToISO(endDate);
-
-    var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
-    window.open(url, '_blank');
-});
-
-function formatToISO(dateString) {
-    var parts = dateString.split('/');
-    return parts[2] + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
-}
-
-
-
- </script>
-
 <?php include('../../inc/footer.php'); ?>
