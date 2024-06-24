@@ -33,6 +33,7 @@
             $c_car_paydate = $result["c_car_paydate"];
             $c_encoded_by = $result["c_encoded_by"];
             $c_mop = $result["c_mop"];
+            $c_encoded_by = $result["c_encoded_by"];
         }
     } 
 ?>
@@ -118,9 +119,9 @@
     </div>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
-        <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
+        <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo $_SESSION['username'] ?>" readonly>
         <?php
-            $c_encoded_by = $c_encoded_by;
+            $c_encoded_by = $_SESSION['username'];
             $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
             $results = odbc_exec($conn, $get_encoder_details_qry);
 

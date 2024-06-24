@@ -2,6 +2,7 @@ $(document).ready( function () {
   $('#data-table').DataTable();
 } );
 
+
 (function() {
     let zoomLevel = 1;
     const tableContainer = document.querySelector('.table-container');

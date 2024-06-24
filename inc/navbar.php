@@ -39,6 +39,7 @@ function isActive($pages) {
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    <?php if ($c_group == 1) { ?>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
@@ -52,7 +53,7 @@ function isActive($pages) {
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">Car List</a>
             </div>
         </li>
-        <?php if ($c_group == 1) { ?>
+
         <li class="nav-item dropdown<?php echo isActive(['car_type', 'user']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Settings
@@ -62,13 +63,13 @@ function isActive($pages) {
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users?page=index">System Users</a>
             </div>
         </li>
-        <?php } ?>
         <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Reports
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/car_reports.php">Car Reports</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/summary_car_reports.php">Summary of Reports</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
@@ -81,6 +82,41 @@ function isActive($pages) {
         </li>
       </ul>
     </div>
+    <?php } ?>
+    <?php if ($c_group == 2) { ?>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item<?php echo isActive(['/supervisor/car?page=car_list']) ? ' active' : ''; ?>">
+          <a class="nav-link" href="<?php echo base_url ?>supervisor/car?page=car_list">Home</a>
+        </li>
+        <li class="nav-item dropdown<?php echo isActive(['/supervisor/car/all_car_list.php']) ? ' active' : ''; ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Files
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/car/all_car_list.php">Car List</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Reports
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/reports/car_reports.php">Car Reports</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/reports/summary_car_reports.php">Summary of Reports</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?php echo htmlspecialchars($c_realname); ?>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
+            </div>
+        </li>
+      </ul>
+    </div>
+    <?php } ?>
   </div>
 </nav>
 </body>
