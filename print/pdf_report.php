@@ -1,31 +1,21 @@
 <?php
 session_start();
 require '../dompdf/vendor/autoload.php';
+include('../config.php');
+
+/* ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL); */
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+$startDate = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d');
+$endDate = isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d');
+$c_encoded_by = $_SESSION['username'];
+
 $l_css = '../dist/css/pdf.css';
 $l_css_path = file_get_contents($l_css);
-
-$startDate = isset($_GET['start_date']) ? $_GET['start_date'] : null;
-$endDate = isset($_GET['end_date']) ? $_GET['end_date'] : null;
-
-if ($startDate) {
-    $startDate = date_create_from_format('m/d/Y', $startDate);
-    $startDate = $startDate ? $startDate->format('Y-m-d') : date('Y-m-d');
-}
-
-if ($endDate) {
-    $endDate = date_create_from_format('m/d/Y', $endDate);
-    $endDate = $endDate ? $endDate->format('Y-m-d') : date('Y-m-d');
-}
-
-echo "Start Date: " . $startDate . "<br>";
-echo "End Date: " . $endDate . "<br>";
-include('../config.php');
-
-$c_encoded_by = $_SESSION['username'];
 
 if ($startDate == $endDate) {
     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
@@ -49,7 +39,6 @@ if ($startDate == $endDate) {
     $executeParams = [$startDate, $endDate, $c_encoded_by];
 }
 
-
 $carData = [];
 if ($stmt && odbc_execute($stmt, $executeParams)) {
     while ($row = odbc_fetch_array($stmt)) {
@@ -72,14 +61,14 @@ $html = '
         <h3>CASH ACKNOWLEDGEMENT RECEIPT</h3>
         <h5>DAILY COLLECTION & DEPOSIT REPORT</h5>';
 
-        $l_start    = date('F j, Y', strtotime($startDate));
-        $l_end      = date('F j, Y', strtotime($endDate));
+$l_start = date('F j, Y', strtotime($startDate));
+$l_end = date('F j, Y', strtotime($endDate));
 
-        if ($startDate == $endDate) {
-            $html .= '<p>' . htmlspecialchars($l_start) . '</p>';
-        } else {
-            $html .= '<p>From ' . htmlspecialchars($l_start) . ' to ' . htmlspecialchars($l_end) . '</p>';
-        }
+if ($startDate == $endDate) {
+    $html .= '<p>' . htmlspecialchars($l_start) . '</p>';
+} else {
+    $html .= '<p>From ' . htmlspecialchars($l_start) . ' to ' . htmlspecialchars($l_end) . '</p>';
+}
 
 $html .= '
     </header>
@@ -123,7 +112,7 @@ if (empty($carData)) {
             <td class="pdf-font">' . $counter++ . '</td>
             <td class="pdf-font">' . htmlspecialchars($row['c_car_no']) . '</td>
             <td class="pdf-font">';
-            
+
         $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
         if (!empty($c_buyer_acc)) {
             $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
@@ -144,34 +133,33 @@ if (empty($carData)) {
 
         $html .= '</td>';
 
-        $html .= '<td class="pdf-font">' . htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '') . '</td>';
+        $html .= '<td class="pdf-font">' . htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '-----------') . '</td>';
 
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_type']) . '</td>';
 
         $c_account_no = $row['c_account_no'];
         if (!empty($c_account_no)) {
             $c_phase = substr($c_account_no, 0, 3);
-            $c_block = 'B' . ltrim(substr($c_account_no, 3, 3), '0');
-            $c_lot = 'L' . substr($c_account_no, 6, 2);
+            $c_block = substr($c_account_no, 2, 2);
+            $c_lot = substr($c_account_no, 4, 2);
 
-            $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-            $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
-
-            if ($phase_stmt && odbc_execute($phase_stmt, array($c_phase))) {
-                $phase_details = odbc_fetch_array($phase_stmt);
-                if ($phase_details) {
-                    $c_acronym = htmlspecialchars($phase_details["c_acronym"]);
+            $get_acronym_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+            $project_stmt = odbc_prepare($conn, $get_acronym_qry);
+            if (odbc_execute($project_stmt, array($c_phase))) {
+                $project_details = odbc_fetch_array($project_stmt);
+                if ($project_details) {
+                    $c_acronym = $project_details["c_acronym"];
                 } else {
-                    $c_acronym = "";
+                    $c_acronym = "-----";
                 }
             } else {
-                $c_acronym = "";
+                $c_acronym = "-----";
             }
         } else {
-            $c_phase = '';
-            $c_block = '';
-            $c_lot = '';
-            $c_acronym = "";
+            $c_phase = '-----';
+            $c_block = '-----';
+            $c_lot = '-----';
+            $c_acronym = "-----";
         }
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_acronym) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_block) . '</td>';
@@ -205,38 +193,34 @@ $html .= '
         </tbody>
     </table>';
 
-    $html .= '
+$html .= '
     <div class="encoded_by">
         <p>Report By: ';
 
-        $c_encoded_by = $_SESSION['username'];
-        $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
-        $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+$get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+$encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
 
-        if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
-            $html .= htmlspecialchars($encoder["c_realname"]);
-        } else {
-            $html .= "Unknown";
-        }
+if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+    $html .= htmlspecialchars($encoder["c_realname"]);
+} else {
+    $html .= "Unknown";
+}
 
 $html .= '</p>
     </div>
 </body>
 </html>';
 
+$options = new Options();
+$options->set('defaultFont', 'Courier');
+$dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 
 $dompdf->setPaper('legal', 'landscape');
 
 $dompdf->render();
 
-$dompdf->stream("car_payment.pdf", ["Attachment" => 0]);
+header('Content-Type: application/pdf');
+header('Content-Disposition: inline; filename="daily_collection_report.pdf"');
+echo $dompdf->output();
 ?>
-
-
-
-
-
-
-
-

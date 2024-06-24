@@ -72,7 +72,7 @@ document.getElementById('export_csv').addEventListener('click', function() {
     downloadCSV(csv, filename);
 });
 
-document.getElementById('export_pdf').addEventListener('click', function() {
+/* document.getElementById('export_pdf').addEventListener('click', function() {
     let startDate = document.getElementById('start_date').value;
     let endDate = document.getElementById('end_date').value;
 
@@ -89,5 +89,22 @@ document.getElementById('export_pdf').addEventListener('click', function() {
     let url = `../../print/pdf_report.php?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
 
     window.open(url, '_blank');
+}); */
+
+/* PARA SA BWISIT NA OLD VERSION NG MOZARELLA */
+
+/* document.getElementById('export_pdf').addEventListener('click', function() {
+    var startDate = $('#start_date').val();
+    var endDate = $('#end_date').val();
+
+    startDate = formatToISO(startDate);
+    endDate = formatToISO(endDate);
+
+    var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+    window.open(url, '_blank');
 });
 
+function formatToISO(dateString) {
+    var parts = dateString.split('/');
+    return parts[2] + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
+} */
