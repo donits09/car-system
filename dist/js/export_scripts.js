@@ -15,6 +15,11 @@ function downloadCSV(csv, filename) {
     downloadLink.click();
 }
 
+document.getElementById('export_csv').addEventListener('click', function() {
+    let table = document.getElementById('data-table');
+    let csv = convertToCSV(table);
+    let today = new Date();
+
 function exportTableToCSV(filename) {
     var csv = [];
  
