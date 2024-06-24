@@ -41,7 +41,7 @@ function downloadCSV(csv, filename) {
 }
 
 document.getElementById('export_csv').addEventListener('click', function() {
-    let table = document.getElementById('car-list-table');
+    let table = document.getElementById('data-table');
     let csv = convertToCSV(table);
     let today = new Date();
 

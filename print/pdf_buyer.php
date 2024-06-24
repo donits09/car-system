@@ -164,6 +164,6 @@ if (isset($_GET['id'])) {
 
     $dompdf->render();
 
-    $dompdf->stream("car_payment_report.pdf", ["Attachment" => 0]);
+    $dompdf->stream("car_payment.pdf", ["Attachment" => 0]);
 }
 ?>

@@ -329,29 +329,23 @@ document.getElementById('export_csv').addEventListener('click', function() {
     downloadCSV(csv, filename);
 });
 
+
 document.getElementById('export_pdf').addEventListener('click', function() {
-    let startDate = document.getElementById('start_date').value;
-    let endDate = document.getElementById('end_date').value;
+    var startDate = $('#start_date').val();
+    var endDate = $('#end_date').val();
 
-    if (!startDate) {
-        let today = new Date();
-        startDate = today.toISOString().split('T')[0];
-    }
+    startDate = formatToISO(startDate);
+    endDate = formatToISO(endDate);
 
-    if (!endDate) {
-        let today = new Date();
-        endDate = today.toISOString().split('T')[0];
-    }
-
-  
-    console.log(startDate);
-    console.log(endDate);
-
-    let url = `../../print/pdf_report.php?start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
-
-
+    var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
     window.open(url, '_blank');
 });
+
+function formatToISO(dateString) {
+    var parts = dateString.split('/');
+    return parts[2] + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
+}
+
 
 
  </script>
