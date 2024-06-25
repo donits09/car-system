@@ -174,6 +174,7 @@ function showMultipleResults(data, page) {
     $('#multipleResultsModal').modal('show');
 }
 
+
 function showMultipleResultsPagination(page) {
     showMultipleResults(multipleResultsData, page); 
     return false; 
