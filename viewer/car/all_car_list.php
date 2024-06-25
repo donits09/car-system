@@ -1,13 +1,14 @@
 <?php 
 session_start();
-include('../../config.php');
-include('../../inc/navbar.php');    
-include('../../inc/header.php');    
 
 if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 4) {
     require_once('../logout.php');
     exit();
- }
+}
+
+include('../../config.php');
+include('../../inc/navbar.php');    
+include('../../inc/header.php');    
 
 ?>
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->

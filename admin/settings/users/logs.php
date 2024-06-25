@@ -73,7 +73,7 @@ include('../../../inc/header.php');
                     <td class="text-center"><?php echo $row['c_name']; ?></td>
                     <td>
                     <?php
-                        $c_encoded_by = $_SESSION['username'];
+                        $c_encoded_by = $row['c_name'];
                         $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
                         $results = odbc_exec($conn, $get_encoder_details_qry);
 
@@ -101,11 +101,10 @@ $(document).ready(function() {
         changeMonth: true,
         changeYear: true,
         onSelect: function(dateText, inst) {
-            // Optionally, you can handle date selection events here
+
         }
     });
 
-    // Adjust tab click handling to prevent default action
     $('#myTab a').on('click', function (e) {
         e.preventDefault();
         $(this).tab('show');
@@ -113,5 +112,6 @@ $(document).ready(function() {
 });
 </script>
 
+<script src="../../../dist/js/table.js"></script>
 <script src="../../../dist/js/logs.js"></script>
 <?php include('../../../inc/footer.php'); ?>

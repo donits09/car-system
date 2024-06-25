@@ -101,5 +101,5 @@ function closeModal2() {
   }
 </script>
 <?php include('manage_user.php'); ?>
-
+<script src="../../../dist/js/table.js"></script>
 <?php include('../../../inc/footer.php'); ?>
