@@ -1,17 +1,3 @@
-// function validateNumberInputAmt(event) {
-//     const input = event.target;
-//     const value = input.value;
-
-//     let newValue = value.replace(/[^\d.]/g, '');
-
-//     const parts = newValue.split('.');
-//     if (parts.length > 2) {
-//         newValue = parts[0] + '.' + parts.slice(1).join('');
-//     }
-
-//     input.value = newValue;
-// }
-
 function validateNumberInputAmt(event) {
     const input = event.target;
     let value = input.value;
@@ -193,18 +179,6 @@ function calculateTotalAmount() {
 $(document).ready(function() {
     calculateTotalAmount();
 });
-
-
-function updateCarList() {
-    const accountNo = document.getElementById('buyer_acc_no').value;
-    fetch(`car_list.php?account_no=${accountNo}`)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('car-list-body').innerHTML = data;
-            calculateTotalAmount();
-        });
-        calculateTotalAmount();
-}
 
 function delete_car(carId, carNo) {
     start_loader();

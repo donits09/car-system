@@ -29,6 +29,12 @@ function isActive($pages) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CAR ENCODING</title>
   <link rel="stylesheet" href="<?php echo base_url ?>dist/css/navbar.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body.modal-open {
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg">
