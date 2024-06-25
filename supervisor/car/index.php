@@ -33,8 +33,6 @@ include('../../inc/header.php');
             
         endif;
     endif;
-
-  
     }
 ?>
 <link rel="stylesheet" href="../../dist/css/table.css">

@@ -55,7 +55,6 @@ $current_date = date('Y-m-d');
                         <th>Location</th>
                         <th>Amount</th>
                         <th>MoP</th>
-                        <th>Status</th>
                         <th>Transaction Date</th>
                         <th>Pay Date</th>
                         <th>Encoder</th>
@@ -65,7 +64,7 @@ $current_date = date('Y-m-d');
                     <?php
                     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.status
+                    b.c_block, b.c_lot
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_tran_date ASC";
                     $stmt = odbc_prepare($conn, $car_list);
@@ -171,17 +170,6 @@ $current_date = date('Y-m-d');
                                     }
                                     ?>
                                 </td>
-                                <td class="text-center">
-                                    <?php 
-                                    if ($row['status'] == 0) {
-                                        echo "-----";
-                                    } elseif ($row['status'] == 1) {
-                                        echo "CANCELLED";
-                                    } else {
-                                        echo "Unknown";
-                                    }
-                                    ?>
-                                </td>
                                 <td class="text-center tran-date">
                                     <?php
                                     $dateTime = new DateTime($row['c_tran_date']);
@@ -265,39 +253,6 @@ $current_date = date('Y-m-d');
         return month + '/' + day + '/' + year;
     }
 });
- </script>
-
-<script>
-document.getElementById('export_csv').addEventListener('click', function() {
-    let table = document.getElementById('data-table');
-    let csv = convertToCSV(table);
-    let today = new Date();
-
-    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
-    console.log('CSV Filename:', filename);
-
-    downloadCSV(csv, filename);
-});
-
-
-document.getElementById('export_pdf').addEventListener('click', function() {
-    var startDate = $('#start_date').val();
-    var endDate = $('#end_date').val();
-
-    startDate = formatToISO(startDate);
-    endDate = formatToISO(endDate);
-
-    var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
-    window.open(url, '_blank');
-});
-
-function formatToISO(dateString) {
-    var parts = dateString.split('/');
-    return parts[2] + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
-}
-
-
-
  </script>
 
 <?php include('../../inc/footer.php'); ?>

@@ -4,7 +4,8 @@
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-******************" crossorigin="anonymous" /> -->
     <link rel="stylesheet" href="<?php echo base_url ?>dist/header_files/fontawesome-free-6.5.2-web/fontawesome-free-6.5.2-web/css/all.min.css"/>
     <link rel="stylesheet" href="<?php echo base_url ?>dist/header_files/css/all.css"/>
-    <link rel="stylesheet" href="<?php echo base_url ?>dist/header_files/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="<?php echo base_url ?>dist/header_files/css/bootstrap.min.css">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     
     <!-- Sweet Alert -->
@@ -25,7 +26,17 @@
     <script src="<?php echo base_url ?>dist/js/loader.js"></script>
 
     <!-- Popper -->
-    <script src="<?php echo base_url ?>dist/header_files/js/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+<!--     <script src="<?php echo base_url ?>dist/header_files/js/popper.min.js"></script> -->
+
+
+    <!-- <script src="<?php echo base_url ?>dist/header_files/js/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+    <!-- <script src="<?php echo base_url ?>dist/header_files/js/popper.min.js"></script> -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+
     
     <!-- JS -->
     <script src="<?php echo base_url ?>dist/header_files/js/bootstrap.min.js"></script>
