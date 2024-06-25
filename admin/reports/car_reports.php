@@ -1,5 +1,11 @@
 <?php 
 session_start();
+
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+    require_once('../logout.php');
+    exit();
+}
+
 include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
@@ -325,7 +331,7 @@ $current_date = date('Y-m-d');
         startDate = formatToISO(startDate);
         endDate = formatToISO(endDate);
 
-        var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+        var url = '../../print/pdf_report_main.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
         window.open(url, '_blank');
     });
 
