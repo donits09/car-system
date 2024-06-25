@@ -132,64 +132,64 @@ function submitForm() {
 }
 
 
-function calculateTotalAmount() {
-    var table = document.getElementById("car-list-table");
-    if (!table) {
-        console.log("Table not found.");
-        return;
-    }
+// function calculateTotalAmount() {
+//     var table = document.getElementById("car-list-table");
+//     if (!table) {
+//         console.log("Table not found.");
+//         return;
+//     }
 
-    var tbody = table.getElementsByTagName("tbody")[0];
-    if (!tbody) {
-        console.log("Table body not found.");
-        return;
-    }
+//     var tbody = table.getElementsByTagName("tbody")[0];
+//     if (!tbody) {
+//         console.log("Table body not found.");
+//         return;
+//     }
 
-    var rows = tbody.getElementsByTagName("tr");
-    var total = 0;
+//     var rows = tbody.getElementsByTagName("tr");
+//     var total = 0;
 
-    for (var i = 0; i < rows.length; i++) {
-        if (rows[i].style.display !== "none") {
-            var amountCell = rows[i].getElementsByTagName("td")[6]; 
-            if (amountCell) {
-                var amountValue = amountCell.textContent.trim().replace(/,/g, '');
-                var parsedValue = parseFloat(amountValue);
-                if (!isNaN(parsedValue)) {
-                    total += parsedValue;
-                } else {
-                    console.log("Invalid number:", amountValue);
-                }
-            } else {
-                console.log(i);
-            }
-        } else {
-            console.log(i);
-        }
-    }
+//     for (var i = 0; i < rows.length; i++) {
+//         if (rows[i].style.display !== "none") {
+//             var amountCell = rows[i].getElementsByTagName("td")[6]; 
+//             if (amountCell) {
+//                 var amountValue = amountCell.textContent.trim().replace(/,/g, '');
+//                 var parsedValue = parseFloat(amountValue);
+//                 if (!isNaN(parsedValue)) {
+//                     total += parsedValue;
+//                 } else {
+//                     console.log("Invalid number:", amountValue);
+//                 }
+//             } else {
+//                 console.log(i);
+//             }
+//         } else {
+//             console.log(i);
+//         }
+//     }
 
-    var totalAmountElement = document.getElementById("totalAmount");
-    if (totalAmountElement) {
-        totalAmountElement.textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-    } else {
-        console.log("Total amount element not found.");
-    }
-}
+//     var totalAmountElement = document.getElementById("totalAmount");
+//     if (totalAmountElement) {
+//         totalAmountElement.textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+//     } else {
+//         console.log("Total amount element not found.");
+//     }
+// }
 
-$(document).ready(function() {
-    calculateTotalAmount();
-});
+// $(document).ready(function() {
+//     calculateTotalAmount();
+// });
 
 
-function updateCarList() {
-    const accountNo = document.getElementById('buyer_acc_no').value;
-    fetch(`car_list.php?account_no=${accountNo}`)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('car-list-body').innerHTML = data;
-            calculateTotalAmount();
-        });
-        calculateTotalAmount();
-}
+// function updateCarList() {
+//     const accountNo = document.getElementById('buyer_acc_no').value;
+//     fetch(`car_list.php?account_no=${accountNo}`)
+//         .then(response => response.text())
+//         .then(data => {
+//             document.getElementById('car-list-body').innerHTML = data;
+//             calculateTotalAmount();
+//         });
+//         calculateTotalAmount();
+// }
 
 function delete_car(carId, carNo) {
     start_loader();
@@ -209,7 +209,7 @@ function delete_car(carId, carNo) {
                 setTimeout(function() {
                     location.reload();
                     $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
-                }, 2000);
+                }, 1000);
             } else if (resp && resp.status === 'failed' && resp.err) {
                 alert_toast("An error occurred: " + resp.err, 'error');
             } else {
@@ -255,7 +255,7 @@ $(document).ready(function() {
                         setTimeout(function() {
                             location.reload();
                            
-                        }, 2000);
+                        }, 1000);
                     } else if (resp && resp.status === 'failed' && resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');
                     } else {

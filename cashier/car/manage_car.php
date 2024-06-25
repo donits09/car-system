@@ -108,7 +108,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
-<script src="../../dist/js/manage_car.js"></script>
+<script src="../../dist/js/manage_car_cshr.js"></script>
 <script>
 $(document).ready(function() {
     $('#car-form').submit(function(e) {

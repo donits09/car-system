@@ -321,7 +321,7 @@ include('../../inc/header.php');
   });
 </script>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/index.js"></script>
+<script src="../../dist/js/index_cshr.js"></script>
 <!-- <script src="../../dist/js/car_list.js"></script> -->
 <script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/manage_car_cshr.js"></script>

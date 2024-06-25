@@ -87,17 +87,26 @@ function searchBuyer(type) {
     return false;
 }
 
-        // const username = "<?php echo $username; ?>";
+function updateCarList() {
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
 
-        // function updateCarList() {
-        //     const accountNo = document.getElementById('buyer_acc_no').value;
-        //     fetch(`car_list.php?account_no=${accountNo}&username=${username}`)
-        //         .then(response => response.text())
-        //         .then(data => {
-        //             document.getElementById('car-list-body').innerHTML = data;
-        //         });
-        // }
-   
+    fetch(`car_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('car-list-body').innerHTML = data;
+            calculateTotalAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
+
 
 function fillBuyerDetails(data) {
     document.getElementById('buyer_acc_no').value = data.c_account_no;
@@ -179,7 +188,6 @@ function showMultipleResultsPagination(page) {
     showMultipleResults(multipleResultsData, page); 
     return false; 
 }
-
 function selectBuyer(buyer) {
     document.getElementById('buyer_acc_no').value = buyer.c_account_no;
     document.getElementById('buyer_date_of_sale').value = buyer.c_date_of_sale; 
@@ -243,6 +251,11 @@ function calculateTotalAmount() {
 
     document.getElementById("totalAmount").textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
+
+$(document).ready(function() {
+    calculateTotalAmount();
+});
+
 
 function searchAndCalculateTotal(event, type) {
     event.preventDefault();
