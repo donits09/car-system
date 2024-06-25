@@ -29,6 +29,9 @@ function check_session() {
         } else{
             header('Location: ../admin2/index.php');
             exit();
+        } elseif ($c_group == 4) {
+            header('Location: ../viewer/car/index.php');
+            exit();
         }
     }
 }

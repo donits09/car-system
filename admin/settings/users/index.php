@@ -2,8 +2,7 @@
 session_start();
 require_once('../../../config.php');
 include('../../../inc/header.php');
-include('../../../inc/navbar.php');    
-include('manage_user.php');
+include('../../../inc/navbar.php');
 
 if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     require_once('../logout.php');
@@ -11,13 +10,10 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 }
 ?>
 
-<link rel="stylesheet" href="../../../dist/css/table.css">
-<link rel="stylesheet" href="../../../dist/css/index.css">
-<body>
 <div class="container mt-5">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
-            <a class="nav-link" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">User Management</a>
+            <a class="nav-link active" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="true">User Management</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="logs-tab" data-toggle="tab" href="#logs" role="tab" aria-controls="logs" aria-selected="false">User Logs</a>
@@ -98,89 +94,13 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                     </table>
                 </div>
             </div>
+        <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+            <?php include('user.php'); ?>
         </div>
         <div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs-tab">
-            <div class="card mt-3">
-                <div class="pd-20">
-                    <form method="get" action="">
-                        <input type="hidden" name="active_tab" value="logs">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label for="start_date">Start Date:</label>
-                                <input type="date" id="start_date" name="start_date" class="form-control" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="end_date">End Date:</label>
-                                <input type="date" id="end_date" name="end_date" class="form-control" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
-                            </div>
-                            <div class="col-md-1 align-self-end">
-                                <button type="submit" class="btn btn-primary"><span class="fa fa-filter"></span> Filter</button>
-                            </div>
-                        </div>
-                    </form>
-                    <br>
-                </div>
-                <div class="table-container">
-                    <table class="table table-bordered table-striped" id="logs-data-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Employee ID</th>
-                                <th>Name</th>
-                                <th>Log</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Module</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $i = 1;
-                            $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
-                            $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
-                            
-                            $car_list = "SELECT * FROM t_car_logs";
-                            
-                            if ($start_date && $end_date) {
-                                $car_list .= " WHERE c_date BETWEEN '$start_date' AND '$end_date'";
-                            }else {
-                                $current_date = date('Y-m-d');
-                                $car_list .= " WHERE c_date = '$current_date'";
-                            }
-
-                            $car_list .= " ORDER BY c_date, c_time DESC";
-                            $car_result = odbc_exec($conn, $car_list);
-                            while ($row = odbc_fetch_array($car_result)): 
-                            ?>
-                            <tr>
-                                <td class="text-center"><?php echo $i++; ?></td>
-                                <td class="text-center"><?php echo $row['c_name']; ?></td>
-                                <td>
-                                <?php
-                                    $c_encoded_by = $_SESSION['username'];
-                                    $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
-                                    $results = odbc_exec($conn, $get_encoder_details_qry);
-
-                                    if ($encoder = odbc_fetch_array($results)) {
-                                        $realname = $encoder["c_realname"];
-                                    }
-                                ?>
-                                <?php echo $realname ?>
-                                </td>
-                                <td class="text-center"><?php echo $row['c_log']; ?></td>
-                                <td class="text-center"><?php echo $row['c_date']; ?></td>
-                                <td class="text-center"><?php echo $row['c_time']; ?></td>
-                                <td class="text-center"><?php echo $row['c_module']; ?></td>
-                            </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <?php include('logs.php'); ?>
         </div>
     </div>
 </div>
-</body>
-<script src="../../../dist/js/table.js"></script>
-<script src="../../../dist/js/logs.js"></script>
+
 <?php include('../../../inc/footer.php'); ?>

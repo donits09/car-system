@@ -4,10 +4,10 @@ require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
 
-if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
-     require_once('../logout.php');
-     exit();
-}
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 4) {
+    require_once('../logout.php');
+    exit();
+ }
 ?>
 <?php
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
@@ -56,12 +56,28 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
 
     .container {
     width: 100%;
-    height:auto;
     }
-    
-    body{
-        width:100%;
+    /* .form-label {
+        display: inline-block;
+        margin-bottom: 0.5rem;
     }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    #search-tbl{
+        border: none !important;
+    } */
 </style>
 
 <body>
@@ -207,7 +223,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">Car List</h2>
+                            <!-- <h2 class="text-blue h4">Car List</h2>
                             <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
                                 <span class="fa fa-edit"></span> Create New CAR
                             </button>
@@ -227,6 +243,22 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                                         </td>
                                         <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div> -->
+
+                            <div class="container">
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="border: none; padding-bottom: 20px;">
+                                            <div style="display: flex; align-items: center; width: 100%;">
+                                                <h2 class="text-blue h4" style="margin-right: auto;">Car List</h2>
+                                                <div style="display: flex; align-items: center;">
+                                                    <label for="searchInput" class="form-label" style="margin-right: 10px;">Search:</label>
+                                                    <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control" style="width: 200px;">
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>

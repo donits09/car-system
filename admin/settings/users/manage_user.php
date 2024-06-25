@@ -8,7 +8,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                <button onclick="closeModal2()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
+                <button onclick="closeModal2()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
                 <form id="addUserForm" method="POST">
@@ -55,7 +55,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                <button onclick="closeModal2()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
+                <button onclick="closeModal2()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
@@ -104,7 +104,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
-                <button onclick="closeModal2()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
+                <button onclick="closeModal2()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
