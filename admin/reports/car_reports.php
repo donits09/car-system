@@ -268,36 +268,71 @@ $current_date = date('Y-m-d');
  </script>
 
 <script>
-document.getElementById('export_csv').addEventListener('click', function() {
-    let table = document.getElementById('data-table');
-    let csv = convertToCSV(table);
-    let today = new Date();
+    /* Changes don sa export_csv vs old export_csv /galing csr_report.js/ */
+    document.getElementById('export_csv').addEventListener('click', function() {
+        let table = document.getElementById('car-table'); 
+        let csv = convertToCSV(table);
+        let today = new Date();
 
-    let filename = `car_list_asof_${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}.csv`;
-    console.log('CSV Filename:', filename);
+        let year = today.getFullYear();
+        let month = (today.getMonth() + 1);
+        let day = today.getDate();
 
-    downloadCSV(csv, filename);
-});
+        let formattedMonth = month < 10 ? '0' + month : month.toString();
+        let formattedDay = day < 10 ? '0' + day : day.toString();
 
+        let filename = `car_list_asof_${year}-${formattedMonth}-${formattedDay}.csv`;
+        console.log('CSV Filename:', filename);
 
-document.getElementById('export_pdf').addEventListener('click', function() {
-    var startDate = $('#start_date').val();
-    var endDate = $('#end_date').val();
+        downloadCSV(csv, filename);
+    });
 
-    startDate = formatToISO(startDate);
-    endDate = formatToISO(endDate);
+    function convertToCSV(table) {
+        let rows = table.querySelectorAll('tr');
+        let csv = [];
 
-    var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
-    window.open(url, '_blank');
-});
+        for (let row of rows) {
+            let cols = row.querySelectorAll('th, td');
+            let rowData = [];
+            for (let col of cols) {
+                rowData.push('"' + col.innerText.replace(/"/g, '""') + '"');
+            }
+            csv.push(rowData.join(','));
+        }
 
-function formatToISO(dateString) {
-    var parts = dateString.split('/');
-    return parts[2] + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
-}
+        console.log('CSV Content:', csv.join('\n'));
+        return csv.join('\n');
+    }
 
+    function downloadCSV(csv, filename) {
+        let csvFile = new Blob([csv], { type: 'text/csv' });
+        let downloadLink = document.createElement('a');
 
+        downloadLink.download = filename;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = 'none';
 
- </script>
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    /* Export para sa PDF Reports */
+    document.getElementById('export_pdf').addEventListener('click', function() {
+        var startDate = $('#start_date').val();
+        var endDate = $('#end_date').val();
+
+        startDate = formatToISO(startDate);
+        endDate = formatToISO(endDate);
+
+        var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+        window.open(url, '_blank');
+    });
+
+    function formatToISO(dateString) {
+        var parts = dateString.split('/');
+        return parts[2] + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
+    }
+</script>
 
 <?php include('../../inc/footer.php'); ?>
