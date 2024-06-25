@@ -2,6 +2,7 @@
     require_once('../../../config.php');
 ?>
 <link rel="stylesheet" href="../../../dist/css/table.css">
+
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -50,8 +51,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
@@ -117,14 +118,7 @@
         </div>
     </div>
 </div>
-<script>
 
-function closeModal2() {
-    $('#confirmDeleteModal').modal('hide');
-    $('#editUserModal').modal('hide');
-    $('#addUserModal').modal('hide');
-  }
-</script>
 <script src="../../../dist/js/table.js"></script>
 <script src="../../../dist/js/user.js"></script>
 <!-- <script src="../../../dist/js/modals.js"></script> -->

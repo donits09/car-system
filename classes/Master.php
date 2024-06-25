@@ -104,7 +104,7 @@ Class Master{
 					if ($result) {
 						$this->car_logs('Car Users', "DELETED - $c_employee_code - $c_realname");
 						$resp['status'] = 'success';
-						$resp['msg'] = "Car payment successfully deleted.";
+						$resp['msg'] = "User successfully deleted.";
 					} else {
 						$resp['status'] = 'failed';
 						$resp['err'] = odbc_errormsg($this->conn);

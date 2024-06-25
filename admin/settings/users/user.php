@@ -81,6 +81,25 @@ include('../../../inc/header.php');
     </div>
 </div>
 
+<script>
+var $jq = jQuery.noConflict();
+
+$jq(document).ready(function() {
+    $jq('.edit_data').click(function() {
+        $jq('#editUserModal').modal('show');
+    });
+    $jq('.delete_data').click(function() {
+        $jq('#confirmDeleteModal').modal('show');
+    });
+});
+</script>
+<script>
+function closeModal2() {
+    $('#confirmDeleteModal').modal('hide');
+    $('#editUserModal').modal('hide');
+    $('#addUserModal').modal('hide');
+  }
+</script>
 <?php include('manage_user.php'); ?>
 
 <?php include('../../../inc/footer.php'); ?>
