@@ -42,7 +42,7 @@ function isActive($pages) {
     <a class="navbar-brand" href="https://asianland.ph/">
         <img src="<?php echo base_url ?>images/logo.jpg" alt="ALSC Logo"> CAR ENCODING
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="background-color:rgba(255,255,255,0.5);">
       <span class="navbar-toggler-icon"></span>
     </button>
     <?php if ($c_group == 1) { ?>

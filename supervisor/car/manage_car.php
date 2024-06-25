@@ -111,6 +111,56 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <script src="../../dist/js/manage_car.js"></script>
 <script>
 $(document).ready(function() {
+    $('#car-form').submit(function(e) {
+        e.preventDefault();
+
+        const buyerName = $('#buyer_name').val();
+        if (!buyerName || buyerName === 'Unknown') {
+            alert('Name field is required.');
+            return;
+        }
+
+        // if (confirm("Are you sure you want to save this car payment?")) {
+            var _this = $(this);
+
+            start_loader();
+
+            $.ajax({
+                url: "../../classes/Master.php?f=save_car_payment",
+                data: new FormData(_this[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: function(err) {
+                    console.log(err);
+                    alert_toast("An error occurred.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    console.log(resp); 
+                    if (resp && resp.status === 'success') {
+                        alert_toast(resp.msg, 'success');
+                       setTimeout(function() {
+                          updateCarList();
+                        }, 2000);
+                    } else if (resp && resp.status === 'failed' && resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    } else {
+                        alert_toast("An unexpected error occurred", 'error');
+                    }
+                    end_loader();
+                }
+            });
+       // }
+    });
+
+});
+
+</script>
+<script>
+$(document).ready(function() {
     function fetchBuyerDetails(accountNo) {
         const buyerNameField = $('#buyer_name');
 
@@ -167,7 +217,14 @@ $(document).ready(function() {
             });
         }
     });
-
+    $('#c_car_amount').on('input', function() {
+        const carAmount = parseInt($('#c_car_amount').val());
+        if (carAmount === 0) {
+            $('#car-form button[type="submit"]').attr('disabled', true);
+        }else{
+            $('#car-form button[type="submit"]').attr('disabled', false);
+        }
+    });
     $('#car-form').on('submit', function(e) {
         if ($('#car_no_error').text().length > 0) {
             e.preventDefault();
