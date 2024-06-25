@@ -61,9 +61,12 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
                                         echo 'Admin';
                                     }
                                     elseif ($row['c_group'] == '2'){
-                                        echo 'Cashier';
+                                        echo 'Supervisor';
                                     }
                                     elseif ($row['c_group'] == '3'){
+                                        echo 'Cashier';
+                                    }
+                                    elseif ($row['c_group'] == '4'){
                                         echo 'View Only';   
                                     }else{
                                         echo $row['c_group'];

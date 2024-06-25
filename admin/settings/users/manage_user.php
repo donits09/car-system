@@ -29,8 +29,9 @@
                         <select class="form-control" id="c_group" name="c_group" required>
                             <option value="" disabled <?php echo !isset($row['c_group']) ? 'selected' : ''; ?>></option>
                             <option value="1" <?php echo (isset($row['c_group']) && $row['c_group'] == '1') ? 'selected' : ''; ?>>Admin</option>
-                            <option value="2" <?php echo (isset($row['c_group']) && $row['c_group'] == '2') ? 'selected' : ''; ?>>Cashier</option>
-                            <option value="3" <?php echo (isset($row['c_group']) && $row['c_group'] == '3') ? 'selected' : ''; ?>>Viewer</option>
+                            <option value="2" <?php echo (isset($row['c_group']) && $row['c_group'] == '2') ? 'selected' : ''; ?>>Supervisor</option>
+                            <option value="3" <?php echo (isset($row['c_group']) && $row['c_group'] == '3') ? 'selected' : ''; ?>>Cashier</option>
+                            <option value="4" <?php echo (isset($row['c_group']) && $row['c_group'] == '4') ? 'selected' : ''; ?>>Viewer</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -77,8 +78,9 @@
                         <label for="edit_group" class="form-label">Group</label>
                         <select class="form-control" id="edit_group" name="c_group" required>
                             <option value="1">Admin</option>
-                            <option value="2">Cashier</option>
-                            <option value="3">Viewer</option>
+                            <option value="2">Supervisor</option>
+                            <option value="3">Cashier</option>
+                            <option value="4">Viewer</option>
                         </select>
                     </div>
                     <div class="mb-3">

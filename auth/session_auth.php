@@ -24,6 +24,9 @@ function check_session() {
             header('Location: ../supervisor/car/index.php');
             exit();
         } elseif ($c_group == 3) {
+            header('Location: ../cashier/car/index.php');
+            exit();
+        } else{
             header('Location: ../admin2/index.php');
             exit();
         }

@@ -86,14 +86,27 @@ function searchBuyer(type) {
     
     return false;
 }
-function updateCarList() {
-    const accountNo = document.getElementById('buyer_acc_no').value;
-    fetch(`car_list.php?account_no=${accountNo}`)
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('car-list-body').innerHTML = data;
-        });
-}
+// function updateCarList() {
+//     const accountNo = document.getElementById('buyer_acc_no').value;
+//     fetch(`car_list.php?account_no=${accountNo}`)
+//         .then(response => response.text())
+//         .then(data => {
+//             document.getElementById('car-list-body').innerHTML = data;
+//         });
+// }
+
+
+        const username = "<?php echo $username; ?>";
+
+        function updateCarList() {
+            const accountNo = document.getElementById('buyer_acc_no').value;
+            fetch(`car_list.php?account_no=${accountNo}&username=${username}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('car-list-body').innerHTML = data;
+                });
+        }
+   
 
 function fillBuyerDetails(data) {
     document.getElementById('buyer_acc_no').value = data.c_account_no;
