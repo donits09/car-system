@@ -8,7 +8,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                <button onclick="closeModal2()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
+                <button onclick="closeModal2()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
                 <form id="addUserForm" method="POST">
@@ -29,8 +29,9 @@
                         <select class="form-control" id="c_group" name="c_group" required>
                             <option value="" disabled <?php echo !isset($row['c_group']) ? 'selected' : ''; ?>></option>
                             <option value="1" <?php echo (isset($row['c_group']) && $row['c_group'] == '1') ? 'selected' : ''; ?>>Admin</option>
-                            <option value="2" <?php echo (isset($row['c_group']) && $row['c_group'] == '2') ? 'selected' : ''; ?>>Cashier</option>
-                            <option value="3" <?php echo (isset($row['c_group']) && $row['c_group'] == '3') ? 'selected' : ''; ?>>Viewer</option>
+                            <option value="2" <?php echo (isset($row['c_group']) && $row['c_group'] == '2') ? 'selected' : ''; ?>>Supervisor</option>
+                            <option value="3" <?php echo (isset($row['c_group']) && $row['c_group'] == '3') ? 'selected' : ''; ?>>Cashier</option>
+                            <option value="4" <?php echo (isset($row['c_group']) && $row['c_group'] == '4') ? 'selected' : ''; ?>>Viewer</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -54,7 +55,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                <button onclick="closeModal2()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
+                <button onclick="closeModal2()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
@@ -77,8 +78,9 @@
                         <label for="edit_group" class="form-label">Group</label>
                         <select class="form-control" id="edit_group" name="c_group" required>
                             <option value="1">Admin</option>
-                            <option value="2">Cashier</option>
-                            <option value="3">Viewer</option>
+                            <option value="2">Supervisor</option>
+                            <option value="3">Cashier</option>
+                            <option value="4">Viewer</option>
                         </select>
                     </div>
                     <div class="mb-3">
@@ -102,7 +104,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
-                <button onclick="closeModal2()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
+                <button onclick="closeModal2()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
                 <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
             </div>
             <div class="modal-body">
