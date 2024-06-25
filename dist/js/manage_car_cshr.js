@@ -1,3 +1,17 @@
+// function validateNumberInputAmt(event) {
+//     const input = event.target;
+//     const value = input.value;
+
+//     let newValue = value.replace(/[^\d.]/g, '');
+
+//     const parts = newValue.split('.');
+//     if (parts.length > 2) {
+//         newValue = parts[0] + '.' + parts.slice(1).join('');
+//     }
+
+//     input.value = newValue;
+// }
+
 function validateNumberInputAmt(event) {
     const input = event.target;
     let value = input.value;
@@ -180,6 +194,28 @@ $(document).ready(function() {
     calculateTotalAmount();
 });
 
+
+function updateCarList() {
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
+
+    fetch(`car_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('car-list-body').innerHTML = data;
+            calculateTotalAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
+
+
 function delete_car(carId, carNo) {
     start_loader();
     $.ajax({
@@ -196,8 +232,7 @@ function delete_car(carId, carNo) {
             if (resp && resp.status === 'success') {
                 alert_toast(resp.msg, 'success');
                 setTimeout(function() {
-                    // location.reload();
-                    updateCarList();
+                    location.reload();;
                     $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
                 }, 2000);
             } else if (resp && resp.status === 'failed' && resp.err) {
@@ -243,8 +278,7 @@ $(document).ready(function() {
                     if (resp && resp.status === 'success') {
                         alert_toast(resp.msg, 'success');
                         setTimeout(function() {
-                            updateCarList();
-                           
+                            location.reload();;
                         }, 2000);
                     } else if (resp && resp.status === 'failed' && resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');

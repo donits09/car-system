@@ -3,11 +3,6 @@ session_start();
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
-
-// if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
-//     require_once('../logout.php');
-//     exit();
-// }
 ?>
 <?php
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
@@ -87,6 +82,7 @@ include('../../inc/header.php');
 
         <!-- By Account # -->
         <form id="account-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('account')">
+        <input type="hidden" id="username" class="form-control" value="<?php echo $username ?>">
             <hr>
             <div class="row align-items-end">
                 <div class="col-md-3 form-group">
@@ -204,7 +200,7 @@ include('../../inc/header.php');
                     </div>
                 </div>
                 
-                <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
+                <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab" onshow="calculateTotalAmount()">
                     <div class="card mt-3">
                         <div class="container">
                             <h2 class="text-blue h4">Car List</h2>
@@ -269,7 +265,31 @@ include('../../inc/header.php');
         </div>
     </div>
 </div>
+</body>
+<script>
+    $(document).ready(function() {
+    $('#car-list-tab').on('click', function(e) {
+        e.preventDefault(); 
 
+        var username = $('#username').val();
+        var buyer_acc_no = $('#buyer_acc_no').val();
+
+        $.ajax({
+            url: 'car_list.php',
+            type: 'GET',
+            data: { username: username, buyer_acc_no: buyer_acc_no },
+            success: function(response) {
+              
+                $('#car-list-body').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching car list:', error);
+              
+            }
+        });
+    });
+});
+</script>
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
@@ -291,9 +311,18 @@ include('../../inc/header.php');
     });
 
 </script>
+<script>
+  $('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    let targetTabId = $(e.target).attr('href');
+
+    if (targetTabId === '#car-list') {
+      calculateTotalAmount();
+    }
+  });
+</script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <!-- <script src="../../dist/js/car_list.js"></script> -->
 <script src="../../dist/js/export_scripts.js"></script>
-<script src="../../dist/js/manage_car.js"></script>
+<script src="../../dist/js/manage_car_cshr.js"></script>
 <?php include('../../inc/footer.php'); ?>

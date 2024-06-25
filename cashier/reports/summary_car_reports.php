@@ -12,6 +12,8 @@ $current_date = date('Y-m-d');
     <!-- <link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
     <script src="<?php echo base_url; ?>dist/js/jquery-3.5.1.min.js"></script>
     <script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script> -->
+
+
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
@@ -50,10 +52,10 @@ $current_date = date('Y-m-d');
                     <button id="export_pdf" class="btn btn-danger mt-2" href="javascript:void(0)"><span class="fa fa-download"></span> Export as PDF</button>
                     <button id="export_csv" class="btn btn-flat btn-success mt-2" href="javascript:void(0)"><span class="fa fa-download"></span> Export as CSV</button>
                 </div>
-            </div>
-            <hr> -->
+            </div> -->
+            <hr>
             <div class="table-container">
-                <table class="table table-bordered table-striped" id="data-table">
+                <table class="table table-bordered table-striped" id="car-table">
                     <thead>
                         <tr>
                             <th>Transaction Date</th>
@@ -123,7 +125,7 @@ $current_date = date('Y-m-d');
                                     <td><?php echo $isLocked ? "LOCKED" : "-----------"; ?></td>
                                     <td align="center">
                                         <div class="dropdown">
-                                            <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                            <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown" <?php echo $isLocked ? 'disabled' : ''; ?>>
                                                 Action
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
@@ -131,13 +133,6 @@ $current_date = date('Y-m-d');
                                                 <?php if (!$isLocked): ?>
                                                     <a class="dropdown-item lock_data" href="javascript:void(0)" data-date="<?php echo htmlspecialchars($trandate); ?>" data-cash="<?php echo htmlspecialchars($cash_amt); ?>" data-check="<?php echo htmlspecialchars($check_amt); ?>" data-total="<?php echo htmlspecialchars($total); ?>">
                                                         <span class="fa fa-lock text-primary"></span> Lock
-                                                    </a>
-                                                   
-                                                <?php endif; ?>
-                                          
-                                                <?php if ($isLocked): ?>
-                                                    <a class="dropdown-item unlock_data" href="javascript:void(0)" data-date="<?php echo htmlspecialchars($trandate); ?>">
-                                                        <span class="fa fa-lock-open text-primary"></span> Unlock
                                                     </a>
                                                 <?php endif; ?>
                                             </div>
@@ -155,7 +150,6 @@ $current_date = date('Y-m-d');
             </div>
         </div>
     </div>
-
 </body>
 
 <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
@@ -225,12 +219,11 @@ $current_date = date('Y-m-d');
         }
     });
 </script> -->
+
 <script>
-    $(document).ready( function () {
+$(document).ready( function () {
     $('#car-table').DataTable();
     } );
-</script>
-<script>
     $(document).ready(function() {
         $(document).on('click', '.lock_data', function() {
             var sum_trandate = $(this).data('date');
@@ -238,13 +231,6 @@ $current_date = date('Y-m-d');
             var sum_check = $(this).data('check');
             var sum_total = $(this).data('total');
             _conf("Are you sure you want to lock this summary report?", lock_summary, [sum_trandate, sum_cash, sum_check, sum_total]);
-        });
-
-        $(document).on('click', '.unlock_data', function() {
-            var sum_trandate = $(this).data('date');
-            var sum_id = $(this).data('id');
-            var sum_car_no = $(this).data('car-no');
-            _conf("Are you sure you want to unlock this summary report?", unlock_summary, [sum_trandate]);
         });
 
         window._conf = function(msg, func, params) {
@@ -283,12 +269,12 @@ $current_date = date('Y-m-d');
             });
         }
 
-        function unlock_summary(sum_trandate) {
+        function unlock_summary(sum_id, sum_trandate, sum_car_no) {
             start_loader();
             $.ajax({
                 url: "../../classes/Master.php?f=unlock_trans",
                 method: "POST",
-                data: { tran_date: sum_trandate },
+                data: { id: sum_id, tran_date: sum_trandate, car_no: sum_car_no },
                 dataType: "json",
                 error: function(err) {
                     console.log("AJAX error: ", err);

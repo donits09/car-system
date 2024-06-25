@@ -1,5 +1,6 @@
 .navbar{
     background-color:#0038a5;
+    position: fixed;
 }
 .nav-item.active .nav-link {
     text-decoration: underline!important;
@@ -14,3 +15,8 @@
     margin-right: 10px;
     border-radius: 50%;
 }    
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+} */
