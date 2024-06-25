@@ -174,12 +174,10 @@ function showMultipleResults(data, page) {
     $('#multipleResultsModal').modal('show');
 }
 
-
 function showMultipleResultsPagination(page) {
     showMultipleResults(multipleResultsData, page); 
     return false; 
 }
-
 function selectBuyer(buyer) {
     document.getElementById('buyer_acc_no').value = buyer.c_account_no;
     document.getElementById('buyer_date_of_sale').value = buyer.c_date_of_sale; 
