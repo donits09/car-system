@@ -1,5 +1,11 @@
 <?php 
 session_start();
+
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
+    require_once('../logout.php');
+    exit();
+}
+
 include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     

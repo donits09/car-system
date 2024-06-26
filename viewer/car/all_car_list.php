@@ -8,8 +8,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 4) {
 
 include('../../config.php');
 include('../../inc/navbar.php');    
-include('../../inc/header.php');    
-
+include('../../inc/header.php');     
 ?>
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">

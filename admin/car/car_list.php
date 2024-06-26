@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+    require_once('../logout.php');
+    exit();
+}
+
 ?>
 <?php
 include('../../config.php');
