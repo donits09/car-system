@@ -1,6 +1,10 @@
 <?php
-require_once('../../../config.php');
-include('../../../inc/header.php');
+    if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+        require_once('../logout.php');
+        exit();
+    }
+    require_once('../../../config.php');
+    include('../../../inc/header.php');
 ?>
 
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">

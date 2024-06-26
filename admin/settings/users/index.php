@@ -1,6 +1,9 @@
 <?php
 session_start();
-
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+    require_once('../logout.php');
+    exit();
+}
 require_once('../../../config.php');
 include('../../../inc/header.php');
 include('../../../inc/navbar.php');    
@@ -18,10 +21,13 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
+    <!-- <link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
 </head>
 <body>
+    <!-- <script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script>
+    <script src="<?php echo base_url; ?>dist/js/popper.min.js"></script> -->
 
     <div class="container mt-5">
         <ul class="nav nav-tabs" id="myTab" role="tablist">

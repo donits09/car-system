@@ -1,11 +1,9 @@
 <?php
 session_start();
-
 if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
     require_once('../logout.php');
     exit();
 }
-
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
@@ -67,6 +65,10 @@ include('../../inc/header.php');
     
     body{
         width:100%;
+    }
+    body.modal-open {
+        overflow: hidden;
+        padding-right: 0 !important;
     }
 </style>
 
@@ -275,7 +277,7 @@ include('../../inc/header.php');
         </div>
     </div>
 </div>
-
+</body>
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
@@ -295,6 +297,127 @@ include('../../inc/header.php');
     document.getElementById("searchInput").addEventListener("input", function() {
         filterTable();
     });
+
+    $('#createCarModal').on('hidden.bs.modal', function () {
+        $('body').css('padding-right', '0');
+    });
+
+    var selectedType = this.value;
+    if (selectedType) {
+        document.getElementById(selectedType + '-form').style.display = 'block';
+    }
+    
+    document.getElementById("searchAcc").addEventListener("click", function(event) {
+        searchAndCalculateTotal(event, 'account');
+    });
+
+    document.getElementById("searchLoc").addEventListener("click", function(event) {
+        searchAndCalculateTotal(event, 'location');
+    });
+
+    document.getElementById("searchName").addEventListener("click", function(event) {
+        searchAndCalculateTotal(event, 'last-name');
+    });
+</script>
+<script>
+    $(document).ready(function() {
+    function loadModal(title, url, modalId) {
+        start_loader();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                $(modalId + ' .modal-body').html(response);
+                $(modalId + ' .modal-title').text(title);
+                $(modalId).modal('show');
+                end_loader();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("An error occurred while loading data.");
+                end_loader();
+            }
+        });
+    }
+
+    $('#create_new').click(function() {
+        var accountNo = $(this).data('account-no');
+        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
+    });
+
+    $(document).on('click', '.edit_data', function() {
+        var accountId = $(this).data('id');
+        var accountNo = $(this).data('account-no');
+    
+        if (!accountNo) {
+            loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
+        } else {
+            loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+        }
+    });
+
+    $(document).on('click', '.view_data', function() {
+        var accountId = $(this).data('id');
+        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
+    });
+
+    $('#create_other_new').click(function() {
+        loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
+    });
+
+    $(document).on('click', '.delete_data', function() {
+        var carId = $(this).data('id');
+        var carNo = $(this).data('car-no');
+        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId, carNo]);
+    });
+
+    window._conf = function(msg, func, params) {
+        $('#confirm_modal .modal-body').html(msg);
+        $('#confirm_modal #confirm').off('click').on('click', function() {
+            func.apply(this, params);
+        });
+        $('#confirm_modal').modal('show');
+    };
+});
+
+$(document).ready(function() {
+    calculateTotalAmount();
+});
+
+</script>
+<script>
+function delete_car(carId, carNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=delete_car",
+        method: "POST",
+        data: { carId: carId, carNo: carNo },
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    //location.reload();
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
+                    updateCarList(); 
+                    $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+            }
+            end_loader();
+        }
+    });
+}
 
 </script>
 <script src="../../dist/js/table.js"></script>

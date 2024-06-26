@@ -1,5 +1,9 @@
 <?php 
 session_start();
+if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
+    require_once('../logout.php');
+    exit();
+}
 include('../../config.php');
 
 $c_account_no = null;
@@ -115,49 +119,55 @@ $(document).ready(function() {
         e.preventDefault();
 
         const buyerName = $('#buyer_name').val();
+        const carType = $('#c_car_type').val();
+
         if (!buyerName || buyerName === 'Unknown') {
             alert('Name field is required.');
             return;
         }
 
-        // if (confirm("Are you sure you want to save this car payment?")) {
-            var _this = $(this);
+        if (!carType) {
+            alert('Payment Type field is required.');
+            return;
+        }
 
-            start_loader();
+        var _this = $(this);
 
-            $.ajax({
-                url: "../../classes/Master.php?f=save_car_payment",
-                data: new FormData(_this[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                method: 'POST',
-                dataType: 'json',
-                error: function(err) {
-                    console.log(err);
-                    alert_toast("An error occurred.", 'error');
-                    end_loader();
-                },
-                success: function(resp) {
-                    console.log(resp); 
-                    if (resp && resp.status === 'success') {
-                        alert_toast(resp.msg, 'success');
-                       setTimeout(function() {
-                          updateCarList();
-                        }, 2000);
-                    } else if (resp && resp.status === 'failed' && resp.err) {
-                        alert_toast("An error occurred: " + resp.err, 'error');
-                    } else {
-                        alert_toast("An unexpected error occurred", 'error');
-                    }
-                    end_loader();
+        start_loader();
+
+        $.ajax({
+            url: "../../classes/Master.php?f=save_car_payment",
+            data: new FormData(_this[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                console.log(resp); 
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        $('#createCarModal').modal('hide'); 
+                        $('body').removeClass('modal-open'); 
+                        $('.modal-backdrop').remove(); 
+                        updateCarList();
+                    }, 1000);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    alert_toast("An unexpected error occurred", 'error');
                 }
-            });
-       // }
+                end_loader();
+            }
+        });
     });
-
 });
-
 </script>
 <script>
 $(document).ready(function() {
@@ -206,7 +216,7 @@ $(document).ready(function() {
                 data: { car_no: carNo },
                 dataType: 'json',
                 success: function(response) {
-                    if (response.exists) {
+              if (response.exists) {
                         $('#car_no_error').text('CAR No. already exists.').addClass('bold-text');
                         $('#car-form button[type="submit"]').attr('disabled', true);
                     } else {

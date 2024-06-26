@@ -1,5 +1,9 @@
 <?php 
     session_start();
+    if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
+        require_once('../logout.php');
+        exit();
+    }
     include('../../config.php');
 
     $c_name = '';
@@ -81,22 +85,64 @@
         </div>
     </div>
 
+
     <div class="form-group">
         <label for="c_car_type">Payment Type</label>
         <div class="dropdown">
-            <input type="text" class="form-control" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" oninput="validateAlphaNumericInput(event)" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
-                <div class="dropdown-menu w-100" id="comboBoxMenu">
-                    <?php
-                    $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-                    $type_result = odbc_exec($conn, $car_type_query);
-                    while ($row = odbc_fetch_array($type_result)) {
-                        $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'active' : '';
-                        echo "<a class='dropdown-item $selected' href='#' data-value='".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."</a>";
-                    }
-                    ?>
-                </div>
+            <input type="text" class="form-control" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" oninput="validateAlphaNumericInput(event)" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
+            <div class="dropdown-menu w-100" id="comboBoxMenu">
+                <?php
+                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                $type_result = odbc_exec($conn, $car_type_query);
+                while ($row = odbc_fetch_array($type_result)) {
+                    $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'active' : '';
+                    echo "<a class='dropdown-item $selected' href='#' data-value='".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."</a>";
+                }
+                ?>
             </div>
         </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.dropdown-item').forEach(function(item) {
+                item.addEventListener('click', function() {
+                    var value = this.getAttribute('data-value');
+                    document.getElementById('c_car_type').value = value;
+                    document.getElementById('comboBoxMenu').style.display = 'none';
+                });
+            });
+
+            document.getElementById('c_car_type').addEventListener('focus', function() {
+                document.getElementById('comboBoxMenu').style.display = 'block';
+            });
+
+            document.getElementById('c_car_type').addEventListener('blur', function() {
+                setTimeout(function() {
+                    document.getElementById('comboBoxMenu').style.display = 'none';
+                }, 200);
+            });
+        });
+
+        function validateForm() {
+            var carTypeInput = document.getElementById('c_car_type');
+            if (carTypeInput.value.trim() === '') {
+                carTypeInput.setCustomValidity('Please select a payment type');
+                carTypeInput.reportValidity();
+                return false;
+            } else {
+                carTypeInput.setCustomValidity('');
+            }
+            return true;
+        }
+
+        var form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+            }
+        });
+    </script>
     <div class="form-group">
         <label for="amount">Amount</label>
         <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
@@ -200,8 +246,11 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
+                        $('#createCarModal').modal('hide'); 
+                        $('body').removeClass('modal-open'); 
+                        $('.modal-backdrop').remove(); 
                         location.reload();
-                    }, 2000);
+                    }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
                 } else {

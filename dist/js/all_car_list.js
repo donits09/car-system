@@ -207,6 +207,9 @@ function delete_car(carId, carNo) {
             if (resp && resp.status === 'success') {
                 alert_toast(resp.msg, 'success');
                 setTimeout(function() {
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
                     location.reload();
                     $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
                 }, 1000);
@@ -253,6 +256,9 @@ $(document).ready(function() {
                     if (resp && resp.status === 'success') {
                         alert_toast(resp.msg, 'success');
                         setTimeout(function() {
+                            $('#createCarModal').modal('hide'); 
+                            $('body').removeClass('modal-open'); 
+                            $('.modal-backdrop').remove(); 
                             location.reload();
                            
                         }, 1000);
