@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 4) {
 
 require_once('../../config.php');
 include('../../inc/navbar.php');    
-include('../../inc/header.php');
+include('../../inc/header.php');     
 
 ?>
 <?php
@@ -58,28 +58,12 @@ include('../../inc/header.php');
 
     .container {
     width: 100%;
+    height:auto;
     }
-    /* .form-label {
-        display: inline-block;
-        margin-bottom: 0.5rem;
+    
+    body{
+        width:100%;
     }
-
-    .form-control {
-        display: block;
-        width: 100%;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        color: #495057;
-        background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }
-    #search-tbl{
-        border: none !important;
-    } */
 </style>
 
 <body>
@@ -236,7 +220,7 @@ include('../../inc/header.php');
                             <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as PDF
                             </a>
-                            <hr>
+                            <hr> -->
                             <div class="container">
                                 <table>
                                     <tr>
@@ -245,22 +229,6 @@ include('../../inc/header.php');
                                         </td>
                                         <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div> -->
-
-                            <div class="container">
-                                <table style="width: 100%;">
-                                    <tr>
-                                        <td style="border: none; padding-bottom: 20px;">
-                                            <div style="display: flex; align-items: center; width: 100%;">
-                                                <h2 class="text-blue h4" style="margin-right: auto;">Car List</h2>
-                                                <div style="display: flex; align-items: center;">
-                                                    <label for="searchInput" class="form-label" style="margin-right: 10px;">Search:</label>
-                                                    <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control" style="width: 200px;">
-                                                </div>
-                                            </div>
                                         </td>
                                     </tr>
                                 </table>

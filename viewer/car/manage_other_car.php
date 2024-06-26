@@ -5,7 +5,7 @@
         require_once('../logout.php');
         exit();
     }
-    
+
     include('../../config.php');
 
     $c_name = '';
