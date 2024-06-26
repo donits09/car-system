@@ -1,11 +1,9 @@
 <?php 
 session_start();
-
 if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
     require_once('../logout.php');
     exit();
 }
-
 include('../../config.php');
 
 $c_account_no = null;
@@ -149,9 +147,12 @@ $(document).ready(function() {
                     console.log(resp); 
                     if (resp && resp.status === 'success') {
                         alert_toast(resp.msg, 'success');
-                       setTimeout(function() {
-                          updateCarList();
-                        }, 2000);
+                        setTimeout(function() {
+                            $('#createCarModal').modal('hide'); 
+                            $('body').removeClass('modal-open'); 
+                            $('.modal-backdrop').remove(); 
+                            updateCarList();
+                        }, 1000);
                     } else if (resp && resp.status === 'failed' && resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');
                     } else {

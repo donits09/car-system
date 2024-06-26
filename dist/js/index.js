@@ -1,15 +1,3 @@
-document.getElementById('search_type').addEventListener('change', function() {
-    var forms = document.querySelectorAll('.filter-form');
-    forms.forEach(function(form) {
-        form.style.display = 'none';
-    });
-
-    var selectedType = this.value;
-    if (selectedType) {
-        document.getElementById(selectedType + '-form').style.display = 'block';
-    }
-});
-
 function toggleForm() {
     var searchType = document.getElementById("search_type").value;
     document.getElementById("account-form").style.display = searchType === "account" ? "block" : "none";
@@ -242,11 +230,6 @@ function calculateTotalAmount() {
     document.getElementById("totalAmount").textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
 }
 
-$(document).ready(function() {
-    calculateTotalAmount();
-});
-
-
 function searchAndCalculateTotal(event, type) {
     event.preventDefault();
     searchBuyer(type);
@@ -255,15 +238,3 @@ function searchAndCalculateTotal(event, type) {
         calculateTotalAmount();
     }, 150);
 }
-
-document.getElementById("searchAcc").addEventListener("click", function(event) {
-    searchAndCalculateTotal(event, 'account');
-});
-
-document.getElementById("searchLoc").addEventListener("click", function(event) {
-    searchAndCalculateTotal(event, 'location');
-});
-
-document.getElementById("searchName").addEventListener("click", function(event) {
-    searchAndCalculateTotal(event, 'last-name');
-});

@@ -1,5 +1,9 @@
 <?php
     session_start();
+    if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
+        require_once('../logout.php');
+        exit();
+    }
     include('../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
         $accountId = $_GET['id'];

@@ -1,4 +1,8 @@
 <?php
+    if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
+        require_once('../logout.php');
+        exit();
+    }
     require_once('../../../config.php');
 ?>
 <link rel="stylesheet" href="../../../dist/css/table.css">
