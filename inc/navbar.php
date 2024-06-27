@@ -67,6 +67,7 @@ function isActive($pages) {
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">Car Type</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users?page=index">System Users</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/logs?page=index">User Logs</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">

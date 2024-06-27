@@ -213,7 +213,7 @@ $html .= '
 
 $html .= '
     <div class="encoded_by">
-        <p>Print By: ';
+        <p>Printed By: ';
 
 $c_employee_code = $_SESSION['username'];
 $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
