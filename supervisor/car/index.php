@@ -220,10 +220,9 @@ include('../../inc/header.php');
                     <div class="card mt-3">
                         <div class="container">
                             <h2 class="text-blue h4">Car List</h2>
-                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
+                            <!-- <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
                                 <span class="fa fa-edit"></span> Create New CAR
-                            </button>
-                            </button>
+                            </button> -->
                             <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as CSV
                             </a>

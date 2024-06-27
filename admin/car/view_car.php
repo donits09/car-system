@@ -3,7 +3,7 @@
 
     require_once('../../inc/check_session.php');
     check_user_group(1);
-    
+
     include('../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
         $accountId = $_GET['id'];

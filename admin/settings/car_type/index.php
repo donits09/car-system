@@ -1,6 +1,5 @@
 <?php 
 session_start();
-
 require_once('../../../inc/check_session.php');
 check_user_group(1);
 

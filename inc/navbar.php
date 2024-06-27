@@ -164,14 +164,14 @@ function isActive($pages) {
         <li class="nav-item<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
           <a class="nav-link" href="<?php echo base_url ?>viewer/car?page=car_list">Home</a>
         </li>
-        <li class="nav-item dropdown<?php echo isActive(['/viewer/car/all_car_list.php']) ? ' active' : ''; ?>">
+        <!-- <li class="nav-item dropdown<?php echo isActive(['/viewer/car/all_car_list.php']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Files
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                 <a class="dropdown-item" href="<?php echo base_url ?>viewer/car/all_car_list.php">Car List</a>
             </div>
-        </li>
+        </li> -->
         <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php echo htmlspecialchars($c_realname); ?>

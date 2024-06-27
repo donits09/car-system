@@ -19,13 +19,14 @@ include('../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
+        <h2 class="text-blue h4">Car List</h2>
         <!-- <div class="pd-20" id="car-btn"> -->
-            <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
+            <!-- <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                 <span class="fa fa-edit"></span> Create New Payment 
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
                 <span class="fa fa-edit"></span> Create Other Payment 
-            </a>
+            </a> -->
             <div class="pd-20">
             <hr>
         </div>

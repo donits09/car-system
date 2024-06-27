@@ -63,6 +63,7 @@ $current_date = date('Y-m-d');
                         <th>Location</th>
                         <th>Amount</th>
                         <th>MoP</th>
+                        <th>Status</th>
                         <th>Transaction Date</th>
                         <th>Pay Date</th>
                         <th>Encoder</th>
@@ -72,7 +73,7 @@ $current_date = date('Y-m-d');
                     <?php
                     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot
+                    b.c_block, b.c_lot, a.status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_tran_date ASC";
                     $stmt = odbc_prepare($conn, $car_list);
@@ -173,6 +174,17 @@ $current_date = date('Y-m-d');
                                         echo "Cash";
                                     } elseif ($row['c_mop'] == 2) {
                                         echo "Check";
+                                    } else {
+                                        echo "Unknown";
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['status'] == 0) {
+                                        echo "-----";
+                                    } elseif ($row['status'] == 1) {
+                                        echo "CANCELLED";
                                     } else {
                                         echo "Unknown";
                                     }
