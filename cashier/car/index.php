@@ -82,9 +82,8 @@ include('../../inc/header.php');
         border: none;
     }
 </style>
-
 <body>
-<div class="container mt-5">
+<div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
         <div class="pd-20">
         <!-- Dropdown 'to Par -->

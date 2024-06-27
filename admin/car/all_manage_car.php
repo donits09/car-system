@@ -8,7 +8,7 @@ include('../../config.php');
 
 $c_account_no = null;
 $c_car_type = '';
-$c_car_amount = '';
+$c_car_amount = 0;
 $c_car_no = '';
 $c_car_paydate = date('Y-m-d');
 $c_encoded_by = '';
@@ -16,7 +16,7 @@ $c_tran_date = date('Y-m-d H:i:s');
 $c_mop = '';
 
 if (isset($_GET['id']) && $_GET['id'] > 0) {
-    $get_car_query = "SELECT * FROM t_car_payment WHERE id = ? and status != 1";
+    $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
     $accountId = $_GET['id'];
     $stmt = odbc_prepare($conn, $get_car_query);
     odbc_execute($stmt, array($accountId));
@@ -42,6 +42,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 }
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
+<body>
 <form id="car-form" method="post" action="">
     <?php
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
@@ -54,7 +55,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group">
         <label for="car_no">CAR No.</label>
         <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
-        <div id="car_no_error" class="text-danger"></div>
+        <div id="car_no_error"></div>
     </div>
     <div class="form-group">
         <label for="c_car_type">Payment Type</label>
@@ -78,7 +79,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo htmlspecialchars($c_car_amount); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <div id="car_amt_error"></div>
     </div>
     <div class="form-group">
         <label for="c_mop">Mode of Payment</label>
@@ -112,69 +114,4 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
-<script>
-$(document).ready(function() {
-    function fetchBuyerDetails(accountNo) {
-        const buyerNameField = $('#buyer_name');
-
-        if (accountNo.length > 0) {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
-                data: { account_no: accountNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        buyerNameField.val(response.name);
-                        buyerNameField.removeAttr('required');
-                    } else {
-                        buyerNameField.val('Unknown');
-                        buyerNameField.attr('required', 'required');
-                    }
-                }
-            });
-        } else {
-            buyerNameField.val('');
-            buyerNameField.attr('required', 'required');
-        }
-    }
-
-    const accountNo = $('#c_account_no').val();
-    fetchBuyerDetails(accountNo);
-
-    $('#c_account_no').on('input', function() {
-        const accountNo = $(this).val();
-        fetchBuyerDetails(accountNo);
-    });
-
-    $('#c_car_no').on('input', function() {
-        const carNo = $(this).val();
-        if (carNo.length < 6) {
-            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text');
-            $('#car-form button[type="submit"]').attr('disabled', true);
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/check_car_no.php',
-                data: { car_no: carNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.exists) {
-                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text');
-                        $('#car-form button[type="submit"]').attr('disabled', true);
-                    } else {
-                        $('#car_no_error').text('').removeClass('bold-text');
-                        $('#car-form button[type="submit"]').attr('disabled', false);
-                    }
-                }
-            });
-        }
-    });
-
-    $('#car-form').on('submit', function(e) {
-        if ($('#car_no_error').text().length > 0) {
-            e.preventDefault();
-        }
-    });
-});
-</script>
+</body>

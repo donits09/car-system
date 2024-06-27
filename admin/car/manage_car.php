@@ -120,55 +120,65 @@ $(document).ready(function() {
         e.preventDefault();
 
         const buyerName = $('#buyer_name').val();
+        const carNo = $('#c_car_no').val();
+        const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
+
+        let valid = true;
+
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
+        if (carAmount <= 0) {
+            $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
         if (!buyerName || buyerName === 'Unknown') {
             alert('Name field is required.');
+            valid = false;
+        }
+
+        if (!valid) {
             return;
         }
 
-        // if (confirm("Are you sure you want to save this car payment?")) {
-            var _this = $(this);
+        start_loader();
 
-            start_loader();
-
-            $.ajax({
-                url: "../../classes/Master.php?f=save_car_payment",
-                data: new FormData(_this[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                method: 'POST',
-                dataType: 'json',
-                error: function(err) {
-                    console.log(err);
-                    alert_toast("An error occurred.", 'error');
-                    end_loader();
-                },
-                success: function(resp) {
-                    console.log(resp); 
-                    if (resp && resp.status === 'success') {
-                        alert_toast(resp.msg, 'success');
-                        setTimeout(function() {
-                            $('#createCarModal').modal('hide'); 
-                            $('body').removeClass('modal-open'); 
-                            $('.modal-backdrop').remove(); 
-                            updateCarList();
-                        }, 1000);
-                    } else if (resp && resp.status === 'failed' && resp.err) {
-                        alert_toast("An error occurred: " + resp.err, 'error');
-                    } else {
-                        alert_toast("An unexpected error occurred", 'error');
-                    }
-                    end_loader();
+        $.ajax({
+            url: "../../classes/Master.php?f=save_car_payment",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                console.log(resp); 
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        $('#createCarModal').modal('hide'); 
+                        $('body').removeClass('modal-open'); 
+                        $('.modal-backdrop').remove(); 
+                        updateCarList();
+                    }, 1000);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    alert_toast("An unexpected error occurred", 'error');
                 }
-            });
-       // }
+                end_loader();
+            }
+        });
     });
 
-});
-
-</script>
-<script>
-$(document).ready(function() {
     function fetchBuyerDetails(accountNo) {
         const buyerNameField = $('#buyer_name');
 
@@ -223,6 +233,7 @@ $(document).ready(function() {
                         $('#car-form button[type="submit"]').attr('disabled', true);
                     } else {
                         $('#car_no_error').text('').removeClass('bold-text');
+                        $('#car-form button[type="submit"]').attr('disabled', false);
                     }
                 }
             });

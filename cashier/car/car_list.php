@@ -5,8 +5,8 @@ session_start();
     exit();
 } */
 
-require_once('../../inc/check_session.php');
-check_user_group(3);
+// require_once('../../inc/check_session.php');
+// check_user_group(3);
 
 include('../../config.php');
 

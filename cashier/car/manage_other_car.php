@@ -1,10 +1,6 @@
 <?php 
     session_start();
-    /* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
-        require_once('../logout.php');
-        exit();
-    } */
-
+    
     require_once('../../inc/check_session.php');
     check_user_group(3);
 
@@ -89,7 +85,6 @@
         </div>
     </div>
 
-
     <div class="form-group">
         <label for="c_car_type">Payment Type</label>
         <div class="dropdown">
@@ -147,14 +142,16 @@
             }
         });
     </script>
+
     <div class="form-group">
         <label for="amount">Amount</label>
         <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <div id="car_amt_error"></div>
     </div>
     <div class="form-group">
         <label for="car_no">CAR No.</label>
         <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
-        <div id="car_no_error" class="text-danger"></div>
+        <div id="car_no_error"></div>
     </div>
     <div class="form-group">
     <label for="c_mop">Mode of Payment</label>
@@ -191,50 +188,29 @@
 <script src="../../dist/js/manage_car.js"></script>
 <script>
 $(document).ready(function() {
-    $('#c_car_no').on('input', function() {
-        const carNo = $(this).val();
-        if (carNo.length < 6) {
-            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text');
-            $('#other-car-form button[type="submit"]').attr('disabled', true);
-        } else {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/check_car_no.php',
-                data: { car_no: carNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.exists) {
-                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text');
-                        $('#other-car-form button[type="submit"]').attr('disabled', true);
-                    } else {
-                        $('#car_no_error').text('').removeClass('bold-text');
-                        $('#other-car-form button[type="submit"]').attr('disabled', false);
-                    }
-                }
-            });
-        }
-    });
-
     $('#other-car-form').on('submit', function(e) {
-        if ($('#car_no_error').text().length > 0) {
-            e.preventDefault();
+        e.preventDefault(); 
+        var carNo = $('#c_car_no').val();
+        const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
+        let valid = true;
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            valid = false;
         }
-    });
-});
-</script>
-<script>
-    $(document).ready(function() {
-    $('#other-car-form').submit(function(e) {
-        e.preventDefault();
-       
-        // if (confirm("Are you sure you want to save this car payment?")) {
-            var _this = $(this);
 
-            start_loader();
+        if (carAmount <= 0) {
+            $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
 
-            $.ajax({
+        if (!valid) {
+            return;
+        }
+        start_loader();
+
+        $.ajax({
             url: "../../classes/Master.php?f=save_other_car_payment",
-            data: new FormData(_this[0]),
+            data: new FormData($(this)[0]),
             cache: false,
             contentType: false,
             processData: false,
@@ -246,13 +222,13 @@ $(document).ready(function() {
                 end_loader();
             },
             success: function(resp) {
-                console.log(resp); 
+                console.log(resp);
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createCarModal').modal('hide'); 
-                        $('body').removeClass('modal-open'); 
-                        $('.modal-backdrop').remove(); 
+                        $('#createCarModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
                         location.reload();
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
@@ -262,9 +238,41 @@ $(document).ready(function() {
                 }
                 end_loader();
             }
-
         });
-        // }
+    });
+
+    $('#c_car_no').on('input', function() {
+        const carNo = $(this).val();
+
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            $('#other-car-form button[type="submit"]').attr('disabled', true);
+        } else if (carNo.length > 6) {
+            $('#car_no_error').text('CAR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
+            $('#other-car-form button[type="submit"]').attr('disabled', false);
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/check_car_no.php',
+                data: { car_no: carNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text').css('color', 'red');
+                        $('#other-car-form button[type="submit"]').attr('disabled', true);
+                    } else {
+                        $('#car_no_error').text('').removeClass('bold-text');
+                        $('#other-car-form button[type="submit"]').attr('disabled', false);
+                    }
+                }
+            });
+        }
+    });
+
+    $('#other-car-form').on('submit', function(e) {
+        if ($('#car_no_error').text().includes('must be 6 digits')) {
+            e.preventDefault();
+        }
     });
 });
 </script>
