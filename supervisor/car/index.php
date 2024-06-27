@@ -74,8 +74,19 @@ include('../../inc/header.php');
         overflow: hidden;
         padding-right: 0 !important;
     }
+    #buyer_loc{
+        border:none;
+        background-color: transparent;
+        font-size: 14px;
+        font-style: italic;
+        font-weight: bold;
+        color:black;
+    }
+    #b_details{
+        text-align: left;
+        border: none;
+    }
 </style>
-
 <body>
 <div class="container mt-5">
     <div class="card mt-3">
@@ -174,9 +185,17 @@ include('../../inc/header.php');
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
                     <div class="card mt-3">
-                        <div class="pd-20">
-                            <h2 class="text-blue h4">Buyer's Details</h2>
-                        </div>
+                        <table id="b_details">
+                            <tr>
+                                <td style="width: 15%;border-top:none;border-bottom:none;border-left:none;">
+                                    <h2 class="text-blue h4">Buyer's Details</h2>
+                                </td>
+                                <td style="border-top:none;border-bottom:none;border-right:none;">
+                                    <input type="text" class="form-control" id="buyer_loc" name="buyer_loc" readonly>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr>
                         <div class="container">
                             <form class="row g-3">
                                 <div class="col-md-4">
@@ -220,9 +239,10 @@ include('../../inc/header.php');
                     <div class="card mt-3">
                         <div class="container">
                             <h2 class="text-blue h4">Car List</h2>
-                            <!-- <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
+                            <hr>
+                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
                                 <span class="fa fa-edit"></span> Create New CAR
-                            </button> -->
+                            </button>
                             <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as CSV
                             </a>
@@ -230,7 +250,23 @@ include('../../inc/header.php');
                                 <span class="fa fa-download"></span> Export as PDF
                             </a>
                             <hr>
-                            <div class="container">
+                                <div class="container">
+                                    <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <label for="accno" class="form-label">Acc #</label>
+                                        <input type="text" class="form-control" id="accno" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="fullname" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="fullname" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="car_buyer_loc" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="car_buyer_loc" name="car_buyer_loc" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">

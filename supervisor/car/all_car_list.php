@@ -21,12 +21,12 @@ include('../../inc/header.php');
         <div class="pd-20">
         <h2 class="text-blue h4">Car List</h2>
         <!-- <div class="pd-20" id="car-btn"> -->
-            <!-- <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
+            <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                 <span class="fa fa-edit"></span> Create New Payment 
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
                 <span class="fa fa-edit"></span> Create Other Payment 
-            </a> -->
+            </a>
             <div class="pd-20">
             <hr>
         </div>
@@ -52,7 +52,7 @@ include('../../inc/header.php');
                     <?php
                     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot
+                    b.c_block, b.c_lot,a.e_status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE status != 1
                         ORDER BY c_tran_date DESC;
@@ -191,24 +191,26 @@ include('../../inc/header.php');
                                             <span class="fa fa-eye text-primary"></span> View
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                        data-id="<?php echo $row['id']; ?>" 
-                                        data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                                        data-payment-type="<?php echo htmlspecialchars($row['c_car_type']); ?>" 
-                                        data-amount="<?php echo htmlspecialchars($row['c_car_amount']); ?>" 
-                                        data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>" 
-                                        data-pay-date="<?php echo htmlspecialchars($row['c_car_paydate']); ?>" 
-                                        data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
-                                            <span class="fa fa-edit text-info"></span> Edit
-                                        </a>
-                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo htmlspecialchars($row['c_car_no']); ?>" target="_blank">
                                             <span class="fas fa-print"></span> Print
                                         </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
-                                            <span class="fa fa-trash text-danger"></span> Delete
-                                        </a>
+                                        <?php
+                                                if ($row['e_status'] == 0){ ?>
+                                                    <a class="dropdown-item edit_data" href="javascript:void(0)" 
+                                                    data-id="<?php echo $row['id']; ?>" 
+                                                    data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
+                                                    data-payment-type="<?php echo htmlspecialchars($row['c_car_type']); ?>" 
+                                                    data-amount="<?php echo htmlspecialchars($row['c_car_amount']); ?>" 
+                                                    data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>" 
+                                                    data-pay-date="<?php echo htmlspecialchars($row['c_car_paydate']); ?>" 
+                                                    data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
+                                                        <span class="fa fa-edit text-info"></span> Edit
+                                                    </a>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
+                                                        <span class="fa fa-trash text-danger"></span> Delete
+                                                    </a>
+                                        <?php } ?>
                                     </div>
                                 </td>
                             </tr>

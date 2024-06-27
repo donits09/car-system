@@ -95,6 +95,36 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_mname').value = data.c_b1_middle_name;
     document.getElementById('buyer_address').value = data.c_address; 
     document.getElementById('buyer_remarks').value = data.c_remarks; 
+    document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
+    document.getElementById('accno').value = data.c_account_no;
+
+    var phase = data.c_account_no.substring(0, 3);
+    var block = data.c_account_no.substring(3, 6).replace(/^0+/, ''); 
+    var lot = data.c_account_no.substring(6, 8);
+
+    var xhr = new XMLHttpRequest();
+    var url = 'fetch_phase_details.php?phase=' + encodeURIComponent(phase);
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var phase_details = JSON.parse(xhr.responseText);
+            if (phase_details && phase_details.c_acronym) {
+                document.getElementById('buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + data.c_type + ')';
+                document.getElementById('car_buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + data.c_type + ')';
+            } else {
+                document.getElementById('buyer_loc').value = "-----";
+                document.getElementById('car_buyer_loc').value = "-----";
+            }
+        } else {
+            document.getElementById('buyer_loc').value = "-----";
+            document.getElementById('car_buyer_loc').value = "-----";
+        }
+    };
+    xhr.onerror = function() {
+        document.getElementById('buyer_loc').value = "-----";
+        document.getElementById('car_buyer_loc').value = "-----";
+    };
+    xhr.send();
 }
 
 var currentPage = 1;
@@ -117,29 +147,58 @@ function showMultipleResults(data, page) {
         var tdLastName = document.createElement('td');
         var tdFirstName = document.createElement('td');
         var tdMiddleName = document.createElement('td');
+        var tdStats = document.createElement('td');
         var tdButton = document.createElement('td');
-        
+    
         tdAccountNo.textContent = buyer.c_account_no;
         tdLastName.textContent = buyer.c_b1_last_name;
         tdFirstName.textContent = buyer.c_b1_first_name;
         tdMiddleName.textContent = buyer.c_b1_middle_name;
-        
+    
+        var phase = buyer.c_account_no.substring(0, 3);
+        var block = buyer.c_account_no.substring(3, 6).replace(/^0+/, ''); 
+        var lot = buyer.c_account_no.substring(6, 8);
+    
+     
+        var xhr = new XMLHttpRequest();
+        var url = 'fetch_phase_details.php?phase=' + encodeURIComponent(phase);
+        xhr.open('GET', url, true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var phase_details = JSON.parse(xhr.responseText);
+                if (phase_details && phase_details.c_acronym) {
+                    tdStats.textContent = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
+                } else {
+                    tdStats.textContent = "-----";
+                }
+            } else {
+                tdStats.textContent = "-----";
+            }
+        };
+        xhr.onerror = function() {
+            tdStats.textContent = "-----";
+        };
+        xhr.send();
+    
         var button = document.createElement('button');
         button.className = 'btn btn-primary';
         button.textContent = 'Select';
         button.onclick = function() {
-            selectBuyer(buyer); 
+            selectBuyer(buyer);
         };
         tdButton.appendChild(button);
-        
+    
         tr.appendChild(tdAccountNo);
         tr.appendChild(tdLastName);
         tr.appendChild(tdFirstName);
         tr.appendChild(tdMiddleName);
+        tr.appendChild(tdStats);
         tr.appendChild(tdButton);
-        
+    
         modalBody.appendChild(tr);
     });
+    
+    
 
     var totalPages = Math.ceil(data.length / rowsPerPage);
     var paginationHtml = '<nav aria-label="Page navigation">' +
@@ -166,6 +225,7 @@ function showMultipleResultsPagination(page) {
     showMultipleResults(multipleResultsData, page); 
     return false; 
 }
+
 function selectBuyer(buyer) {
     document.getElementById('buyer_acc_no').value = buyer.c_account_no;
     document.getElementById('buyer_date_of_sale').value = buyer.c_date_of_sale; 
@@ -175,8 +235,39 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_mname').value = buyer.c_b1_middle_name;
     document.getElementById('buyer_address').value = buyer.c_address; 
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
+    document.getElementById('fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
+    document.getElementById('accno').value = buyer.c_account_no;
 
-    $('#multipleResultsModal').modal('hide');
+    var phase = buyer.c_account_no.substring(0, 3);
+    var block = buyer.c_account_no.substring(3, 6).replace(/^0+/, ''); 
+    var lot = buyer.c_account_no.substring(6, 8);
+
+    var xhr = new XMLHttpRequest();
+    var url = 'fetch_phase_details.php?phase=' + encodeURIComponent(phase);
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            var phase_details = JSON.parse(xhr.responseText);
+            if (phase_details && phase_details.c_acronym) {
+                document.getElementById('buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
+                document.getElementById('car_buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
+            } else {
+                document.getElementById('buyer_loc').value = "-----";
+                document.getElementById('car_buyer_loc').value = "-----";
+            }
+        } else {
+            document.getElementById('buyer_loc').value = "-----";
+            document.getElementById('car_buyer_loc').value = "-----";
+        }
+    };
+    xhr.onerror = function() {
+        document.getElementById('buyer_loc').value = "-----";
+        document.getElementById('car_buyer_loc').value = "-----";
+    };
+    xhr.send();
+
+    $('#multipleResultsModal').modal('hide'); 
+    
     updateCarList();
     calculateTotalAmount();
 }
