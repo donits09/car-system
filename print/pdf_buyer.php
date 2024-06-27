@@ -158,6 +158,25 @@ if (isset($_GET['id'])) {
                     <td class="pdf-font" colspan="3"></td>
                 </tr>
             </tfoot>';
+
+        $html .= '
+                </tbody>
+            </table>';
+        
+        $html .= '
+            <div class="encoded_by">
+                <p>Printed By: ';
+        
+            $c_employee_code = $_SESSION['username'];
+            $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+            $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+            
+            if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+                $html .= htmlspecialchars($encoder["c_realname"]);
+            } else {
+                $html .= "Unknown";
+            }
+
     } else {
         $html .= '
             <tr>

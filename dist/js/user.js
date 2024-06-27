@@ -7,7 +7,7 @@ function validateAlphaNumericInput(event) {
 }
 
 $(document).ready(function() {
-    $('#addUserForm').submit(function(e) {
+    /* $('#addUserForm').submit(function(e) {
         e.preventDefault();
     });
     $('#edit_data').submit(function(e) {
@@ -30,7 +30,7 @@ $(document).ready(function() {
         $('#edit_department').val(department);
     
         $('#editUserModal').modal('show');
-    });       
+    }); */       
 
     $('#addUserForm').submit(function(e) {
         e.preventDefault();
