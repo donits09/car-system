@@ -29,6 +29,12 @@ function isActive($pages) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CAR ENCODING</title>
   <link rel="stylesheet" href="<?php echo base_url ?>dist/css/navbar.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body.modal-open {
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg">
@@ -36,7 +42,7 @@ function isActive($pages) {
     <a class="navbar-brand" href="https://asianland.ph/">
         <img src="<?php echo base_url ?>images/logo.jpg" alt="ALSC Logo"> CAR ENCODING
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="background-color:rgba(255,255,255,0.5);">
       <span class="navbar-toggler-icon"></span>
     </button>
     <?php if ($c_group == 1) { ?>
@@ -61,6 +67,7 @@ function isActive($pages) {
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">Car Type</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users?page=index">System Users</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/logs?page=index">User Logs</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
@@ -106,6 +113,65 @@ function isActive($pages) {
                 <a class="dropdown-item" href="<?php echo base_url ?>supervisor/reports/summary_car_reports.php">Summary of Reports</a>
             </div>
         </li>
+        <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?php echo htmlspecialchars($c_realname); ?>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
+            </div>
+        </li>
+      </ul>
+    </div>
+    <?php } ?>
+      <?php if ($c_group == 3) { ?>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item<?php echo isActive(['/cashier/car?page=car_list']) ? ' active' : ''; ?>">
+                <a class="nav-link" href="<?php echo base_url ?>cashier/car?page=car_list">Home</a>
+              </li>
+              <li class="nav-item dropdown<?php echo isActive(['/cashier/car/all_car_list.php']) ? ' active' : ''; ?>">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Files
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
+                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/car/all_car_list.php">Car List</a>
+                  </div>
+              </li>
+              <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Reports
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
+                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/reports/car_reports.php">Car Reports</a>
+                  </div>
+              </li>
+              <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <?php echo htmlspecialchars($c_realname); ?>
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                      <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
+                  </div>
+              </li>
+            </ul>
+          </div>
+        <?php } ?>
+
+    <?php if ($c_group == 4) { ?>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
+          <a class="nav-link" href="<?php echo base_url ?>viewer/car?page=car_list">Home</a>
+        </li>
+        <!-- <li class="nav-item dropdown<?php echo isActive(['/viewer/car/all_car_list.php']) ? ' active' : ''; ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Files
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
+                <a class="dropdown-item" href="<?php echo base_url ?>viewer/car/all_car_list.php">Car List</a>
+            </div>
+        </li> -->
         <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php echo htmlspecialchars($c_realname); ?>

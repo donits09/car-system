@@ -1,5 +1,9 @@
 <?php 
 session_start();
+
+require_once('../../inc/check_session.php');
+check_user_group(1);
+
 include('../../config.php');
 
 $c_account_no = null;
@@ -50,7 +54,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group">
         <label for="car_no">CAR No.</label>
         <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
-        <div id="car_no_error" class="text-danger"></div>
+        <div id="car_no_error"></div>
     </div>
     <div class="form-group">
         <label for="c_car_type">Payment Type</label>
@@ -75,6 +79,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group">
         <label for="amount">Amount</label>
         <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <div id="car_amt_error"></div>
     </div>
 
     <div class="form-group">
@@ -109,6 +114,59 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
+<script>
+$(document).ready(function() {
+    $('#car-form').submit(function(e) {
+        e.preventDefault();
+
+        const buyerName = $('#buyer_name').val();
+        if (!buyerName || buyerName === 'Unknown') {
+            alert('Name field is required.');
+            return;
+        }
+
+        // if (confirm("Are you sure you want to save this car payment?")) {
+            var _this = $(this);
+
+            start_loader();
+
+            $.ajax({
+                url: "../../classes/Master.php?f=save_car_payment",
+                data: new FormData(_this[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: function(err) {
+                    console.log(err);
+                    alert_toast("An error occurred.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    console.log(resp); 
+                    if (resp && resp.status === 'success') {
+                        alert_toast(resp.msg, 'success');
+                        setTimeout(function() {
+                            $('#createCarModal').modal('hide'); 
+                            $('body').removeClass('modal-open'); 
+                            $('.modal-backdrop').remove(); 
+                            updateCarList();
+                        }, 1000);
+                    } else if (resp && resp.status === 'failed' && resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    } else {
+                        alert_toast("An unexpected error occurred", 'error');
+                    }
+                    end_loader();
+                }
+            });
+       // }
+    });
+
+});
+
+</script>
 <script>
 $(document).ready(function() {
     function fetchBuyerDetails(accountNo) {
@@ -146,9 +204,13 @@ $(document).ready(function() {
 
     $('#c_car_no').on('input', function() {
         const carNo = $(this).val();
+
         if (carNo.length < 6) {
-            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text');
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             $('#car-form button[type="submit"]').attr('disabled', true);
+        } else if (carNo.length > 6) {
+            $('#car_no_error').text('CAR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
+            $('#car-form button[type="submit"]').attr('disabled', false);
         } else {
             $.ajax({
                 type: 'POST',
@@ -157,11 +219,10 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function(response) {
                     if (response.exists) {
-                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text');
+                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text').css('color', 'red');
                         $('#car-form button[type="submit"]').attr('disabled', true);
                     } else {
                         $('#car_no_error').text('').removeClass('bold-text');
-                        $('#car-form button[type="submit"]').attr('disabled', false);
                     }
                 }
             });
@@ -169,9 +230,10 @@ $(document).ready(function() {
     });
 
     $('#car-form').on('submit', function(e) {
-        if ($('#car_no_error').text().length > 0) {
+        if ($('#car_no_error').text().includes('must be 6 digits')) {
             e.preventDefault();
         }
     });
 });
+
 </script>

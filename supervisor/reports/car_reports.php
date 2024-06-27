@@ -1,5 +1,13 @@
 <?php 
 session_start();
+/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
+    require_once('../logout.php');
+    exit();
+} */
+
+require_once('../../inc/check_session.php');
+check_user_group(2);
+
 include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
@@ -55,6 +63,7 @@ $current_date = date('Y-m-d');
                         <th>Location</th>
                         <th>Amount</th>
                         <th>MoP</th>
+                        <th>Status</th>
                         <th>Transaction Date</th>
                         <th>Pay Date</th>
                         <th>Encoder</th>
@@ -64,7 +73,7 @@ $current_date = date('Y-m-d');
                     <?php
                     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot
+                    b.c_block, b.c_lot, a.status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_tran_date ASC";
                     $stmt = odbc_prepare($conn, $car_list);
@@ -170,6 +179,17 @@ $current_date = date('Y-m-d');
                                     }
                                     ?>
                                 </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['status'] == 0) {
+                                        echo "-----";
+                                    } elseif ($row['status'] == 1) {
+                                        echo "CANCELLED";
+                                    } else {
+                                        echo "Unknown";
+                                    }
+                                    ?>
+                                </td>
                                 <td class="text-center tran-date">
                                     <?php
                                     $dateTime = new DateTime($row['c_tran_date']);
@@ -254,5 +274,73 @@ $current_date = date('Y-m-d');
     }
 });
  </script>
+
+<script>
+    /* Changes don sa export_csv vs old export_csv /galing csr_report.js/ */
+    document.getElementById('export_csv').addEventListener('click', function() {
+        let table = document.getElementById('car-table'); 
+        let csv = convertToCSV(table);
+        let today = new Date();
+
+        let year = today.getFullYear();
+        let month = (today.getMonth() + 1);
+        let day = today.getDate();
+
+        let formattedMonth = month < 10 ? '0' + month : month.toString();
+        let formattedDay = day < 10 ? '0' + day : day.toString();
+
+        let filename = `car_list_asof_${year}-${formattedMonth}-${formattedDay}.csv`;
+        console.log('CSV Filename:', filename);
+
+        downloadCSV(csv, filename);
+    });
+
+    function convertToCSV(table) {
+        let rows = table.querySelectorAll('tr');
+        let csv = [];
+
+        for (let row of rows) {
+            let cols = row.querySelectorAll('th, td');
+            let rowData = [];
+            for (let col of cols) {
+                rowData.push('"' + col.innerText.replace(/"/g, '""') + '"');
+            }
+            csv.push(rowData.join(','));
+        }
+
+        console.log('CSV Content:', csv.join('\n'));
+        return csv.join('\n');
+    }
+
+    function downloadCSV(csv, filename) {
+        let csvFile = new Blob([csv], { type: 'text/csv' });
+        let downloadLink = document.createElement('a');
+
+        downloadLink.download = filename;
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = 'none';
+
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    /* Export para sa PDF Reports */
+    document.getElementById('export_pdf').addEventListener('click', function() {
+        var startDate = $('#start_date').val();
+        var endDate = $('#end_date').val();
+
+        startDate = formatToISO(startDate);
+        endDate = formatToISO(endDate);
+
+        var url = '../../print/pdf_report_main.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+        window.open(url, '_blank');
+    });
+
+    function formatToISO(dateString) {
+        var parts = dateString.split('/');
+        return parts[2] + '-' + (parts[0].length === 1 ? '0' + parts[0] : parts[0]) + '-' + (parts[1].length === 1 ? '0' + parts[1] : parts[1]);
+    }
+</script>
 
 <?php include('../../inc/footer.php'); ?>

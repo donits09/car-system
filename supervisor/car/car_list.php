@@ -1,5 +1,13 @@
 <?php
 session_start();
+/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
+    require_once('../logout.php');
+    exit();
+} */
+
+require_once('../../inc/check_session.php');
+check_user_group(2);
+
 ?>
 <?php
 include('../../config.php');
@@ -141,6 +149,13 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                 <span class="fa fa-eye text-primary"></span> View
             </a>
             <div class="dropdown-divider"></div>
+            <div class="card-tools">
+                <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
+                    <span class="fas fa-print"></span> Print
+                </a>
+            </div>
+            <?php if ($row['e_status'] == 0){ ?>
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item edit_data" href="javascript:void(0)" 
             data-id="<?php echo $row['id']; ?>" 
             data-account-no="<?php echo $row['c_account_no']; ?>" 
@@ -151,16 +166,12 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             data-encoder="<?php echo $row['c_encoded_by']; ?>">
                 <span class="fa fa-edit text-info"></span> Edit
             </a>
-            <div class="dropdown-divider"></div>
-            <div class="card-tools">
-                <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
-                    <span class="fas fa-print"></span> Print
-                </a>
-            </div>
+            
             <div class="dropdown-divider"></div>
             <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo $row['c_car_no']; ?>">
                 <span class="fa fa-trash text-danger"></span> Delete
             </a>
+            <?php } ?>
         </div>
     </td>
 </tr>

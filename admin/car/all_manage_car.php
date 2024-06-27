@@ -1,5 +1,9 @@
 <?php 
 session_start();
+
+require_once('../../inc/check_session.php');
+check_user_group(1);
+
 include('../../config.php');
 
 $c_account_no = null;

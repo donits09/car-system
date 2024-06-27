@@ -1,5 +1,13 @@
 <?php 
 session_start();
+/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
+    require_once('../logout.php');
+    exit();
+} */
+
+require_once('../../inc/check_session.php');
+check_user_group(2);
+
 include('../../config.php');
 
 $c_account_no = null;

@@ -18,7 +18,7 @@ if (isset($_GET['id'])) {
                           b.c_name, b.c_phase, b.c_block, b.c_lot
                   FROM t_car_payment a
                   LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                  WHERE a.c_account_no = ?";
+                  WHERE a.c_account_no = ? ORDER BY a.c_tran_date ASC";
         $stmt = odbc_prepare($conn, $query);
         if (!$stmt || !odbc_execute($stmt, array($carNo))) {
             return null;
@@ -48,6 +48,16 @@ if (isset($_GET['id'])) {
         }
         $details = odbc_fetch_array($stmt);
         return $details ? htmlspecialchars($details["c_acronym"]) : "";
+    }
+
+    function fetchEncoderName($conn, $employeeCode) {
+        $query = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+        $stmt = odbc_prepare($conn, $query);
+        if (!$stmt || !odbc_execute($stmt, array($employeeCode))) {
+            return null;
+        }
+        $details = odbc_fetch_array($stmt);
+        return $details ? htmlspecialchars($details["c_realname"]) : "";
     }
 
     $carData = fetchCarPayments($conn, $c_account_no);
@@ -98,6 +108,7 @@ if (isset($_GET['id'])) {
                 <th>Check</th>
                 <th>Transaction Date</th>
                 <th>Payment Date</th>
+                <th>Encoded By</th>
             </tr>
         </thead>
         <tbody>';
@@ -108,7 +119,6 @@ if (isset($_GET['id'])) {
         $totalCheck = 0;
 
         foreach ($carData as $row) {
-
             $cashAmount = ($row['c_mop'] == 1) ? $row['c_car_amount'] : 0;
             $checkAmount = ($row['c_mop'] == 2) ? $row['c_car_amount'] : 0;
 
@@ -116,6 +126,8 @@ if (isset($_GET['id'])) {
             $totalCheck += $checkAmount;
 
             $phase_acronym = fetchPhaseDetails($conn, $c_phase) . ' ' . $c_block . ' ' . $c_lot;
+
+            $l_encode = fetchEncoderName($conn, $row['c_encoded_by']);
 
             $html .= '
             <tr>
@@ -127,6 +139,7 @@ if (isset($_GET['id'])) {
                 <td class="pdf-font">' . number_format($checkAmount, 2) . '</td>
                 <td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>
                 <td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>
+                <td class="pdf-font">' . $l_encode . '</td>
             </tr>';
         }
 
@@ -137,18 +150,37 @@ if (isset($_GET['id'])) {
                     <td class="pdf-font" colspan="4" style="text-align: right;"></td>
                     <td class="pdf-font">' . number_format($totalCash, 2) . '</td>
                     <td class="pdf-font">' . number_format($totalCheck, 2) . '</td>
-                    <td class="pdf-font" colspan="2"></td>
+                    <td class="pdf-font" colspan="3"></td>
                 </tr>
                 <tr>
                     <td class="pdf-font" colspan="4" style="text-align: right;">Final Total:</td>
                     <td class="pdf-font" colspan="2">' . number_format($totalCash + $totalCheck, 2) . '</td>
-                    <td class="pdf-font" colspan="2"></td>
+                    <td class="pdf-font" colspan="3"></td>
                 </tr>
             </tfoot>';
+
+        $html .= '
+                </tbody>
+            </table>';
+        
+        $html .= '
+            <div class="encoded_by">
+                <p>Printed By: ';
+        
+            $c_employee_code = $_SESSION['username'];
+            $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+            $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+            
+            if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+                $html .= htmlspecialchars($encoder["c_realname"]);
+            } else {
+                $html .= "Unknown";
+            }
+
     } else {
         $html .= '
             <tr>
-                <td class="pdf-font" colspan="12" style="text-align: center;">No records found.</td>
+                <td class="pdf-font" colspan="9" style="text-align: center;">No records found.</td>
             </tr>
         </tbody>';
     }
@@ -164,6 +196,9 @@ if (isset($_GET['id'])) {
 
     $dompdf->render();
 
-    $dompdf->stream("car_payment.pdf", ["Attachment" => 0]);
+    $dompdf->stream("car_buyers_payment.pdf", ["Attachment" => 0]);
 }
 ?>
+
+
+

@@ -1,5 +1,9 @@
 <?php
 session_start();
+
+require_once('../../inc/check_session.php');
+check_user_group(1);
+
 include('../../config.php');
 include('../../inc/navbar.php');
 include('../../inc/header.php');
@@ -136,7 +140,7 @@ $current_date = date('Y-m-d');
                                                 <?php endif; ?>
                                           
                                                 <?php if ($isLocked): ?>
-                                                    <a class="dropdown-item delete_data" href="javascript:void(0)" data-date="<?php echo htmlspecialchars($trandate); ?>" data-id="<?php echo htmlspecialchars($row['id']); ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
+                                                    <a class="dropdown-item unlock_data" href="javascript:void(0)" data-date="<?php echo htmlspecialchars($trandate); ?>">
                                                         <span class="fa fa-lock-open text-primary"></span> Unlock
                                                     </a>
                                                 <?php endif; ?>
@@ -155,7 +159,7 @@ $current_date = date('Y-m-d');
             </div>
         </div>
     </div>
-    <?php include ('../modals/main_modals.php'); ?>
+
 </body>
 
 <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
@@ -240,11 +244,11 @@ $current_date = date('Y-m-d');
             _conf("Are you sure you want to lock this summary report?", lock_summary, [sum_trandate, sum_cash, sum_check, sum_total]);
         });
 
-        $(document).on('click', '.delete_data', function() {
+        $(document).on('click', '.unlock_data', function() {
             var sum_trandate = $(this).data('date');
             var sum_id = $(this).data('id');
             var sum_car_no = $(this).data('car-no');
-            _conf("Are you sure you want to unlock this summary report?", unlock_summary, [sum_id, sum_trandate, sum_car_no]);
+            _conf("Are you sure you want to unlock this summary report?", unlock_summary, [sum_trandate]);
         });
 
         window._conf = function(msg, func, params) {
@@ -283,12 +287,12 @@ $current_date = date('Y-m-d');
             });
         }
 
-        function unlock_summary(sum_id, sum_trandate, sum_car_no) {
+        function unlock_summary(sum_trandate) {
             start_loader();
             $.ajax({
                 url: "../../classes/Master.php?f=unlock_trans",
                 method: "POST",
-                data: { id: sum_id, tran_date: sum_trandate, car_no: sum_car_no },
+                data: { tran_date: sum_trandate },
                 dataType: "json",
                 error: function(err) {
                     console.log("AJAX error: ", err);
