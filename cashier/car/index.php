@@ -65,6 +65,18 @@ include('../../inc/header.php');
         overflow: hidden;
         padding-right: 0 !important;
     }
+    #buyer_loc{
+        border:none;
+        background-color: transparent;
+        font-size: 14px;
+        font-style: italic;
+        font-weight: bold;
+        color:black;
+    }
+    #b_details{
+        text-align: left;
+        border: none;
+    }
 </style>
 
 <body>
@@ -166,14 +178,22 @@ include('../../inc/header.php');
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
                     <div class="card mt-3">
-                        <div class="pd-20">
-                            <h2 class="text-blue h4">Buyer's Details</h2>
-                        </div>
+                        <table id="b_details">
+                            <tr>
+                                <td style="width: 15%;border-top:none;border-bottom:none;border-left:none;">
+                                    <h2 class="text-blue h4">Buyer's Details</h2>
+                                </td>
+                                <td style="border-top:none;border-bottom:none;border-right:none;">
+                                    <input type="text" class="form-control" id="buyer_loc" name="buyer_loc" readonly>
+                                </td>
+                            </tr>
+                        </table>
+                        <hr>
                         <div class="container">
-                            <form class="row g-3">
+                            <form class="row g-3" id="buyerForm" method="post">
                                 <div class="col-md-4">
                                     <label for="acc_no" class="form-label">Account No.</label>
-                                    <input type="text" class="form-control" id="buyer_acc_no" readonly>
+                                    <input type="text" class="form-control" id="buyer_acc_no" name="buyer_acc_no" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="date_of_sale" class="form-label">Date of Sale</label>
@@ -207,11 +227,11 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-                
-                <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab" onshow="calculateTotalAmount()">
+                <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
                             <h2 class="text-blue h4">Car List</h2>
+                            <hr>
                             <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
                                 <span class="fa fa-edit"></span> Create New CAR
                             </button>
@@ -223,7 +243,23 @@ include('../../inc/header.php');
                                 <span class="fa fa-download"></span> Export as PDF
                             </a>
                             <hr>
-                            <div class="container">
+                                <div class="container">
+                                    <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <label for="accno" class="form-label">Acc #</label>
+                                        <input type="text" class="form-control" id="accno" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="fullname" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="fullname" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="car_buyer_loc" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="car_buyer_loc" name="car_buyer_loc" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">
@@ -235,7 +271,7 @@ include('../../inc/header.php');
                                     </tr>
                                 </table>
                             </div>
-
+                            
                             <div class="table-container">
                                 <table class="table table-bordered table-striped" id="car-list-table">
                                     <thead class="table-dark">
@@ -455,7 +491,6 @@ function delete_car(carId, carNo) {
         }
     });
 }
-
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index_cshr.js"></script>
