@@ -80,6 +80,8 @@ include('../../inc/header.php');
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
+    <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+    <hr>
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
         <table class="table">
@@ -170,7 +172,7 @@ include('../../inc/header.php');
                     <a class="nav-link active" id="buyer-details-tab" data-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Car List</a>
+                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -190,10 +192,10 @@ include('../../inc/header.php');
                         <hr>
                         </div>
                         <div class="container">
-                            <form class="row g-3" id="buyerForm" method="post">
+                            <form class="row g-3">
                                 <div class="col-md-4">
                                     <label for="acc_no" class="form-label">Account No.</label>
-                                    <input type="text" class="form-control" id="buyer_acc_no" name="buyer_acc_no" readonly>
+                                    <input type="text" class="form-control" id="buyer_acc_no" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="date_of_sale" class="form-label">Date of Sale</label>
@@ -215,6 +217,37 @@ include('../../inc/header.php');
                                     <label for="mname" class="form-label">Middle Name</label>
                                     <input type="text" class="form-control" id="buyer_mname" readonly>
                                 </div>
+
+
+                                <div class="col-md-4">
+                                    <label for="bal" class="form-label">Balance</label>
+                                    <input type="text" class="form-control" id="buyer_bal" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tcp" class="form-label">Net TCP</label>
+                                    <input type="text" class="form-control" id="buyer_tcp" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ret" class="form-label">Account Option</label>
+                                    <input type="text" class="form-control" id="buyer_ret" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="text" class="form-control" id="buyer_email" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="mobile" class="form-label">Mobile #</label>
+                                    <input type="text" class="form-control" id="buyer_mobile" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="title" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="buyer_title" readonly>
+                                </div>
+
+
                                 <div class="col-md-12">
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control" id="buyer_address" readonly>
@@ -230,7 +263,7 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">Car List</h2>
+                            <h2 class="text-blue h4">CAR List</h2>
                             <hr>
                                 <div class="container">
                                     <div class="row">

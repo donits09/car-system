@@ -1,11 +1,12 @@
 <?php 
 session_start();
-require_once('../../../inc/check_session.php');
-check_user_group(1);
+// require_once('../../../inc/check_session.php');
+// check_user_group(1);
 
 include('../../../config.php');
-include('../../../inc/header.php');  
 include('../../../inc/navbar.php');  
+include('../../../inc/header.php');  
+
 ?>
 
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
@@ -14,6 +15,8 @@ include('../../../inc/navbar.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <!-- <div class="pd-20" id="car-btn"> -->
+        <h2 class="text-blue h4">CAR Type</h2>
+        <hr>
         <div class="pd-20">
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                 <span class="fa fa-edit"></span> Create New Payment Type

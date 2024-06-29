@@ -5,8 +5,8 @@ require_once('../../../inc/check_session.php');
 check_user_group(1);
 
 include('../../../config.php');
-include('../../../inc/header.php');
-include('../../../inc/navbar.php');
+include('../../../inc/navbar.php');  
+include('../../../inc/header.php');  
 ?>
 
 <!DOCTYPE html>
@@ -24,6 +24,8 @@ include('../../../inc/navbar.php');
 <body>
     <div class="container mt-5">
         <div class="card mt-3">
+        <h2 class="text-blue h4">User Logs</h2>
+        <hr>
             <div class="pd-20">
                 <form method="get" action="">
                     <div class="row">

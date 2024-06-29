@@ -39,8 +39,17 @@ if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
         $i = 1;
 
         while ($row = odbc_fetch_array($stmt)) {
+            $row_class = $row['e_status'] == 1 ? 'green-row' : '';
             ?>
-            <tr>
+            <style>
+                .green-row {
+                    background-color: #cbd2d9 !important;
+                    /* color:white !important; */
+                    font-weight: bold !important;
+                    font-style: italic;
+                }
+            </style>
+<tr class="<?php echo $row_class; ?>">
                 <td class="text-center"><?php echo $i++; ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_account_no']); ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
@@ -153,7 +162,7 @@ if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
                 <td class="text-center"><?php echo htmlspecialchars($realname); ?></td>
                 <td align="center">
                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                        Action
+                        Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <div class="dropdown-menu" role="menu">
@@ -166,7 +175,7 @@ if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
                                 <span class="fas fa-print"></span> Print
                             </a>
                         </div>
-                        <?php if ($row['e_status'] == 0){ ?>
+                        <!-- <?php if ($row['e_status'] == 0){ ?>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item edit_data" href="javascript:void(0)" 
                             data-id="<?php echo htmlspecialchars($row['id']); ?>" 
@@ -183,7 +192,7 @@ if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
                                 <span class="fa fa-trash text-danger"></span> Delete
                             </a>
                         </div>
-                    <?php } ?>
+                        <?php } ?> -->
                 </td>
             </tr>
             <?php

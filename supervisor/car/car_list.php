@@ -26,9 +26,10 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
         odbc_execute($stmt, array($account_no));
         $i = 1;
         while ($row = odbc_fetch_array($stmt)): 
+            $row_class = $row['e_status'] == 1 ? 'green-row' : '';
 ?>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
-<tr>
+<tr class="<?php echo $row_class; ?>">
     <td class="text-center"><?php echo $i++; ?></td>
     <td class="text-center"><?php echo $row['c_account_no']; ?></td>
     <td class="text-center"><?php echo $row['c_car_no']; ?></td>
@@ -141,7 +142,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
     <td class="text-center"><?php echo $realname; ?></td>
     <td align="center">
         <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-            Action
+            Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu" role="menu">

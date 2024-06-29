@@ -97,20 +97,47 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_remarks').value = data.c_remarks; 
     document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
     document.getElementById('accno').value = data.c_account_no;
+    document.getElementById('buyer_bal').value = parseFloat(data.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('buyer_tcp').value = parseFloat(data.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('buyer_ret').value = data.c_retention;
+    document.getElementById('buyer_email').value = data.c_email;
+    document.getElementById('buyer_mobile').value = data.c_mobile_no;
 
+    var c_lid = data.c_account_no.substring(0, 8);
     var phase = data.c_account_no.substring(0, 3);
     var block = data.c_account_no.substring(3, 6).replace(/^0+/, ''); 
     var lot = data.c_account_no.substring(6, 8);
 
-    var xhr = new XMLHttpRequest();
-    var url = 'fetch_phase_details.php?phase=' + encodeURIComponent(phase);
-    xhr.open('GET', url, true);
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-            var phase_details = JSON.parse(xhr.responseText);
+    var xhrTitle = new XMLHttpRequest();
+    var urlTitle = 'fetch_title_details.php?c_lid=' + encodeURIComponent(c_lid);
+    xhrTitle.open('GET', urlTitle, true);
+    xhrTitle.onload = function() {
+        if (xhrTitle.status === 200) {
+            var lid_details = JSON.parse(xhrTitle.responseText);
+            if (lid_details && lid_details.c_doc_tct_jun_2020) {
+                document.getElementById('buyer_title').value = lid_details.c_doc_tct_jun_2020;
+            } else {
+                document.getElementById('buyer_title').value = "-----";
+            }
+        } else {
+            document.getElementById('buyer_title').value = "-----";
+        }
+    };
+    xhrTitle.onerror = function() {
+        document.getElementById('buyer_title').value = "-----";
+    };
+    xhrTitle.send();
+
+    var xhrPhase = new XMLHttpRequest();
+    var urlPhase = 'fetch_phase_details.php?phase=' + encodeURIComponent(phase);
+    xhrPhase.open('GET', urlPhase, true);
+    xhrPhase.onload = function() {
+        if (xhrPhase.status === 200) {
+            var phase_details = JSON.parse(xhrPhase.responseText);
             if (phase_details && phase_details.c_acronym) {
-                document.getElementById('buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + data.c_type + ')';
-                document.getElementById('car_buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + data.c_type + ')';
+                var buyerLoc = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + data.c_type + ')';
+                document.getElementById('buyer_loc').value = buyerLoc;
+                document.getElementById('car_buyer_loc').value = buyerLoc;
             } else {
                 document.getElementById('buyer_loc').value = "-----";
                 document.getElementById('car_buyer_loc').value = "-----";
@@ -120,12 +147,13 @@ function fillBuyerDetails(data) {
             document.getElementById('car_buyer_loc').value = "-----";
         }
     };
-    xhr.onerror = function() {
+    xhrPhase.onerror = function() {
         document.getElementById('buyer_loc').value = "-----";
         document.getElementById('car_buyer_loc').value = "-----";
     };
-    xhr.send();
+    xhrPhase.send();
 }
+
 
 var currentPage = 1;
 var rowsPerPage = 10; 
@@ -237,10 +265,37 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
     document.getElementById('fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
     document.getElementById('accno').value = buyer.c_account_no;
+    document.getElementById('buyer_bal').value = parseFloat(buyer.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('buyer_tcp').value = parseFloat(buyer.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    document.getElementById('buyer_ret').value = buyer.c_retention;
+    document.getElementById('buyer_email').value = buyer.c_email;
+    document.getElementById('buyer_mobile').value = buyer.c_mobile_no;
 
     var phase = buyer.c_account_no.substring(0, 3);
     var block = buyer.c_account_no.substring(3, 6).replace(/^0+/, ''); 
     var lot = buyer.c_account_no.substring(6, 8);
+    var c_lid = buyer.c_account_no.substring(0, 8);
+
+    var xhrTitle = new XMLHttpRequest();
+    var urlTitle = 'fetch_title_details.php?c_lid=' + encodeURIComponent(c_lid);
+    xhrTitle.open('GET', urlTitle, true);
+    xhrTitle.onload = function() {
+        if (xhrTitle.status === 200) {
+            var lid_details = JSON.parse(xhrTitle.responseText);
+            if (lid_details && lid_details.c_doc_tct_jun_2020) {
+                document.getElementById('buyer_title').value = lid_details.c_doc_tct_jun_2020;
+            } else {
+                document.getElementById('buyer_title').value = "-----";
+            }
+        } else {
+            document.getElementById('buyer_title').value = "-----";
+        }
+    };
+    xhrTitle.onerror = function() {
+        document.getElementById('buyer_title').value = "-----";
+    };
+    xhrTitle.send();
+
 
     var xhr = new XMLHttpRequest();
     var url = 'fetch_phase_details.php?phase=' + encodeURIComponent(phase);

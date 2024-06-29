@@ -39,8 +39,8 @@ function isActive($pages) {
 <body>
 <nav class="navbar navbar-expand-lg">
   <div class="container">
-    <a class="navbar-brand" href="https://asianland.ph/">
-        <img src="<?php echo base_url ?>images/logo.jpg" alt="ALSC Logo"> CAR ENCODING
+    <a class="navbar-brand" href="#">
+        <img src="<?php echo base_url ?>images/logo.jpg" alt="ALSC Logo"> CASH ACKNOWLEDGEMENT RECEIPT ENCODING
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="background-color:rgba(255,255,255,0.5);">
       <span class="navbar-toggler-icon"></span>
@@ -56,7 +56,7 @@ function isActive($pages) {
             Files
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
-                <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">Car List</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">CAR List</a>
             </div>
         </li>
 
@@ -65,7 +65,7 @@ function isActive($pages) {
             Settings
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">Car Type</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">CAR Type</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users?page=index">System Users</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/logs?page=index">User Logs</a>
             </div>
@@ -75,7 +75,7 @@ function isActive($pages) {
             Reports
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
-                <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/car_reports.php">Car Reports</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/car_reports.php">CAR Reports</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/summary_car_reports.php">Summary of Reports</a>
             </div>
         </li>
