@@ -3,7 +3,7 @@
 
     require_once('../../inc/check_session.php');
     check_user_group(1);
-
+    $c_encoded_by = '';
     include('../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
         $accountId = $_GET['id'];
@@ -154,7 +154,7 @@
                 <tr>
                     <th>Encoded by:</th>
                     <?php
-                        $c_encoded_by = $_SESSION['username'];
+                        $c_encoded_by =  $row['c_encoded_by']; 
                         $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
                         $results = odbc_exec($conn, $get_encoder_details_qry);
 

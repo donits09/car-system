@@ -1,13 +1,5 @@
 <?php
 session_start(); 
-/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
-    require_once('../logout.php');
-    exit();
-} */
-
-// require_once('../../inc/check_session.php');
-// check_user_group(3);
-
 include('../../config.php');
 
 if (isset($_GET['username'])) {
@@ -22,34 +14,17 @@ if (isset($_GET['buyer_acc_no'])) {
     $account_no = '';
 }
 
-$car_list_query = "SELECT * FROM t_car_payment WHERE c_account_no = ? AND c_encoded_by = ? AND status != 1";
-$stmt = odbc_prepare($conn, $car_list_query);
+if (!empty($account_no)) {
+    $car_list_query = "SELECT * FROM t_car_payment WHERE c_account_no = ? AND c_encoded_by = ? AND status != 1";
+    $stmt = odbc_prepare($conn, $car_list_query);
 
-$hasRows = false;
-
-if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
-    while ($row = odbc_fetch_array($stmt)) {
-        if (!empty($row['c_account_no'])) {
-            $hasRows = true;
-            break;
-        }
-    }
-    if ($hasRows) {
-        odbc_execute($stmt, array($account_no, $username));
+    if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
         $i = 1;
 
         while ($row = odbc_fetch_array($stmt)) {
             $row_class = $row['e_status'] == 1 ? 'green-row' : '';
             ?>
-            <style>
-                .green-row {
-                    background-color: #cbd2d9 !important;
-                    /* color:white !important; */
-                    font-weight: bold !important;
-                    font-style: italic;
-                }
-            </style>
-<tr class="<?php echo $row_class; ?>">
+            <tr class="<?php echo htmlspecialchars($row_class); ?>">
                 <td class="text-center"><?php echo $i++; ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_account_no']); ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
@@ -152,11 +127,13 @@ if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                 <?php
                 $c_encoded_by = $row['c_encoded_by'];
-                $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
-                $results = odbc_exec($conn, $get_encoder_details_qry);
+                $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = ?";
+                $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
 
-                if ($encoder = odbc_fetch_array($results)) {
-                    $realname = $encoder["c_realname"];
+                if (odbc_execute($encoder_stmt, array($c_encoded_by))) {
+                    if ($encoder = odbc_fetch_array($encoder_stmt)) {
+                        $realname = $encoder["c_realname"];
+                    }
                 }
                 ?>
                 <td class="text-center"><?php echo htmlspecialchars($realname); ?></td>
@@ -175,28 +152,11 @@ if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
                                 <span class="fas fa-print"></span> Print
                             </a>
                         </div>
-                        <!-- <?php if ($row['e_status'] == 0){ ?>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                            data-id="<?php echo htmlspecialchars($row['id']); ?>" 
-                            data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                            data-payment-type="<?php echo htmlspecialchars($row['c_car_type']); ?>" 
-                            data-amount="<?php echo htmlspecialchars($row['c_car_amount']); ?>" 
-                            data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>" 
-                            data-pay-date="<?php echo htmlspecialchars($row['c_car_paydate']); ?>" 
-                            data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
-                                <span class="fa fa-edit text-info"></span> Edit
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo htmlspecialchars($row['id']); ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
-                                <span class="fa fa-trash text-danger"></span> Delete
-                            </a>
-                        </div>
-                        <?php } ?> -->
+                    </div>
                 </td>
             </tr>
             <?php
         }
     }
-}
+} 
 ?>

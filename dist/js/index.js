@@ -99,7 +99,11 @@ function fillBuyerDetails(data) {
     document.getElementById('accno').value = data.c_account_no;
     document.getElementById('buyer_bal').value = parseFloat(data.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('buyer_tcp').value = parseFloat(data.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('buyer_ret').value = data.c_retention;
+    if (data.c_retention == '1') {
+        document.getElementById('buyer_ret').value = "Retention";
+    } else {
+        document.getElementById('buyer_ret').value = "------";
+    }
     document.getElementById('buyer_email').value = data.c_email;
     document.getElementById('buyer_mobile').value = data.c_mobile_no;
 
@@ -267,7 +271,11 @@ function selectBuyer(buyer) {
     document.getElementById('accno').value = buyer.c_account_no;
     document.getElementById('buyer_bal').value = parseFloat(buyer.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('buyer_tcp').value = parseFloat(buyer.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    document.getElementById('buyer_ret').value = buyer.c_retention;
+    if (buyer.c_retention == '1') {
+        document.getElementById('buyer_ret').value = "Retention";
+    } else {
+        document.getElementById('buyer_ret').value = "------";
+    }
     document.getElementById('buyer_email').value = buyer.c_email;
     document.getElementById('buyer_mobile').value = buyer.c_mobile_no;
 

@@ -33,3 +33,16 @@ form{
 .form-control.txt{
     margin-bottom:10px;
 }
+.form-label {
+    white-space: nowrap;
+}
+
+.rem_note {
+    display: inline;
+    font-style: italic;
+}
+.note {
+    display: inline;
+    font-weight: bold;
+    color:red;
+}

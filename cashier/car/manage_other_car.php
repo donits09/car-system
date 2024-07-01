@@ -35,7 +35,6 @@
             $c_car_amount = $result["c_car_amount"];
             $c_car_no = $result["c_car_no"];
             $c_car_paydate = $result["c_car_paydate"];
-            $c_encoded_by = $result["c_encoded_by"];
             $c_mop = $result["c_mop"];
             $c_encoded_by = $result["c_encoded_by"];
         }
@@ -162,19 +161,23 @@
 </div>
     <div class="form-group">
         <label for="pay_date">Pay Date</label>
-        <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required>
+        <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required>
     </div>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
         <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo $_SESSION['username'] ?>" readonly>
         <?php
+        if (isset($_GET['id']) && $_GET['id'] > 0) {
+            $c_encoded_by == $c_encoded_by;
+        }else{
             $c_encoded_by = $_SESSION['username'];
-            $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
-            $results = odbc_exec($conn, $get_encoder_details_qry);
+        }
+        $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
+        $results = odbc_exec($conn, $get_encoder_details_qry);
 
-            if ($encoder = odbc_fetch_array($results)) {
-                $realname = $encoder["c_realname"];
-            }
+        if ($encoder = odbc_fetch_array($results)) {
+            $realname = $encoder["c_realname"];
+        }
         ?>
         <input type="text" class="form-control" value="<?php echo $realname ?>" readonly>
     </div>

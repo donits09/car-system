@@ -211,7 +211,6 @@ Class Master{
 			$maxId = 1; 
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
-	
 		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop";
 		$values = "'$maxId','$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop'";
 		$resp = array();
@@ -234,7 +233,6 @@ Class Master{
 						c_car_no = '$c_car_no',
 						c_car_paydate = '$c_car_paydate',
 						c_car_amount = '$c_car_amount',
-						c_encoded_by = '$c_encoded_by',
 						c_tran_updated = '$c_tran_date',
 						c_mop = '$c_mop'
 					  WHERE id = '$id'";
@@ -290,13 +288,13 @@ Class Master{
 		$resp = array();
 	
 		if (empty($id)) {
-			$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
 			$insert = "INSERT INTO t_other_car_payment ($data) VALUES ($values)";
 			$insert1 = "INSERT INTO t_car_payment ($data1) VALUES ($values1)";
 			$save = odbc_exec($this->conn, $insert);
 			$save1 = odbc_exec($this->conn, $insert1);
 	
 			if ($save && $save1) {
+				$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
 				$resp['status'] = 'success';
 				$resp['msg'] = "New car payment successfully saved.";
 			} else {
@@ -316,7 +314,6 @@ Class Master{
 						c_car_no = '$c_car_no',
 						c_car_paydate = '$c_car_paydate',
 						c_car_amount = '$c_car_amount',
-						c_encoded_by = '$c_encoded_by',
 						c_tran_updated = '$c_tran_date',
 						c_mop = '$c_mop'
 					  WHERE id = '$id'";
@@ -344,11 +341,12 @@ Class Master{
 		$resp = array();
 	
 		if (empty($id)) {
-			$this->car_logs('Car Type Management', "ADDED - $c_payment_type");
+			
 			$insert = "INSERT INTO t_car_type ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert);
 	
 			if ($save) {
+				$this->car_logs('Car Type Management', "ADDED - $c_payment_type");
 				$resp['status'] = 'success';
 				$resp['msg'] = "New car type successfully saved.";
 			} else {
@@ -484,6 +482,7 @@ Class Master{
 		$save1 = odbc_exec($this->conn, $update);
 	
 		if ($save && $save1) {
+			$this->car_logs('Summary Reports', "REPORT LOCKED - $tran_date");
 			$resp['status'] = 'success';
 			$resp['msg'] = "Summary report locked successfully.";
 		} else {
@@ -508,6 +507,7 @@ Class Master{
 		$save1 = odbc_exec($this->conn, $update1);
 	
 		if ($save && $save1) {
+			$this->car_logs('Summary Reports', "UNLOCKED - $tran_date");
 			$resp['status'] = 'success';
 			$resp['msg'] = "Summary report unlocked successfully.";
 		} else {
@@ -539,10 +539,10 @@ Class Master{
 		$resp = [];
 		if ($save) {
 			$resp['status'] = 'success';
-			//$resp['msg'] = "Logs have been successfully inserted.";
+			$resp['msg'] = "Logs have been successfully inserted.";
 		} else {
 			$resp['status'] = 'failed';
-			//$resp['err'] = odbc_errormsg($this->conn) . " [$insert]";
+			$resp['err'] = odbc_errormsg($this->conn) . " [$insert]";
 		}
 		//echo json_encode($resp);
 	}

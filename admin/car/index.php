@@ -247,7 +247,12 @@ include('../../inc/header.php');
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
                                 </div>
                                 <div class="col-md-12">
-                                    <label for="remarks" class="form-label">Remarks</label>
+                                    <label for="remarks" class="form-label">
+                                        Remarks 
+                                        <span class="rem_note">
+                                            (<span class="note">NOTE:</span> The Enter key is enabled only on the last line)
+                                        </span>
+                                    </label>
                                     <textarea class="form-control txt" rows="10" cols="50" id="buyer_remarks" name="buyer_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
                                 </div>
                                 <div class="col-md-12">
