@@ -374,6 +374,97 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
+
+	// function save_remarks() {
+	// 	extract($_POST);
+	// 	$resp = array();
+
+	// 	$buyer_acc_no = isset($buyer_acc_no) ? (int)$buyer_acc_no : 0;
+	// 	$buyer_remarks = isset($buyer_remarks) ? trim($buyer_remarks) : '';
+
+	// 	if ($buyer_acc_no > 0 && !empty($buyer_remarks)) {
+	// 		try {
+	// 			$update_query = "UPDATE t_buyers_account SET c_remarks = '" . addslashes($buyer_remarks) . "' WHERE c_account_no = $buyer_acc_no";
+	// 			$save = odbc_exec($this->conn, $update_query);
+	
+	// 			if ($save) {
+	// 				$this->car_logs('Car Management', "Updated remarks - $buyer_acc_no - $buyer_remarks");
+	// 				$resp['status'] = 'success';
+	// 				$resp['msg'] = "Buyer's account successfully updated.";
+	// 				$resp['remarks'] = $buyer_remarks; 
+	// 			} else {
+	// 				$resp['status'] = 'failed';
+	// 				$resp['err'] = odbc_errormsg($this->conn);
+	// 			}
+	// 		} catch (Exception $e) {
+	// 			$resp['status'] = 'failed';
+	// 			$resp['err'] = 'SQL error: ' . $e->getMessage();
+	// 		}
+	// 	} else {
+	// 		$resp['status'] = 'failed';
+	// 		$resp['err'] = 'Invalid input or missing account number or remarks.';
+	// 	}
+	// 	echo json_encode($resp);
+	// }
+		
+	
+
+	
+	////////////////Naloka ako rito. Jujubels. Dhen, pa-add nalang din ng logs sa ibang functions na wala pa. -dhonitsxzkie
+	function save_remarks() {
+		ob_start();
+	
+		extract($_POST);
+		$resp = array();
+	
+		$buyer_acc_no = isset($buyer_acc_no) ? (int)$buyer_acc_no : 0;
+		$buyer_remarks = isset($buyer_remarks) ? trim($buyer_remarks) : '';
+	
+		if ($buyer_acc_no > 0 && !empty($buyer_remarks)) {
+			try {
+				$fetch_query = "SELECT c_remarks FROM t_buyers_account WHERE c_account_no = $buyer_acc_no";
+				$fetch_result = odbc_exec($this->conn, $fetch_query);
+				$current_remarks = odbc_result($fetch_result, 'c_remarks');
+	
+				$update_query = "UPDATE t_buyers_account SET c_remarks = '" . pg_escape_string($buyer_remarks) . "' WHERE c_account_no = $buyer_acc_no";
+				$save = odbc_exec($this->conn, $update_query);
+	
+				if ($save) {
+					$current_lines = explode("\n", $current_remarks);
+					$new_lines = explode("\n", $buyer_remarks);
+					$modified_lines = [];
+					foreach ($new_lines as $index => $line) {
+						if (!isset($current_lines[$index]) || $current_lines[$index] !== $line) {
+							$prev_line = isset($current_lines[$index]) ? $current_lines[$index] : '';
+							$this->car_logs('Car Management', "UPDATED REMARKS - $buyer_acc_no - PREVIOUS: $prev_line, UPDATED: $line");
+	
+							$modified_lines[] = $line;
+						}
+					}
+	
+					$resp['status'] = 'success';
+					$resp['msg'] = "Buyer's account successfully updated.";
+					$resp['remarks'] = $buyer_remarks;
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} catch (Exception $e) {
+				$resp['status'] = 'failed';
+				$resp['err'] = 'SQL error: ' . $e->getMessage();
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = 'Invalid input or missing account number or remarks.';
+		}
+	
+		ob_end_clean();
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
+		
+	
+	
 	function save_locked_trans() {
 		extract($_POST);
 		
@@ -429,20 +520,33 @@ Class Master{
 	
 	public function car_logs($module, $notes){
 		require_once('../auth/session_auth.php');
-		$username = $_SESSION['username'];
-		$date = date('Y-m-d');
-		$time = date('H:i:s');
-		$values = "'$username','$notes','$date','$time','$module'";
-		$insert = "INSERT INTO t_car_logs (c_name, c_log, c_date, c_time, c_module) VALUES ($values)";
+
+		$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'unknown';
+		
+	
+		$escaped_username = $username;
+		$escaped_notes = pg_escape_string($notes); ///shutainamerliiiiiiiiiiiiiiiiiii
+		$escaped_date = date('Y-m-d');
+		$escaped_time = date('H:i:s');
+		$escaped_module = $module;
+
+		$insert = "INSERT INTO t_car_logs (c_name, c_log, c_date, c_time, c_module) 
+				   VALUES ('$escaped_username', '$escaped_notes', '$escaped_date', '$escaped_time', '$escaped_module')";
+		
+
 		$save = odbc_exec($this->conn, $insert);
+		
+		$resp = [];
 		if ($save) {
-				$resp['status'] = 'success';
-				$resp['msg'] = "Logs has been successfully inserted.";
+			$resp['status'] = 'success';
+			//$resp['msg'] = "Logs have been successfully inserted.";
 		} else {
-				$resp['status'] = 'failed';
-				$resp['err'] = odbc_errormsg($this->conn) . " [$insert]";
+			$resp['status'] = 'failed';
+			//$resp['err'] = odbc_errormsg($this->conn) . " [$insert]";
 		}
+		//echo json_encode($resp);
 	}
+	
 }
 
 $Master = new Master();
@@ -456,6 +560,9 @@ switch ($action) {
 		break;
 	case 'save_car_type':
 		echo $Master->save_car_type();
+		break;
+	case 'save_remarks':
+		echo $Master->save_remarks();
 		break;
     case 'delete_car':
         if (isset($_POST['carId']) && isset($_POST['carNo'])) {

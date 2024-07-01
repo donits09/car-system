@@ -10,6 +10,7 @@ include('../../inc/header.php');
 
 ?>
 <?php
+    $c_remarks = '';
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
     $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
     $l_lot = isset($_GET["lot"]) ? $_GET["lot"] : '' ;
@@ -78,9 +79,7 @@ include('../../inc/header.php');
         text-align: left;
         border: none;
     }
-    /* input{
-        margin-bottom:10px;
-    } */
+
 </style>
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
@@ -194,69 +193,65 @@ include('../../inc/header.php');
                         </table>
                         <hr>
                         <div class="container">
-                            <form class="row g-3">
+                            <form class="row g-3" id="buyerForm">
                                 <div class="col-md-4">
                                     <label for="acc_no" class="form-label">Account No.</label>
-                                    <input type="text" class="form-control" id="buyer_acc_no" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_acc_no" name="buyer_acc_no" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="date_of_sale" class="form-label">Date of Sale</label>
-                                    <input type="text" class="form-control" id="buyer_date_of_sale" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_date_of_sale" name="buyer_date_of_sale" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="acc_status" class="form-label">Account Status</label>
-                                    <input type="text" class="form-control" id="buyer_acc_status" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_acc_status" name="buyer_acc_status" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="lname" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="buyer_lname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_lname" name="buyer_lname" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="fname" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="buyer_fname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_fname" name="buyer_fname" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="mname" class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control" id="buyer_mname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_mname" name="buyer_mname" readonly>
                                 </div>
-
-
                                 <div class="col-md-4">
                                     <label for="bal" class="form-label">Balance</label>
-                                    <input type="text" class="form-control" id="buyer_bal" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_bal" name="buyer_bal" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="tcp" class="form-label">Net TCP</label>
-                                    <input type="text" class="form-control" id="buyer_tcp" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_tcp" name="buyer_tcp" readonly>
                                 </div>
-
                                 <div class="col-md-4">
                                     <label for="ret" class="form-label">Account Option</label>
-                                    <input type="text" class="form-control" id="buyer_ret" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_ret" name="buyer_ret" readonly>
                                 </div>
-
                                 <div class="col-md-4">
                                     <label for="email" class="form-label">Email Address</label>
-                                    <input type="text" class="form-control" id="buyer_email" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_email" name="buyer_email" readonly>
                                 </div>
-
                                 <div class="col-md-4">
                                     <label for="mobile" class="form-label">Mobile #</label>
-                                    <input type="text" class="form-control" id="buyer_mobile" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_mobile" name="buyer_mobile" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="title" class="form-label">Title</label>
-                                    <input type="text" class="form-control" id="buyer_title" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_title" name="buyer_title" readonly>
                                 </div>
-
-
                                 <div class="col-md-12">
                                     <label for="address" class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="buyer_address" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">Remarks</label>
-                                    <textarea class="form-control" rows="10" cols="50" id="buyer_remarks" readonly></textarea>
+                                    <textarea class="form-control txt" rows="10" cols="50" id="buyer_remarks" name="buyer_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -345,6 +340,29 @@ include('../../inc/header.php');
     </div>
 </div>
 </body>
+<script>
+    document.getElementById('buyer_remarks').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const textarea = event.target;
+            const lines = textarea.value.split('\n');
+            const caretPosition = textarea.selectionStart;
+
+            let lineNumber = 0;
+            let currentPosition = 0;
+            for (let i = 0; i < lines.length; i++) {
+                currentPosition += lines[i].length + 1; 
+                if (caretPosition < currentPosition) {
+                    lineNumber = i;
+                    break;
+                }
+            }
+
+            if (lineNumber < lines.length - 1) {
+                event.preventDefault();
+            }
+        }
+    });
+</script>
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
@@ -494,8 +512,47 @@ function delete_car(carId, carNo) {
         }
     });
 }
+</script>
+<script>
+$(document).ready(function() {
+    $('#buyerForm').submit(function(e) {
+        e.preventDefault(); 
+
+        start_loader();
+
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            url: "../../classes/Master.php?f=save_remarks",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+                alert_toast("An error occurred: " + error, 'error');
+                end_loader(); 
+            },
+            success: function(resp) {
+                console.log(resp);
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success'); 
+                    $('#buyer_remarks').val(resp.remarks);
+                } else {
+                    alert_toast("An unexpected error occurred", 'error'); 
+                }
+                end_loader();
+            }
+        });
+    });
+});
 
 </script>
+
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <!-- <script src="../../dist/js/car_list.js"></script> -->

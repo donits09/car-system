@@ -82,6 +82,7 @@ include('../../../inc/header.php');
                             <td>
                             <?php
                                 //Eto yung lagi pong naooverwrite kapag nag memerge BAHAHAHAHA
+                                ///Noted Hahahahahaha - donits
                                 $c_encoded_by = $row['c_name'];
                                 $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
                                 $results = odbc_exec($conn, $get_encoder_details_qry);
@@ -92,7 +93,7 @@ include('../../../inc/header.php');
                             ?>
                             <?php echo $realname ?>
                             </td>
-                            <td class="text-center"><?php echo $row['c_log']; ?></td>
+                            <td class="text-left"><?php echo $row['c_log']; ?></td>
                             <td class="text-center"><?php echo $row['c_date']; ?></td>
                             <td class="text-center"><?php echo $row['c_time']; ?></td>
                             <td class="text-center"><?php echo $row['c_module']; ?></td>
