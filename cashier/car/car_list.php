@@ -15,7 +15,7 @@ if (isset($_GET['buyer_acc_no'])) {
 }
 
 if (!empty($account_no)) {
-    $car_list_query = "SELECT * FROM t_car_payment WHERE c_account_no = ? AND c_encoded_by = ? AND status != 1";
+    $car_list_query = "SELECT * FROM t_car_payment WHERE c_account_no = ? AND c_encoded_by = ? AND status != 1 ORDER BY c_tran_date DESC";
     $stmt = odbc_prepare($conn, $car_list_query);
 
     if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
