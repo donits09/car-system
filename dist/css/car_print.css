@@ -36,24 +36,24 @@ textarea{
 }
 #c_current_date {
     float: right;
-    margin-top: 85px;
-    margin-right: -140px;
+    margin-top: 75px;
+    margin-right: -180px;
 }
 #c_car_type {
     float: right;
-    margin-top: 185px;
-    margin-right: -160px;
+    margin-top: 190px;
+    margin-right: -180px;
     width: 300px;
 }
 #c_car_amount {
     float: right;
     margin-top: 165px;
-    margin-right: -310px;
+    margin-right: -320px;
     width: 140px;
 }
 #c_car_amount_words {
     float: right;
-    margin-top: 140px;
+    margin-top: 150px;
     margin-right: -290px;
     width: 340px;
     height: auto;
@@ -65,14 +65,14 @@ textarea{
 #c_car_no {
     float: right;
     margin-top: 60px;
-    margin-right: -370px;
+    margin-right: -410px;
     width: 80px;
 }
 #c_received {
     text-transform: uppercase;
     float: right;
     margin-top: 100px;
-    margin-right: -360px;
+    margin-right: -380px;
     width: 350px;
     padding:0px;
 }
@@ -80,7 +80,7 @@ textarea{
     text-transform: uppercase;
     float: right;
     margin-top: 120px;
-    margin-right: -350px;
+    margin-right: -360px;
     width: 360px;
     text-align: center;
 }
@@ -89,7 +89,15 @@ textarea{
     float: left;
     margin-top: 10px;
     width: auto;
-    margin-left:470px;
+    margin-left:510px;
+    text-align: center;
+    font-size: 10px !important;
+}
+#c_paydate {
+    float: left;
+    margin-top: 2px;
+    width: 150px;
+    margin-left:70px;
     text-align: center;
     font-size: 10px !important;
 }

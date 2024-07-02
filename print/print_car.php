@@ -26,7 +26,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $accountId = $_GET['id'];
     $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                       a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                      b.c_block, b.c_lot
+                      b.c_block, b.c_lot, a.c_car_paydate
                       FROM t_car_payment a
                       LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
                       WHERE a.c_car_no = ?";
@@ -37,6 +37,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     if ($result) {
         $row = $result;
         $c_account_no = $row['c_account_no'];
+        $c_car_paydate = $row['c_car_paydate'];
         $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         $carDetails = fetchCarDetails($conn, $row['c_car_no']);
         ?>
@@ -60,7 +61,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
+    <!-- <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy"> -->
+         <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">
             <input type="text" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">
@@ -69,7 +71,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($row['c_car_type']); ?>">
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
         <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
-        <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>">
+        <!-- <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>"> -->
         
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
@@ -77,46 +79,42 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <input type="hidden" id="c_mop_value" value="<?php echo ($row['c_mop']); ?>">
         </div>
 
-        <script>
-            var cMopValue = document.getElementById('c_mop_value').value;
-            var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
-            if (cMopValue == '1') {
-                dynamicMarginDiv.style.marginTop = '190px';
-            } else {
-                dynamicMarginDiv.style.marginTop = '205px';
-            }
-        </script>
-        <?php if ($buyerDetails) {
-            $lname = $buyerDetails["c_b1_last_name"];
-            $fname = $buyerDetails["c_b1_first_name"];
-            $mname = $buyerDetails["c_b1_middle_name"];
-            $address = $buyerDetails["c_address"];
-            $prov = $buyerDetails["c_city_prov"];
-            $zip = $buyerDetails["c_zip_code"];
-            $c_account_no = $buyerDetails["c_account_no"];
+        
 
-            $c_phase = substr($c_account_no, 0, 3);
-            $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
-            $c_lot = substr($c_account_no, 6, 2);
+        <?php
+            if ($buyerDetails) {
+                $lname = $buyerDetails["c_b1_last_name"];
+                $fname = $buyerDetails["c_b1_first_name"];
+                $mname = $buyerDetails["c_b1_middle_name"];
+                $address = $buyerDetails["c_address"];
+                $prov = $buyerDetails["c_city_prov"];
+                $zip = $buyerDetails["c_zip_code"];
+                $c_account_no = $buyerDetails["c_account_no"];
 
-            $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-            $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+                $c_phase = substr($c_account_no, 0, 3);
+                $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
+                $c_lot = substr($c_account_no, 6, 2);
 
-            if (odbc_execute($phase_stmt, array($c_phase))) {
-                $phase_details = odbc_fetch_array($phase_stmt);
-
-                if ($phase_details) {
-                    $loc = $phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot;
+                if (strpos($fname, 'Spouses ') === 0) {
+                    $fname = substr($fname, strlen('Spouses '));
                 }
-            }
 
-            $full_address = trim($address);
-            if ($prov || $zip) {
-                $full_address .= ($prov ? ', ' . trim($prov) : '') . ($zip ? ', ' . trim($zip) : '');
-            }
+                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
 
-            $fullName = htmlspecialchars(trim($fname) . ' ' . trim($mname) . ' ' . trim($lname));
-        ?>
+                if (odbc_execute($phase_stmt, array($c_phase))) {
+                    $phase_details = odbc_fetch_array($phase_stmt);
+
+                    if ($phase_details) {
+                        $loc = $phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot;
+                    }
+                }
+                $full_address = trim($address);
+                if ($prov || $zip) {
+                    $full_address .= ($prov ? ', ' . trim($prov) : '') . ($zip ? ', ' . trim($zip) : '');
+                }
+                $fullName = htmlspecialchars(trim($fname) . ' ' . trim($mname) . ' ' . trim($lname));
+            ?>
             <textarea name="c_received" id="c_received"><?php echo $fullName; ?></textarea>
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
@@ -157,8 +155,21 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             }
         ?>
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
+        <input type="text" name="c_paydate" id="c_paydate" value="<?php echo $c_car_paydate; ?>">
     </div>
+    <script>
+        var cMopValue = document.getElementById('c_mop_value').value;
+        var cPayDateField = document.getElementById('c_paydate');
+        var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
+        if (cMopValue == '1') {
+            dynamicMarginDiv.style.marginTop = '195px';
+            cPayDateField.style.display = 'none';
+        } else {
+            dynamicMarginDiv.style.marginTop = '210px';
+            cPayDateField.style.display = 'block';
+        }
+    </script>
     <script>
         function initializePage() {
             adjustTextArea('c_received');

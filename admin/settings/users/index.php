@@ -5,8 +5,8 @@ require_once('../../../inc/check_session.php');
 check_user_group(1);
 
 require_once('../../../config.php');
-include('../../../inc/header.php');
-include('../../../inc/navbar.php');    
+include('../../../inc/navbar.php');  
+include('../../../inc/header.php');  
 include('manage_user.php');
 ?>
 
@@ -16,6 +16,8 @@ include('manage_user.php');
 
 <div class="container mt-5">    
     <div class="card mt-3">
+    <h2 class="text-blue h4">User List</h2>
+    <hr>
         <div class="pd-20">
             <a id="create_new" class="btn btn-flat btn-primary" href="#" data-toggle="modal" data-target="#addUserModal">
                 <span class="fa fa-edit"></span> Create New User

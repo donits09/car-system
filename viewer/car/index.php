@@ -3,9 +3,11 @@ session_start();
 
 require_once('../../inc/check_session.php');
 check_user_group(4);
+
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
+
 ?>
 <?php
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
@@ -76,10 +78,15 @@ include('../../inc/header.php');
         text-align: left;
         border: none;
     }
+    /* input{
+        margin-bottom:10px;
+    } */
 </style>
 <body>
-<div class="container mt-5">
+<div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
+    <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+    <hr>
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
         <table class="table">
@@ -100,7 +107,6 @@ include('../../inc/header.php');
 
         <!-- By Account # -->
         <form id="account-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('account')">
-        <input type="hidden" id="username" class="form-control" value="<?php echo $username ?>">
             <hr>
             <div class="row align-items-end">
                 <div class="col-md-3 form-group">
@@ -170,13 +176,12 @@ include('../../inc/header.php');
                     <a class="nav-link active" id="buyer-details-tab" data-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Car List</a>
+                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
                     <div class="card mt-3">
-                        <div class="pd-20">
                         <table id="b_details">
                             <tr>
                                 <td style="width: 15%;border-top:none;border-bottom:none;border-left:none;">
@@ -188,49 +193,78 @@ include('../../inc/header.php');
                             </tr>
                         </table>
                         <hr>
-                        </div>
                         <div class="container">
-                            <form class="row g-3" id="buyerForm" method="post">
+                            <form class="row g-3">
                                 <div class="col-md-4">
                                     <label for="acc_no" class="form-label">Account No.</label>
-                                    <input type="text" class="form-control" id="buyer_acc_no" name="buyer_acc_no" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_acc_no" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="date_of_sale" class="form-label">Date of Sale</label>
-                                    <input type="text" class="form-control" id="buyer_date_of_sale" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_date_of_sale" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="acc_status" class="form-label">Account Status</label>
-                                    <input type="text" class="form-control" id="buyer_acc_status" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_acc_status" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="lname" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" id="buyer_lname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_lname" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="fname" class="form-label">First Name</label>
-                                    <input type="text" class="form-control" id="buyer_fname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_fname" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="mname" class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control" id="buyer_mname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_mname" readonly>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <label for="bal" class="form-label">Balance</label>
+                                    <input type="text" class="form-control txt" id="buyer_bal" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tcp" class="form-label">Net TCP</label>
+                                    <input type="text" class="form-control txt" id="buyer_tcp" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="ret" class="form-label">Account Option</label>
+                                    <input type="text" class="form-control txt" id="buyer_ret" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="email" class="form-label">Email Address</label>
+                                    <input type="text" class="form-control txt" id="buyer_email" readonly>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label for="mobile" class="form-label">Mobile #</label>
+                                    <input type="text" class="form-control txt" id="buyer_mobile" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="title" class="form-label">Title</label>
+                                    <input type="text" class="form-control txt" id="buyer_title" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="address" class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="buyer_address" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_address" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">Remarks</label>
-                                    <textarea class="form-control" rows="10" cols="50" id="buyer_remarks" readonly></textarea>
+                                    <textarea class="form-control txt" rows="10" cols="50" id="buyer_remarks" readonly></textarea>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
+                
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">Car List</h2>
+                            <h2 class="text-blue h4">CAR List</h2>
                             <hr>
                                 <div class="container">
                                     <div class="row">
@@ -260,7 +294,7 @@ include('../../inc/header.php');
                                     </tr>
                                 </table>
                             </div>
-                            
+
                             <div class="table-container">
                                 <table class="table table-bordered table-striped" id="car-list-table">
                                     <thead class="table-dark">
@@ -300,30 +334,6 @@ include('../../inc/header.php');
 </div>
 </body>
 <script>
-    $(document).ready(function() {
-    $('#car-list-tab').on('click', function(e) {
-        e.preventDefault(); 
-
-        var username = $('#username').val();
-        var buyer_acc_no = $('#buyer_acc_no').val();
-
-        $.ajax({
-            url: 'car_list.php',
-            type: 'GET',
-            data: { username: username, buyer_acc_no: buyer_acc_no },
-            success: function(response) {
-              
-                $('#car-list-body').html(response);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching car list:', error);
-              
-            }
-        });
-    });
-});
-</script>
-<script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
         console.log(accountNo);
@@ -341,19 +351,6 @@ include('../../inc/header.php');
 
     document.getElementById("searchInput").addEventListener("input", function() {
         filterTable();
-    });
-
-</script>
-<script>
-  $('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    let targetTabId = $(e.target).attr('href');
-
-    if (targetTabId === '#car-list') {
-      calculateTotalAmount();
-    }
-  });
-  $('#createCarModal').on('hidden.bs.modal', function () {
-        $('body').css('padding-right', '0');
     });
 
     document.getElementById('search_type').addEventListener('change', function() {
@@ -380,9 +377,10 @@ include('../../inc/header.php');
     });
 
 });
+
 </script>
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
     function loadModal(title, url, modalId) {
         start_loader();
         $.ajax({
@@ -402,44 +400,11 @@ $(document).ready(function() {
         });
     }
 
-    $('#create_new').click(function() {
-        var accountNo = $(this).data('account-no');
-        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
-    });
-
-    $(document).on('click', '.edit_data', function() {
-        var accountId = $(this).data('id');
-        var accountNo = $(this).data('account-no');
-    
-        if (!accountNo) {
-            loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
-        } else {
-            loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
-        }
-    });
-
     $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
         loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
     });
 
-    $('#create_other_new').click(function() {
-        loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
-    });
-
-    $(document).on('click', '.delete_data', function() {
-        var carId = $(this).data('id');
-        var carNo = $(this).data('car-no');
-        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId, carNo]);
-    });
-
-    window._conf = function(msg, func, params) {
-        $('#confirm_modal .modal-body').html(msg);
-        $('#confirm_modal #confirm').off('click').on('click', function() {
-            func.apply(this, params);
-        });
-        $('#confirm_modal').modal('show');
-    };
 });
 
 $(document).ready(function() {
@@ -480,6 +445,7 @@ function delete_car(carId, carNo) {
         }
     });
 }
+
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>

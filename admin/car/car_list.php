@@ -1,14 +1,10 @@
 <?php
 session_start();
-
-require_once('../../inc/check_session.php');
-check_user_group(1);
-
 ?>
 <?php
 include('../../config.php');
 $account_no = $_GET['account_no'];
-$car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_tran_date";
+$car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_tran_date DESC";
 $stmt = odbc_prepare($conn, $car_list);
 $hasRows = false;
 if ($stmt && odbc_execute($stmt, array($account_no))) {
@@ -22,9 +18,10 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
         odbc_execute($stmt, array($account_no));
         $i = 1;
         while ($row = odbc_fetch_array($stmt)): 
-?>
+            $row_class = $row['e_status'] == 1 ? 'green-row' : '';
+        ?>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
-<tr>
+<tr class="<?php echo $row_class; ?>">
     <td class="text-center"><?php echo $i++; ?></td>
     <td class="text-center"><?php echo $row['c_account_no']; ?></td>
     <td class="text-center"><?php echo $row['c_car_no']; ?></td>
@@ -137,7 +134,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
     <td class="text-center"><?php echo $realname; ?></td>
     <td align="center">
         <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-            Action
+            Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <div class="dropdown-menu" role="menu">

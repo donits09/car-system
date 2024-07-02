@@ -9,6 +9,7 @@
     check_user_group(2);
 
     include('../../config.php');
+    $c_encoded_by = '';
     if(isset($_GET['id']) && $_GET['id'] > 0){
         $accountId = $_GET['id'];
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
@@ -158,7 +159,7 @@
                 <tr>
                     <th>Encoded by:</th>
                     <?php
-                        $c_encoded_by = $_SESSION['username'];
+                        $c_encoded_by =  $row['c_encoded_by']; 
                         $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
                         $results = odbc_exec($conn, $get_encoder_details_qry);
 

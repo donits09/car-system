@@ -25,7 +25,15 @@ function validateAlphaNumericInput(event) {
     const input = event.target;
     let value = input.value;
 
-    value = value.replace(/[^a-zA-Z0-9\s]/g, '');
+    value = value.replace(/[^a-zA-Z0-9-\s]/g, '');
+    input.value = value;
+}
+
+function validateAlphaNumericInput(event) {
+    const input = event.target;
+    let value = input.value;
+
+    value = value.replace(/[^a-zA-Z0-9-\s]/g, '');
     input.value = value;
 }
 
