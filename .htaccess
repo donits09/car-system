@@ -6,7 +6,15 @@
 #RewriteRule ^(.*)$    /index.php/$2/?page=$1   [L]
 #</IfModule>
 
+Options -Indexes
 RewriteEngine On
+
+# Block access to /car/admin/, /car/cashier/, and /car/supervisor/ and their subdirectories
+RewriteCond %{REQUEST_URI} ^/car/(admin)/.*$
+RewriteRule ^ 404.html [L]
+
+# Handle other requests with your existing rules
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ 404.html [L]
+
