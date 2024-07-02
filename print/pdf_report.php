@@ -19,7 +19,7 @@ $l_css_path = file_get_contents($l_css);
 
 if ($startDate == $endDate) {
     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, 
+                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, 
                         b.c_name, b.c_phase, b.c_block, b.c_lot
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
@@ -29,7 +29,7 @@ if ($startDate == $endDate) {
     $executeParams = ["%$startDate%", $c_encoded_by];
 } else {
     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, 
+                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, 
                         b.c_name, b.c_phase, b.c_block, b.c_lot
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
@@ -85,7 +85,7 @@ $html .= '
                 <th>Lot</th>
                 <th>Cash</th>
                 <th>Check</th>
-                <th>Transaction Date</th>
+                <th>Status</th>
                 <th>Payment Date</th>
             </tr>
         </thead>
@@ -168,7 +168,8 @@ if (empty($carData)) {
         $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>';
         $html .= '<td class="pdf-font">' . number_format($checkAmount, 2) . '</td>';
 
-        $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>';
+        /* $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>'; */
+        $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>
         </tr>';
     }
@@ -224,3 +225,6 @@ header('Content-Type: application/pdf');
 header('Content-Disposition: inline; filename="daily_collection_report.pdf"');
 echo $dompdf->output();
 ?>
+
+
+
