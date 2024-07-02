@@ -10,6 +10,7 @@ include('../../inc/header.php');
 
 ?>
 <?php
+    $c_remarks = '';
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
     $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
     $l_lot = isset($_GET["lot"]) ? $_GET["lot"] : '' ;
@@ -194,10 +195,10 @@ include('../../inc/header.php');
                         </table>
                         <hr>
                         <div class="container">
-                            <form class="row g-3">
+                            <form class="row g-3" id="buyerForm">
                                 <div class="col-md-4">
                                     <label for="acc_no" class="form-label">Account No.</label>
-                                    <input type="text" class="form-control txt" id="buyer_acc_no" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_acc_no" name="buyer_acc_no" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="date_of_sale" class="form-label">Date of Sale</label>
@@ -253,8 +254,16 @@ include('../../inc/header.php');
                                     <input type="text" class="form-control txt" id="buyer_address" readonly>
                                 </div>
                                 <div class="col-md-12">
-                                    <label for="remarks" class="form-label">Remarks</label>
-                                    <textarea class="form-control txt" rows="10" cols="50" id="buyer_remarks" readonly></textarea>
+                                    <label for="remarks" class="form-label">
+                                        Remarks 
+                                        <span class="rem_note">
+                                            (<span class="note">NOTE:</span> The Enter key is enabled only on the last line)
+                                        </span>
+                                    </label>
+                                    <textarea class="form-control txt" rows="10" cols="50" id="buyer_remarks" name="buyer_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </form>
                         </div>
@@ -446,6 +455,44 @@ function delete_car(carId, carNo) {
     });
 }
 
+</script>
+<script>
+$(document).ready(function() {
+    $('#buyerForm').submit(function(e) {
+        e.preventDefault(); 
+
+        start_loader();
+
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            url: "../../classes/Master.php?f=save_remarks",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader(); 
+            },
+            success: function(resp) {
+                console.log(resp);
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success'); 
+                    $('#buyer_remarks').val(resp.remarks);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error'); 
+                } else {
+                    alert_toast("An unexpected error occurred", 'error'); 
+                }
+                end_loader();
+            }
+        });
+    });
+});
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
