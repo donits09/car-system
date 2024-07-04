@@ -6,8 +6,9 @@
     background-color: #007bff;
     color: #ffffff;
 }
-/* .bold-text {
-    padding: 5px;
-    font-size: 11px;
+.green-row {
+    background-color: #cbd2d9 !important;
+    /* color:white !important; */
+    font-weight: bold !important;
     font-style: italic;
-} */
+}

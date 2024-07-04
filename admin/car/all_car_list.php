@@ -11,11 +11,21 @@ include('../../inc/header.php');
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
+<style>
+    .green-row {
+        background-color: #cbd2d9 !important;
+        /* color:white !important; */
+        font-weight: bold !important;
+        font-style: italic;
+    }
+</style>
 <body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
         <!-- <div class="pd-20" id="car-btn"> -->
+        <h2 class="text-blue h4">Cash Acknowledgement Receipt - Full List</h2>
+        <hr>
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                 <span class="fa fa-edit"></span> Create New Payment 
             </a>
@@ -44,40 +54,44 @@ include('../../inc/header.php');
                     </tr>
                 </thead>
                 <tbody id="car-type-body">
-                    <?php
-                    $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
+                        <?php
+                        $username = $_SESSION['username'];
+
+                        $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot
+                    b.c_block, b.c_lot, a.e_status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE status != 1
-                        ORDER BY c_tran_date DESC;
-                        ";
-                    $stmt = odbc_prepare($conn, $car_list);
-                    
-                    if ($stmt && odbc_execute($stmt)) {
-                        $i = 1;
-                        while ($row = odbc_fetch_array($stmt)): 
-                    ?>
-                            <tr>
-                                <td class="text-center"><?php echo $i++; ?></td>
-                                <td class="text-center">
-                                    <?php 
-                                    echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); 
-                                    ?>
-                                </td>
-                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
-                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
-                                <td class="text-center">
-                                    <?php
+                        ORDER BY a.c_tran_date DESC";
+                        $stmt = odbc_prepare($conn, $car_list);
+
+                        $result = odbc_execute($stmt, array($username));
+
+                        if ($result === false) {
+                            echo "<tr><td colspan='13' class='text-center'>No data available or error executing query.</td></tr>";
+                        } else {
+                            $i = 1;
+                            while ($row = odbc_fetch_array($stmt)) {
+                                $row_class = $row['e_status'] == 1 ? 'green-row' : '';
+                        ?>
+                                <tr class="<?php echo $row_class; ?>">
+                                    <td class="text-center"><?php echo $i++; ?></td>
+                                    <td class="text-center">
+                                        <?php echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); ?>
+                                    </td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
+                                    <td class="text-center">
+                                        <?php
                                         $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
 
                                         if (!empty($c_buyer_acc)) {
                                             $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
                                             $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
-                                            
+
                                             if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
                                                 $buyer_details = odbc_fetch_array($buyer_stmt);
-                                                
+
                                                 if ($buyer_details) {
                                                     echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
                                                 } else {
@@ -90,39 +104,17 @@ include('../../inc/header.php');
                                             echo htmlspecialchars($row['c_name']);
                                         }
                                         ?>
-                                </td>
-                                <td>
-                                <?php
-                                    $c_account_no = $row['c_account_no'];
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $c_account_no = $row['c_account_no'];
 
-                                    try {
-                                        if (!empty($c_account_no)) {
-                                            $c_phase = substr($c_account_no, 0, 3);
-                                            $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
-                                            $c_lot = substr($c_account_no, 6, 2);
+                                        try {
+                                            if (!empty($c_account_no)) {
+                                                $c_phase = substr($c_account_no, 0, 3);
+                                                $c_block = ltrim(substr($c_account_no, 3, 3), '0');
+                                                $c_lot = substr($c_account_no, 6, 2);
 
-                                            $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                                            $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
-
-                                            if (odbc_execute($phase_stmt, array($c_phase))) {
-                                                $phase_details = odbc_fetch_array($phase_stmt);
-
-                                                if ($phase_details) {
-                                                    echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
-                                                } else {
-                                                    echo "-----";
-                                                }
-                                            } else {
-                                                echo "-----";
-                                            }
-                                        } else {
-                                            $c_phase = $row['c_phase'];
-                                            $c_block = $row['c_block'];
-                                            $c_lot = $row['c_lot'];
-
-                                            if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
-                                                echo "-------------";
-                                            } else {
                                                 $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
                                                 $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
 
@@ -137,48 +129,70 @@ include('../../inc/header.php');
                                                 } else {
                                                     echo "-----";
                                                 }
+                                            } else {
+                                                $c_phase = $row['c_phase'];
+                                                $c_block = $row['c_block'];
+                                                $c_lot = $row['c_lot'];
+
+                                                if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
+                                                    echo "-------------";
+                                                } else {
+                                                    $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                                                    $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+
+                                                    if (odbc_execute($phase_stmt, array($c_phase))) {
+                                                        $phase_details = odbc_fetch_array($phase_stmt);
+
+                                                        if ($phase_details) {
+                                                            echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                        } else {
+                                                            echo "-----";
+                                                        }
+                                                    } else {
+                                                        echo "-----";
+                                                    }
+                                                }
                                             }
+                                        } catch (Exception $e) {
+                                            echo "-----";
                                         }
-                                    } catch (Exception $e) {
-                                        echo "-----";
-                                    }
-                                ?>
-                                </td>
-                                <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
-                                <td class="text-center">
-                                    <?php 
-                                    if ($row['c_mop'] == 1) {
-                                        echo "Cash";
-                                    } elseif ($row['c_mop'] == 2) {
-                                        echo "Check";
-                                    } else {
-                                        echo "Unknown";
-                                    }
-                                    ?>
-                                </td>
-                                <td class="text-center tran-date">
-                                    <?php
-                                    $dateTime = new DateTime($row['c_tran_date']);
-                                    echo htmlspecialchars($dateTime->format('Y-m-d')); 
-                                    ?>
-                                </td>
-                                <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
-                                <td class="text-center">
-                                    <?php
-                                    $c_encoded_by = $row['c_encoded_by'];
-                                    $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
-                                    $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
-                                    
-                                    if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
-                                        echo htmlspecialchars($encoder["c_realname"]);
-                                    } else {
-                                        echo "Unknown";
-                                    }
-                                    ?>
-                                </td>
-                                <td align="center">
+                                        ?>
+                                    </td>
+                                    <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+                                    <td class="text-center">
+                                        <?php
+                                        if ($row['c_mop'] == 1) {
+                                            echo "Cash";
+                                        } elseif ($row['c_mop'] == 2) {
+                                            echo "Check";
+                                        } else {
+                                            echo "Unknown";
+                                        }
+                                        ?>
+                                    </td>
+                                    <td class="text-center tran-date">
+                                        <?php
+                                        $dateTime = new DateTime($row['c_tran_date']);
+                                        echo htmlspecialchars($dateTime->format('Y-m-d'));
+                                        ?>
+                                    </td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
+                                    <td class="text-center">
+                                        <?php
+                                        $c_encoded_by = $row['c_encoded_by'];
+                                        $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+                                        $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+
+                                        if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+                                            echo htmlspecialchars($encoder["c_realname"]);
+                                        } else {
+                                            echo "Unknown";
+                                        }
+                                        ?>
+                                    </td>
+                                    <td align="center">
                                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                        Action
+                                        Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
@@ -206,14 +220,13 @@ include('../../inc/header.php');
                                         </a>
                                     </div>
                                 </td>
-                            </tr>
-                    <?php 
-                        endwhile;
-                    } else {
-                        echo "<tr><td colspan='8' class='text-center'>No data available or error executing query.</td></tr>";
-                    }
-                    ?>
-                </tbody>
+
+                                </tr>
+                        <?php
+                            }
+                        }
+                        ?>
+                    </tbody>
                 <tfoot>
                     <tr>
                         <th colspan="6" class="text-right" id="totalAmt">Total amount:</th>

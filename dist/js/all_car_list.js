@@ -25,7 +25,7 @@ function validateAlphaNumericInput(event) {
     const input = event.target;
     let value = input.value;
 
-    value = value.replace(/[^a-zA-Z0-9\s]/g, '');
+    value = value.replace(/[^a-zA-Z0-9-\s]/g, '');
     input.value = value;
 }
 
@@ -131,66 +131,6 @@ function submitForm() {
     alert('You selected: ' + selectedOption);
 }
 
-
-// function calculateTotalAmount() {
-//     var table = document.getElementById("car-list-table");
-//     if (!table) {
-//         console.log("Table not found.");
-//         return;
-//     }
-
-//     var tbody = table.getElementsByTagName("tbody")[0];
-//     if (!tbody) {
-//         console.log("Table body not found.");
-//         return;
-//     }
-
-//     var rows = tbody.getElementsByTagName("tr");
-//     var total = 0;
-
-//     for (var i = 0; i < rows.length; i++) {
-//         if (rows[i].style.display !== "none") {
-//             var amountCell = rows[i].getElementsByTagName("td")[6]; 
-//             if (amountCell) {
-//                 var amountValue = amountCell.textContent.trim().replace(/,/g, '');
-//                 var parsedValue = parseFloat(amountValue);
-//                 if (!isNaN(parsedValue)) {
-//                     total += parsedValue;
-//                 } else {
-//                     console.log("Invalid number:", amountValue);
-//                 }
-//             } else {
-//                 console.log(i);
-//             }
-//         } else {
-//             console.log(i);
-//         }
-//     }
-
-//     var totalAmountElement = document.getElementById("totalAmount");
-//     if (totalAmountElement) {
-//         totalAmountElement.textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-//     } else {
-//         console.log("Total amount element not found.");
-//     }
-// }
-
-// $(document).ready(function() {
-//     calculateTotalAmount();
-// });
-
-
-// function updateCarList() {
-//     const accountNo = document.getElementById('buyer_acc_no').value;
-//     fetch(`car_list.php?account_no=${accountNo}`)
-//         .then(response => response.text())
-//         .then(data => {
-//             document.getElementById('car-list-body').innerHTML = data;
-//             calculateTotalAmount();
-//         });
-//         calculateTotalAmount();
-// }
-
 function delete_car(carId, carNo) {
     start_loader();
     $.ajax({
@@ -228,54 +168,129 @@ $(document).ready(function() {
         e.preventDefault();
 
         const buyerName = $('#buyer_name').val();
+        const carNo = $('#c_car_no').val();
+        const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
+
+        let valid = true;
+
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
+        if (carAmount <= 0) {
+            $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
         if (!buyerName || buyerName === 'Unknown') {
             alert('Name field is required.');
+            valid = false;
+        }
+
+        if (!valid) {
             return;
         }
 
-        // if (confirm("Are you sure you want to save this car payment?")) {
-            var _this = $(this);
+        start_loader();
 
-            start_loader();
-
-            $.ajax({
-                url: "../../classes/Master.php?f=save_car_payment",
-                data: new FormData(_this[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                method: 'POST',
-                dataType: 'json',
-                error: function(err) {
-                    console.log(err);
-                    alert_toast("An error occurred.", 'error');
-                    end_loader();
-                },
-                success: function(resp) {
-                    console.log(resp); 
-                    if (resp && resp.status === 'success') {
-                        alert_toast(resp.msg, 'success');
-                        setTimeout(function() {
-                            $('#createCarModal').modal('hide'); 
-                            $('body').removeClass('modal-open'); 
-                            $('.modal-backdrop').remove(); 
-                            location.reload();
-                           
-                        }, 1000);
-                    } else if (resp && resp.status === 'failed' && resp.err) {
-                        alert_toast("An error occurred: " + resp.err, 'error');
-                    } else {
-                        alert_toast("An unexpected error occurred", 'error');
-                    }
-                    end_loader();
+        $.ajax({
+            url: "../../classes/Master.php?f=save_car_payment",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                console.log(resp); 
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        $('#createCarModal').modal('hide'); 
+                        $('body').removeClass('modal-open'); 
+                        $('.modal-backdrop').remove(); 
+                        location.reload();
+                    }, 1000);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    alert_toast("An unexpected error occurred", 'error');
                 }
-            });
-        // }
+                end_loader();
+            }
+        });
     });
 
-    
-    var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
-    if (idValue) {
-        $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');
+    function fetchBuyerDetails(accountNo) {
+        const buyerNameField = $('#buyer_name');
+
+        if (accountNo.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/get_buyer_details.php',
+                data: { account_no: accountNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        buyerNameField.val(response.name);
+                        buyerNameField.removeAttr('required');
+                    } else {
+                        buyerNameField.val('Unknown');
+                        buyerNameField.attr('required', 'required');
+                    }
+                }
+            });
+        } else {
+            buyerNameField.val('');
+            buyerNameField.attr('required', 'required');
+        }
     }
+
+    const accountNo = $('#c_account_no').val();
+    fetchBuyerDetails(accountNo);
+
+    $('#c_account_no').on('input', function() {
+        const accountNo = $(this).val();
+        fetchBuyerDetails(accountNo);
+    });
+
+    $('#c_car_no').on('input', function() {
+        const carNo = $(this).val();
+
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            $('#car-form button[type="submit"]').attr('disabled', true);
+        } else if (carNo.length > 6) {
+            $('#car_no_error').text('CAR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
+            $('#car-form button[type="submit"]').attr('disabled', false);
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/check_car_no.php',
+                data: { car_no: carNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text').css('color', 'red');
+                        $('#car-form button[type="submit"]').attr('disabled', true);
+                    } else {
+                        $('#car_no_error').text('').removeClass('bold-text');
+                        $('#car-form button[type="submit"]').attr('disabled', false);
+                    }
+                }
+            });
+        }
+    });
+
+    $('#car-form').on('submit', function(e) {
+        if ($('#car_no_error').text().includes('must be 6 digits') || $('#car_amt_error').text().includes('greater than zero')) {
+            e.preventDefault();
+        }
+    });
 });

@@ -5,8 +5,8 @@ require_once('../../../inc/check_session.php');
 check_user_group(1);
 
 include('../../../config.php');
-include('../../../inc/header.php');
-include('../../../inc/navbar.php');
+include('../../../inc/navbar.php');  
+include('../../../inc/header.php');  
 ?>
 
 <!DOCTYPE html>
@@ -24,6 +24,8 @@ include('../../../inc/navbar.php');
 <body>
     <div class="container mt-5">
         <div class="card mt-3">
+        <h2 class="text-blue h4">User Logs</h2>
+        <hr>
             <div class="pd-20">
                 <form method="get" action="">
                     <div class="row">
@@ -80,6 +82,7 @@ include('../../../inc/navbar.php');
                             <td>
                             <?php
                                 //Eto yung lagi pong naooverwrite kapag nag memerge BAHAHAHAHA
+                                ///Noted Hahahahahaha - donits
                                 $c_encoded_by = $row['c_name'];
                                 $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
                                 $results = odbc_exec($conn, $get_encoder_details_qry);
@@ -90,7 +93,7 @@ include('../../../inc/navbar.php');
                             ?>
                             <?php echo $realname ?>
                             </td>
-                            <td class="text-center"><?php echo $row['c_log']; ?></td>
+                            <td class="text-left"><?php echo $row['c_log']; ?></td>
                             <td class="text-center"><?php echo $row['c_date']; ?></td>
                             <td class="text-center"><?php echo $row['c_time']; ?></td>
                             <td class="text-center"><?php echo $row['c_module']; ?></td>

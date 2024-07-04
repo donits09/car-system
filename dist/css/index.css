@@ -27,7 +27,22 @@ form{
 .btn.btn-flat.btn-primary{
     font-size:12px;
 }
-
 #car-btn{
     color:white;
+}
+.form-control.txt{
+    margin-bottom:10px;
+}
+.form-label {
+    white-space: nowrap;
+}
+
+.rem_note {
+    display: inline;
+    font-style: italic;
+}
+.note {
+    display: inline;
+    font-weight: bold;
+    color:red;
 }
