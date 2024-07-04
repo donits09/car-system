@@ -100,17 +100,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $l_date = "2023-05-30";
 }
 
-// Convert numbers to money format
-function ftom($value) {
-    return number_format($value, 2);
-}
-
-function mtof($value) {
-    $m_value = str_replace(",", "", $value);
-    // Convert to float and format with two decimal places
-    return (float)$m_value;
-}
-
 // Create the HTML content for the PDF
 $html = "
 <!DOCTYPE html>

@@ -1,18 +1,4 @@
 
-<?php 
-session_start();
-require_once('../../config.php');
-include('../../inc/navbar.php');    
-include('../../inc/header.php');   
-if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 1) {
-    require_once('../logout.php');
-    exit();
-}
-
-if (isset($_SESSION['username'])) {
-    echo "Username: " . $_SESSION['username'];
-}
-?>
 <style>
     table {
         width: 100%;
@@ -36,11 +22,14 @@ if (isset($_SESSION['username'])) {
         display: none;
     }
 </style>
+
+<?php include('nav.php'); ?>
+
 <div class="card card-outline rounded-0 card-maroon">
 		<div class="card-header">
 			<h5 class="card-title"><b><i>List of Agents</b></i></h5>
 			<div class="card-tools">
-				<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary" style="font-size:14px;"><span class="fas fa-plus"></span>&nbsp;&nbsp;Add New</a>
+				<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary" style="font-size:14px;">Add New</a>
 			</div>
 		</div>
 		<div class="card-body">
@@ -65,8 +54,8 @@ if (isset($_SESSION['username'])) {
 						</thead>
 						<tbody>
 						<?php 
-							$i = 1;
-							$sql = "SELECT * FROM t_agents order by c_hire_date";
+							$i = 1; 
+							$sql = "SELECT * FROM t_agents order by c_hire_date DESC limit 10";
 							$comm_result = odbc_exec($conn, $sql);
                             while ($row = odbc_fetch_array($comm_result)): 
 							?>
@@ -77,9 +66,9 @@ if (isset($_SESSION['username'])) {
 								<td class=""><?php echo $row['c_position'] ?></td>
 								<td align="center">
 									
-										<button><a class="edit_data" href="javascript:void(0)" data-id ="<?php echo $row['c_code'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
+										<button><a class="edit_data" href="javascript:void(0)" data-id ="<?php echo $row['c_code'] ?>">Edit</a>
                                         </button>
-										<button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['c_code'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+										<button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['c_code'] ?>">Delete</a>
                                         </button>
 								</td>
 							</tr>
@@ -89,47 +78,48 @@ if (isset($_SESSION['username'])) {
 				</div>                
 			</div>
 	</div>
+
 <script>
-    $(document).ready(function(){
-		$('.table').dataTable();
-	})
+  $(document).ready(function() {
+	$('#data-table').DataTable();
+	});
+	
+
 	$('#create_new').click(function(){
-		uni_modal("Add New Agent","commission_voucher/new_agent.php",'mid-large')
-	})
-	$('.edit_data').click(function(){
-		uni_modal("Update Agent Details","commission_voucher/new_agent.php?id="+$(this).attr('id'),'mid-large')
-	})
-	$('.delete_data').click(function(){
-		_conf("Are you sure you want to delete this permanently?","delete_agent",[$(this).attr('data-id')])
-	})
-	$('.table td, .table th').addClass('py-1 px-2 align-middle')
-	$('.table').dataTable({
-		columnDefs: [
-			{ orderable: false, targets: 5 }
-		],
+		uni_modal("Add New Agent","commission_voucher/agent.php",'')
 	});
 
-    function delete_account($id){
+    $('.edit_data').click(function(){
+		uni_modal("Update Agent Details","commission_voucher/agent.php?id="+$(this).attr('data-id'),'')
+	})
+	$('.delete_data').click(function(){
+    _conf("Are you sure you want to delete this permanently?", "delete_agent", [$(this).attr('data-id')])
+	})
+
+	function delete_agent($id){
 		start_loader();
 		$.ajax({
-			url:_base_url_+"classes/Master.php?f=delete_account",
-			method:"POST",
-			data:{id: $id},
-			dataType:"json",
-			error:err=>{
-				console.log(err)
-				alert_toast("An error occured.",'error');
+			url: _base_url_ + "classes/Commission_Master.php?f=delete_agent",
+			method: "POST",
+			data: {id: $id},
+			dataType: "json",
+			error: function(err) {
+				console.log(err);
+				alert_toast("An error occurred.", 'error');
 				end_loader();
 			},
-			success:function(resp){
-				if(typeof resp== 'object' && resp.status == 'success'){
-					location.reload();
-					console.log('dsdsds');
-				}else{
-					alert_toast("An error occured.",'error');
+			success: function(resp) {
+				if (typeof resp === 'object' && resp.status === 'success') {
+					alert_toast(resp.msg, 'success');
+					setTimeout(function() {
+						location.reload();
+					}, 2000);
+				} else {
+					alert_toast(resp.msg || "An error occurred.", 'error'); // Display default error message if msg is undefined
 					end_loader();
 				}
 			}
-		})
+		});
 	}
+
 </script>
