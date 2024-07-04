@@ -64,6 +64,7 @@ function searchBuyer(type) {
             } else {
                 alert('No data found');
             }
+            updateAtapList();
             updateCarList(); 
             calculateTotalAmount();
         } else {
@@ -84,6 +85,17 @@ function updateCarList() {
             calculateTotalAmount();
         });
         calculateTotalAmount();
+}
+
+function updateAtapList() {
+    const accountNo = document.getElementById('buyer_acc_no').value;
+    fetch(`../atap/fetch_atap_list.php?account_no=${accountNo}`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('atap-list-body').innerHTML = data;
+            //calculateTotalAmount();
+        });
+        //calculateTotalAmount();
 }
 
 function fillBuyerDetails(data) {
@@ -331,6 +343,7 @@ function selectBuyer(buyer) {
 
     $('#multipleResultsModal').modal('hide'); 
     
+    updateAtapList();
     updateCarList();
     calculateTotalAmount();
 }

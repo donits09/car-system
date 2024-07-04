@@ -141,27 +141,6 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
                 <span class="fa fa-eye text-primary"></span> View
             </a>
-            <!-- <div class="dropdown-divider"></div>
-            <a class="dropdown-item edit_data" href="javascript:void(0)" 
-            data-id="<?php echo $row['id']; ?>" 
-            data-account-no="<?php echo $row['c_account_no']; ?>" 
-            data-payment-type="<?php echo $row['c_car_type']; ?>" 
-            data-amount="<?php echo $row['c_car_amount']; ?>" 
-            data-car-no="<?php echo $row['c_car_no']; ?>" 
-            data-pay-date="<?php echo $row['c_car_paydate']; ?>" 
-            data-encoder="<?php echo $row['c_encoded_by']; ?>">
-                <span class="fa fa-edit text-info"></span> Edit
-            </a>
-            <div class="dropdown-divider"></div>
-            <div class="card-tools">
-                <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
-                    <span class="fas fa-print"></span> Print
-                </a>
-            </div>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo $row['c_car_no']; ?>">
-                <span class="fa fa-trash text-danger"></span> Delete
-            </a> -->
         </div>
     </td>
 </tr>

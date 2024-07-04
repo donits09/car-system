@@ -57,7 +57,7 @@
     
     <div class="row align-items-end">
         <div class="col-md-6 form-group">
-            <label for="location">Location</label><br>
+            
             <label for="c_phase" class="control-label">Phase</label>
             <select name="c_phase" id="c_phase" class="custom-select form-control" autocomplete="off">
                 <option value="" selected>--SELECT--</option>

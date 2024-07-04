@@ -520,7 +520,7 @@ $(document).ready(function() {
     $(document).on('click', '.delete_data', function() {
         var carId = $(this).data('id');
         var carNo = $(this).data('car-no');
-        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId, carNo]);
+        _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
     });
 
     window._conf = function(msg, func, params) {

@@ -36,6 +36,7 @@ include('../../inc/header.php');
     endif;
     }
 ?>
+
 <link rel="stylesheet" href="../../dist/css/table.css">
 <link rel="stylesheet" href="../../dist/css/index.css">
 <style>
@@ -79,9 +80,9 @@ include('../../inc/header.php');
         text-align: left;
         border: none;
     }
-    /* input{
-        margin-bottom:10px;
-    } */
+    .hidden_fields{
+        display:none;
+    }
 </style>
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
@@ -179,6 +180,9 @@ include('../../inc/header.php');
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -275,8 +279,8 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">CAR List</h2>
                             <hr>
-                                <div class="container">
-                                    <div class="row">
+                            <div class="container">
+                                <div class="row">
                                     <div class="col-12 col-md-4">
                                         <label for="accno" class="form-label">Acc #</label>
                                         <input type="text" class="form-control" id="accno" readonly>
@@ -316,7 +320,7 @@ include('../../inc/header.php');
                                             <th>Location</th>
                                             <th>Amount</th>
                                             <th>MoP</th>
-                                            <th>Transaction Date</th>
+                                            <th>Transaction Date/Time</th>
                                             <th>Pay Date</th>
                                             <th>Encoder</th>
                                             <th>Action</th>
@@ -336,28 +340,100 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
+
+                <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
+                    <div class="card mt-3">
+                    <div class="container">
+                            <h2 class="text-blue h4">ATAP List</h2>
+                            <hr>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <label for="accno" class="form-label">Acc #</label>
+                                        <input type="text" class="form-control" id="accno" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="fullname" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="fullname" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="car_buyer_loc" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="car_buyer_loc" name="car_buyer_loc" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                                <table>
+                                    <tr>
+                                        <td style="width:80%;border:none;">
+                                            <label for="remarks" class="form-label" style="float:right;">Search:</label>
+                                        </td>
+                                        <td style="width:20%;border:none;">
+                                            <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <button type="button" id="create_new_atap" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal">
+                                <span class="fa fa-edit"></span> Create New ATAP
+                            </button>
+                            <hr>
+                            <div class="table-container">
+                                <table class="table table-bordered table-striped" id="data-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Account No.</th>
+                                            <th>ATAP No.</th>
+                                            <th>Name</th>
+                                            <th>Total Amount</th>
+                                            <th>Transaction Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="atap-list-body">
+                                        <?php include('../atap/fetch_atap_list.php'); ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
         <?php include ('../modals/main_modals.php'); ?>
         </div>
     </div>
 </div>
+
 </body>
 <script>
-    function updateAccountNo() {
-        var accountNo = $('#buyer_acc_no').val();
-        console.log(accountNo);
-        $('#create_new').data('account-no', accountNo); 
-    }
+    $(document).ready(function() {
+    $('#atap-list-tab').on('click', function(e) {
+        e.preventDefault(); 
+
+        var username = $('#username').val();
+        var buyer_acc_no = $('#buyer_acc_no').val();
+
+        $.ajax({
+            url: '../atap/fetch_atap_list.php',
+            type: 'GET',
+            data: { username: username, buyer_acc_no: buyer_acc_no },
+            success: function(response) {
+              
+                $('#atap-list-body').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching car list:', error);
+              
+            }
+        });
+    });
+});
 </script>
 <script>
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        updateAccountNo();
-    });
-
-    $('#buyer_acc_no').on('change', function() {
-        updateAccountNo();
-    });
-
     document.getElementById("searchInput").addEventListener("input", function() {
         filterTable();
     });
@@ -409,11 +485,42 @@ include('../../inc/header.php');
         });
     }
 
+    $('#create_new_atap').click(function() {
+        loadModal('Create New ATAP', '../atap/manage_atap.php', '#createCarModal');
+    });
+
     $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
         loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
     });
 
+    $(document).on('click', '.view_atap', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+    });
+
+    $(document).on('click', '.delete_data', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        _conf("Are you sure you want to cancel this ATAP permanently?", delete_atap, [atapId, atapNo]);
+    });
+
+    $(document).on('click', '.edit_atap', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+    
+        loadModal('Edit ATAP Details', '../atap/manage_atap.php?id=' + atapId + '&no=' + atapNo, '#createCarModal');
+       
+    });
+
+    window._conf = function(msg, func, params) {
+        $('#confirm_modal .modal-body').html(msg);
+        $('#confirm_modal #confirm').off('click').on('click', function() {
+            func.apply(this, params);
+        });
+        $('#confirm_modal').modal('show');
+    };
 });
 
 $(document).ready(function() {
@@ -422,12 +529,12 @@ $(document).ready(function() {
 
 </script>
 <script>
-function delete_car(carId, carNo) {
+function delete_atap(atapId, atapNo) {
     start_loader();
     $.ajax({
-        url: "../../classes/Master.php?f=delete_car",
+        url: "../../classes/Master.php?f=delete_atap",
         method: "POST",
-        data: { carId: carId, carNo: carNo },
+        data: { atapId: atapId, atapNo: atapNo },
         dataType: "json",
         error: function(err) {
             console.log(err);
@@ -438,19 +545,30 @@ function delete_car(carId, carNo) {
             if (resp && resp.status === 'success') {
                 alert_toast(resp.msg, 'success');
                 setTimeout(function() {
-                    //location.reload();
                     $('#confirm_modal').modal('hide'); 
                     $('body').removeClass('modal-open'); 
-                    $('.modal-backdrop').remove(); 
-                    updateCarList(); 
-                    $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
+                    $('.modal-backdrop').remove();
+                    $.ajax({
+                        url: '../atap/fetch_atap_list.php', 
+                        method: 'GET',
+                        success: function(data) {
+                            $('#atap-list-body').html(data); 
+                            end_loader();
+                        },
+                        error: function(err) {
+                            console.log(err);
+                            alert_toast("An error occurred while fetching the updated table.", 'error');
+                            end_loader();
+                        }
+                    });
                 }, 1000);
             } else if (resp && resp.status === 'failed' && resp.err) {
                 alert_toast("An error occurred: " + resp.err, 'error');
+                end_loader();
             } else {
                 alert_toast("An unexpected error occurred", 'error');
+                end_loader();
             }
-            end_loader();
         }
     });
 }
@@ -494,6 +612,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <!-- <script src="../../dist/js/car_list.js"></script> -->

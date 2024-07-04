@@ -79,7 +79,7 @@ if (isset($_SESSION['username'])) {
 									
 										<button><a class="edit_data" href="javascript:void(0)" data-id ="<?php echo $row['c_code'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
                                         </button>
-										<button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['c_code'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+										<button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['c_code'] ?>"><span class="fa fa-ban text-danger"></span> Cancel</a>
                                         </button>
 								</td>
 							</tr>

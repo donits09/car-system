@@ -170,7 +170,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             
             <div class="dropdown-divider"></div>
             <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo $row['c_car_no']; ?>">
-                <span class="fa fa-trash text-danger"></span> Delete
+                <span class="fa fa-ban text-danger"></span> Cancel
             </a>
             <?php } ?>
         </div>
