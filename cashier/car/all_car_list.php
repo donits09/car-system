@@ -67,7 +67,7 @@ include('../../inc/header.php');
                                         FROM t_car_payment a
                                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
                                         WHERE a.c_encoded_by = ? AND a.status != 1
-                                        ORDER BY a.c_tran_date DESC";
+                                        ORDER BY a.c_tran_updated DESC";
                             $stmt = odbc_prepare($conn, $car_list);
 
                             $result = odbc_execute($stmt, array($username));

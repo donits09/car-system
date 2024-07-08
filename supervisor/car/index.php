@@ -96,85 +96,86 @@ include('../../inc/header.php');
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
         <table class="table">
-            <form id="search-type-form">
+        <form id="search-type-form">
+                    <div class="row align-items-end">
+                        <div class="col-md-3 form-group">
+                            <label for="search_type" class="control-label">Search By:</label>
+                            <select id="search_type" class="custom-select form-control" onchange="toggleForm()">
+                                <option value="" selected>--SELECT--</option>
+                                <option value="account">Account #</option>
+                                <option value="location">Location</option>
+                                <option value="last-name">Name</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </table>
+
+            <!-- By Account # -->
+            <form id="account-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('account')">
+            <input type="hidden" id="username" class="form-control" value="<?php echo $username ?>">
+                <hr>
                 <div class="row align-items-end">
                     <div class="col-md-3 form-group">
-                        <label for="search_type" class="control-label">Search By:</label>
-                        <select id="search_type" class="custom-select form-control" onchange="toggleForm()">
-                            <option value="" selected>--SELECT--</option>
-                            <option value="account">Account #</option>
-                            <option value="location">Location</option>
-                            <option value="last-name">Name</option>
-                        </select>
+                        <label for="acc_no" class="control-label">Account #</label>
+                        <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11" oninput="validateNumberInput(event)">
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <button type="submit" id="searchAcc" class="btn btn-primary" onclick="calculateTotalAmount()">
+                            <span class="fa fa-search"></span> Search Account
+                        </button>
                     </div>
                 </div>
             </form>
-        </table>
 
-        <!-- By Account # -->
-        <form id="account-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('account')">
-            <hr>
-            <div class="row align-items-end">
-                <div class="col-md-3 form-group">
-                    <label for="acc_no" class="control-label">Account #</label>
-                    <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11" oninput="validateNumberInput(event)">
+            <!-- By Location -->
+            <form id="location-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('location')">
+                <hr>
+                <div class="row align-items-end">
+                    <div class="col-md-3 form-group">
+                        <label for="phase" class="control-label">Phase</label>
+                        <select name="phase" id="phase" class="custom-select form-control" autocomplete="off">
+                            <option value="" selected>--SELECT--</option>
+                            <?php
+                            $sql = "SELECT * FROM t_projects ORDER BY c_acronym";
+                            $results = odbc_exec($conn, $sql);
+                            while ($row = odbc_fetch_array($results)) {
+                                echo '<option value="' . $row['c_code'] . '">' . $row['c_acronym'] . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label for="block" class="control-label">Block</label>
+                        <input type="number" id="block" name="block" class="form-control" min="0" step="1" oninput="validateNumberInput(event)">
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <label for="lot" class="control-label">Lot</label>
+                        <input type="number" id="lot" name="lot" class="form-control" min="0" step="1" oninput="validateNumberInput(event)">
+                    </div>
+                    <div class="col-md-2 form-group">
+                        <button type="submit" id="searchLoc" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Location</button>
+                    </div>
                 </div>
-                <div class="col-md-3 form-group">
-                    <button type="submit" id="searchAcc" class="btn btn-primary" onclick="calculateTotalAmount()">
-                        <span class="fa fa-search"></span> Search Account
-                    </button>
-                </div>
-            </div>
-        </form>
+            </form>
 
-        <!-- By Location -->
-        <form id="location-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('location')">
-            <hr>
-            <div class="row align-items-end">
-                <div class="col-md-3 form-group">
-                    <label for="phase" class="control-label">Phase</label>
-                    <select name="phase" id="phase" class="custom-select form-control" autocomplete="off">
-                        <option value="" selected>--SELECT--</option>
-                        <?php
-                        $sql = "SELECT * FROM t_projects ORDER BY c_acronym";
-                        $results = odbc_exec($conn, $sql);
-                        while ($row = odbc_fetch_array($results)) {
-                            echo '<option value="' . $row['c_code'] . '">' . $row['c_acronym'] . '</option>';
-                        }
-                        ?>
-                    </select>
+            <!-- By Last Name -->
+            <form id="last-name-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('last-name')">
+                <hr>
+                <div class="row align-items-end">
+                    <div class="col-md-3 form-group">
+                        <label for="last_name" class="control-label">Last Name</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control">
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <label for="first_name" class="control-label">First Name</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control">
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <button type="submit" id="searchName" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Name</button>
+                    </div>
                 </div>
-                <div class="col-md-2 form-group">
-                    <label for="block" class="control-label">Block</label>
-                    <input type="number" id="block" name="block" class="form-control" min="0" step="1" oninput="validateNumberInput(event)">
-                </div>
-                <div class="col-md-2 form-group">
-                    <label for="lot" class="control-label">Lot</label>
-                    <input type="number" id="lot" name="lot" class="form-control" min="0" step="1" oninput="validateNumberInput(event)">
-                </div>
-                <div class="col-md-2 form-group">
-                    <button type="submit" id="searchLoc" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Location</button>
-                </div>
-            </div>
-        </form>
-
-        <!-- By Last Name -->
-        <form id="last-name-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('last-name')">
-            <hr>
-            <div class="row align-items-end">
-                <div class="col-md-3 form-group">
-                    <label for="last_name" class="control-label">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" class="form-control">
-                </div>
-                <div class="col-md-3 form-group">
-                    <label for="first_name" class="control-label">First Name</label>
-                    <input type="text" id="first_name" name="first_name" class="form-control">
-                </div>
-                <div class="col-md-3 form-group">
-                    <button type="submit" id="searchName" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Name</button>
-                </div>
-            </div>
-        </form>
+            </form>
         </div>
         <div class="container mt-5">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -305,7 +306,7 @@ include('../../inc/header.php');
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">
-                                            <label for="remarks" class="form-label" style="float:right;">Search:</label>
+                                            <label for="searchInput" class="form-label" style="float:right;">Search:</label>
                                         </td>
                                         <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
@@ -354,8 +355,9 @@ include('../../inc/header.php');
 </body>
 <script>
     document.getElementById('buyer_remarks').addEventListener('keydown', function(event) {
+        const textarea = event.target;
+
         if (event.key === 'Enter') {
-            const textarea = event.target;
             const lines = textarea.value.split('\n');
             const caretPosition = textarea.selectionStart;
 
@@ -373,7 +375,26 @@ include('../../inc/header.php');
                 event.preventDefault();
             }
         }
+
+        if (event.key === 'Backspace') {
+            const caretPosition = textarea.selectionStart;
+            const textBeforeCaret = textarea.value.substring(0, caretPosition);
+
+          
+            const lastNewLineIndex = textBeforeCaret.lastIndexOf('\n');
+            
+            if (caretPosition === lastNewLineIndex + 1) {
+                event.preventDefault();
+                
+                textarea.classList.add('red-glow');
+
+                setTimeout(() => {
+                    textarea.classList.remove('red-glow');
+                }, 500);
+            }
+        }
     });
+</script>
 </script>
 <script>
     function updateAccountNo() {

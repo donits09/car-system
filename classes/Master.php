@@ -220,8 +220,9 @@ Class Master{
 	
 	function save_car_payment() {
 		extract($_POST);
+		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
-	
+	  
 		$car_type_check = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_car_type'";
 		$check_result = odbc_exec($this->conn, $car_type_check);
 	
@@ -232,6 +233,7 @@ Class Master{
 				error_log("Failed to insert new car type: " . odbc_errormsg($this->conn));
 			}
 		}
+	
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -242,6 +244,7 @@ Class Master{
 			$maxId = 1; 
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
+	
 		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop";
 		$values = "'$maxId','$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop'";
 		$resp = array();
@@ -250,10 +253,29 @@ Class Master{
 			$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
 			$insert = "INSERT INTO t_car_payment ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert);
-	
+		
 			if ($save) {
-				$resp['status'] = 'success';
-				$resp['msg'] = "New car payment successfully saved.";
+				if (!empty($c_atap_no)) {
+					$check_atap = "SELECT 1 FROM t_atap WHERE c_atap_no = '$c_atap_no'";
+					$check_result = odbc_exec($this->conn, $check_atap);
+		
+					if (odbc_fetch_row($check_result)) {
+						$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
+						$update = odbc_exec($this->conn, $update_atap);
+					} else {
+						$update = true; 
+					}
+				} else {
+					$update = true;
+				}
+		
+				if ($update) {
+					$resp['status'] = 'success';
+					$resp['msg'] = "New car payment successfully saved.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
 			} else {
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($this->conn);
@@ -284,7 +306,7 @@ Class Master{
 	
 	function save_other_car_payment() {
 		extract($_POST);
-	
+		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
 
 		$car_type_check = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_car_type'";
@@ -325,10 +347,24 @@ Class Master{
 			$save1 = odbc_exec($this->conn, $insert1);
 	
 			if ($save && $save1) {
-				$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
-				$resp['status'] = 'success';
-				$resp['msg'] = "New car payment successfully saved.";
-			} else {
+				$check_atap = "SELECT 1 FROM t_atap WHERE c_atap_no = '$c_atap_no'";
+				$check_result = odbc_exec($this->conn, $check_atap);
+		
+				if (odbc_fetch_row($check_result)) {
+					$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
+					$update = odbc_exec($this->conn, $update_atap);
+				} else {
+					$update = true; 
+				}
+				if ($update) {
+					$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
+					$resp['status'] = 'success';
+					$resp['msg'] = "New car payment successfully saved.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			}else {
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($this->conn);
 			}

@@ -14,13 +14,21 @@ include('../../inc/header.php');
 <style>
     .green-row {
         background-color: #cbd2d9 !important;
-        /* color:white !important; */
         font-weight: bold !important;
         font-style: italic;
     }
     .hidden_fields{
         display:none;
     }
+    /* .status-pending {
+        background-color: orange !important;
+    }
+    .status-paid {
+        background-color: green !important;
+    }
+    .status-cancelled {
+        background-color: red !important;
+    } */
 </style>
 <body>
 <div class="container mt-5">
@@ -93,8 +101,16 @@ include('../../inc/header.php');
                     if (odbc_execute($stmt)) {
                         $i = 1; 
                         while ($row = odbc_fetch_array($stmt)) {
+                            $rowClass = '';
+                            if ($row['status'] == 0) {
+                                $rowClass = 'status-pending';
+                            } else if ($row['status'] == 1) {
+                                $rowClass = 'status-paid';
+                            } else {
+                                $rowClass = 'status-cancelled';
+                            }
                             ?>
-                            <tr>
+                            <tr class="<?php echo $rowClass; ?>">
                                 <td class="text-center"><?php echo $i++; ?></td>
                                 <td class="text-center">
                                     <?php echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); ?>
@@ -219,10 +235,10 @@ include('../../inc/header.php');
                             <?php 
                         }
                     } else {
-                        echo "<tr><td colspan='7' class='text-center'>Error.</td></tr>";
+                        echo "<tr><td colspan='9' class='text-center'>Error.</td></tr>";
                     }
                     ?>
-                </thead>
+                
             </table>
         </div>
         <?php include ('../modals/main_modals.php'); ?>

@@ -1,10 +1,3 @@
-function toggleForm() {
-    var searchType = document.getElementById("search_type").value;
-    document.getElementById("account-form").style.display = searchType === "account" ? "block" : "none";
-    document.getElementById("location-form").style.display = searchType === "location" ? "block" : "none";
-    document.getElementById("last-name-form").style.display = searchType === "last-name" ? "block" : "none";
-}
-
 function searchBuyer(type) {
     var formData = new FormData();
 
@@ -15,30 +8,23 @@ function searchBuyer(type) {
         var phase = document.getElementById('phase').value;
         var block = document.getElementById('block').value;
         var lot = document.getElementById('lot').value;
-        var loc;
 
-        if (block.length === 1) {
-            block = "00" + block;
-        } else if (block.length === 2) {
-            block = "0" + block;
-        }
+        if (block.length === 1) block = "00" + block;
+        else if (block.length === 2) block = "0" + block;
 
-        if (lot.length === 1) {
-            lot = "0" + lot;
-        } 
-        loc = phase + block + lot;
+        if (lot.length === 1) lot = "0" + lot;
 
-        formData.append('loc', loc); 
+        var loc = phase + block + lot;
+        formData.append('loc', loc);
     } else if (type === 'last-name') {
         var last_name = document.getElementById('last_name').value;
         var first_name = document.getElementById('first_name').value;
         formData.append('last_name', last_name);
-        formData.append('first_name', first_name); 
+        formData.append('first_name', first_name);
     }
 
     var xhr = new XMLHttpRequest();
     var url = 'search_buyer.php';
-
     var params = [];
     formData.forEach(function(value, key) {
         params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
@@ -51,9 +37,7 @@ function searchBuyer(type) {
             var response = JSON.parse(xhr.responseText);
             if (response.status === 'success') {
                 if (Array.isArray(response.data)) {
-                    if (type === 'last-name' && response.data.length > 1) {
-                        showMultipleResults(response.data);
-                    } else if (type === 'location' && response.data.length > 1) {
+                    if ((type === 'last-name' || type === 'location') && response.data.length > 1) {
                         showMultipleResults(response.data);
                     } else {
                         fillBuyerDetails(response.data[0]);
@@ -75,24 +59,20 @@ function searchBuyer(type) {
     return false;
 }
 
-function updateCarList() {
-    const username = $('#username').val(); 
-    const accountNo = $('#buyer_acc_no').val();
+function toggleForm() {
+    var searchType = document.getElementById("search_type").value;
+    document.getElementById("account-form").style.display = searchType === "account" ? "block" : "none";
+    document.getElementById("location-form").style.display = searchType === "location" ? "block" : "none";
+    document.getElementById("last-name-form").style.display = searchType === "last-name" ? "block" : "none";
+    
+    clearFormFields();
+}
 
-    fetch(`car_list.php?username=${username}&buyer_acc_no=${accountNo}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
-        .then(data => {
-            document.getElementById('car-list-body').innerHTML = data;
-            calculateTotalAmount(); 
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
+function clearFormFields() {
+    var forms = document.querySelectorAll('.filter-form');
+    forms.forEach(function(form) {
+        form.reset();
+    });
 }
 
 function fillBuyerDetails(data) {
@@ -105,10 +85,12 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_address').value = data.c_address; 
     document.getElementById('buyer_remarks').value = data.c_remarks; 
     document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
+    document.getElementById('atap_fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
     document.getElementById('accno').value = data.c_account_no;
+    document.getElementById('atap_accno').value = data.c_account_no;
     document.getElementById('buyer_bal').value = parseFloat(data.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('buyer_tcp').value = parseFloat(data.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    if (data.c_retention = '1') {
+    if (data.c_retention == '1') {
         document.getElementById('buyer_ret').value = "Retention";
     } else {
         document.getElementById('buyer_ret').value = "------";
@@ -151,18 +133,22 @@ function fillBuyerDetails(data) {
                 var buyerLoc = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + data.c_type + ')';
                 document.getElementById('buyer_loc').value = buyerLoc;
                 document.getElementById('car_buyer_loc').value = buyerLoc;
+                document.getElementById('atap_car_buyer_loc').value = buyerLoc;
             } else {
                 document.getElementById('buyer_loc').value = "-----";
                 document.getElementById('car_buyer_loc').value = "-----";
+                document.getElementById('atap_car_buyer_loc').value = "-----";
             }
         } else {
             document.getElementById('buyer_loc').value = "-----";
             document.getElementById('car_buyer_loc').value = "-----";
+            document.getElementById('atap_car_buyer_loc').value = "-----";
         }
     };
     xhrPhase.onerror = function() {
         document.getElementById('buyer_loc').value = "-----";
         document.getElementById('car_buyer_loc').value = "-----";
+        document.getElementById('atap_car_buyer_loc').value = "-----";
     };
     xhrPhase.send();
 }
@@ -277,7 +263,9 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_address').value = buyer.c_address; 
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
     document.getElementById('fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
+    document.getElementById('atap_fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
     document.getElementById('accno').value = buyer.c_account_no;
+    document.getElementById('atap_accno').value = buyer.c_account_no;
     document.getElementById('buyer_bal').value = parseFloat(buyer.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('buyer_tcp').value = parseFloat(buyer.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     if (buyer.c_retention == '1') {
@@ -323,18 +311,22 @@ function selectBuyer(buyer) {
             if (phase_details && phase_details.c_acronym) {
                 document.getElementById('buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
                 document.getElementById('car_buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
+                document.getElementById('atap_car_buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
             } else {
                 document.getElementById('buyer_loc').value = "-----";
                 document.getElementById('car_buyer_loc').value = "-----";
+                document.getElementById('atap_car_buyer_loc').value = "-----";
             }
         } else {
             document.getElementById('buyer_loc').value = "-----";
             document.getElementById('car_buyer_loc').value = "-----";
+            document.getElementById('atap_car_buyer_loc').value = "-----";
         }
     };
     xhr.onerror = function() {
         document.getElementById('buyer_loc').value = "-----";
         document.getElementById('car_buyer_loc').value = "-----";
+        document.getElementById('atap_car_buyer_loc').value = "-----";
     };
     xhr.send();
 
@@ -374,6 +366,7 @@ function filterTable() {
     }
     calculateTotalAmount();
 }
+
 function calculateTotalAmount() {
     var table = document.getElementById("car-list-table");
     var tbody = table.getElementsByTagName("tbody")[0];

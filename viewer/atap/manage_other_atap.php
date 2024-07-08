@@ -85,6 +85,24 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     font-size: 11px;
     font-style: italic;
 }
+.transaction-type {
+    text-align: center;
+}
+
+.transaction-amount, .total-amount {
+    text-align: right;
+}
+
+.total-amount {
+    text-align: right;
+}
+#add-row{
+    border-radius: 0px;
+}
+.remove-row{
+    border-radius: 0px;
+    text-align: center;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_atap.css">
 <form id="atap-form" method="post" action="">
@@ -122,7 +140,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="name">Name</label>
         <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name) ?>" required>
     </div>
-    <div class="col-md-12">
+    <div class="form-group">
         <label for="remarks" class="form-label">
             Remarks 
         </label>
@@ -164,30 +182,29 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
                     <?php foreach ($transaction_types as $key => $type) : ?>
                         <tr>
-                            <td><input type="text" name="transaction_type[]" class="form-control" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>" required></td>
+                            <td><input type="text" name="transaction_type[]" class="form-control transaction-type" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>" required></td>
                             <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars($type['c_atap_amount']); ?>" required></td>
-                            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td><input type="text" name="transaction_type[]" class="form-control" required></td>
+                        <td><input type="text" name="transaction_type[]" class="form-control transaction-type" required></td>
                         <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-                        <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+                        <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                     </tr>
                 <?php endif; ?>
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="1">Total:</th>
-                    <th id="total-amount">0.00</th>
+                    <th colspan="1" style="text-align:right;"> <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:</th>
+                    <th id="total-amount" class="total-amount">0.00</th>
                     <th></th>
                 </tr>
             </tfoot>
         </table>
-        <button type="button" class="btn btn-primary" id="add-row">Add</button>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_atap.js"></script>
 <script>
@@ -214,7 +231,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         const newRow = `<tr>
             <td><input type="text" name="transaction_type[]" class="form-control" required></td>
             <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
         </tr>`;
         $('#transaction-table tbody').append(newRow);
     });

@@ -34,6 +34,7 @@ function isActive($pages) {
     body.modal-open {
       overflow: hidden;
     }
+
   </style>
 </head>
 <body>

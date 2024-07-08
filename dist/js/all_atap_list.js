@@ -47,7 +47,7 @@
         var atapId = $(this).data('id');
         var atapNo = $(this).data('no');
         var accountNo = $(this).data('acc-no');
-        var modalTitle = 'Edit ATAP Details ' + accountNo;
+        var modalTitle = 'Edit ATAP Details ';
         var modalSelector = '#createCarModal';
         var url;
     
@@ -59,6 +59,20 @@
     
         loadModal(modalTitle, url, modalSelector);
     });
+
+    $(document).on('click', '.edit_atap_spec', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        var accountNo = $(this).data('acc-no');
+        var modalTitle = 'Edit ATAP Details ';
+        var modalSelector = '#createCarModal';
+        var url;
+    
+        url = '../atap/manage_atap.php?id=' + atapId + '&no=' + atapNo + '&acc-no=' + accountNo;
+        
+        loadModal(modalTitle, url, modalSelector);
+    });
+    
     
 
     window._conf = function(msg, func, params) {

@@ -115,7 +115,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
 <script>
