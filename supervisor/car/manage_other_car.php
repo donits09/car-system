@@ -15,10 +15,11 @@
     $c_encoded_by = '';
     $c_tran_date = date('Y-m-d H:i:s');
     $c_mop = '';
+    $c_bank = '';
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
@@ -38,6 +39,7 @@
             $c_encoded_by = $result["c_encoded_by"];
             $c_mop = $result["c_mop"];
             $c_encoded_by = $result["c_encoded_by"];
+            $c_bank = $result["c_bank"];
         }
     } 
 ?>
@@ -153,13 +155,47 @@
         <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
         <div id="car_no_error"></div>
     </div>
+    <!-- Some Changes dito sa Bank Kineme -DhenDwen -->
     <div class="form-group">
-    <label for="c_mop">Mode of Payment</label>
-    <select class="form-control" id="c_mop" name="c_mop" required>
-        <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
-        <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
-    </select>
-</div>
+        <label for="c_mop">Mode of Payment</label>
+        <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
+            <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
+            <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
+            <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
+        </select>
+    </div>  
+
+    <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
+        <label for="c_bank_check">Select Check Bank</label>
+        <div class="dropdown">
+            <select class="form-control" id="c_bank_check" name="c_bank_check" required>
+                <?php
+                $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY id ASC";
+                $type_result = odbc_exec($conn, $check_type_query);
+                while ($row = odbc_fetch_array($type_result)) {
+                    $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                    echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
+        <label for="c_bank_online">Select Online Bank</label>
+        <div class="dropdown">
+            <select class="form-control" id="c_bank_online" name="c_bank_online" required>
+                <?php
+                $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY id ASC";
+                $type_result = odbc_exec($conn, $online_bank_query);
+                while ($row = odbc_fetch_array($type_result)) {
+                    $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                    echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
     <div class="form-group">
         <label for="pay_date">Pay Date</label>
         <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required>

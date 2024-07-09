@@ -326,6 +326,7 @@ include('../../inc/header.php');
                                             <th>Location</th>
                                             <th>Amount</th>
                                             <th>MoP</th>
+                                            <th>Bank</th>
                                             <th>Transaction Date</th>
                                             <th>Pay Date</th>
                                             <th>Encoder</th>

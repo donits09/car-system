@@ -60,6 +60,16 @@ function isActive($pages) {
             </div>
         </li>
 
+        <li class="nav-item dropdown<?php echo isActive(['bank']) ? ' active' : ''; ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Bank Type
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/check_type.php">Check</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/online_type.php">Online</a>
+            </div>
+        </li>
+
         <li class="nav-item dropdown<?php echo isActive(['car_type', 'user']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Settings
@@ -84,6 +94,7 @@ function isActive($pages) {
                 <?php echo htmlspecialchars($c_realname); ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/my_account.php">My Account</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
             </div>
         </li>
@@ -102,6 +113,15 @@ function isActive($pages) {
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                 <a class="dropdown-item" href="<?php echo base_url ?>supervisor/car/all_car_list.php">Car List</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown<?php echo isActive(['bank']) ? ' active' : ''; ?>">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReports" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Bank Type
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/settings/bank/check_type.php">Check Bank</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/settings/bank/online_type.php">Online Bank</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
