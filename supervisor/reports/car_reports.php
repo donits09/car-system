@@ -23,6 +23,8 @@ $current_date = date('Y-m-d');
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url ?>dist/header_files/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="<?php echo base_url ?>dist/header_files/js/jquery.dataTables.js"></script>
 </head>
 <body>
 <div class="container mt-5">
@@ -238,6 +240,10 @@ $current_date = date('Y-m-d');
 <script src="../../dist/js/table.js"></script>
 <!-- <script src="../../dist/js/car_reports.js"></script> -->
  <script>
+    $(document).ready( function () {
+        $('#car-table').DataTable();
+    } );
+
     $(document).ready(function(){
     $('.datepicker').datepicker({
         dateFormat: 'mm/dd/yy',

@@ -80,7 +80,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
         <div id="car_amt_error"></div>
     </div>
 
@@ -128,7 +128,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
     <div class="form-group">
         <label for="pay_date">Pay Date</label>
-        <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required>
+        <!-- <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required> -->
+        <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>" min="1990-01-01" max="<?php echo date('Y-m-d'); ?>" required>
     </div>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
@@ -152,7 +153,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
 <script>
@@ -287,5 +288,6 @@ $(document).ready(function() {
         }
     });
 });
+
 
 </script>

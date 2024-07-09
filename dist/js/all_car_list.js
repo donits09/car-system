@@ -1,3 +1,4 @@
+
 function validateNumberInputAmt(event) {
     const input = event.target;
     let value = input.value;
@@ -77,7 +78,7 @@ $(document).ready(function() {
     $(document).on('click', '.delete_data', function() {
         var carId = $(this).data('id');
         var carNo = $(this).data('car-no');
-        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId, carNo]);
+        _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
     });
 
     window._conf = function(msg, func, params) {
@@ -301,8 +302,8 @@ $(document).ready(function() {
 
     function fetchBuyerDetails(accountNo) {
         const buyerNameField = $('#buyer_name');
-
-        if (accountNo.length > 0) {
+    
+        if (accountNo && accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
                 url: '../../admin/car/get_buyer_details.php',
@@ -323,6 +324,7 @@ $(document).ready(function() {
             buyerNameField.attr('required', 'required');
         }
     }
+    
 
     const accountNo = $('#c_account_no').val();
     fetchBuyerDetails(accountNo);
@@ -366,3 +368,11 @@ $(document).ready(function() {
         }
     });
 });
+
+function clearAmt(){
+    var txtamt = document.getElementById('c_car_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_car_amount').value='';
+    }
+}
