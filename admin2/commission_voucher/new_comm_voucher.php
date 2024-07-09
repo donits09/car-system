@@ -24,11 +24,10 @@
 
 <?php include('nav.php'); ?>
 
-<div class="card card-outline rounded-0 card-maroon">
-    <div class="card-header">
-        <h5 class="card-title"><b><i>List of Commissions</i></b></h5>
-      
-    </div>
+    <div class="container mt-5" style="margin-bottom:50px;">
+    <div class="card mt-3">
+        <h2 class="text-blue h4">New Commission Voucher</h2>
+    <hr>
     <div class="card-body">
         <div class="container-fluid">
             <div class="table-responsive">

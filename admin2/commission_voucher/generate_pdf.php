@@ -1,7 +1,7 @@
 <?php
 require '../../dompdf/autoload.inc.php';
 require_once('../../config.php');
-
+include('../../inc/common.php');
 use Dompdf\Dompdf;
 use Dompdf\Options;
 

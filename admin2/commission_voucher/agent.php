@@ -38,13 +38,46 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
+<style>
+    /* Custom CSS for modal form */
 
-<h2>Agent Information Form</h2>
+/* Reduce spacing between form sections */
+.form-section {
+    margin-bottom: 1rem; /* Adjust margin bottom as needed */
+}
+
+/* Reduce spacing between form rows */
+.form-section .row {
+    margin-bottom: 0.5rem; /* Adjust margin bottom as needed */
+}
+
+/* Reduce padding inside form fields */
+.form-control {
+    padding: 0.375rem 0.75rem; /* Adjust padding as needed */
+    font-size: 0.775rem; /* Adjust font size to make text smaller */
+}
+
+/* Adjust label font size and weight */
+.form-section label {
+    font-size: 0.775rem; /* Adjust label font size */
+    font-weight: normal; /* Adjust label font weight if needed */
+}
+
+/* Adjust column width for smaller screens */
+@media (max-width: 768px) {
+    .col-md-6 {
+        width: 100%; /* Make columns full-width on smaller screens */
+        margin-bottom: 0.5rem; /* Adjust margin bottom for responsiveness */
+    }
+}
+</style>
+<!-- 
+<h5>Agent Information Form</h5> -->
 
 <form action="" id="agent-form" class="container">
     <!-- Primary Details Section -->
     <div class="form-section mb-4">
-        <h3>Primary Details</h3>
+        <h5>Primary Details</h5>
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="c_code">Code:</label>
@@ -83,7 +116,7 @@ if (isset($_GET['id'])) {
 
     <!-- Contact Info Section -->
     <div class="form-section mb-4">
-        <h3>Contact Info</h3>
+        <h5>Contact Info</h5>
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="c_address_ln1">Address Line 1:</label>
@@ -102,7 +135,7 @@ if (isset($_GET['id'])) {
 
     <!-- Other Details Section -->
     <div class="form-section mb-4">
-        <h3>Other Details</h3>
+        <h5>Other Details</h5>
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label for="c_civil_status">Civil Status:</label>

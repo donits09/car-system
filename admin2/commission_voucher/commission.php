@@ -42,50 +42,10 @@
     .highlight {
         background-color: yellow !important;
     }
-    .card-header {
-        background-color: whitesmoke;
-        color: black;
-    }
-
-    .card-title {
-        font-weight: bold;
-    }
-
-    .nav-tabs .nav-link.active {
-        background-color: #0038a5;
-        color: white;
-    }
-
-    .form-group label {
-        font-weight: bold;
-    }
-
-    .form-group input {
-        width: 100%;
-    }
-    .form-group textarea{
-        width: 100%;
-        /* Set min-height to control the number of rows */
-        min-height: 20em; /* Adjust this value as needed */
-        max-height: 8em; /* Adjust this value as needed */
-        resize: vertical; /* Allow vertical resizing of textarea */
-        overflow-y: auto; /* Add scrollbar if content exceeds max-height */
-    }
-
-    .btn-primary {
-        background-color: #0038a5;
-        border-color: #0038a5;
-    }
-
-    .btn-primary:hover {
-        background-color: #660000;
-        border-color: #660000;
-    }
-
-    .hidden-button {
-        display: none;
-    }
+   
 </style>
+
+<link rel="stylesheet" href="../../dist/css/index.css">
 
 
 <?php
@@ -162,6 +122,7 @@ if ($l_acct_no != ''){
     $data = [];  // Initialize an array to store the final data
 
     while ($row = odbc_fetch_array($l_qry3)) {
+        $l_acc = $row['c_account_no'];
         $l_code = strval($row['c_code']);
         $l_amount = strval($row['c_amount']);
         $l_rate = strval($row['c_rate']);
@@ -219,7 +180,7 @@ if ($l_acct_no != ''){
                
             }
 
-            $l_data = [$l_pos, $l_code, $l_agent_name, $l_amount, $l_rate, $l_tax_rate];
+            $l_data = [$l_pos, $l_code, $l_agent_name, $l_amount, $l_rate, $l_tax_rate, $l_acc];
             $data[] = $l_data; 
             
             $l_agent_data = [];
@@ -231,7 +192,8 @@ if ($l_acct_no != ''){
                     'agent_name' => $row[2],
                     'amount' => $row[3],
                     'rate' => $row[4],
-                    'whtax' => $row[5]
+                    'whtax' => $row[5],
+                    'acc_no' => $row[6]
                 ];
             }
         }
@@ -305,13 +267,13 @@ if ($l_acct_no != ''){
 <?php include('nav.php'); ?>
 
         <div class="container mt-5" style="margin-bottom:50px;">
-            <div class="card mt-3">
-                <h2 class="text-blue h4">Commission Voucher</h2>
-            <hr>
+        <div class="card mt-3">
+            <h2 class="text-blue h4">Commission</h2>
+        <hr>
             <div class="card-body">
             <form action="" id="filter">
                 <div class="row align-items-end">
-                    <input type="hidden" id="page" name="page" value="commission_voucher/comm_voucher" class="form-control form-control-sm rounded-0">
+                    <input type="hidden" id="page" name="page" value="commission_voucher/commission" class="form-control form-control-sm rounded-0">
 
                     <div class="col-md-3 form-group">
                         <input type="text" id="acct_no" name="acct_no" value="<?= $l_acct_no ?>" class="form-control" placeholder="Enter Account No" maxlength="11">
@@ -323,7 +285,7 @@ if ($l_acct_no != ''){
                 </div>
             </form>
 
-            <form action="<?php base_url?>commission_voucher/generate_pdf.php" method="post" target="_blank" id="print-commission">
+            <form action=""  id="commission">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">        
@@ -398,23 +360,28 @@ if ($l_acct_no != ''){
                         <div class="col-md-4">        
                             <div class="form-group">
                                 <label for="amount">Amount:</label>
-                                <input type="text" id="amount" name="amount" class="form-control" readonly>
+                                <input type="text" id="amount" name="amount" class="form-control" >
                             </div>
                         </div>    
                         <div class="col-md-4">        
                             <div class="form-group">
                                 <label for="rate">Rate:</label>
-                                <input type="text" id="rate" name="rate" class="form-control" readonly>
+                                <input type="text" id="rate" name="rate" class="form-control" >
                             </div>
                         </div>    
                         <div class="col-md-4">        
                             <div class="form-group">
                                 <label for="whtax">W.H. Tax:</label>
-                                <input type="text" id="whtax" name="whtax" class="form-control" readonly>
+                                <input type="text" id="whtax" name="whtax" class="form-control" >
                             </div>
                         </div>
                     </div>
                     <div class="row">
+                        <a id="add_commission" class="btn btn-flat btn-primary" href="javascript:void(0)">
+                            <span class="fa fa-add"></span> Add Agent
+                        </a>
+                      
+                        <!-- Your existing table code -->
                         <table class="table table-bordered" id="data-table" style="text-align:center;width:100%;">
                             <thead>
                                 <tr>
@@ -424,112 +391,73 @@ if ($l_acct_no != ''){
                                     <th>Amount</th>
                                     <th>Commission Rate</th>
                                     <th>W.H. Rate</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($l_agent_data as $row): ?>
-                                <tr onclick="displayData('<?php echo $row['pos']; ?>', '<?php echo $row['code']; ?>', '<?php echo $row['agent_name']; ?>', '<?php echo number_format($row['amount'],2); ?>', '<?php echo $row['rate']; ?>', '<?php echo $row['whtax']; ?>', this)">
+                                <tr>
                                     <td><?php echo $row['pos']; ?></td>
                                     <td><?php echo $row['code']; ?></td>
                                     <td><?php echo $row['agent_name']; ?></td>
                                     <td><?php echo number_format($row['amount'],2); ?></td>
                                     <td><?php echo $row['rate']; ?></td>
                                     <td><?php echo $row['whtax']; ?></td>
+                                    <td>
+                                    <button><a class="edit_data" href="javascript:void(0)" data-id ="<?php echo $row['code']?>" data-acc="<?php echo $row['acc_no']?>"> Edit</a>
+                                    </button>
+                                    <button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['code'] ?>">Delete</a>
+                                    </button>
+                                    </td>
                                 </tr>
                                 <?php endforeach; ?>    
                             </tbody>
                         </table>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label">Net TCP: </label>
-                                <input type="text" class="form-control" name="net_tcp" id="net_tcp" value="<?php echo number_format( isset($l_net_tcp) ? $l_net_tcp : 0,2) ?>" readonly>    
-                            </div>
-                        </div>
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label">Down %: </label>
-                                <input type="text" class="form-control" name="down_percent" id="down_percent" value="<?php echo isset($l_down_per) ? $l_down_per : 0 ?>" readonly>    
-                            </div>
-                        </div>
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label"># Payments: </label>
-                                <input type="text" class="form-control" name="no_payment" id="no_payment" value="<?php echo isset($l_no_payment) ? $l_no_payment : 0 ?>" readonly>    
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label">Reservation: </label>
-                                <input type="text" class="form-control" name="reservation" id="reservation" value="<?php echo  number_format(isset($l_reservation) ? $l_reservation : 0) ?>" readonly>    
-                            </div>
-                        </div>
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label">Net DP: </label>
-                                <input type="text" class="form-control" name="net_dp" id="net_dp" value="<?php echo number_format(isset($l_net_dp)? $l_net_dp : 0,2) ?>" readonly>    
-                            </div>
-                        </div>
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label">Due Commission: </label>
-                                <input type="text" class="form-control" name="due_commission" id="due_commission" value="<?php echo isset($commission_percentage) ? $commission_percentage : 0 ?>">    
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label">Cash Advance: </label>
-                                <input type="text" class="form-control" name="cash_advance" id="cash_advance" value="">    
-                            </div>
-                        </div>
-                        <div class="col-md-4">        
-                            <div class="form-group">
-                                <label class="control-label">Others: </label>
-                                <input type="text" class="form-control" name="others" id="others" value="">    
-                            </div>
-                        </div>
-                        <div class="col-md-4">        
-                            <button id="generateButton" class="btn btn-primary">Print Commission</button>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-12">        
-                            <div class="form-group">
-                                <label for="remarks">Remarks:</label>
-                                <textarea id="remarks" name="remarks" rows="4" class="form-control"><?php echo isset($l_remarks) ? $l_remarks : '' ?></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form> 
 
-            </div>
-        </div>
-</body>
 <script>
+
+$(document).ready(function() {
+	$('#add_commission').click(function(){
+		uni_modal("Add New Commission","commission_voucher/commission_add.php",'')
+	});
+
+    $('.edit_data').click(function(){
+		uni_modal("Update Commission","commission_voucher/commission_add.php?id="+$(this).attr('data-id')+"&acc="+$(this).attr('data-acc'),'')
+	})
+	$('.delete_data').click(function(){
+    _conf("Are you sure you want to delete this permanently?", "delete_agent_comm", [$(this).attr('data-id')])
+	})
+
+	function delete_agent_comm($id){
+		start_loader();
+		$.ajax({
+			url: _base_url_ + "classes/Commission_Master.php?f=delete_agent_comm",
+			method: "POST",
+			data: {id: $id},
+			dataType: "json",
+			error: function(err) {
+				console.log(err);
+				alert_toast("An error occurred.", 'error');
+				end_loader();
+			},
+			success: function(resp) {
+				if (typeof resp === 'object' && resp.status === 'success') {
+					alert_toast(resp.msg, 'success');
+					setTimeout(function() {
+						location.reload();
+					}, 2000);
+				} else {
+					alert_toast(resp.msg || "An error occurred.", 'error'); // Display default error message if msg is undefined
+					end_loader();
+				}
+			}
+		});
+	}
+});
+
 let currentRow;
 
-function displayData(pos, code, agent_name, amount, rate, whtax, row) {
-    document.getElementById('pos').value = pos;
-    document.getElementById('code').value = code;
-    document.getElementById('agent_name').value = agent_name;
-    document.getElementById('amount').value = amount;
-    document.getElementById('rate').value = rate;
-    document.getElementById('whtax').value = whtax;
 
-    if (currentRow) {
-        currentRow.classList.remove('highlight');
-    }
-    row.classList.add('highlight');
-    currentRow = row;
-    showButton();
-}
 
 </script>

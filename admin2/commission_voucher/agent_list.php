@@ -25,13 +25,16 @@
 
 <?php include('nav.php'); ?>
 
-<div class="card card-outline rounded-0 card-maroon">
-		<div class="card-header">
-			<h5 class="card-title"><b><i>List of Agents</b></i></h5>
-			<div class="card-tools">
-				<a href="javascript:void(0)" id="create_new" class="btn btn-flat btn-primary" style="font-size:14px;">Add New</a>
-			</div>
-		</div>
+		<div class="container mt-5" style="margin-bottom:50px;">
+        <div class="card mt-3">
+            <h2 class="text-blue h4">Agents</h2>
+		
+            <hr>
+			<div class="pd-20">
+            <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" >
+                <span class="fa fa-edit"></span> Create New Agent
+            </a>
+			
 		<div class="card-body">
             <div class="container-fluid">
             <div class="container-fluid">

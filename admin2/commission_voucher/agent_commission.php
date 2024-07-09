@@ -1,5 +1,6 @@
 <?php 
 require_once('../../config.php');
+include('../../inc/common.php');   
 
 // Get the agent code from POST request
 if (isset($_GET['id'])) {
