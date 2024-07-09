@@ -14,11 +14,11 @@ if (isset($_GET['id'])) {
 
     function fetchCarPayments($conn, $carNo) {
         $query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                          a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop,
+                          a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
                           b.c_name, b.c_phase, b.c_block, b.c_lot
                   FROM t_car_payment a
                   LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                  WHERE a.c_account_no = ? ORDER BY a.c_tran_date ASC";
+                  WHERE a.c_account_no = ? AND status != '1' ORDER BY a.c_tran_date ASC";
         $stmt = odbc_prepare($conn, $query);
         if (!$stmt || !odbc_execute($stmt, array($carNo))) {
             return null;
@@ -60,6 +60,16 @@ if (isset($_GET['id'])) {
         return $details ? htmlspecialchars($details["c_realname"]) : "";
     }
 
+    /* Eto yung sa footer ng page */
+    $c_employee_code = $_SESSION['username'];
+    $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+    $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+    $c_realname = "Unknown";
+
+    if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+        $c_realname = htmlspecialchars($encoder["c_realname"]);
+    }
+
     $carData = fetchCarPayments($conn, $c_account_no);
     $buyer_name = fetchBuyerDetails($conn, $c_account_no);
 
@@ -97,6 +107,13 @@ if (isset($_GET['id'])) {
         </div>
 
     </header>
+
+    <footer>
+        <div class="footer-content">
+            <p>Printed By: ' . $c_realname . '</p>
+        </div>
+    </footer>
+    
     <table border="1" cellspacing="0" cellpadding="5">
         <thead>
             <tr>
@@ -106,6 +123,8 @@ if (isset($_GET['id'])) {
                 <th>Location</th>
                 <th>Cash</th>
                 <th>Check</th>
+                <th>Online</th>
+                <th>Bank</th>
                 <th>Transaction Date</th>
                 <th>Payment Date</th>
                 <th>Encoded By</th>
@@ -117,13 +136,16 @@ if (isset($_GET['id'])) {
         $counter = 1;
         $totalCash = 0;
         $totalCheck = 0;
+        $totalOnline = 0;
 
         foreach ($carData as $row) {
             $cashAmount = ($row['c_mop'] == 1) ? $row['c_car_amount'] : 0;
             $checkAmount = ($row['c_mop'] == 2) ? $row['c_car_amount'] : 0;
+            $checkOnline = ($row['c_mop'] == 3) ? $row['c_car_amount'] : 0;
 
             $totalCash += $cashAmount;
             $totalCheck += $checkAmount;
+            $totalOnline += $checkOnline;
 
             $phase_acronym = fetchPhaseDetails($conn, $c_phase) . ' ' . $c_block . ' ' . $c_lot;
 
@@ -137,6 +159,9 @@ if (isset($_GET['id'])) {
                 <td class="pdf-font">' . $phase_acronym . '</td>
                 <td class="pdf-font">' . number_format($cashAmount, 2) . '</td>
                 <td class="pdf-font">' . number_format($checkAmount, 2) . '</td>
+                <td class="pdf-font">' . number_format($checkOnline, 2) . '</td>
+                <td class="pdf-font">' . htmlspecialchars($row['c_bank'] == '' ? '-' : $row['c_bank']) . '</td>
+
                 <td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>
                 <td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>
                 <td class="pdf-font">' . $l_encode . '</td>
@@ -150,32 +175,19 @@ if (isset($_GET['id'])) {
                     <td class="pdf-font" colspan="4" style="text-align: right;"></td>
                     <td class="pdf-font">' . number_format($totalCash, 2) . '</td>
                     <td class="pdf-font">' . number_format($totalCheck, 2) . '</td>
-                    <td class="pdf-font" colspan="3"></td>
+                    <td class="pdf-font">' . number_format($totalOnline, 2) . '</td>
+                    <td class="pdf-font" colspan="4"></td>
                 </tr>
                 <tr>
                     <td class="pdf-font" colspan="4" style="text-align: right;">Final Total:</td>
-                    <td class="pdf-font" colspan="2">' . number_format($totalCash + $totalCheck, 2) . '</td>
-                    <td class="pdf-font" colspan="3"></td>
+                    <td class="pdf-font" colspan="3">' . number_format($totalCash + $totalCheck + $totalOnline, 2) . '</td>
+                    <td class="pdf-font" colspan="4"></td>
                 </tr>
             </tfoot>';
 
         $html .= '
                 </tbody>
             </table>';
-        
-        $html .= '
-            <div class="encoded_by">
-                <p>Printed By: ';
-        
-            $c_employee_code = $_SESSION['username'];
-            $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
-            $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
-            
-            if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetch_array($encoder_stmt)) {
-                $html .= htmlspecialchars($encoder["c_realname"]);
-            } else {
-                $html .= "Unknown";
-            }
 
     } else {
         $html .= '

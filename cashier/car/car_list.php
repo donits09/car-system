@@ -15,7 +15,7 @@ if (isset($_GET['buyer_acc_no'])) {
 }
 
 if (!empty($account_no)) {
-    $car_list_query = "SELECT * FROM t_car_payment WHERE c_account_no = ? AND c_encoded_by = ? AND status != 1 ORDER BY c_tran_date DESC";
+    $car_list_query = "SELECT * FROM t_car_payment WHERE c_account_no = ? AND status != 1 ORDER BY c_tran_updated DESC";
     $stmt = odbc_prepare($conn, $car_list_query);
 
     if ($stmt && odbc_execute($stmt, array($account_no, $username))) {
@@ -113,8 +113,19 @@ if (!empty($account_no)) {
                         echo "Cash";
                     } elseif ($row['c_mop'] == 2) {
                         echo "Check";
+                    } elseif ($row['c_mop'] == 3) {
+                        echo "Online";
                     } else {
                         echo "Unknown";
+                    }
+                    ?>
+                </td>
+                <td class="text-center">
+                    <?php 
+                    if ($row['c_bank'] == '') {
+                        echo "-";
+                    }else {
+                        echo htmlspecialchars($row['c_bank']);
                     }
                     ?>
                 </td>

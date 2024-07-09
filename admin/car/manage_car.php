@@ -14,6 +14,7 @@ $c_car_paydate = date('Y-m-d');
 $c_encoded_by = '';
 $c_tran_date = date('Y-m-d H:i:s');
 $c_mop = '';
+$c_bank = '';
 
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
@@ -28,7 +29,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_car_no = $result["c_car_no"];
         $c_car_paydate = $result["c_car_paydate"];
         $c_encoded_by = $result["c_encoded_by"];
-        $c_mop = $result["c_mop"];
+        $c_mop = $result["c_mop"];  
+        $c_bank = $result["c_bank"];
     }
 } else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
     $c_account_no = $_GET['c_account_no'];
@@ -78,17 +80,52 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
         <div id="car_amt_error"></div>
     </div>
 
+    <!-- Some Changes dito sa Bank Kineme -DhenDwen -->
     <div class="form-group">
         <label for="c_mop">Mode of Payment</label>
-        <select class="form-control" id="c_mop" name="c_mop" required>
+        <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
             <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
             <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
+            <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
         </select>
     </div>
+
+    <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
+        <label for="c_bank_check">Select Check Bank</label>
+        <div class="dropdown">
+            <select class="form-control" id="c_bank_check" name="c_bank_check" required>
+                <?php
+                $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY id ASC";
+                $type_result = odbc_exec($conn, $check_type_query);
+                while ($row = odbc_fetch_array($type_result)) {
+                    $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                    echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
+        <label for="c_bank_online">Select Online Bank</label>
+        <div class="dropdown">
+            <select class="form-control" id="c_bank_online" name="c_bank_online" required>
+                <?php
+                $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY id ASC";
+                $type_result = odbc_exec($conn, $online_bank_query);
+                while ($row = odbc_fetch_array($type_result)) {
+                    $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                    echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+
     <div class="form-group">
         <label for="pay_date">Pay Date</label>
         <!-- <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required> -->
@@ -116,7 +153,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
 <script>
@@ -251,5 +288,6 @@ $(document).ready(function() {
         }
     });
 });
+
 
 </script>

@@ -23,6 +23,8 @@ $current_date = date('Y-m-d');
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url ?>dist/header_files/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="<?php echo base_url ?>dist/header_files/js/jquery.dataTables.js"></script>
 </head>
 <body>
 <div class="container mt-5">
@@ -63,6 +65,7 @@ $current_date = date('Y-m-d');
                         <th>Location</th>
                         <th>Amount</th>
                         <th>MoP</th>
+                        <th>Bank</th>
                         <th>Status</th>
                         <th>Transaction Date</th>
                         <th>Pay Date</th>
@@ -72,7 +75,7 @@ $current_date = date('Y-m-d');
                 <tbody id="car-type-body">
                     <?php
                     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_tran_date ASC";
@@ -174,8 +177,19 @@ $current_date = date('Y-m-d');
                                         echo "Cash";
                                     } elseif ($row['c_mop'] == 2) {
                                         echo "Check";
+                                    } elseif ($row['c_mop'] == 3) {
+                                        echo "Online";
                                     } else {
                                         echo "Unknown";
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['c_bank'] == '') {
+                                        echo "-";
+                                    }else {
+                                        echo htmlspecialchars($row['c_bank']);
                                     }
                                     ?>
                                 </td>
@@ -226,6 +240,10 @@ $current_date = date('Y-m-d');
 <script src="../../dist/js/table.js"></script>
 <!-- <script src="../../dist/js/car_reports.js"></script> -->
  <script>
+    $(document).ready( function () {
+        $('#car-table').DataTable();
+    } );
+
     $(document).ready(function(){
     $('.datepicker').datepicker({
         dateFormat: 'mm/dd/yy',
