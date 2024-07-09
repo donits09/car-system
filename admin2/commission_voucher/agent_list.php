@@ -71,7 +71,11 @@
 									
 										<button><a class="edit_data" href="javascript:void(0)" data-id ="<?php echo $row['c_code'] ?>">Edit</a>
                                         </button>
+<<<<<<< HEAD
 										<button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['c_code'] ?>">Delete</a>
+=======
+										<button><a class="delete_data" href="javascript:void(0)" data-id="<?php echo $row['c_code'] ?>"><span class="fa fa-ban text-danger"></span> Cancel</a>
+>>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
                                         </button>
 								</td>
 							</tr>

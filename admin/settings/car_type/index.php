@@ -59,7 +59,7 @@ include('../../../inc/header.php');
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-type="<?php echo $row['c_payment_type']; ?>">
-                                            <span class="fa fa-trash text-danger"></span> Delete
+                                            <span class="fa fa-ban text-danger"></span> Cancel
                                         </a>
                                     </div>
                                 </td>

@@ -86,23 +86,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="confirm_modal_lock" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_lock_label" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirm_modal_lock_label">Confirmation</h5>
-                <button onclick="closeModal()" class="btn customized-modal" data-dismiss="modal">x</button>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeModal()">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirm">Lock</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="modal fade" id="multipleResultsModal" tabindex="-1" role="dialog" aria-labelledby="multipleResultsModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">

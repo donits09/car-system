@@ -42,6 +42,20 @@
                             <option value="Information Technology" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Information Technology') ? 'selected' : ''; ?>>Information Technology</option>
                             <option value="Documentation" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Documentation') ? 'selected' : ''; ?>>Documentation</option>
                             <option value="Treasury" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Treasury') ? 'selected' : ''; ?>>Treasury</option>
+                            <option value="Accounting" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Accounting') ? 'selected' : ''; ?>>Accounting</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="position" class="form-label">Position</label>
+                        <select class="form-control" id="c_position" name="c_position" required>
+                            <option value="" disabled <?php echo !isset($row['c_position']) ? 'selected' : ''; ?>></option>
+                            <option value="IT Manager" <?php echo (isset($row['c_position']) && $row['c_position'] == 'IT Manager') ? 'selected' : ''; ?>>IT Manager</option>
+                            <option value="SoftDev Supervisor" <?php echo (isset($row['c_position']) && $row['c_position'] == 'SoftDev Supervisor') ? 'selected' : ''; ?>>SoftDev Supervisor</option>
+                            <option value="Software Developer" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Software Developer') ? 'selected' : ''; ?>>Software Developer</option>
+                            <option value="AVP Treasury" <?php echo (isset($row['c_position']) && $row['c_position'] == 'AVP Treasury') ? 'selected' : ''; ?>>AVP Treasury</option>
+                            <option value="Treasury Supervisor" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Treasury Supervisor') ? 'selected' : ''; ?>>Treasury Supervisor</option>
+                            <option value="Treasury Assistant" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Treasury Assistant') ? 'selected' : ''; ?>>Treasury Assistant</option>
+                            <option value="Cashier" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Cashier') ? 'selected' : ''; ?>>Cashier</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -90,6 +104,19 @@
                             <option value="Information Technology">Information Technology</option>
                             <option value="Treasury">Treasury</option>
                             <option value="Documentation">Documentation</option>
+                            <option value="Accounting">Accounting</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_position" class="form-label">Position</label>
+                        <select class="form-control" id="edit_position" name="c_position" required>
+                            <option value="IT Manager">IT Manager</option>
+                            <option value="SoftDev Supervisor">SoftDev Supervisor</option>
+                            <option value="Software Developer">Software Developer</option>
+                            <option value="AVP Treasury">AVP Treasury</option>
+                            <option value="Treasury Supervisor">Treasury Supervisor</option>
+                            <option value="Treasury Assistant">Treasury Assistant</option>
+                            <option value="Cashier">Cashier</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>
