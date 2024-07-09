@@ -1,10 +1,3 @@
-function toggleForm() {
-    var searchType = document.getElementById("search_type").value;
-    document.getElementById("account-form").style.display = searchType === "account" ? "block" : "none";
-    document.getElementById("location-form").style.display = searchType === "location" ? "block" : "none";
-    document.getElementById("last-name-form").style.display = searchType === "last-name" ? "block" : "none";
-}
-
 function searchBuyer(type) {
     var formData = new FormData();
 
@@ -51,9 +44,7 @@ function searchBuyer(type) {
             var response = JSON.parse(xhr.responseText);
             if (response.status === 'success') {
                 if (Array.isArray(response.data)) {
-                    if (type === 'last-name' && response.data.length > 1) {
-                        showMultipleResults(response.data);
-                    } else if (type === 'location' && response.data.length > 1) {
+                    if ((type === 'last-name' || type === 'location') && response.data.length > 1) {
                         showMultipleResults(response.data);
                     } else {
                         fillBuyerDetails(response.data[0]);
@@ -75,15 +66,40 @@ function searchBuyer(type) {
     return false;
 }
 
+function toggleForm() {
+    var searchType = document.getElementById("search_type").value;
+    document.getElementById("account-form").style.display = searchType === "account" ? "block" : "none";
+    document.getElementById("location-form").style.display = searchType === "location" ? "block" : "none";
+    document.getElementById("last-name-form").style.display = searchType === "last-name" ? "block" : "none";
+
+    clearFormFields();
+}
+
+function clearFormFields() {
+    var forms = document.querySelectorAll('.filter-form');
+    forms.forEach(function(form) {
+        form.reset();
+    });
+}
+
 function updateCarList() {
-    const accountNo = document.getElementById('buyer_acc_no').value;
-    fetch(`car_list.php?account_no=${accountNo}`)
-        .then(response => response.text())
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
+
+    fetch(`car_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
         .then(data => {
             document.getElementById('car-list-body').innerHTML = data;
-            calculateTotalAmount();
+            calculateTotalAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
         });
-        calculateTotalAmount();
 }
 
 function fillBuyerDetails(data) {
@@ -391,4 +407,12 @@ function searchAndCalculateTotal(event, type) {
     setTimeout(function() {
         calculateTotalAmount();
     }, 150);
+}
+
+function clearAmt(){
+    var txtamt = document.getElementById('c_car_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_car_amount').value='';
+    }
 }

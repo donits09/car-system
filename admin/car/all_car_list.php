@@ -62,7 +62,7 @@ include('../../inc/header.php');
                     b.c_block, b.c_lot, a.e_status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE status != 1
-                        ORDER BY a.c_tran_date DESC";
+                        ORDER BY a.c_tran_updated DESC";
                         $stmt = odbc_prepare($conn, $car_list);
 
                         $result = odbc_execute($stmt, array($username));
@@ -216,7 +216,7 @@ include('../../inc/header.php');
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
-                                            <span class="fa fa-trash text-danger"></span> Delete
+                                            <span class="fa fa-ban text-danger"></span> Cancel
                                         </a>
                                     </div>
                                 </td>

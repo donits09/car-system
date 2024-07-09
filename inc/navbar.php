@@ -1,3 +1,9 @@
+    
+    <!-- FAVICON -->
+  <link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url ?>dist/header_files/favicon/alsc-32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="<?php echo base_url ?>dist/header_files/favicon/alsc-16.png">
+
+
 <?php 
 $c_realname = '';
 
@@ -34,6 +40,7 @@ function isActive($pages) {
     body.modal-open {
       overflow: hidden;
     }
+
   </style>
 </head>
 <body>
@@ -57,6 +64,7 @@ function isActive($pages) {
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                 <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">CAR List</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>admin/atap/all_atap_list.php">ATAP List</a>
             </div>
         </li>
 
@@ -102,6 +110,7 @@ function isActive($pages) {
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                 <a class="dropdown-item" href="<?php echo base_url ?>supervisor/car/all_car_list.php">Car List</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/atap/all_atap_list.php">ATAP List</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
@@ -132,10 +141,11 @@ function isActive($pages) {
               </li>
               <li class="nav-item dropdown<?php echo isActive(['/cashier/car/all_car_list.php']) ? ' active' : ''; ?>">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Files
+                      Files
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                       <a class="dropdown-item" href="<?php echo base_url ?>cashier/car/all_car_list.php">Car List</a>
+                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/atap/all_atap_list.php">ATAP List</a>
                   </div>
               </li>
               <li class="nav-item dropdown<?php echo isActive(['car_reports']) ? ' active' : ''; ?>">
@@ -164,14 +174,14 @@ function isActive($pages) {
         <li class="nav-item<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
           <a class="nav-link" href="<?php echo base_url ?>viewer/car?page=car_list">Home</a>
         </li>
-        <!-- <li class="nav-item dropdown<?php echo isActive(['/viewer/car/all_car_list.php']) ? ' active' : ''; ?>">
+        <li class="nav-item dropdown<?php echo isActive(['/viewer/atap/atap_list.php']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Files
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
-                <a class="dropdown-item" href="<?php echo base_url ?>viewer/car/all_car_list.php">Car List</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>viewer/atap/all_atap_list.php">ATAP List</a>
             </div>
-        </li> -->
+        </li>
         <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <?php echo htmlspecialchars($c_realname); ?>

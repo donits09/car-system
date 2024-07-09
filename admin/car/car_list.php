@@ -3,8 +3,8 @@ session_start();
 ?>
 <?php
 include('../../config.php');
-$account_no = $_GET['account_no'];
-$car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_tran_date DESC";
+$account_no = $_GET['buyer_acc_no'];
+$car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_tran_updated DESC";
 $stmt = odbc_prepare($conn, $car_list);
 $hasRows = false;
 if ($stmt && odbc_execute($stmt, array($account_no))) {
@@ -160,7 +160,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             </div>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo $row['c_car_no']; ?>">
-                <span class="fa fa-trash text-danger"></span> Delete
+                <span class="fa fa-ban text-danger"></span> Cancel
             </a>
         </div>
     </td>

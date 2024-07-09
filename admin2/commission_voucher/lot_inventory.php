@@ -120,7 +120,7 @@
                                 <div class="dropdown-menu" role="menu">
                                 <a class="dropdown-item edit-lot" data-lot-id="<?php echo $row['c_lid'] ?>"><span class="fa fa-edit text-primary"></span> Edit</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item delete-lot" data-lot-id="<?php echo $row['c_lid'] ?>"><span class="fa fa-trash text-danger"></span> Delete</a>
+                                <a class="dropdown-item delete-lot" data-lot-id="<?php echo $row['c_lid'] ?>"><span class="fa fa-ban text-danger"></span> Cancel</a>
                                 </div>
                         </td>
                         <?php endif; ?>

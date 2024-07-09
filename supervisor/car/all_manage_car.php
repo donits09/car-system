@@ -48,6 +48,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="form-group">
+                <label for="c_atap_no">ATAP No.</label>
+                <input type="text" class="form-control" id="c_atap_no" name="c_atap_no">
+            </div>
+        </div>
+        <div class="col-sm-4" style="margin-top: 25px;">
+            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;">
+                <span class="fa fa-edit"></span> Get ATAP
+            </a>
+        </div>
+    </div>
+    <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
         <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
@@ -79,7 +93,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
         <div id="car_amt_error"></div>
     </div>
     <div class="form-group">
@@ -115,7 +129,135 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
+<script>
+ $(document).ready(function() {
+    $('#get_atap').on('click', function() {
+        const atapNo = $('#c_atap_no').val();
+        
+        if (atapNo.length > 0) {
+            fetchAtapDetails(atapNo);
+        } else {
+            alert('Please enter an ATAP No. first.');
+        }
+    });
+
+    function fetchAtapDetails(atapNo) {
+        $.ajax({
+            type: 'POST',
+            url: '../atap/get_atap_details.php',
+            data: { c_atap_no: atapNo },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    if (response.data && response.data.c_account_no) {
+                        if (response.data.status === '1') {
+                            alert("This ATAP has already been PAID.");
+                        } else if (response.data.status === '2') {
+                            alert('This ATAP has already been CANCELLED');
+                        } else {
+                            populateForm(response.data);
+                            fetchBuyerDetails(response.data.c_account_no);
+                        }
+                    } else {
+                        alert('No account number found for the given ATAP No.');
+                        clearTxt();
+                    }
+                } else {
+                    alert('No ATAP details found for the given ATAP No.');
+                    clearTxt();
+                }
+            },
+            error: function() {
+                alert('An error occurred while fetching ATAP details.');
+            }
+        });
+    }
+
+    function clearTxt(){
+        const atapNoField = $('#c_atap_no');
+        // const buyerNameField = $('#buyer_name');
+        const amountField = $('#c_car_amount');
+        // const accField = $('#c_account_no');
+        const statusField = $('#status');
+
+        atapNoField.val('');
+        // buyerNameField.val('');
+        amountField.val('');
+        // accField.val('');
+        statusField.val('');
+
+    }
+
+    function populateForm(data) {
+        const buyerNameField = $('#buyer_name');
+        const amountField = $('#c_car_amount');
+        const accField = $('#c_account_no');
+        const statusField = $('#status');
+     
+        if (data.status === '1') {
+            statusField.val('PAID');
+        } else if (data.status === '2') {
+            statusField.val('CANCELLED');
+        } else {
+            statusField.val('PENDING');
+        }
+
+        const formattedAmount = parseFloat(data.c_car_amount).toFixed(2);
+
+        buyerNameField.val(data.c_name).addClass('glow-effect');
+        amountField.val(formattedAmount).addClass('glow-effect');
+        accField.val(data.c_account_no).addClass('glow-effect');
+        statusField.addClass('glow-effect');
+
+        setTimeout(function() {
+            buyerNameField.removeClass('glow-effect');
+            amountField.removeClass('glow-effect');
+            accField.removeClass('glow-effect');
+            statusField.removeClass('glow-effect');
+        }, 1000);
+
+        $('#c_account_no').trigger('input');
+    }
+
+
+    $('#c_account_no').on('input', function() {
+        const accountNo = $(this).val();
+        fetchBuyerDetails(accountNo);
+    });
+
+    function fetchBuyerDetails(accountNo) {
+        const buyerNameField = $('#buyer_name');
+
+        if (accountNo.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '../../cashier/car/get_buyer_details.php',
+                data: { account_no: accountNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        buyerNameField.val(response.name);
+                        buyerNameField.removeAttr('required');
+                    } else {
+                        buyerNameField.val('Unknown');
+                        buyerNameField.attr('required', 'required');
+                    }
+                },
+                error: function() {
+                    buyerNameField.val('Unknown');
+                    buyerNameField.attr('required', 'required');
+                    alert('An error occurred while fetching buyer details.');
+                }
+            });
+        } else {
+            buyerNameField.val('');
+            buyerNameField.attr('required', 'required');
+        }
+    }
+});
+
+</script>
 </body>
