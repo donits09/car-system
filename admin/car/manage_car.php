@@ -91,7 +91,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="pay_date">Pay Date</label>
-        <!-- <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required> -->
         <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>" min="1990-01-01" max="<?php echo date('Y-m-d'); ?>" required>
     </div>
     <div class="form-group">
