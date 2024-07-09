@@ -671,12 +671,9 @@ function updateCarList() {
         });
         calculateTotalAmount();
 }
-
 </script>
-
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
-<!-- <script src="../../dist/js/car_list.js"></script> -->
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
 <script src="../../dist/js/manage_car.js"></script>
 <?php include('../../inc/footer.php'); ?>
