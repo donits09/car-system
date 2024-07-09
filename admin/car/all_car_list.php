@@ -47,6 +47,7 @@ include('../../inc/header.php');
                         <th>Location</th>
                         <th>Amount</th>
                         <th>MoP</th>
+                        <th>Bank</th>
                         <th>Transaction Date</th>
                         <th>Pay Date</th>
                         <th>Encoder</th>
@@ -58,7 +59,7 @@ include('../../inc/header.php');
                         $username = $_SESSION['username'];
 
                         $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.e_status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE status != 1
@@ -165,8 +166,19 @@ include('../../inc/header.php');
                                             echo "Cash";
                                         } elseif ($row['c_mop'] == 2) {
                                             echo "Check";
+                                        } elseif ($row['c_mop'] == 3) {
+                                            echo "Online";
                                         } else {
                                             echo "Unknown";
+                                        }
+                                        ?>
+                                    </td>
+                                    <td class="text-center">
+                                        <?php 
+                                        if ($row['c_bank'] == '') {
+                                            echo "-";
+                                        }else {
+                                            echo htmlspecialchars($row['c_bank']);
                                         }
                                         ?>
                                     </td>

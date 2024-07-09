@@ -118,8 +118,19 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             echo "Cash";
         } elseif ($row['c_mop'] == 2) {
             echo "Check";
+        } elseif ($row['c_mop'] == 3) {
+            echo "Online";
         } else {
             echo "Unknown";
+        }
+        ?>
+    </td>
+    <td class="text-center">
+        <?php 
+        if ($row['c_bank'] == '') {
+            echo "-";
+        }else {
+            echo htmlspecialchars($row['c_bank']);
         }
         ?>
     </td>

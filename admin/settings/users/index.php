@@ -33,6 +33,7 @@ include('manage_user.php');
                         <th>Name</th>
                         <th>Group</th>
                         <th>Department</th>
+                        <th>Position</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -66,6 +67,7 @@ include('manage_user.php');
                             ?>
                         </td>
                         <td class="text-center"><?php echo $row['c_department']; ?></td>
+                        <td class="text-center"><?php echo $row['c_position']; ?></td>
                         <td align="center">
                             <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                                 Action
@@ -78,7 +80,8 @@ include('manage_user.php');
                                     data-password="<?php echo $row['c_password']; ?>" 
                                     data-realname="<?php echo $row['c_realname']; ?>" 
                                     data-group="<?php echo $row['c_group']; ?>" 
-                                    data-department="<?php echo $row['c_department']; ?>">
+                                    data-department="<?php echo $row['c_department']; ?>"
+                                    data-position="<?php echo $row['c_position']; ?>">
                                     <span class="fa fa-edit text-primary"></span> Edit
                                 </a>
                                 <div class="dropdown-divider"></div>
@@ -102,13 +105,14 @@ $(document).ready(function() {
         e.preventDefault();
     });
 
-    $('.edit_data').on('click', function() {
+    $(document).on('click', '.edit_data', function() {
         var id = $(this).data('id');
         var employee_code = $(this).data('employee_code');
         var password = $(this).data('password');
         var realname = $(this).data('realname');
         var group = $(this).data('group');
         var department = $(this).data('department');
+        var position = $(this).data('position');
     
         $('#edit_user_id').val(id);
         $('#edit_employee_code').val(employee_code);
@@ -116,10 +120,12 @@ $(document).ready(function() {
         $('#edit_realname').val(realname);
         $('#edit_group').val(group);
         $('#edit_department').val(department);
+        $('#edit_position').val(position);
     
         $('#editUserModal').modal('show');
     });
 });
+
 </script>
 
 <script>

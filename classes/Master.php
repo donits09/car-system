@@ -24,8 +24,8 @@ Class Master{
 			}
 	
 			$hashed_password = password_hash($c_password, PASSWORD_BCRYPT);
-			$data = "c_employee_code, c_password, c_realname, c_group, c_department";
-			$values = "'$c_employee_code', '$hashed_password', '$c_realname', '$c_group', '$c_department'";
+			$data = "c_employee_code, c_password, c_realname, c_group, c_department, c_position";
+			$values = "'$c_employee_code', '$hashed_password', '$c_realname', '$c_group', '$c_department', '$c_position' ";
 			$insert = "INSERT INTO t_car_users ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert);
 	
@@ -52,7 +52,8 @@ Class Master{
 				"c_employee_code = '$c_employee_code'",
 				"c_realname = '$c_realname'",
 				"c_group = '$c_group'",
-				"c_department = '$c_department'"
+				"c_department = '$c_department'",
+				"c_position = '$c_position'"
 			);
 	
 			if (!empty($c_password)) {
@@ -222,7 +223,17 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
-	  
+
+		/* Nag add lang me here -DhenDwen */          
+		if ($c_mop == 1) {
+			$c_bank = "";
+		} elseif ($c_mop == 2) {
+			$c_bank = isset($_POST['c_bank_check']) ? $_POST['c_bank_check'] : "";
+		} elseif ($c_mop == 3) {
+			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
+		}
+	
+
 		$car_type_check = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_car_type'";
 		$check_result = odbc_exec($this->conn, $car_type_check);
 	
@@ -244,9 +255,14 @@ Class Master{
 			$maxId = 1; 
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
+
+		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop,c_bank";
+		$values = "'$maxId','$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank'";
+
 	
-		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop";
-		$values = "'$maxId','$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop'";
+		//$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop";
+		//$values = "'$maxId','$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop'";
+
 		$resp = array();
 	
 		if (empty($id)) {
@@ -287,7 +303,8 @@ Class Master{
 						c_car_paydate = '$c_car_paydate',
 						c_car_amount = '$c_car_amount',
 						c_tran_updated = '$c_tran_date',
-						c_mop = '$c_mop'
+						c_mop = '$c_mop',
+						c_bank = '$c_bank'
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	
@@ -308,6 +325,15 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
+
+		/* Nag add lang me here -DhenDwen */
+		if ($c_mop == 1) {
+			$c_bank = "";
+		} elseif ($c_mop == 2) {
+			$c_bank = isset($_POST['c_bank_check']) ? $_POST['c_bank_check'] : "";
+		} elseif ($c_mop == 3) {
+			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
+		}
 
 		$car_type_check = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_car_type'";
 		$check_result = odbc_exec($this->conn, $car_type_check);
@@ -335,8 +361,8 @@ Class Master{
 		$values = "'$maxId', '$c_car_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 
 		$c_account_no = '';
-		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop";
-		$values1 = "'$maxId', '$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop'";
+		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank";
+		$values1 = "'$maxId', '$c_account_no', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank'";
 	
 		$resp = array();
 	
@@ -382,7 +408,8 @@ Class Master{
 						c_car_paydate = '$c_car_paydate',
 						c_car_amount = '$c_car_amount',
 						c_tran_updated = '$c_tran_date',
-						c_mop = '$c_mop'
+						c_mop = '$c_mop',
+						c_bank = '$c_bank'
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 			$save1 = odbc_exec($this->conn, $update1);
@@ -719,6 +746,196 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
+
+	function save_car_check() {
+		extract($_POST);
+	
+		$data = "c_bank_type, status, c_name";
+		$values = "'$c_bank_type', '$status', '$c_name'";
+	
+		$resp = array();
+	
+		if (empty($id)) {
+			$insert = "INSERT INTO t_car_check ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				$this->car_logs('Car Check Bank', "ADDED - $c_bank_type - $c_name");
+				$resp['status'] = 'success';
+				$resp['msg'] = "New check bank successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$update = "UPDATE t_car_check SET 
+						c_bank_type = '$c_bank_type',
+						c_name = '$c_name',
+						status = '$status'
+					  WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				$this->car_logs('Car Check Bank', "UPDATED - $c_bank_type - $c_name");
+				$resp['status'] = 'success';
+				$resp['msg'] = "Car check bank successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+	
+		echo json_encode($resp);
+	}
+
+	function delete_car_check($carTypeId, $carType) {
+		$resp = array();
+	
+		if (isset($carTypeId) && isset($carType)) {
+			$sql = "DELETE FROM t_car_check WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($carTypeId)); 
+	
+				if ($result) {
+					$this->car_logs('Car Check Bank', "DELETED - $carType");
+					$resp['status'] = 'success';
+					$resp['msg'] = "Car check bank successfully deleted.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Check bank not provided.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
+
+	function save_car_online() {
+		extract($_POST);
+	
+		$data = "c_bank_type, status, c_name";
+		$values = "'$c_bank_type', '$status', '$c_name'";
+	
+		$resp = array();
+	
+		if (empty($id)) {
+			$insert = "INSERT INTO t_car_online ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				$this->car_logs('Car Online Bank', "ADDED - $c_bank_type - $c_name");
+				$resp['status'] = 'success';
+				$resp['msg'] = "New online bank successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$update = "UPDATE t_car_online SET 
+						c_bank_type = '$c_bank_type',
+						c_name = '$c_name',
+						status = '$status'
+					  WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				$this->car_logs('Car Online Bank', "UPDATED - $c_bank_type - $c_name");
+				$resp['status'] = 'success';
+				$resp['msg'] = "Car online bank successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+	
+		echo json_encode($resp);
+	}
+
+	function delete_car_online($carTypeId, $carType) {
+		$resp = array();
+	
+		if (isset($carTypeId) && isset($carType)) {
+			$sql = "DELETE FROM t_car_online WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($carTypeId)); 
+	
+				if ($result) {
+					$this->car_logs('Car Online Bank', "DELETED - $carType");
+					$resp['status'] = 'success';
+					$resp['msg'] = "Car online bank successfully deleted.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Online bank not provided.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
+
+	function save_my_account() {
+		extract($_POST);
+		$resp = array();    
+	
+		$check_query = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_employee_code' AND id != '$id'";
+		$check_result = odbc_exec($this->conn, $check_query);
+	
+		if (odbc_num_rows($check_result) > 0) {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Employee code already exists.";
+			echo json_encode($resp);
+			return;
+		}
+	
+		$update_fields = array(
+			"c_employee_code = '$c_employee_code'",
+			"c_realname = '$c_realname'",
+			"c_department = '$c_department'"
+		);
+	
+		if (!empty($c_password)) {
+			$hashed_password = password_hash($c_password, PASSWORD_BCRYPT);
+			$update_fields[] = "c_password = '$hashed_password'";
+	
+			session_start();
+			session_unset();
+			session_destroy();
+	
+			$resp['logout'] = true;
+		}
+	
+		$update_query = "UPDATE t_car_users SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
+		$save = odbc_exec($this->conn, $update_query);
+	
+		if ($save) {
+			$this->car_logs('My Account', "UPDATE - $c_employee_code - $c_realname - CHANGED PASSWORD");
+			$resp['status'] = 'success';
+			$resp['msg'] = "User successfully updated.";
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = odbc_errormsg($this->conn);
+		}
+	
+		echo json_encode($resp);
+	}
 	
 	public function car_logs($module, $notes){
 		require_once('../auth/session_auth.php');
@@ -763,6 +980,12 @@ switch ($action) {
 	case 'save_car_type':
 		echo $Master->save_car_type();
 		break;
+	case 'save_car_check':
+		echo $Master->save_car_check();
+		break;
+	case 'save_car_online':
+		echo $Master->save_car_online();
+		break;
 	case 'save_remarks':
 		echo $Master->save_remarks();
 		break;
@@ -780,9 +1003,26 @@ switch ($action) {
 			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
 		}
 		break;
+	case 'delete_car_check':
+		if (isset($_POST['carTypeId']) && isset($_POST['carType'])) {
+			echo $Master->delete_car_check($_POST['carTypeId'], $_POST['carType']);
+		} else {
+			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
+		}
+		break;
+	case 'delete_car_online':
+		if (isset($_POST['carTypeId']) && isset($_POST['carType'])) {
+			echo $Master->delete_car_online($_POST['carTypeId'], $_POST['carType']);
+		} else {
+			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
+		}
+		break;
     case 'save_car_users':
         echo $Master->save_car_users();
         break;
+	case 'save_my_account':
+		echo $Master->save_my_account();
+		break;
     case 'delete_user':
         echo $Master->delete_user();
         break;
