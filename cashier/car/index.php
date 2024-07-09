@@ -408,6 +408,7 @@ include('../../inc/header.php');
                                             <th>Total Amount</th>
                                             <th>Transaction Date</th>
                                             <th>Status</th>
+                                            <th>Encoder</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -626,12 +627,6 @@ $(document).ready(function() {
         _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
     });
 
-    $(document).on('click', '.view_atap', function() {
-        var atapId = $(this).data('id');
-        var atapNo = $(this).data('no');
-        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
-    });
-
     window._conf = function(msg, func, params) {
         $('#confirm_modal .modal-body').html(msg);
         $('#confirm_modal #confirm').off('click').on('click', function() {
@@ -639,6 +634,12 @@ $(document).ready(function() {
         });
         $('#confirm_modal').modal('show');
     };
+
+    $(document).on('click', '.view_atap', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+    });
 });
 
 $(document).ready(function() {
@@ -681,7 +682,7 @@ function delete_car(carId, carNo) {
 }
 </script>
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
     $('#car-list-tab').on('click', function(e) {
         e.preventDefault(); 
 
@@ -703,25 +704,21 @@ function delete_car(carId, carNo) {
         });
     });
 });
+function updateCarList() {
+    const accountNo = document.getElementById('buyer_acc_no').value;
+    fetch(`car_list.php?account_no=${accountNo}`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('car-list-body').innerHTML = data;
+            calculateTotalAmount();
+        });
+        calculateTotalAmount();
+}
 </script>
-
-<!-- <script>
-  $('#myTab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    let targetTabId = $(e.target).attr('href');
-
-    if (targetTabId === '#car-list') {
-      calculateTotalAmount();
-    }
-  });
-
-  
-    
-</script> -->
-
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index_cshr.js"></script>
 
 <script src="../../dist/js/manage_car_cshr.js"></script>
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
-<script src="../../dist/js/export_scripts.js"></script>
+
 <?php include('../../inc/footer.php'); ?>

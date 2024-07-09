@@ -287,7 +287,6 @@ $(document).ready(function() {
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_car_list.js"></script>
-<script src="../../dist/js/export_scripts.js"></script>
 </div>
 </body>
 <?php include('../../inc/footer.php'); ?>

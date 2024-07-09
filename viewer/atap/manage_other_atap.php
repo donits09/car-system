@@ -144,7 +144,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks"><?php echo htmlspecialchars($atap_remarks) ?></textarea>
+        <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks" required><?php echo htmlspecialchars($atap_remarks) ?></textarea>
     </div>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
@@ -206,80 +206,108 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-<script src="../../dist/js/manage_atap.js"></script>
 <script>
     $(document).ready(function() {
+  
         function calculateTotal() {
-        let total = 0;
-        $('.transaction-amount').each(function() {
-            total += parseFloat($(this).val()) || 0;
-        });
-        $('#total-amount').text(formatNumber(total.toFixed(2)));
-    }
+            let total = 0;
+            $('.transaction-amount').each(function() {
+                total += parseFloat($(this).val()) || 0;
+            });
+            $('#total-amount').text(formatNumber(total.toFixed(2)));
+        }
 
-    function formatNumber(number) {
-        return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
+       
+        function formatNumber(number) {
+            return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
 
-    calculateTotal();
-
-    $('#transaction-table').on('input', '.transaction-amount', function() {
-        calculateTotal();
-    });
-
-    $('#add-row').click(function() {
-        const newRow = `<tr>
-            <td><input type="text" name="transaction_type[]" class="form-control" required></td>
-            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-        </tr>`;
-        $('#transaction-table tbody').append(newRow);
-    });
-
-    $('#transaction-table').on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-        calculateTotal();
-    });
-});
-</script>
-<script>
-$(document).ready(function() {
-    $('#atap-form').submit(function(e) {
-        e.preventDefault();
-
-        start_loader();
-
-        $.ajax({
-            url: "../../classes/Master.php?f=save_other_atap_payment",
-            data: new FormData($(this)[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                console.log(resp);
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        $('#createAtapModal').modal('hide');
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
-                        location.reload();
-                    }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
-                }
-                end_loader();
+      
+        function checkRemoveButton() {
+            let rowCount = $('#transaction-table tbody tr').length;
+            if (rowCount <= 1) {
+                $('#transaction-table .remove-row').prop('disabled', true);
+            } else {
+                $('#transaction-table .remove-row').prop('disabled', false);
             }
+        }
+
+    
+        $('#transaction-table').on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
+            calculateTotal();
+            checkRemoveButton();
+        });
+
+      
+        $('#add-row').on('click', function() {
+            let newRow = `<tr>
+                <td><input type="text" name="transaction_type[]" class="form-control transaction-type" required></td>
+                <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+            </tr>`;
+            $('#transaction-table tbody').append(newRow);
+            calculateTotal();
+            checkRemoveButton();
+        });
+
+       
+        $('#transaction-table').on('input', '.transaction-amount', function() {
+            calculateTotal();
+        });
+
+     
+        checkRemoveButton();
+
+      
+        calculateTotal();
+
+     
+        $('#atap-form').submit(function(e) {
+            e.preventDefault();
+
+         
+            if ($(this).data('formSubmitting')) return;
+
+            $(this).data('formSubmitting', true);
+
+            start_loader(); 
+
+        
+            $.ajax({
+                url: "../../classes/Master.php?f=save_other_atap_payment",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: function(err) {
+                    console.log(err);
+                    alert_toast("An error occurred.", 'error'); 
+                    end_loader();
+                    $('#atap-form').data('formSubmitting', false);
+                },
+                success: function(resp) {
+                    console.log(resp);
+                    if (resp && resp.status === 'success') {
+                        alert_toast(resp.msg, 'success'); 
+                        setTimeout(function() {
+                            $('#createAtapModal').modal('hide'); 
+                            $('body').removeClass('modal-open');
+                            $('.modal-backdrop').remove();
+                            location.reload(); 
+                        }, 1000);
+                    } else if (resp && resp.status === 'failed' && resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error'); 
+                    } else {
+                        alert_toast("An unexpected error occurred", 'error'); 
+                    }
+                    end_loader(); 
+                    $('#atap-form').data('formSubmitting', false); 
+                }
+            });
         });
     });
-});
 </script>
+

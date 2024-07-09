@@ -100,6 +100,19 @@ if (!empty($account_no)) {
                         echo  'CANCELLED' ; 
                     } ?>
                 </td>
+                <td class="text-center">
+                    <?php
+                    $c_encoded_by = $row['c_encoded_by'];
+                    $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+                    $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+
+                    if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+                        echo htmlspecialchars($encoder["c_realname"]);
+                    } else {
+                        echo "Unknown";
+                    }
+                    ?>
+                </td>
                 <td align="center">
                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                         Action
@@ -109,15 +122,15 @@ if (!empty($account_no)) {
                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
                             <span class="fa fa-eye text-primary"></span> View
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item edit_atap_spec" href="javascript:void(0)" 
+                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                        <a class="dropdown-item edit_atap <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
                             data-acc-no="<?php echo $row['c_account_no']; ?>"
                             data-id="<?php echo $row['id']; ?>"
-                            data-no="<?php echo $row['c_atap_no'] ?>">
+                            data-no="<?php echo $row['c_atap_no']; ?>">
                             <span class="fa fa-edit text-primary"></span> Edit
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                        <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
                             <span class="fa fa-ban text-danger"></span> Cancel
                         </a>
                     </div>

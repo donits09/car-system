@@ -110,7 +110,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     ?>
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> required>
+        <input type="number" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> required>
     </div>
     <div class="form-group">
         <label for="name">Name</label>
@@ -120,7 +120,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks"><?php echo htmlspecialchars($atap_remarks) ?></textarea>
+        <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks" required><?php echo htmlspecialchars($atap_remarks) ?></textarea>
     </div>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
@@ -183,137 +183,149 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script>
-    $(document).ready(function() {
-        function calculateTotal() {
-        let total = 0;
-        $('.transaction-amount').each(function() {
-            total += parseFloat($(this).val()) || 0;
-        });
-        $('#total-amount').text(formatNumber(total.toFixed(2)));
-    }
+$(document).ready(function() { 
 
-    function formatNumber(number) {
-        return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
+function calculateTotal() {
+    let total = 0;
+    $('.transaction-amount').each(function() {
+        total += parseFloat($(this).val()) || 0;
+    });
+    $('#total-amount').text(formatNumber(total.toFixed(2)));
+}
 
+function formatNumber(number) {
+    return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function checkRemoveButton() {
+    let rowCount = $('#transaction-table tbody tr').length;
+    $('#transaction-table .remove-row').prop('disabled', rowCount <= 1);
+}
+
+$('#transaction-table').on('click', '.remove-row', function() {
+    $(this).closest('tr').remove();
     calculateTotal();
-
-    $('#transaction-table').on('input', '.transaction-amount', function() {
-        calculateTotal();
-    });
-
-    $('#add-row').click(function() {
-        const newRow = `<tr>
-            <td><input type="text" name="transaction_type[]" class="form-control" required></td>
-            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-        </tr>`;
-        $('#transaction-table tbody').append(newRow);
-    });
-
-    $('#transaction-table').on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-        calculateTotal();
-    });
+    checkRemoveButton();
 });
-</script>
-<script>
-$(document).ready(function() {
-    $('#atap-form').submit(function(e) {
-        e.preventDefault();
 
-        start_loader();
-
-        $.ajax({
-            url: "../../classes/Master.php?f=save_atap_payment",
-            data: new FormData($(this)[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                console.log(resp);
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        $('#createCarModal').modal('hide');
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
-                        updateAtapList();
-                    }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
-                }
-                end_loader();
-            }
-        });
-    });
+$('#add-row').on('click', function() {
+    let newRow = `<tr>
+        <td><input type="text" name="transaction_type[]" class="form-control transaction-type" required></td>
+        <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
+        <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+    </tr>`;
+    $('#transaction-table tbody').append(newRow);
+    calculateTotal();
+    checkRemoveButton();
 });
-</script>
-<script>
-    function fetchBuyerDetails(accountNo) {
-        const buyerNameField = $('#c_name');
 
-        if (accountNo.length > 0) {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
-                data: { account_no: accountNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        buyerNameField.val(response.name);
-                        buyerNameField.removeAttr('required');
-                    } else {
-                        buyerNameField.val('Unknown');
-                        buyerNameField.attr('required', 'required');
-                    }
-                }
-            });
-        } else {
-            buyerNameField.val('');
-            buyerNameField.attr('required', 'required');
-        }
+$('#transaction-table').on('input', '.transaction-amount', function() {
+    calculateTotal();
+});
+
+checkRemoveButton();
+calculateTotal();
+
+$('#atap-form').submit(function(e) {
+    e.preventDefault();
+
+    if ($(this).data('formSubmitting')) return;
+    $(this).data('formSubmitting', true);
+
+    const buyerName = $('#c_name').val();
+
+    let valid = true;
+
+    if (!buyerName || buyerName === 'Unknown') {
+        alert('Name field is required.');
+        valid = false;
     }
-    $('#c_account_no').on('input', function() {
-        const accountNo = $(this).val();
-        const buyerNameField = $('#c_name');
 
-        if (accountNo.length > 0) {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
-                data: { account_no: accountNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        buyerNameField.val(response.name);
-                        buyerNameField.removeAttr('required');
-                    } else {
-                        buyerNameField.val('Unknown');
-                        buyerNameField.attr('required', 'required');
-                    }
-                }
-            });
-        } else {
-            buyerNameField.val('');
-            buyerNameField.attr('required', 'required');
+    if (!valid) {
+        $(this).data('formSubmitting', false);
+        return;
+    }
+    
+    start_loader();
+
+    $.ajax({
+        url: "../../classes/Master.php?f=save_atap_payment",
+        data: new FormData($(this)[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+        dataType: 'json',
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            console.log(resp);
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#createCarModal').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                    location.reload();
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+            }
+            end_loader();
+        },
+        complete: function() {
+            $('#atap-form').data('formSubmitting', false);
         }
     });
-    const accountNo = $('#c_account_no').val();
-    fetchBuyerDetails(accountNo);
+});
+
+const accountNo = $('#c_account_no').val();
+fetchBuyerDetails(accountNo);
 
     $('#c_account_no').on('input', function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
+});
+
+</script>
+<script>
+    function validateNumberInput(event) {
+        const input = event.target;
+        const value = input.value;
+
+        input.value = value.replace(/\D/g, '');
+    }
+</script>
+<script>
+function fetchBuyerDetails(accountNo) {
+    const buyerNameField = $('#c_name');
+
+    if (accountNo.length > 0) {
+        $.ajax({
+            type: 'POST',
+            url: '../../viewer/car/get_buyer_details.php',
+            data: { account_no: accountNo },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    buyerNameField.val(response.name);
+                    buyerNameField.removeAttr('required');
+                } else {
+                    buyerNameField.val('Unknown');
+                    buyerNameField.attr('required', 'required');
+                }
+            }
+        });
+    } else {
+        buyerNameField.val('');
+        buyerNameField.attr('required', 'required');
+    }
+}
 
 </script>

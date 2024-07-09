@@ -15,6 +15,8 @@
     $c_encoded_by = '';
     $c_tran_date = date('Y-m-d H:i:s');
     $c_mop = '';
+    $c_lot = '';
+    $c_block = '';
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
@@ -144,7 +146,7 @@
 
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
         <div id="car_amt_error"></div>
     </div>
     <div class="form-group">

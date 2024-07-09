@@ -79,7 +79,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
         <div id="car_amt_error"></div>
     </div>
     <div class="form-group">

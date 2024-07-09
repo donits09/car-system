@@ -185,6 +185,9 @@ include('../../inc/header.php');
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -347,12 +350,79 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
+
+                <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
+                    <div class="card mt-3">
+                    <div class="container">
+                            <h2 class="text-blue h4">ATAP List</h2>
+                            <hr>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <label for="accno" class="form-label">Acc #</label>
+                                        <input type="text" class="form-control" id="atap_accno" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="fullname" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="atap_fullname" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="car_buyer_loc" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="atap_car_buyer_loc" name="atap_car_buyer_loc" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                                <table>
+                                    <tr>
+                                        <td style="width:80%;border:none;">
+                                            <label for="search" class="form-label" style="float:right;">Search:</label>
+                                        </td>
+                                        <td style="width:20%;border:none;">
+                                            <input type="text" id="searchInputAtap" onkeyup="filterTableAtap()" class="form-control">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-container">
+                                <table class="table table-bordered table-striped" id="atap-list-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Account No.</th>
+                                            <th>ATAP No.</th>
+                                            <th>Name</th>
+                                            <th>Total Amount</th>
+                                            <th>Transaction Date</th>
+                                            <th>Status</th>
+                                            <th>Encoder</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="atap-list-body">
+                                        <?php include('../atap/fetch_atap_list.php'); ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" class="text-right">Total Amount:</th>
+                                            <th id="totalAtapAmount" class="text-center"></th>
+                                            <th colspan="4"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         <?php include ('../modals/main_modals.php'); ?>
         </div>
     </div>
 </div>
 </body>
+
+<!-- REMARKS FUNCTIONS -->
 <script>
     document.getElementById('buyer_remarks').addEventListener('keydown', function(event) {
         const textarea = event.target;
@@ -395,7 +465,46 @@ include('../../inc/header.php');
         }
     });
 </script>
+<script>
+$(document).ready(function() {
+    $('#buyerForm').submit(function(e) {
+        e.preventDefault(); 
+
+        start_loader();
+
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            url: "../../classes/Master.php?f=save_remarks",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader(); 
+            },
+            success: function(resp) {
+                console.log(resp);
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success'); 
+                    $('#buyer_remarks').val(resp.remarks);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error'); 
+                } else {
+                    alert_toast("An unexpected error occurred", 'error'); 
+                }
+                end_loader();
+            }
+        });
+    });
+});
 </script>
+
+<!-- GETTING OF ACCOUNT NO FOR PASSING -->
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
@@ -403,6 +512,8 @@ include('../../inc/header.php');
         $('#create_new').data('account-no', accountNo); 
     }
 </script>
+
+<!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
 <script>
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();
@@ -414,6 +525,10 @@ include('../../inc/header.php');
 
     document.getElementById("searchInput").addEventListener("input", function() {
         filterTable();
+    });
+
+    document.getElementById("searchInputAtap").addEventListener("input", function() {
+        filterTableAtap();
     });
 
     $('#createCarModal').on('hidden.bs.modal', function () {
@@ -437,6 +552,8 @@ include('../../inc/header.php');
         searchAndCalculateTotal(event, 'last-name');
     });
 </script>
+
+<!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
 <script>
     $(document).ready(function() {
     function loadModal(title, url, modalId) {
@@ -458,6 +575,11 @@ include('../../inc/header.php');
         });
     }
 
+    $(document).on('click', '.view_data', function() {
+        var accountId = $(this).data('id');
+        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
+    });
+
     $('#create_new').click(function() {
         var accountNo = $(this).data('account-no');
         loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
@@ -472,11 +594,6 @@ include('../../inc/header.php');
         } else {
             loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
         }
-    });
-
-    $(document).on('click', '.view_data', function() {
-        var accountId = $(this).data('id');
-        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
     });
 
     $('#create_other_new').click(function() {
@@ -496,6 +613,13 @@ include('../../inc/header.php');
         });
         $('#confirm_modal').modal('show');
     };
+
+    $(document).on('click', '.view_atap', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+    });
+    
 });
 
 $(document).ready(function() {
@@ -536,48 +660,22 @@ function delete_car(carId, carNo) {
         }
     });
 }
-</script>
-<script>
-$(document).ready(function() {
-    $('#buyerForm').submit(function(e) {
-        e.preventDefault(); 
-
-        start_loader();
-
-        var formData = new FormData($(this)[0]);
-
-        $.ajax({
-            url: "../../classes/Master.php?f=save_remarks",
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader(); 
-            },
-            success: function(resp) {
-                console.log(resp);
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success'); 
-                    $('#buyer_remarks').val(resp.remarks);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error'); 
-                } else {
-                    alert_toast("An unexpected error occurred", 'error'); 
-                }
-                end_loader();
-            }
+function updateCarList() {
+    const accountNo = document.getElementById('buyer_acc_no').value;
+    fetch(`car_list.php?account_no=${accountNo}`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('car-list-body').innerHTML = data;
+            calculateTotalAmount();
         });
-    });
-});
+        calculateTotalAmount();
+}
 </script>
+
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <!-- <script src="../../dist/js/car_list.js"></script> -->
-<script src="../../dist/js/export_scripts.js"></script>
+<!-- <script src="../../dist/js/export_scripts.js"></script> -->
+<script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
 <script src="../../dist/js/manage_car.js"></script>
 <?php include('../../inc/footer.php'); ?>

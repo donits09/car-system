@@ -408,3 +408,11 @@ function searchAndCalculateTotal(event, type) {
         calculateTotalAmount();
     }, 150);
 }
+
+function clearAmt(){
+    var txtamt = document.getElementById('c_car_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_car_amount').value='';
+    }
+}

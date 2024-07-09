@@ -1,3 +1,5 @@
+
+
 function searchBuyer(type) {
     var formData = new FormData();
 
@@ -393,4 +395,12 @@ function searchAndCalculateTotal(event, type) {
     setTimeout(function() {
         calculateTotalAmount();
     }, 150);
+}
+
+function clearAmt(){
+    var txtamt = document.getElementById('c_car_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_car_amount').value='';
+    }
 }

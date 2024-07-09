@@ -247,7 +247,7 @@ include('../../inc/header.php');
 </div>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_car_list.js"></script>
-<script src="../../dist/js/export_scripts.js"></script>
+
 <!-- <script src="../../dist/js/manage_car.js"></script> -->
 <script>
 $(document).ready(function() {

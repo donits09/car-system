@@ -58,6 +58,7 @@ include('../../inc/header.php');
                         <th>Total Amount</th>
                         <th>Transaction Date</th>
                         <th>Status</th>
+                        <th>Requester</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -200,15 +201,29 @@ include('../../inc/header.php');
                                     echo htmlspecialchars($dateTime->format('Y-m-d'));
                                     ?>
                                 </td>
-                                <td class="text-center"><?php 
+                                <td class="text-center">
+                                    <?php 
                                     if ($row['status'] == 0){
-                                        echo  'PENDING' ; 
+                                        echo 'PENDING'; 
                                     }else if($row['status'] == 1){
-                                        echo  'PAID' ; 
+                                        echo 'PAID'; 
                                     }else{
-                                        echo  'CANCELLED' ; 
+                                        echo 'CANCELLED'; 
                                     } ?>
-                               </td>
+                                </td>
+                                <td class="text-center">
+                                    <?php
+                                    $c_encoded_by = $row['c_encoded_by'];
+                                    $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+                                    $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+
+                                    if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+                                        echo htmlspecialchars($encoder["c_realname"]);
+                                    } else {
+                                        echo "Unknown";
+                                    }
+                                    ?>
+                                </td>
                                 <td align="center">
                                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                                         Action
@@ -218,15 +233,15 @@ include('../../inc/header.php');
                                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
                                             <span class="fa fa-eye text-primary"></span> View
                                         </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item edit_atap" href="javascript:void(0)" 
+                                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                                        <a class="dropdown-item edit_atap <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
                                             data-acc-no="<?php echo $row['c_account_no']; ?>"
                                             data-id="<?php echo $row['id']; ?>"
-                                            data-no="<?php echo $row['c_atap_no'] ?>">
+                                            data-no="<?php echo $row['c_atap_no']; ?>">
                                             <span class="fa fa-edit text-primary"></span> Edit
                                         </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                                        <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
                                             <span class="fa fa-ban text-danger"></span> Cancel
                                         </a>
                                     </div>

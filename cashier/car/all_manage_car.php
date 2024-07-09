@@ -93,7 +93,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
         <div id="car_amt_error"></div>
     </div>
     <div class="form-group">
@@ -132,8 +132,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
-
-
 <script>
  $(document).ready(function() {
     $('#get_atap').on('click', function() {
@@ -207,9 +205,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             statusField.val('PENDING');
         }
 
+        const formattedAmount = parseFloat(data.c_car_amount).toFixed(2);
+
         buyerNameField.val(data.c_name).addClass('glow-effect');
-        amountField.val(data.c_car_amount).addClass('glow-effect');
+        amountField.val(formattedAmount).addClass('glow-effect');
         accField.val(data.c_account_no).addClass('glow-effect');
+        statusField.addClass('glow-effect');
 
         setTimeout(function() {
             buyerNameField.removeClass('glow-effect');

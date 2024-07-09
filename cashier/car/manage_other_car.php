@@ -15,6 +15,8 @@
     $c_encoded_by = '';
     $c_tran_date = date('Y-m-d H:i:s');
     $c_mop = '';
+    $c_lot = '';
+    $c_block = '';
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
@@ -50,7 +52,6 @@
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="other-car-form">
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
-    
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
@@ -159,7 +160,7 @@
 
     <div class="form-group">
         <label for="amount">Amount</label>
-        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" required>
+        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
         <div id="car_amt_error"></div>
     </div>
     <div class="form-group">
@@ -352,7 +353,9 @@ $(document).ready(function() {
         $('#c_phase').val(data.c_phase).addClass('glow-effect');
         $('#c_block').val(data.c_block).addClass('glow-effect');
         $('#c_lot').val(data.c_lot).addClass('glow-effect');
-        $('#c_car_amount').val(data.c_car_amount).addClass('glow-effect');
+
+        const formattedAmount = parseFloat(data.c_car_amount).toFixed(2);
+        $('#c_car_amount').val(formattedAmount).addClass('glow-effect');
 
         setTimeout(function() {
             $('#c_name').removeClass('glow-effect');
@@ -362,5 +365,6 @@ $(document).ready(function() {
             $('#c_car_amount').removeClass('glow-effect');
         }, 1000);
     }
+
 });
 </script>

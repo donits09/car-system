@@ -392,6 +392,7 @@ include('../../inc/header.php');
                                             <th>Total Amount</th>
                                             <th>Transaction Date</th>
                                             <th>Status</th>
+                                            <th>Requester</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -613,9 +614,7 @@ $(document).ready(function() {
 
 </script>
 
-<!-- ATAP -->
 
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/atap_js/index_atap.js"></script>
-<script src="../../dist/js/export_scripts.js"></script>
 <?php include('../../inc/footer.php'); ?>

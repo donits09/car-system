@@ -100,6 +100,19 @@ if (!empty($account_no)) {
                         echo  'CANCELLED' ; 
                     } ?>
                 </td>
+                <td class="text-center">
+                    <?php
+                    $c_encoded_by = $row['c_encoded_by'];
+                    $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+                    $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+
+                    if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+                        echo htmlspecialchars($encoder["c_realname"]);
+                    } else {
+                        echo "Unknown";
+                    }
+                    ?>
+                </td>
                 <td align="center">
                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                         Action
