@@ -1,3 +1,4 @@
+
 function validateNumberInputAmt(event) {
     const input = event.target;
     let value = input.value;
@@ -77,7 +78,7 @@ $(document).ready(function() {
     $(document).on('click', '.delete_data', function() {
         var carId = $(this).data('id');
         var carNo = $(this).data('car-no');
-        _conf("Are you sure you want to delete this car permanently?", delete_car, [carId, carNo]);
+        _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
     });
 
     window._conf = function(msg, func, params) {
@@ -123,6 +124,78 @@ $(document).ready(function () {
         if (!$(e.target).closest('.dropdown').length) {
             $('#comboBoxMenu').hide();
         }
+    });
+});
+
+/* toggle para sa bank pantropiko */
+function toggleCheckDropdown() {
+    var modeOfPayment = document.getElementById("c_mop").value;
+    var checkList = document.getElementById("checkList");
+    var onlineBankList = document.getElementById("onlineBankList");
+    var cBankCheckInput = document.getElementById("c_bank_check");
+    var cBankOnlineInput = document.getElementById("c_bank_online");
+
+    if (modeOfPayment == '2') {
+        checkList.style.display = "block";
+        onlineBankList.style.display = "none";
+        cBankCheckInput.setAttribute("required", "true");
+        cBankOnlineInput.removeAttribute("required");
+    } else if (modeOfPayment == '3') {
+        checkList.style.display = "none";
+        onlineBankList.style.display = "block";
+        cBankOnlineInput.setAttribute("required", "true");
+        cBankCheckInput.removeAttribute("required");
+    } else {
+        checkList.style.display = "none";
+        onlineBankList.style.display = "none";
+        cBankCheckInput.removeAttribute("required");
+        cBankOnlineInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cBankOnlineInput.value = "";
+    }
+}
+
+$(document).ready(function() {
+    $('#comboBoxMenuCheck').on('click', '.dropdown-item', function () {
+        handleBankSelection('#c_bank_check', '#comboBoxMenuCheck', $(this));
+    });
+
+    $('#comboBoxMenuOnline').on('click', '.dropdown-item', function () {
+        handleBankSelection('#c_bank_online', '#comboBoxMenuOnline', $(this));
+    });
+
+    function handleBankSelection(inputSelector, menuSelector, selectedItem) {
+        var selectedText = selectedItem.data('value');
+        $(inputSelector).val(selectedText);
+        $(menuSelector).hide();
+    }
+
+    $('#c_bank_check, #c_bank_online').on('click', function () {
+        $('#comboBoxMenuCheck').show();
+        $('#comboBoxMenuOnline').show();
+    });
+
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('.dropdown').length) {
+            $('#comboBoxMenuCheck').hide();
+            $('#comboBoxMenuOnline').hide();
+        }
+    });
+
+    var idValueCheck = "<?php echo isset($c_bank) ? htmlspecialchars($c_bank, ENT_QUOTES, 'UTF-8') : ''; ?>";
+    if (idValueCheck) {
+        $('#comboBoxMenuCheck').find('a[data-value="' + idValueCheck + '"]').addClass('active');
+    }
+
+    var idValueOnline = "<?php echo isset($c_bank) ? htmlspecialchars($c_bank, ENT_QUOTES, 'UTF-8') : ''; ?>";
+    if (idValueOnline) {
+        $('#comboBoxMenuOnline').find('a[data-value="' + idValueOnline + '"]').addClass('active');
+    }
+
+    toggleCheckDropdown();
+
+    $('#c_mop').on('change', function() {
+        toggleCheckDropdown();
     });
 });
 
@@ -229,8 +302,8 @@ $(document).ready(function() {
 
     function fetchBuyerDetails(accountNo) {
         const buyerNameField = $('#buyer_name');
-
-        if (accountNo.length > 0) {
+    
+        if (accountNo && accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
                 url: '../../admin/car/get_buyer_details.php',
@@ -251,6 +324,7 @@ $(document).ready(function() {
             buyerNameField.attr('required', 'required');
         }
     }
+    
 
     const accountNo = $('#c_account_no').val();
     fetchBuyerDetails(accountNo);
@@ -294,3 +368,11 @@ $(document).ready(function() {
         }
     });
 });
+
+function clearAmt(){
+    var txtamt = document.getElementById('c_car_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_car_amount').value='';
+    }
+}

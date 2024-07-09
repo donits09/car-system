@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-******************" crossorigin="anonymous" /> -->
     <link rel="stylesheet" href="<?php echo base_url ?>dist/header_files/fontawesome-free-6.5.2-web/fontawesome-free-6.5.2-web/css/all.min.css"/>
     <link rel="stylesheet" href="<?php echo base_url ?>dist/header_files/css/all.css"/>
@@ -42,13 +42,15 @@
 
     
     <!-- JS -->
-    <script src="<?php echo base_url ?>dist/header_files/js/bootstrap.min.js"></script>
-    <script src="<?php echo base_url ?>dist/header_files/js/jquery.min.js"></script>
+    <script src="<?php echo base_url ?>dist/header_files/bootstrap-5.0.2-dist/js/bootstrap.min.js"></script>
+    <script src="<?php echo base_url ?>dist/header_files/jquery-3.7.1/dist/jquery.min.js"></script>
     <script src="<?php echo base_url ?>dist/header_files/js/cmp/bootstrap.min.js"></script>
     <!-- conflict sa akin tong script sa baba nakacomment -->
-    <script src="<?php echo base_url ?>dist/header_files/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo base_url ?>dist/js/modals.js"></script>
+    <script src="<?php echo base_url ?>dist/header_files/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
 
+
+
+    <script src="<?php echo base_url ?>dist/js/modals.js"></script>
     <script src="<?php echo base_url ?>dist/header_files/js/html2pdf.bundle.min.js"></script>
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="<?php echo base_url ?>dist/header_files/css/jquery.dataTables.css">
@@ -57,15 +59,18 @@
 
     <!-- DataTables JS -->
     <script type="text/javascript" charset="utf8" src="<?php echo base_url ?>dist/header_files/js/jquery.dataTables.js"></script>
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="<?php echo base_url ?>dist/header_files/css/css2.css" rel="stylesheet"> -->
+
     <script>
         var _base_url_ = '<?php echo base_url ?>';
     </script>
     <style>
         body{
             margin-bottom:50px;
+        }
+        @media (-ms-high-contrast: active) {
+        }
+
+        @media (forced-colors: active) {
         }
     </style>
 </head>

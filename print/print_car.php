@@ -1,4 +1,5 @@
 <?php
+//updated
 include('../config.php');
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
@@ -12,7 +13,6 @@ function fetchBuyerDetails($conn, $accountNo) {
     }
     return false;
 }
-
 function fetchCarDetails($conn, $carNo) {
     $query = "SELECT * FROM t_other_car_payment WHERE c_car_no = ?";
     $stmt = odbc_prepare($conn, $query);
