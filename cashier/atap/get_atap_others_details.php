@@ -3,7 +3,6 @@ include('../../config.php');
 
 if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
     $c_atap_no = $_POST['c_atap_no'];
-
     $query = "SELECT 
                 a.id, 
                 a.c_account_no, 

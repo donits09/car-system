@@ -122,17 +122,6 @@ if (!empty($account_no)) {
                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
                             <span class="fa fa-eye text-primary"></span> View
                         </a>
-                        <!-- <div class="dropdown-divider"></div>
-                        <a class="dropdown-item edit_atap_spec" href="javascript:void(0)" 
-                            data-acc-no="<?php echo $row['c_account_no']; ?>"
-                            data-id="<?php echo $row['id']; ?>"
-                            data-no="<?php echo $row['c_atap_no'] ?>">
-                            <span class="fa fa-edit text-primary"></span> Edit
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
-                            <span class="fa fa-ban text-danger"></span> Cancel
-                        </a> -->
                     </div>
                 </td>
             </tr>

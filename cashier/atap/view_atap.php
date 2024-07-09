@@ -1,8 +1,6 @@
 <?php
 session_start();
-
 include('../../config.php');
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $atapId = $_GET['id'];
     $get_atap = "SELECT 
