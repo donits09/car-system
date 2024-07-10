@@ -1,7 +1,7 @@
 <?php
 require '../../dompdf/autoload.inc.php';
 require_once('../../config.php');
-
+include('../../inc/common.php');
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -98,17 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $l_total_deductions = $l_ca + $l_oth;
     $l_net_due_commission = $l_net_commission - $l_total_deductions;
     $l_date = "2023-05-30";
-}
-
-// Convert numbers to money format
-function ftom($value) {
-    return number_format($value, 2);
-}
-
-function mtof($value) {
-    $m_value = str_replace(",", "", $value);
-    // Convert to float and format with two decimal places
-    return (float)$m_value;
 }
 
 // Create the HTML content for the PDF

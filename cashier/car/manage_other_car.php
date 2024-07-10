@@ -16,7 +16,6 @@
     $c_tran_date = date('Y-m-d H:i:s');
     $c_mop = '';
     $c_bank = '';
-=======
     $c_lot = '';
     $c_block = '';
 

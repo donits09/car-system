@@ -181,7 +181,11 @@ include('../../inc/header.php');
                     <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
                 </li>
                 <li class="nav-item" role="presentation">
+<<<<<<< HEAD
+                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
+=======
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
+>>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -288,7 +292,8 @@ include('../../inc/header.php');
                                     <div class="row">
                                     <div class="col-12 col-md-4">
                                         <label for="accno" class="form-label">Acc #</label>
-                                        <input type="text" class="form-control" id="accno" readonly>
+                                        <input type="text" class="form-control" id="accno" value="accno" readonly>
+                                       
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label for="fullname" class="form-label">Name</label>
@@ -346,6 +351,10 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
+                <!-- Payment Schedule -->
+                <?php include ('../car/payment_record.php'); ?>
+=======
 
                 <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
                     <div class="card mt-3">
@@ -411,6 +420,7 @@ include('../../inc/header.php');
                     </div>
                 </div>
 
+>>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
             </div>
         <?php include ('../modals/main_modals.php'); ?>
         </div>
@@ -504,9 +514,11 @@ $(document).ready(function() {
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        console.log(accountNo);
+        //document.getElementById('accno').value = accountNo;
+        //console.log(accountNo);
         $('#create_new').data('account-no', accountNo); 
     }
+  
 </script>
 
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
@@ -628,6 +640,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     calculateTotalAmount();
+    
 });
 
 </script>
@@ -675,6 +688,45 @@ function updateCarList() {
         calculateTotalAmount();
 }
 </script>
+<<<<<<< HEAD
+
+<script>
+    function transferValue() {
+        var accno = document.getElementById('accno').value.trim(); // Trim to remove any leading/trailing whitespace
+        //console.log(accno);
+        // Check if accno is not empty before proceeding with AJAX call
+        if (accno === '') {
+            accno = '1'; // Set a default value if accno is empty
+        }
+        $.ajax({
+            type: "POST",
+            url: "payment_record.php",
+            data: { accno: accno },
+            success: function(response) {
+                // Handle the response if needed
+                $('#result').html(response);
+                
+                var base_url = window.location.origin + window.location.pathname;
+                var newUrl = base_url + '?page=car_list&accno=' + encodeURIComponent(accno);
+                // Update the browser's URL without reloading the page
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                
+            }
+        });
+      
+    }
+
+    // Trigger transferValue() when Payment Record tab is clicked
+    document.getElementById('payment-record-tab').addEventListener('click', function() {
+        transferValue();
+        //location.reload();
+    });
+</script>
+
+
+
+=======
+>>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>

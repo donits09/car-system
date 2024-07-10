@@ -165,7 +165,7 @@ if ($l_acct_no != ''){
                 $l_agent_data[] = [
                     'pos' => $row[0],
                     'code' => $row[1],
-                    'agent_name' => $row[2],
+                    'name' => $row[2],
                     'amount' => $row[3],
                     'rate' => $row[4],
                     'whtax' => $row[5]
@@ -257,11 +257,11 @@ if ($l_acct_no != ''){
     </style>
     <script>
         let currentRow;
-
-        function displayData(pos, code, agent_name, amount, rate, whtax, row) {
+        
+        function displayData(pos, code, name, amount, rate, whtax, row) {
             document.getElementById('pos').value = pos;
             document.getElementById('code').value = code;
-            document.getElementById('agent_name').value = agent_name;
+            document.getElementById('name').value = name;
             document.getElementById('amount').value = amount;
             document.getElementById('rate').value = rate;
             document.getElementById('whtax').value = whtax;
@@ -397,8 +397,8 @@ if ($l_acct_no != ''){
                             </div>
                             <div class="col-md-4">        
                                 <div class="form-group">
-                                    <label for="agent_name">Name:</label>
-                                    <input type="text" id="agent_name" name="agent_name" readonly><br><br>
+                                    <label for="name">Name:</label>
+                                    <input type="text" id="name" name="name" readonly><br><br>
                                 </div>
                             </div>    
                             <div class="col-md-4">        
@@ -444,10 +444,10 @@ if ($l_acct_no != ''){
                                 <tbody>
                                     <?php 
                                         foreach ($l_agent_data as $row): ?>
-                                        <tr onclick="displayData('<?php echo $row['pos']; ?>', '<?php echo $row['code']; ?>', '<?php echo $row['agent_name']; ?>', '<?php echo number_format($row['amount'],2); ?>', '<?php echo $row['rate']; ?>', '<?php echo $row['whtax']; ?>', this)">
+                                        <tr onclick="displayData('<?php echo $row['pos']; ?>', '<?php echo $row['code']; ?>', '<?php echo $row['name']; ?>', '<?php echo number_format($row['amount'],2); ?>', '<?php echo $row['rate']; ?>', '<?php echo $row['whtax']; ?>', this)">
                                             <td><?php echo $row['pos']; ?></td>
                                             <td><?php echo $row['code']; ?></td>
-                                            <td><?php echo $row['agent_name']; ?></td>
+                                            <td><?php echo $row['name']; ?></td>
                                             <td><?php echo number_format($row['amount'],2); ?></td>
                                             <td><?php echo $row['rate']; ?></td>
                                             <td><?php echo $row['whtax']; ?></td>
@@ -598,154 +598,153 @@ if ($l_acct_no != ''){
                 // Sample data for the table
 
                 $code_no = isset($_GET["code_no"]) ? $_GET["code_no"] : '' ;
-                $l_date = "2023-05-27";
+
                 $l_buyer_data = [];
                 if ($code_no != ''){
-                    $l_find = $code_no;
+                    $l_find = $l_acct_no;
 
-                    $sql4 = "SELECT * FROM t_agents WHERE c_code = '%s'";
-                    $query4 = sprintf($sql4, $l_find);
-                    $l_qry4 = odbc_exec($conn, $query4);
-
-                    while ($result = odbc_fetch_array($l_qry4)) {
-                        $l_code = $result['c_code'];
-                        $l_agent_name = $result['c_last_name'] . ', ' . $result['c_first_name'] . ' '  . $result['c_middle_initial'];
-                        $l_tax_rate = isset($result["c_withholding_tax"]) ? $result["c_withholding_tax"] : 10;
-                        $l_position = $result['c_position'];
-                        $l_status = $result['c_status'];
-                        $l_date_hired = $result['c_hire_date'];
-                        $l_network  = $result['c_network'];
-                        $l_division = $result['c_division'];
-
-                    }
-                    $sql = "SELECT t_commission.c_code, t_commission.c_amount, t_commission.c_account_no, t_commission.c_rate, 
-                    t_buyers_account.c_down_percent, t_buyers_account.c_b1_first_name, t_buyers_account.c_b1_last_name, 
-                            t_commission.c_sale 
-                    FROM t_agents 
-                    LEFT JOIN t_commission ON t_agents.c_code = t_commission.c_code 
-                    LEFT JOIN t_buyers_account ON t_commission.c_account_no = t_buyers_account.c_account_no 
-                    RIGHT JOIN t_new_commission_log ON t_commission.c_code = t_new_commission_log.c_code 
-                    WHERE t_commission.c_code = '%s' AND t_new_commission_log.c_print_date = '%s' 
-                    ORDER BY t_commission.c_account_no";
-                    $query = sprintf($sql, $l_code,$l_date);
+                    $sql = "SELECT * FROM t_agents where c_code = '%s' order by c_account_no ";
+                    $query = sprintf($sql, $l_find);
                     $l_qry = odbc_exec($conn, $query);
-                    if (!$l_qry) {
-                        die("Error in SQL query: " . odbc_errormsg($conn));
-                    }
-                    
-                    $l_row = odbc_num_rows($l_qry);
-                    
-                    if ($l_row == 0) {
-                        echo "<script>alert('No Commission Found');</script>";
+                    $l_rst = odbc_fetch_array($l_qry);
+                    if ($l_rst === false) {
+                        echo "Error: No account found with the provided account number.";
                     } else {
-                        while ($row = odbc_fetch_array($l_qry)) {
-                            // Access data from each row
-                            $l_code = $row['c_code'];
-                            $l_amount = $row['c_amount'];
-                            $l_account_no = $row['c_account_no'];
-                            $l_rate = $row['c_rate'];
-                            $l_net_tcp = $row['c_net_tcp'];
-                            $l_down_percent = $row['c_down_percent'];
-                            $l_first_name = $row['c_b1_first_name'];
-                            $l_last_name = $row['c_b1_last_name'];
-                            $l_buyer_name = $l_last_name . ', ' . $l_first_name ;
-                            $l_comm_type = $row['c_sale'];
-                            
-                            $get_val = due_commission2($conn, $l_account_no, $l_net_tcp, $l_down_per,$l_amount, $l_comm_type);
-                            $l_val = $get_val[0][0];
-                            $l_get_comm = $get_val[0][1];
-                            $l_tot_dp = $get_val[0][2];
-                            $l_prev_comm = $get_val[0][3];
+                        // Process the result as needed
+                        
+                    
+                    $sql2 = "SELECT * FROM t_payment WHERE c_account_no = '%s' AND c_status = 'ERN' ORDER BY c_payment_count ";
+                    $query2 = sprintf($sql2, $l_find);
+                    $l_qry1 = odbc_exec($conn, $query2);
+                    $l_rst1 = odbc_fetch_array($l_qry1);
+                    $row_count = 0;
+                    while (odbc_fetch_row($l_qry1)) {
+                        $row_count++;
+                    }
 
-                            $l_data = [$l_account_no, $l_location, $l_buyer_name, ftom($l_amount), ftoa($l_rate)];
+                    $l_reservation = $l_rst['c_reservation'];
+                    if ($row_count > 0) {
+                        $l_earnest = $l_rst['c_reservation'];
+                        $total_paid = 0; // Initialize a variable to store the total paid amount
+                        for ($i = 0; $i < $row_count; $i++) {
+                            $l_rst1 = odbc_fetch_array($l_qry1); // Fetch the next row as an associative array
+                            if ($l_rst1) {
+                                $total_paid += intval($l_rst1['c_amount_paid']);
+                            }
+                        }
+                        $l_reservation = $l_earnest + $total_paid;
+                    }
+
+                    $l_account_no = $l_rst['c_account_no'];
+                    $lot_area = $l_rst['c_lot_area'];
+                    $flr_area = $l_rst['c_floor_area'];
+                    $lot_price_sqm = $l_rst['c_price_sqm'];
+                    $hse_price_sqm = $l_rst['c_house_price_sqm'];
+                    $lot_discount = $l_rst['c_lot_discount'];
+                    $lot_disc_amt = $l_rst['c_lot_discount_amount'];
+                    $hse_discount = $l_rst['c_h_discount'];
+                    $hse_disc_amt = $l_rst['c_h_discount_amount'];
+                    $tcp_disc_amt = $l_rst['c_tcp_discount_amount'];
+                    $tcp_discount = $l_rst['c_tcp_discount'];
+                    $l_location = substr($l_account_no, 0, 3) . ' ' . substr($l_account_no, 3, 3) . ' ' . substr($l_account_no, 6, 2);
+                    $l_name = $l_rst['c_b1_last_name'] . ', ' . $l_rst['c_b1_first_name'] . ' ' . $l_rst['c_b1_middle_name'];
+                    if($l_rst['c_b2_last_name'] != ''){
+                        $l_name2 = $l_rst['c_b2_last_name'] . ', ' . $l_rst['c_b2_first_name'] . ' ' . $l_rst['c_b2_middle_name'];
+                    }
+                    $l_net_tcp = $l_rst['c_net_tcp'];
+                    $l_down_per = $l_rst['c_down_percent'];
+                    $l_net_dp =  $l_rst['c_net_dp'];
+                    $l_status =  $l_rst['c_account_status'];
+                    $l_no_payment =  $l_rst['c_no_payments'];
+                    $l_date_of_sale = $l_rst['c_date_of_sale'];
+                    $l_network =  $l_rst['c_network'];
+                    $l_division =  $l_rst['c_division'];
+                    $l_remarks =  $l_rst['c_remarks'];
+                    
+
+                    $sql3 = "SELECT * FROM t_commission WHERE c_account_no = '%s' ORDER BY c_position";
+                    $query3 = sprintf($sql3, $l_find);
+                    $l_qry3 = odbc_exec($conn, $query3);
+
+                    $data = [];  // Initialize an array to store the final data
+
+                    while ($row = odbc_fetch_array($l_qry3)) {
+                        $l_code = strval($row['c_code']);
+                        $l_amount = strval($row['c_amount']);
+                        $l_rate = strval($row['c_rate']);
+
+                        $sql4 = "SELECT * FROM t_agents WHERE c_code = '%s'";
+                        $query4 = sprintf($sql4, $l_code);
+                        $l_qry4 = odbc_exec($conn, $query4);
+
+                        while ($result = odbc_fetch_array($l_qry4)) {
+                            $l_agent_name = $result['c_last_name'] . ', ' . $result['c_first_name'] . ' '  . $result['c_middle_initial'];
+                            $l_tax_rate = isset($result["c_withholding_tax"]) ? $result["c_withholding_tax"] : 10;
+                            $l_position = $row['c_position'];
+                            //echo $l_position;
+                            if($l_position == 1) {
+                                $l_pos = 'AVP';
+                            }elseif($l_position == 2){
+                                $l_pos = 'JAV';
+                            }
+                            elseif($l_position == 3){
+                                $l_pos = 'AM';
+                            }
+                            elseif($l_position == 4){
+                                $l_pos = 'FM';
+                            }
+                            elseif($l_position == 5){
+                                $l_pos = 'SM';
+                            }
+                            elseif($l_position == 6){
+                                $l_pos = 'MA';
+                            }
+                            elseif($l_position == 7){
+                                $l_pos = 'EMP';
+                            }
+                            elseif($l_position == 8){
+                                $l_pos = 'SPC';
+                            }
+                            elseif($l_position == 9){
+                                $l_pos = 'VPS';
+                            }
+                            elseif($l_position == 10){
+                                $l_pos = 'DS';
+                            }
+                            elseif($l_position == 11){
+                                $l_pos = 'SMG';
+                            }
+                            elseif($l_position == 12){
+                                $l_pos = 'PC';
+                            }
+                            elseif($l_position == 13){
+                                $l_pos = 'PD';
+                            }
+                            else{
+                                $l_pos = 'N/A';
+                            }
+                            
+                            }
+
+                            $l_data = [$l_pos, $l_code, $l_agent_name, $l_amount, $l_rate, $l_tax_rate];
                             $data[] = $l_data; 
                             
                             $l_agent_data = [];
-                
+
                             foreach ($data as $row) {
                                 $l_agent_data[] = [
                                     'pos' => $row[0],
                                     'code' => $row[1],
-                                    'agent_name' => $row[2],
+                                    'name' => $row[2],
                                     'amount' => $row[3],
                                     'rate' => $row[4],
                                     'whtax' => $row[5]
                                 ];
                             }
+                        }
+                        $commission_percentage = due_commission($conn, $l_account_no, $l_net_tcp, $l_down_per);
+                    }
 
-                            
-                            // Process or display data as needed
-                        }
-                    }
-                    function due_commission2($conn, $c_account_no, $net_tcp, $down_per, $l_amount, $l_comm_type) {
-                        // Initialize an empty array to store data
-                        $l_list = [];
-                    
-                        // Query to get total principal
-                        $l_sql = "SELECT sum(c_principal) AS total_principal FROM t_payment WHERE c_account_no = '%s'";
-                        $query = sprintf($l_sql, $c_account_no);
-                    
-                        // Execute the query
-                        $l_qry = odbc_exec($conn, $query);
-                        if ($l_qry === false) {
-                            die("Query execution failed: " . odbc_errormsg($conn));
-                        }
-                    
-                        // Fetch the result
-                        $row = odbc_fetch_array($l_qry);
-                        if ($row === false) {
-                            die("Fetching result failed: " . odbc_errormsg($conn));
-                        }
-                    
-                        // Get the total principal
-                        $l_prin = $row['total_principal'];
-                    
-                        // Calculate values based on conditions
-                        $total_dp = $net_tcp * ($down_per / 100);
-                        if ($total_dp == 0) {
-                            $l_val = 80;
-                            $l_get_comm = $l_amount * ($l_val / 100);
-                        } else {
-                            if ($l_prin >= $total_dp) {
-                                $l_val = 100.0;
-                                $l_get_comm = $l_amount * ($l_val / 100);
-                            }
-                        }
-                    
-                        // Query to get previous commission data
-                        $sql666 = "SELECT c_due_comm, c_commission_amount, c_commission_count FROM t_new_commission_log WHERE c_account_no = '%s' ORDER BY c_commission_count DESC LIMIT 1";
-                        $query2 = sprintf($sql666, $c_account_no);
-                    
-                        // Execute the query
-                        $l_qry2 = odbc_exec($conn, $query2);
-                        if ($l_qry2 === false) {
-                            die("Query execution failed: " . odbc_errormsg($conn));
-                        }
-                    
-                        // Fetch the result
-                        $row2 = odbc_fetch_array($l_qry2);
-                        if ($row2 === false) {
-                            // No rows found, handle this case gracefully
-                            $l_prev_comm = 0.0;
-                            $l_prev_amt = 0.0;
-                            $l_comm_count = 0;
-                        } else {
-                            // Rows found, extract values
-                            $l_prev_comm = isset($row2['c_due_comm']) ? $row2['c_due_comm'] : 0.0;
-                            $l_prev_amt = isset($row2['c_commission_amount']) ? $row2['c_commission_amount'] : 0.0;
-                            $l_comm_count = isset($row2['c_commission_count']) ? $row2['c_commission_count'] : 0;
-                        }
-                    
-                        // Store data in an array
-                        $l_data = [$l_val, $l_get_comm, $total_dp, $l_prev_comm, $l_prev_amt, $l_comm_count];
-                    
-                        // Append data to the result array
-                        $l_list[] = $l_data;
-                    
-                        // Return the result array
-                        return $l_list;
-                    }
-                    
                     
                 }?>
                     <form action="" id="filter">
@@ -838,8 +837,8 @@ if ($l_acct_no != ''){
                                 </div>
                                 <div class="col-md-4">        
                                     <div class="form-group">
-                                        <label for="agent_name">Name:</label>
-                                        <input type="text" id="agent_name" name="agent_name" readonly><br><br>
+                                        <label for="name">Name:</label>
+                                        <input type="text" id="name" name="name" readonly><br><br>
                                     </div>
                                 </div>    
                                 <div class="col-md-4">        
@@ -885,10 +884,10 @@ if ($l_acct_no != ''){
                                     <tbody>
                                         <?php 
                                             foreach ($l_agent_data as $row): ?>
-                                            <tr onclick="displayData('<?php echo $row['acc']; ?>', '<?php echo $row['loc']; ?>', '<?php echo $row['agent_name']; ?>', '<?php echo number_format($row['amount'],2); ?>', '<?php echo $row['rate']; ?>', '<?php echo $row['whtax']; ?>', this)">
+                                            <tr onclick="displayData('<?php echo $row['acc']; ?>', '<?php echo $row['loc']; ?>', '<?php echo $row['name']; ?>', '<?php echo number_format($row['amount'],2); ?>', '<?php echo $row['rate']; ?>', '<?php echo $row['whtax']; ?>', this)">
                                                 <td><?php echo $row['acc']; ?></td>
                                                 <td><?php echo $row['loc']; ?></td>
-                                                <td><?php echo $row['agent_name']; ?></td>
+                                                <td><?php echo $row['name']; ?></td>
                                                 <td><?php echo number_format($row['amount'],2); ?></td>
                                                 <td><?php echo $row['rate']; ?></td>
                                                 <td><?php echo $row['whtax']; ?></td>
