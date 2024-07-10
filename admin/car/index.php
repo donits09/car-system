@@ -181,11 +181,10 @@ include('../../inc/header.php');
                     <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
                 </li>
                 <li class="nav-item" role="presentation">
-<<<<<<< HEAD
-                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
-=======
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
->>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
+                </li>
+                <li class="nav-item" role="presentation">
+                <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -351,10 +350,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-<<<<<<< HEAD
-                <!-- Payment Schedule -->
-                <?php include ('../car/payment_record.php'); ?>
-=======
 
                 <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
                     <div class="card mt-3">
@@ -419,8 +414,10 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
+           
+                <!-- Payment Schedule -->
+                <?php include ('../car/payment_record.php'); ?>
 
->>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
             </div>
         <?php include ('../modals/main_modals.php'); ?>
         </div>
