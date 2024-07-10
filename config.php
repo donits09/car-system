@@ -2,7 +2,11 @@
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
 
+<<<<<<< HEAD
+define('base_url','http://localhost/car/');
+=======
 //define('base_url','http://192.168.0.56/car/');
+>>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
 
 define('base_url','http://localhost/car/');
 global $dsn, $user, $pass;
@@ -19,4 +23,17 @@ function redirect($url) {
     header("Location: $url");
     exit();
 }
+
+##### JUDZ CONNECTION ######
+$dbhost = '192.168.0.111';
+$dbport = '5432'; // default PostgreSQL port
+$dbname = 'CAR_TESTDB';
+$dbuser = 'glicelo';
+$dbpass = 'admin12345';
+
+$cnx  = pg_connect("host=$dbhost port=$dbport dbname=$dbname user=$dbuser password=$dbpass");
+if (!$cnx) {
+    die("Error connecting to PostgreSQL database: " . pg_last_error());
+}
+
 ?>
