@@ -1,11 +1,8 @@
 <?php 
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(1);
-
 include('../../config.php');
-
 $c_account_no = null;
 $c_car_type = '';
 $c_car_amount = 0;
@@ -39,279 +36,170 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 }
 ?>
 <style>
-    .bold-text {
-        padding: 5px;
-        font-size: 11px;
-        font-style: italic;
-    }
-    .form_cont {
-        background-color: snow;
-        height: auto;
-        width: 30%;
-        float: left;
-        padding: 20px;
-        border:1px solid black;
-        border-radius: 5px;
-    }
-    .main_container {
-        width: auto;
-        height: auto;
-        padding: 20px;
-    }
-
-    /* PREV DISPLAY */
-    .form_prev {
-        position: relative; 
-        height: 350px; 
-        width: 70%;
-        float: right;
-    }
-    .texts_container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(128, 128, 128, 0.5);
-        z-index: 2;
-        font-weight: bolder;
-    }
-    .background-image {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
-        width: 100%; 
-        z-index: 1;
-        object-fit: cover;
-    }
-    .car_container {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
-        width: 100%; 
-        z-index: 1;
-        object-fit: cover;
-        background-color: rgba(255, 255, 0, 0.5);
-    }
-    #c_current_date {
-        float: right;
-        margin-top:120px;
-        margin-right:60px;
-    }
-    #prev_c_acc_no{
-        margin-top:120px;
-        margin-left:60px;
-    }
-    #prev_c_car_amount{
-        margin-top:95px;
-        margin-left:700px;
-    }
-    #c_car_amount_words {
-        float: right;
-        margin-top: -60px;
-        margin-right: 170px;
-        width: 340px;
-        height: auto;
-        line-height: 1.2em;
-        overflow: hidden;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-    #c_address {
-        text-transform: uppercase;
-        float: right;
-        margin-top: -90px;
-        margin-right: 170px;
-        width: 360px;
-        text-align: center;
-    }
-    #prev_c_car_no {
-        float: right;
-        margin-top:80px;
-        margin-right:60px;
-        width: 80px;
-
-        position:absolute;
-    }
-    /* .bg_unif{
-        background-color: transparent;
-        border:none;
-    } */
+.bold-text {
+    padding: 5px;
+    font-size: 11px;
+    font-style: italic;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
-<div class="main_container">
-    <div class="form_prev">
-        <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
-        <div class="car_container">
-            <div class="texts_container">
-                
-                <div class="box_middle">
-                    <input type="text" class="bg_unif" name="prev_c_car_no" id="prev_c_car_no">
-                    <input type="text" class="bg_unif" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">
+<form id="car-form" method="post" action="">
+    <?php
+    $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
+    ?>
+    <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="form-group">
+                <label for="c_atap_no">ATAP No.</label>
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
+            </div>
+        </div>
+        <div class="col-sm-4" style="margin-top: 25px;">
+            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;">
+                <span class="fa fa-edit"></span> Get ATAP
+            </a>
+        </div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label for="account_no">Account No.</label>
+        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
+    </div>
+    <div class="form-group">
+        <label for="car_no">CAR No.</label>
+        <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
+        <div id="car_no_error"></div>
+    </div>
+    <div class="form-group">
+        <label for="c_car_type">Payment Type</label>
+        <div class="dropdown">
+            <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
+            <div class="dropdown-menu w-100" id="comboBoxMenu">
+                <?php
+                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                $type_result = odbc_exec($conn, $car_type_query);
+                while ($row = odbc_fetch_array($type_result)) {
+                    $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'active' : '';
+                    echo "<a class='dropdown-item $selected' href='#' data-value='".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."</a>";
+                }
+                ?>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="amount">Amount</label>
+                <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
+                <div id="car_amt_error"></div>
+            </div>
+            <div class="col-md-6">
+                <label for="c_mop">Mode of Payment</label>
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
+                    <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
+                    <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
+                    <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
+        <div class="row">
+            <div class="col-md-6">  
+                <label for="c_bank_check">Check Bank(Depository)</label>
+                <div class="dropdown">
+                    <select class="form-control" id="c_bank_check" name="c_bank_check" required>
+                        <?php
+                        $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY id ASC";
+                        $type_result = odbc_exec($conn, $check_type_query);
+                        while ($row = odbc_fetch_array($type_result)) {
+                            $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                            echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
-                <input type="text" class="bg_unif" name="prev_c_acc_no" id="prev_c_acc_no">
-                <input type="text" class="bg_unif" name="prev_c_car_amount" id="prev_c_car_amount">
-                <textarea class="bg_unif" name="c_address" id="c_address"></textarea>
-               
-                <textarea class="bg_unif" name="c_car_amount_words" id="c_car_amount_words"></textarea>
+            </div>
+            <div class="col-md-6">
+                <label for="c_check_no">Check No</label>
+                <input type="text" class="form-control" id="c_check_no" name="c_check_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
             </div>
         </div>
     </div>
 
-    <div class="form_cont">
-        <form id="car-form" method="post" action="">
-            <?php
-            $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
-            ?>
-            <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="form-group">
-                        <label for="c_atap_no">ATAP No.</label>
-                        <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
-                    </div>
-                </div>
-                <div class="col-sm-4" style="margin-top: 25px;">
-                    <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;">
-                        <span class="fa fa-edit"></span> Get ATAP
-                    </a>
-                </div>
-            </div>
-            <hr>
-            <div class="form-group">
-                <label for="account_no">Account No.</label>
-                <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" oninput="validateNumberInput(event)" required>
-            </div>
-            <div class="form-group">
-                <label for="car_no">CAR No.</label>
-                <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
-                <div id="car_no_error"></div>
-            </div>
-            <div class="form-group">
-                <label for="c_car_type">Payment Type</label>
+    <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="c_bank_online">Online Bank(Depository)</label>
                 <div class="dropdown">
-                    <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
-                    <div class="dropdown-menu w-100" id="comboBoxMenu">
+                    <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
-                        $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-                        $type_result = odbc_exec($conn, $car_type_query);
+                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY id ASC";
+                        $type_result = odbc_exec($conn, $online_bank_query);
                         while ($row = odbc_fetch_array($type_result)) {
-                            $selected = (isset($c_car_type) && $c_car_type == $row['c_payment_type']) ? 'active' : '';
-                            echo "<a class='dropdown-item $selected' href='#' data-value='".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8')."</a>";
+                            $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                            echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
                         }
                         ?>
-                    </div>
+                    </select>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)">
+            <div class="col-md-6">
+                <label for="c_check_no">Ref No</label>
+                <input type="text" class="form-control" id="c_ref_no" name="c_check_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
             </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="amount">Amount</label>
-                        <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event); convertCarAmountToWords();" onclick="clearAmt();" required>
-                        <div id="car_amt_error"></div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="c_mop">Mode of Payment</label>
-                        <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
-                            <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
-                            <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
-                            <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
-                <div class="row">
-                    <div class="col-md-6">  
-                        <label for="c_bank_check">Bank</label>
-                        <div class="dropdown">
-                            <select class="form-control" id="c_bank_check" name="c_bank_check" required>
-                                <?php
-                                $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY id ASC";
-                                $type_result = odbc_exec($conn, $check_type_query);
-                                while ($row = odbc_fetch_array($type_result)) {
-                                    $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
-                                    echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="c_check_no">Check No</label>
-                        <input type="text" class="form-control" id="c_check_no" name="c_check_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="c_bank_online">Bank</label>
-                        <div class="dropdown">
-                            <select class="form-control" id="c_bank_online" name="c_bank_online" required>
-                                <?php
-                                $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY id ASC";
-                                $type_result = odbc_exec($conn, $online_bank_query);
-                                while ($row = odbc_fetch_array($type_result)) {
-                                    $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
-                                    echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="c_check_no">Ref No</label>
-                        <input type="text" class="form-control" id="c_ref_no" name="c_check_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="pay_date">Pay Date</label>
-                        <!-- <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required> -->
-                        <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>" min="1990-01-01" max="<?php echo date('Y-m-d'); ?>" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="encoder">Encoded by</label>
-                        <input type="text" class="hidden_fields" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>">
-                        <?php
-                        if (isset($_GET['id']) && $_GET['id'] > 0) {
-                            $c_encoded_by == $c_encoded_by;
-                        }else{
-                            $c_encoded_by = $_SESSION['username'];
-                        }
-                        $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
-                        $results = odbc_exec($conn, $get_encoder_details_qry);
-
-                        if ($encoder = odbc_fetch_array($results)) {
-                            $realname = $encoder["c_realname"];
-                        }
-                        ?>
-                        <input type="text" class="form-control" value="<?php echo $realname ?>">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group hidden_fields">
-                <label for="encoder">Transaction date</label>
-                <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>">
-            </div>
-            <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
-        </form>
+        </div>
     </div>
-</div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="pay_date">Pay Date</label>
+                <!-- <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required> -->
+                <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>" min="1990-01-01" max="<?php echo date('Y-m-d'); ?>" required>
+            </div>
+            <div class="col-md-6">
+                <label for="encoder">Encoded by</label>
+                <input type="text" class="hidden_fields" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
+                <?php
+                if (isset($_GET['id']) && $_GET['id'] > 0) {
+                    $c_encoded_by == $c_encoded_by;
+                }else{
+                    $c_encoded_by = $_SESSION['username'];
+                }
+                $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
+                $results = odbc_exec($conn, $get_encoder_details_qry);
+
+                if ($encoder = odbc_fetch_array($results)) {
+                    $realname = $encoder["c_realname"];
+                }
+                ?>
+                <input type="text" class="form-control" value="<?php echo $realname ?>" readonly>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group hidden_fields">
+        <label for="encoder">Transaction date</label>
+        <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
+    </div>
+
+    <div class="mb-3">
+        <a href="javascript:void(0);" class="btn btn-primary" onclick="openPrintWindow()">
+            <span class="fas fa-print"></span> CAR Preview
+        </a>
+    </div>
+
+    <?php include ('../modals/main_modals.php'); ?>
+
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+    <!-- <button class="btn btn-primary" id="btnPreview">Preview</button> -->
+</form>
 <script src="../../dist/js/manage_car.js"></script>
 <script>
 $(document).ready(function() {
@@ -590,93 +478,17 @@ function updateCarList() {
             console.error('Fetch error:', error);
         });
 }
-
-
 </script>
 <script>
-    $(document).ready(function() {
-        $('#c_account_no').on('input', function() {
-            var accountNo = $(this).val();
-            $('#prev_c_acc_no').val(accountNo);
-        });
-
-        $('#c_car_amount').on('input', function() {
-            var carAmount = $(this).val();
-            carAmount = carAmount.replace(/,/g, '');
-            var formattedCarAmount = carAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            $('#prev_c_car_amount').val(formattedCarAmount);
-        });
-    });
-
- 
-</script>
-<script>
-    function initializePage() {
-        convertCarAmountToWords();
+    function openPrintWindow() {
+        var form = document.getElementById('car-form');
+        var formData = new FormData(form);
+        var queryString = new URLSearchParams(formData).toString();
+        var printUrl = '../../print/preview_car.php?' + queryString;
+        
+        var iframe = document.getElementById('previewCarIframe');
+        iframe.src = printUrl;
+        
+        $('#previewCarModal').modal('show');
     }
-    function convertToWords(number) {
-            var ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
-            var teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-            var tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-
-            function convertGroup(num) {
-                var result = "";
-                if (num >= 100) {
-                    result += ones[Math.floor(num / 100)] + " Hundred ";
-                    num %= 100;
-                }
-                if (num >= 10 && num <= 19) {
-                    result += teens[num - 10];
-                } else if (num >= 20) {
-                    result += tens[Math.floor(num / 10)];
-                    if (num % 10 > 0) {
-                        result += " " + ones[num % 10];
-                    }
-                } else if (num > 0) {
-                    result += ones[num];
-                }
-                return result;
-            }
-
-            var result = "";
-            if (number >= 1000000) {
-                result += convertGroup(Math.floor(number / 1000000)) + " Million ";
-                number %= 1000000;
-            }
-            if (number >= 1000) {
-                result += convertGroup(Math.floor(number / 1000)) + " Thousand ";
-                number %= 1000;
-            }
-            if (number >= 1) {
-                result += convertGroup(Math.floor(number));
-            }
-
-            var decimalPart = number % 1;
-            if (decimalPart > 0) {
-                result += " and " + (decimalPart * 100).toFixed(0) + "/100";
-            }
-
-            result = result.trim() + " Pesos Only";
-
-            return result;
-        }
-
-        function convertCarAmountToWords() {
-            var carAmountElement = document.getElementById("c_car_amount");
-            var carAmountWordsElement = document.getElementById("c_car_amount_words");
-
-            var carAmount = parseFloat(carAmountElement.value.replace(/,/g, ''));
-            var carAmountWords = convertToWords(carAmount);
-
-            carAmountWordsElement.value = carAmountWords;
-
-            var lineHeight = parseInt(window.getComputedStyle(carAmountWordsElement).lineHeight);
-            var lines = carAmountWordsElement.scrollHeight / lineHeight;
-            var fontSize = 15;
-            if (lines > 1) {
-                fontSize -= (lines - 1) * 2;
-            }
-            carAmountWordsElement.style.fontSize = fontSize + "px";
-        }
 </script>
-
