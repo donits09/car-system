@@ -15,3 +15,6 @@
 .modal-content{
     color:black!important;
 }
+#createCarPrevModal .modal-dialog {
+    max-width: 90%;
+}
