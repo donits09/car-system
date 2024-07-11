@@ -15,11 +15,12 @@ $(document).on('click', '.edit_data', function() {
     loadModal('Edit Bank Details', 'manage_check_type.php?id=' + carTypeId, '#createCarModal');
 });
 
-$(document).on('click', '.delete_data', function() {
+/* $(document).on('click', '.delete_data', function() {
     var carTypeId = $(this).data('id');
     var carType = $(this).data('car-type');
-    _conf("Are you sure you want to delete this bank type permanently?", delete_check, [carTypeId, carType]);
-});
+
+    _conf("Are you sure you want to delete this car type permanently?", delete_check, [carTypeId, carType]);
+}); */
 
 function loadModal(title, url, modalId) {
     start_loader();
@@ -48,7 +49,7 @@ window._conf = function(msg, func, params) {
     $('#confirm_modal').modal('show');
 };
 
-function delete_check(carTypeId, carType) {
+/* function delete_check(carTypeId, carType) {
     start_loader();
     $.ajax({
         url: "../../../classes/Master.php?f=delete_car_check",
@@ -75,7 +76,7 @@ function delete_check(carTypeId, carType) {
             end_loader();
         }
     });
-}
+} */
 
 $(document).ready(function() {
     $('#car-type-form').submit(function(e) {

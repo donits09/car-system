@@ -789,7 +789,7 @@ Class Master{
 		echo json_encode($resp);
 	}
 
-	function delete_car_check($carTypeId, $carType) {
+	/* function delete_car_check($carTypeId, $carType) {
 		$resp = array();
 	
 		if (isset($carTypeId) && isset($carType)) {
@@ -818,7 +818,7 @@ Class Master{
 	
 		header('Content-Type: application/json');
 		echo json_encode($resp);
-	}
+	} */
 
 	function save_car_online() {
 		extract($_POST);
@@ -861,7 +861,7 @@ Class Master{
 		echo json_encode($resp);
 	}
 
-	function delete_car_online($carTypeId, $carType) {
+	/* function delete_car_online($carTypeId, $carType) {
 		$resp = array();
 	
 		if (isset($carTypeId) && isset($carType)) {
@@ -890,7 +890,7 @@ Class Master{
 	
 		header('Content-Type: application/json');
 		echo json_encode($resp);
-	}
+	} */
 
 	function save_my_account() {
 		extract($_POST);

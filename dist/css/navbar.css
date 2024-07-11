@@ -22,7 +22,6 @@ body {
     color:white;
 } 
 .dropdown-submenu {
-/* <<<<<<< donits_20240710_atap */
   position: relative;
 }
 
@@ -34,12 +33,10 @@ body {
 }
 
 .dropdown-submenu:hover .dropdown-menu {
-  display: block;
-}
-/* ======= */
+    display: block;
     position: relative;
   }
-  
+/*   
   .dropdown-submenu .dropdown-menu {
     top: 0;
     left: 100%;
@@ -49,6 +46,4 @@ body {
   
   .dropdown-submenu:hover .dropdown-menu {
     display: block;
-  }
-/* >>>>>>> main */
-  
+} */
