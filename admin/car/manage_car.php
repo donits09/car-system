@@ -1,11 +1,8 @@
 <?php 
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(1);
-
 include('../../config.php');
-
 $c_account_no = null;
 $c_car_type = '';
 $c_car_amount = 0;
@@ -94,7 +91,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
     </div>
-
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
@@ -112,7 +108,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">  
