@@ -685,8 +685,6 @@ function updateCarList() {
         calculateTotalAmount();
 }
 </script>
-<<<<<<< HEAD
-
 <script>
     function transferValue() {
         var accno = document.getElementById('accno').value.trim(); // Trim to remove any leading/trailing whitespace
@@ -722,10 +720,9 @@ function updateCarList() {
 
 
 
-=======
->>>>>>> 5a5a1344b66307639763fbbe8d12640fc136cd6f
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
+<script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
 <script src="../../dist/js/manage_car.js"></script>
 <?php include('../../inc/footer.php'); ?>

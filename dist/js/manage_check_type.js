@@ -7,17 +7,18 @@ function validateAlphaNumericInput(event) {
 }
 
 $('#create_new').click(function() {
-    loadModal('Create New Check Type', 'manage_check_type.php', '#createCarModal');
+    loadModal('Create New Bank', 'manage_check_type.php', '#createCarModal');
 });
 
 $(document).on('click', '.edit_data', function() {
     var carTypeId = $(this).data('id');
-    loadModal('Edit Car Details', 'manage_check_type.php?id=' + carTypeId, '#createCarModal');
+    loadModal('Edit Bank Details', 'manage_check_type.php?id=' + carTypeId, '#createCarModal');
 });
 
 /* $(document).on('click', '.delete_data', function() {
     var carTypeId = $(this).data('id');
     var carType = $(this).data('car-type');
+
     _conf("Are you sure you want to delete this car type permanently?", delete_check, [carTypeId, carType]);
 }); */
 

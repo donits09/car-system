@@ -192,7 +192,7 @@ if (isset($_GET['id'])) {
     } else {
         $html .= '
             <tr>
-                <td class="pdf-font" colspan="9" style="text-align: center;">No records found.</td>
+                <td class="pdf-font" colspan="11" style="text-align: center;">No records found.</td>
             </tr>
         </tbody>';
     }

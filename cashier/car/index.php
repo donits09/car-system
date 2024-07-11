@@ -718,7 +718,7 @@ function updateCarList() {
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index_cshr.js"></script>
-
+<script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/manage_car_cshr.js"></script>
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
 

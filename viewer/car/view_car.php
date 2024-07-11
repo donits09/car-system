@@ -10,7 +10,7 @@
         $accountId = $_GET['id'];
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot
+                    b.c_block, b.c_lot, a.c_check_no
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
         $stmt = odbc_prepare($conn, $get_car_query);
@@ -125,7 +125,6 @@
                     <th>Amount:</th>
                     <td><?php echo number_format($row['c_car_amount'],2); ?></td>
                 </tr>
-                
                 <tr>
                     <th>Mode of Payment:</th>
                     <td>
@@ -142,18 +141,20 @@
                         ?>
                     </td>
                 </tr>
+                <?php if ($row['c_mop'] == 2 || $row['c_mop'] == 3): ?>
                 <tr>
                     <th>Issuance Bank:</th>
                     <td>
-                        <?php 
-                        if ($row['c_bank'] == '') {
-                            echo "-";
-                        }else {
-                            echo htmlspecialchars($row['c_bank']);
-                        }
-                        ?>
+                        <?php echo htmlspecialchars($row['c_bank']); ?>
                     </td>
                 </tr>
+                <tr>
+                    <th><?php echo $row['c_mop'] == 2 ? 'Check No' : 'Reference No'; ?>:</th>
+                    <td>
+                        <?php echo htmlspecialchars($row['c_check_no']); ?>
+                    </td>
+                </tr>
+                <?php endif; ?>
                 <tr>
                     <th>Transaction Date:</th>
                     <td><?php
