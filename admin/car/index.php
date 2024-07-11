@@ -272,7 +272,7 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">CAR List</h2>
                             <hr>
-                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
+                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarPrevModal" onclick="updateAccountNo()">
                                 <span class="fa fa-edit"></span> Create New CAR
                             </button>
                             <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
@@ -584,7 +584,7 @@ $(document).ready(function() {
 
     $('#create_new').click(function() {
         var accountNo = $(this).data('account-no');
-        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
+        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarPrevModal');
     });
 
     $(document).on('click', '.edit_data', function() {
