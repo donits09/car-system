@@ -19,15 +19,15 @@ function redirect($url) {
 }
 
 ##### JUDZ CONNECTION ######
-$dbhost = '192.168.0.111';
-$dbport = '5432'; // default PostgreSQL port
-$dbname = 'CAR_TESTDB';
-$dbuser = 'glicelo';
-$dbpass = 'admin12345';
+// $dbhost = '192.168.0.111';
+// $dbport = '5432'; // default PostgreSQL port
+// $dbname = 'CAR_TESTDB';
+// $dbuser = 'glicelo';
+// $dbpass = 'admin12345';
 
-$cnx  = pg_connect("host=$dbhost port=$dbport dbname=$dbname user=$dbuser password=$dbpass");
-if (!$cnx) {
-    die("Error connecting to PostgreSQL database: " . pg_last_error());
-}
+// $cnx  = pg_connect("host=$dbhost port=$dbport dbname=$dbname user=$dbuser password=$dbpass");
+// if (!$cnx) {
+//     die("Error connecting to PostgreSQL database: " . pg_last_error());
+// }
 
 ?>

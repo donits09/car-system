@@ -183,9 +183,9 @@ include('../../inc/header.php');
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
                 </li>
-                <li class="nav-item" role="presentation">
+                <!-- <li class="nav-item" role="presentation">
                 <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
-                </li>
+                </li> -->
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -416,7 +416,7 @@ include('../../inc/header.php');
                 </div>
            
                 <!-- Payment Schedule -->
-                <?php include ('../car/payment_record.php'); ?>
+
 
             </div>
         <?php include ('../modals/main_modals.php'); ?>
