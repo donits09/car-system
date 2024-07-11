@@ -95,7 +95,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
 
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
-        <label for="c_bank_check">Select Check Bank</label>
+        <label for="c_bank_check">Check Bank(Depository)</label>
         <div class="dropdown">
             <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                 <?php
@@ -111,7 +111,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
 
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
-        <label for="c_bank_online">Select Online Bank</label>
+        <label for="c_bank_online">Online Bank(Depository)</label>
         <div class="dropdown">
             <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                 <?php
@@ -153,6 +153,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
+
+    <div class="mb-3">
+        <a href="javascript:void(0);" class="btn btn-primary" onclick="openPrintWindow()">
+            <span class="fas fa-print"></span> CAR Preview
+        </a>
+    </div>
+
+    <?php include ('../modals/main_modals.php'); ?>
+
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
@@ -288,6 +297,17 @@ $(document).ready(function() {
         }
     });
 });
-
-
+</script>
+<script>
+    function openPrintWindow() {
+        var form = document.getElementById('car-form');
+        var formData = new FormData(form);
+        var queryString = new URLSearchParams(formData).toString();
+        var printUrl = '../../print/preview_car.php?' + queryString;
+        
+        var iframe = document.getElementById('previewCarIframe');
+        iframe.src = printUrl;
+        
+        $('#previewCarModal').modal('show');
+    }
 </script>
