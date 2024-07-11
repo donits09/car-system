@@ -23,7 +23,7 @@
 <form id="car-type-form">
     <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
     <div class="form-group">
-        <label for="c_bank_type">Bank Type</label>
+        <label for="c_bank_type">Acronym</label>
         <input type="text" class="form-control" id="c_bank_type" name="c_bank_type" value="<?php echo htmlspecialchars($c_bank_type) ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
     <div class="form-group">

@@ -15,11 +15,11 @@ include('../../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <!-- <div class="pd-20" id="car-btn"> -->
-        <h2 class="text-blue h4">Online Bank Type</h2>
+        <h2 class="text-blue h4">List of Banks for Online Payment</h2>
         <hr>
         <div class="pd-20">
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New Online Bank
+                <span class="fa fa-edit"></span> Create New Bank
             </a>
             <hr>
         </div>
@@ -28,7 +28,7 @@ include('../../../inc/header.php');
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Bank Type</th>
+                        <th>Acronym</th>
                         <th>Name</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -59,10 +59,10 @@ include('../../../inc/header.php');
                                         data-bank-status="<?php echo ($row['status']); ?>">
                                             <span class="fa fa-edit text-primary"></span> Edit
                                         </a>
-                                        <div class="dropdown-divider"></div>
+                                        <!-- <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-type="<?php echo $row['c_bank_type']; ?>">
-                                            <span class="fa fa-trash text-danger"></span> Delete
-                                        </a>
+                                            <span class="fa fa-trash text-danger"></span> Inactive
+                                        </a> -->
                                     </div>
                                 </td>
                             </tr>

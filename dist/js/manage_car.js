@@ -124,33 +124,6 @@ $(document).ready(function() {
     }
 });
 
-/* toggle para sa bank pantropiko */
-function toggleCheckDropdown() {
-    var modeOfPayment = document.getElementById("c_mop").value;
-    var checkList = document.getElementById("checkList");
-    var onlineBankList = document.getElementById("onlineBankList");
-    var cBankCheckInput = document.getElementById("c_bank_check");
-    var cBankOnlineInput = document.getElementById("c_bank_online");
-
-    if (modeOfPayment == '2') {
-        checkList.style.display = "block";
-        onlineBankList.style.display = "none";
-        cBankCheckInput.setAttribute("required", "true");
-        cBankOnlineInput.removeAttribute("required");
-    } else if (modeOfPayment == '3') {
-        checkList.style.display = "none";
-        onlineBankList.style.display = "block";
-        cBankOnlineInput.setAttribute("required", "true");
-        cBankCheckInput.removeAttribute("required");
-    } else {
-        checkList.style.display = "none";
-        onlineBankList.style.display = "none";
-        cBankCheckInput.removeAttribute("required");
-        cBankOnlineInput.removeAttribute("required");
-        cBankCheckInput.value = "";
-        cBankOnlineInput.value = "";
-    }
-}
 
 $(document).ready(function() {
     $('#comboBoxMenuCheck').on('click', '.dropdown-item', function () {
@@ -195,3 +168,39 @@ $(document).ready(function() {
         toggleCheckDropdown();
     });
 });
+
+/* toggle para sa bank pantropiko */
+function toggleCheckDropdown() {
+    var modeOfPayment = document.getElementById("c_mop").value;
+    var checkList = document.getElementById("checkList");
+    var onlineBankList = document.getElementById("onlineBankList");
+    var cBankCheckInput = document.getElementById("c_bank_check");
+    var cBankOnlineInput = document.getElementById("c_bank_online");
+    var cCheckNo = document.getElementById("c_check_no");
+    var cRefNo = document.getElementById("c_ref_no");
+
+    if (modeOfPayment == '2') {
+        checkList.style.display = "block";
+        cCheckNo.style.display = "block";
+        onlineBankList.style.display = "none";
+        cRefNo.style.display = "none";
+        cBankCheckInput.setAttribute("required", "true");
+        cBankOnlineInput.removeAttribute("required");
+    } else if (modeOfPayment == '3') {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        onlineBankList.style.display = "block";
+        cRefNo.style.display = "block";
+        cBankOnlineInput.setAttribute("required", "true");
+        cBankCheckInput.removeAttribute("required");
+    } else {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        cRefNo.style.display = "none";
+        onlineBankList.style.display = "none";
+        cBankCheckInput.removeAttribute("required");
+        cBankOnlineInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cBankOnlineInput.value = "";
+    }
+}
