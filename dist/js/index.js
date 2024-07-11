@@ -112,7 +112,9 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_address').value = data.c_address; 
     document.getElementById('buyer_remarks').value = data.c_remarks; 
     document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
+    document.getElementById('atap_fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
     document.getElementById('accno').value = data.c_account_no;
+    document.getElementById('atap_accno').value = data.c_account_no;
     document.getElementById('buyer_bal').value = parseFloat(data.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('buyer_tcp').value = parseFloat(data.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     if (data.c_retention == '1') {
@@ -158,18 +160,22 @@ function fillBuyerDetails(data) {
                 var buyerLoc = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + data.c_type + ')';
                 document.getElementById('buyer_loc').value = buyerLoc;
                 document.getElementById('car_buyer_loc').value = buyerLoc;
+                document.getElementById('atap_car_buyer_loc').value = buyerLoc;
             } else {
                 document.getElementById('buyer_loc').value = "-----";
                 document.getElementById('car_buyer_loc').value = "-----";
+                document.getElementById('atap_car_buyer_loc').value = "-----";
             }
         } else {
             document.getElementById('buyer_loc').value = "-----";
             document.getElementById('car_buyer_loc').value = "-----";
+            document.getElementById('atap_car_buyer_loc').value = "-----";
         }
     };
     xhrPhase.onerror = function() {
         document.getElementById('buyer_loc').value = "-----";
         document.getElementById('car_buyer_loc').value = "-----";
+        document.getElementById('atap_car_buyer_loc').value = "-----";
     };
     xhrPhase.send();
 }
@@ -284,7 +290,9 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_address').value = buyer.c_address; 
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
     document.getElementById('fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
+    document.getElementById('atap_fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
     document.getElementById('accno').value = buyer.c_account_no;
+    document.getElementById('atap_accno').value = buyer.c_account_no;
     document.getElementById('buyer_bal').value = parseFloat(buyer.c_balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     document.getElementById('buyer_tcp').value = parseFloat(buyer.c_net_tcp).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     if (buyer.c_retention == '1') {
@@ -330,18 +338,22 @@ function selectBuyer(buyer) {
             if (phase_details && phase_details.c_acronym) {
                 document.getElementById('buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
                 document.getElementById('car_buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
+                document.getElementById('atap_car_buyer_loc').value = phase_details.c_acronym + ' B' + block + ' L' + lot + ' (' + buyer.c_type + ')';
             } else {
                 document.getElementById('buyer_loc').value = "-----";
                 document.getElementById('car_buyer_loc').value = "-----";
+                document.getElementById('atap_car_buyer_loc').value = "-----";
             }
         } else {
             document.getElementById('buyer_loc').value = "-----";
             document.getElementById('car_buyer_loc').value = "-----";
+            document.getElementById('atap_car_buyer_loc').value = "-----";
         }
     };
     xhr.onerror = function() {
         document.getElementById('buyer_loc').value = "-----";
         document.getElementById('car_buyer_loc').value = "-----";
+        document.getElementById('atap_car_buyer_loc').value = "-----";
     };
     xhr.send();
 

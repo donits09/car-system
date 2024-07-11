@@ -250,4 +250,4 @@ include('../../inc/header.php');
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_atap_list.js"></script>
 </body>
-<!-- <?php include('../../inc/footer.php'); ?> -->
+<?php include('../../inc/footer.php'); ?>

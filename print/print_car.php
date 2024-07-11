@@ -26,7 +26,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $accountId = $_GET['id'];
     $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                       a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                      b.c_block, b.c_lot, a.c_car_paydate
+                      b.c_block, b.c_lot, a.c_car_paydate, a.c_bank, a.c_check_no
                       FROM t_car_payment a
                       LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
                       WHERE a.c_car_no = ?";
@@ -61,7 +61,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <!-- <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy"> -->
+    <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">
@@ -71,6 +71,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($row['c_car_type']); ?>">
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
         <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
+        <input type="text" name="c_bank" id="c_bank" value="<?php echo $row['c_bank']; ?>">
+        <input type="text" name="c_check_no" id="c_check_no" value="<?php echo $row['c_check_no']; ?>">
         <!-- <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>"> -->
         
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>

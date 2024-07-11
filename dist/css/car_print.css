@@ -126,3 +126,19 @@ textarea{
     margin-left:70px;
     position:absolute;
 }
+#c_bank{
+    margin-top: 150px;
+    margin-right: 100px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+#c_check_no{
+    margin-top: 225px;
+    width: auto;
+    margin-left:220px;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}

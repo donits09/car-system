@@ -43,7 +43,6 @@ include('../../inc/header.php');
             <a id="create_other_atap" class="btn btn-flat btn-success" href="javascript:void(0)">
                 <span class="fa fa-edit"></span> Create Other ATAP
             </a>
-            <div class="pd-20">
             <hr>
         </div>
         <div class="table-container">
@@ -297,4 +296,4 @@ include('../../inc/header.php');
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_atap_list.js"></script>
 </body>
-<!-- <?php include('../../inc/footer.php'); ?> -->
+<?php include('../../inc/footer.php'); ?>
