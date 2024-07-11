@@ -34,6 +34,8 @@ include('../../inc/header.php');
             
         endif;
     endif;
+
+  
     }
 ?>
 <link rel="stylesheet" href="../../dist/css/table.css">
@@ -181,6 +183,9 @@ include('../../inc/header.php');
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
                 </li>
+                <li class="nav-item" role="presentation">
+                <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
+                </li>
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -286,7 +291,8 @@ include('../../inc/header.php');
                                     <div class="row">
                                     <div class="col-12 col-md-4">
                                         <label for="accno" class="form-label">Acc #</label>
-                                        <input type="text" class="form-control" id="accno" readonly>
+                                        <input type="text" class="form-control" id="accno" value="accno" readonly>
+                                       
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label for="fullname" class="form-label">Name</label>
@@ -408,6 +414,9 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
+           
+                <!-- Payment Schedule -->
+                <?php include ('../car/payment_record.php'); ?>
 
             </div>
         <?php include ('../modals/main_modals.php'); ?>
@@ -502,9 +511,11 @@ $(document).ready(function() {
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        console.log(accountNo);
+        //document.getElementById('accno').value = accountNo;
+        //console.log(accountNo);
         $('#create_new').data('account-no', accountNo); 
     }
+  
 </script>
 
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
@@ -626,6 +637,7 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     calculateTotalAmount();
+    
 });
 
 </script>
@@ -673,6 +685,41 @@ function updateCarList() {
         calculateTotalAmount();
 }
 </script>
+<script>
+    function transferValue() {
+        var accno = document.getElementById('accno').value.trim(); // Trim to remove any leading/trailing whitespace
+        //console.log(accno);
+        // Check if accno is not empty before proceeding with AJAX call
+        if (accno === '') {
+            accno = '1'; // Set a default value if accno is empty
+        }
+        $.ajax({
+            type: "POST",
+            url: "payment_record.php",
+            data: { accno: accno },
+            success: function(response) {
+                // Handle the response if needed
+                $('#result').html(response);
+                
+                var base_url = window.location.origin + window.location.pathname;
+                var newUrl = base_url + '?page=car_list&accno=' + encodeURIComponent(accno);
+                // Update the browser's URL without reloading the page
+                window.history.pushState({ path: newUrl }, '', newUrl);
+                
+            }
+        });
+      
+    }
+
+    // Trigger transferValue() when Payment Record tab is clicked
+    document.getElementById('payment-record-tab').addEventListener('click', function() {
+        transferValue();
+        //location.reload();
+    });
+</script>
+
+
+
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>
