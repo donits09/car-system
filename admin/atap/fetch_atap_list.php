@@ -143,7 +143,7 @@ if (!empty($account_no)) {
         die('Failed to execute SQL statement: ' . odbc_errormsg());
     }
 } else {
-    echo "<tr><td colspan='8' class='text-center'>No data found.</td></tr>";
+    echo "<tr><td colspan='9' class='text-center'>No data found.</td></tr>";
     echo "<script>$('#totalAtapAmount').text('0.00');</script>";
 }
 ?>
