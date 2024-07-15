@@ -291,7 +291,7 @@ include('../../inc/header.php');
                                     <div class="row">
                                     <div class="col-12 col-md-4">
                                         <label for="accno" class="form-label">Acc #</label>
-                                        <input type="text" class="form-control" id="accno" value="accno" readonly>
+                                        <input type="text" class="form-control" id="accno" readonly>
                                        
                                     </div>
                                     <div class="col-12 col-md-4">
