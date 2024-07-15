@@ -191,6 +191,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
+    <div class="mb-3">
+        <a href="javascript:void(0);" class="btn btn-primary" onclick="openPrintWindow()">
+            <span class="fas fa-print"></span> CAR Preview
+        </a>
+    </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
@@ -478,4 +483,28 @@ function updateCarList() {
             console.error('Fetch error:', error);
         });
 }
+</script>
+<script>
+    function openPrintWindow() {
+        var form = document.getElementById('car-form');
+        if (!form) {
+            console.error('Form not found!');
+            return;
+        }
+
+        var formData = new FormData(form);
+        var queryString = [];
+        for (var pair of formData.entries()) {
+            queryString.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
+        }
+        queryString = queryString.join('&');
+
+        console.log('Query String:', queryString);
+
+        var printUrl = '../../print/preview_car.php?' + queryString;
+        var iframe = document.getElementById('previewCarIframe');
+        iframe.src = printUrl;
+
+        $('#previewCarModal').modal('show');
+    }
 </script>
