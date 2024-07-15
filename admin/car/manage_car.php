@@ -195,7 +195,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </a>
     </div>
 
-    <?php include ('../modals/main_modals.php'); ?>
+    
 
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
     <!-- <button class="btn btn-primary" id="btnPreview">Preview</button> -->
@@ -482,13 +482,24 @@ function updateCarList() {
 <script>
     function openPrintWindow() {
         var form = document.getElementById('car-form');
+        if (!form) {
+            console.error('Form not found!');
+            return;
+        }
+
         var formData = new FormData(form);
-        var queryString = new URLSearchParams(formData).toString();
+        var queryString = [];
+        for (var pair of formData.entries()) {
+            queryString.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
+        }
+        queryString = queryString.join('&');
+
+        console.log('Query String:', queryString);
+
         var printUrl = '../../print/preview_car.php?' + queryString;
-        
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
-        
+
         $('#previewCarModal').modal('show');
     }
 </script>

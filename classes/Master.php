@@ -909,7 +909,8 @@ Class Master{
 		$update_fields = array(
 			"c_employee_code = '$c_employee_code'",
 			"c_realname = '$c_realname'",
-			"c_department = '$c_department'"
+			"c_department = '$c_department'",
+			"c_position = '$c_position'"
 		);
 	
 		if (!empty($c_password)) {

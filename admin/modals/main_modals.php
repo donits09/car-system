@@ -115,8 +115,8 @@
 </div>
 
 <!-- Modal for Preview Car -->
-<div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" role="document">
+<!-- <div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document" style="height: 80vh;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="previewCarModalLabel">CAR Preview</h5>
@@ -124,6 +124,29 @@
             <div class="modal-body" onclick="closePreviewModal()">
                 <iframe id="previewCarIframe" style="width: 100%; height: 500px;" frameborder="0"></iframe>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelled</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewCarModalLabel">CAR Preview</h5>
+            </div>
+            <div class="modal-body" onclick="closePreviewModal()">
+                <iframe id="previewCarIframe" style="width: 100%; height: 310px;" frameborder="0"></iframe>
+            </div>
+            </div>
         </div>
     </div>
 </div>
+
+
+
+
+
+

@@ -159,6 +159,7 @@ function isActive($pages) {
                 <?php echo htmlspecialchars($c_realname); ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/settings/users/my_account.php">My Account</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
             </div>
         </li>
@@ -211,6 +212,7 @@ function isActive($pages) {
         <?php echo htmlspecialchars($c_realname); ?>
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+        <a class="dropdown-item" href="<?php echo base_url ?>cashier/settings/users/my_account.php">My Account</a>
         <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
       </div>
     </li>
@@ -238,6 +240,7 @@ function isActive($pages) {
                 <?php echo htmlspecialchars($c_realname); ?>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                <a class="dropdown-item" href="<?php echo base_url ?>viewer/settings/users/my_account.php">My Account</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
             </div>
         </li>
