@@ -83,7 +83,11 @@ include('../../inc/header.php');
     .hidden_fields{
         display:none;
     }
- 
+    .disabled-link {
+        pointer-events: none; 
+        opacity: 0.5; 
+        cursor: not-allowed; 
+    }
 </style>
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
@@ -353,7 +357,7 @@ include('../../inc/header.php');
                     <div class="container">
                             <h2 class="text-blue h4">ATAP List</h2>
                             <hr>
-                            <button type="button" id="create_new_atap" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
+                            <button type="button" id="create_new_atap" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New ATAP
                             </button>
                             <hr>
@@ -423,7 +427,23 @@ include('../../inc/header.php');
     </div>
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accnoInput = document.getElementById('accno');
+        const createNewBtn = document.getElementById('create_new_atap');
+        let initialValue = accnoInput.value; 
+     
+        function checkValueChange() {
+           
+            if (accnoInput.value !== initialValue) {
+                createNewBtn.disabled = false; 
+                initialValue = accnoInput.value; 
+            }
+        }
 
+        setInterval(checkValueChange, 500); 
+    });
+</script>
 <!-- REMARKS FUNCTIONS -->
 <script>
     document.getElementById('buyer_remarks').addEventListener('keydown', function(event) {
