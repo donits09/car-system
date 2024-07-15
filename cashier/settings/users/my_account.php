@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once('../../../inc/check_session.php');
-check_user_group(1);
+check_user_group(3);
 
 require_once('../../../config.php');
 include('../../../inc/navbar.php');  
@@ -17,9 +17,6 @@ include('../../../inc/header.php');
         font-weight: bold;
         background-color: white !important;
         color: black !important;
-    }
-    #btnsave{
-        width:100%;
     }
 </style>
 
@@ -46,14 +43,10 @@ include('../../../inc/header.php');
                             <input type="text" class="form-control txt" style="background-color: white;" id="c_department" name="c_department" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="c_position" class="form-label">Position</label>
-                            <input type="text" class="form-control txt" style="background-color: white;" id="c_position" name="c_position" readonly>
-                        </div>
-                        <div class="form-group">
                             <label for="c_password" class="form-label">Password</label>
                             <input type="password" class="form-control txt" id="c_password" name="c_password">
                         </div>
-                        <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                 </div>
             </div>

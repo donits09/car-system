@@ -15,6 +15,12 @@
 .modal-content{
     color:black!important;
 }
+
+#previewCarModal .modal-dialog {
+    max-height: 80vh;
+    max-width: 105vh;
+}
+
 #createCarPrevModal .modal-dialog {
     max-width: 90%;
 }

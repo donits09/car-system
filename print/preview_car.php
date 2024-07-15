@@ -4,7 +4,6 @@ include('../config.php');
 $c_account_no = $_GET['c_account_no'] ?? '';
 $c_car_no = $_GET['c_car_no'] ?? '';
 $c_car_type = $_GET['c_car_type'] ?? '';
-$c_car_no = $_GET['c_car_no'] ?? '';
 $c_car_amount = $_GET['c_car_amount'] ?? '';
 $c_car_paydate = $_GET['c_car_paydate'] ?? '';
 $c_encoded_by = $_GET['c_encoded_by'] ?? '';
