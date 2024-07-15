@@ -100,6 +100,11 @@ include('../../inc/header.php');
         .table-dark th, .table-dark td, .table-dark thead th {
             border-color: #454d55;
         }
+        .disabled-link {
+            pointer-events: none; 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+        }
     </style>
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
@@ -291,14 +296,13 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">CAR List</h2>
                             <hr>
-                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()">
+                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New CAR
                             </button>
-                            </button>
-                            <a id="export_csv" class="btn btn-flat btn-success" href="javascript:void(0)">
+                            <a id="export_csv" class="btn btn-flat btn-success disabled-link" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as CSV
                             </a>
-                            <a id="export_pdf" class="btn btn-flat btn-danger" href="javascript:void(0)">
+                            <a id="export_pdf" class="btn btn-flat btn-danger disabled-link" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as PDF
                             </a>
                             <hr>
@@ -436,7 +440,57 @@ include('../../inc/header.php');
     </div>
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      
+        function disableExportLinks() {
+            document.getElementById('export_csv').classList.add('disabled-link');
+            document.getElementById('export_csv').addEventListener('click', preventDefaultAction);
+            
+            document.getElementById('export_pdf').classList.add('disabled-link');
+            document.getElementById('export_pdf').addEventListener('click', preventDefaultAction);
+        }
 
+        function preventDefaultAction(event) {
+            event.preventDefault();
+        }
+
+        disableExportLinks();
+        
+        const accnoInput = document.getElementById('accno');
+        accnoInput.addEventListener('input', function() {
+           
+            document.getElementById('export_csv').classList.remove('disabled-link');
+            document.getElementById('export_csv').removeEventListener('click', preventDefaultAction);
+            
+            document.getElementById('export_pdf').classList.remove('disabled-link');
+            document.getElementById('export_pdf').removeEventListener('click', preventDefaultAction);
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accnoInput = document.getElementById('accno');
+        const createNewBtn = document.getElementById('create_new');
+        const exportcsvBtn = document.getElementById('export_csv');
+        const exportpdfBtn = document.getElementById('export_pdf');
+        let initialValue = accnoInput.value; 
+     
+        function checkValueChange() {
+           
+            if (accnoInput.value !== initialValue) {
+                createNewBtn.disabled = false; 
+                exportcsvBtn.classList.remove('disabled-link'); 
+                exportpdfBtn.classList.remove('disabled-link'); 
+                exportcsvBtn.removeAttribute('disabled'); 
+                exportpdfBtn.removeAttribute('disabled'); 
+                initialValue = accnoInput.value; 
+            }
+        }
+
+        setInterval(checkValueChange, 500); 
+    });
+</script>
 <!-- REMARKS FUNCTIONS -->
 <script>
     document.getElementById('buyer_remarks').addEventListener('keydown', function(event) {

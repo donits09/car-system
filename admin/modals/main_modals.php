@@ -1,5 +1,6 @@
 
 <link rel="stylesheet" href="../../dist/css/modals.css">
+
 <div class="modal fade" id="createCarPrevModal" tabindex="-1" role="dialog" aria-labelledby="createCarModalPrevLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
