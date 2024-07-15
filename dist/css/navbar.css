@@ -33,6 +33,17 @@ body {
 }
 
 .dropdown-submenu:hover .dropdown-menu {
-  display: block;
-}
+    display: block;
+    position: relative;
+  }
+/*   
+  .dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    display: none;
+  }
   
+  .dropdown-submenu:hover .dropdown-menu {
+    display: block;
+} */

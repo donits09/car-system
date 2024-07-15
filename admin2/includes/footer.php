@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function(){
-      window.uni_modal = function($title = '', $url = '', $size = ''){
+      window.uni_modal = function($title = '', $url = '', $size = ""){
         $.ajax({
           url: $url,
           error: function(err){
@@ -16,13 +16,8 @@
               } else {
                 $('#uni_modal .modal-dialog').removeAttr("class").addClass("modal-dialog modal-lg modal-dialog-centered");
               }
-              $('#uni_modal').modal({
-                show: true,
-                backdrop: 'static',
-                keyboard: false,
-                focus: true
-              });
-              console.log("SUCCESS");
+              $('#uni_modal').modal('show');
+              
             }
           }
         });
@@ -33,6 +28,29 @@
         $('#confirm_modal .modal-body').html($msg);
         $('#confirm_modal').modal('show');
       };
+
+      window.uni_modal_right = function($title = '' , $url='',$size=""){
+        start_loader()
+        $.ajax({
+            url:$url,
+            error:err=>{
+                console.log()
+                alert("An error occured")
+            },
+            success:function(resp){
+                if(resp){
+                    $('#uni_modal_right .modal-title').html($title)
+                    $('#uni_modal_right .modal-body').html(resp)
+                    if($size != ''){
+                        $('#uni_modal_right .modal-dialog').addClass($size+'  modal-dialog-centered')
+                    }else{
+                        $('#uni_modal_right .modal-dialog').removeAttr("class").addClass("modal-dialog modal-lg modal-dialog-centered")
+                    }
+                    $('#uni_modal_right').modal('show');
+                }
+            }
+        })
+    }
 
    
     });

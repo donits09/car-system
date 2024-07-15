@@ -17,4 +17,7 @@ modal.css
 .modal-content{
     color:black!important;
 }
-
+#previewCarModal .modal-dialog {
+    max-height: 80vh;
+    max-width: 105vh;
+}
