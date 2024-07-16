@@ -44,8 +44,8 @@ include('../../inc/header.php');
     endif;
     }
 ?>
-<link rel="stylesheet" href="../../dist/css/table.css">
-<link rel="stylesheet" href="../../dist/css/index.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/index.css">
 <style>
     .table-container {
         margin-bottom: 20px;

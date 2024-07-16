@@ -48,7 +48,7 @@ textarea{
 #c_car_amount {
     float: right;
     margin-top: 165px;
-    margin-right: -320px;
+    margin-right: -300px;
     width: 140px;
 }
 #c_car_amount_words {
@@ -87,9 +87,9 @@ textarea{
 #c_encoded_by {
     text-transform: uppercase;
     float: left;
-    margin-top: 10px;
+    margin-top: 5px;
     width: auto;
-    margin-left:510px;
+    margin-left:470px;
     text-align: center;
     font-size: 10px !important;
 }
@@ -130,4 +130,67 @@ textarea{
     body {
         display: none;
     }
+}
+
+
+
+/* PREVIEW OTHER CAR */
+#c_name {
+    text-transform: uppercase;
+    float: right;
+    margin-top: 100px;
+    margin-right: -380px;
+    width: 350px;
+    padding:0px;
+}
+#c_phase{
+    text-transform: uppercase;
+    float:left;
+    margin-top: -800px;
+    margin-right: 145px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+}
+#location{
+    text-transform: uppercase;
+    margin-top: 100px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+}
+#c_amount_words {
+    float: right;
+    margin-top: 140px;
+    margin-right: -290px;
+    width: 340px;
+    height: auto;
+    line-height: 1.2em;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+#c_paydate_prev {
+    float: left;
+    margin-top: 0px;
+    width: 150px;
+    margin-left:70px;
+    text-align: center;
+    font-size: 10px !important;
+}
+#c_bank{
+    margin-top: 130px;
+    margin-left: -160px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+#c_check{
+    margin-top:210px;
+    margin-left:80px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
 }

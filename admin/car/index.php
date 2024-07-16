@@ -38,8 +38,8 @@ include('../../inc/header.php');
   
     }
 ?>
-<link rel="stylesheet" href="../../dist/css/table.css">
-<link rel="stylesheet" href="../../dist/css/index.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/index.css">
 <style>
     .table-container {
         margin-bottom: 20px;
@@ -187,9 +187,9 @@ include('../../inc/header.php');
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
                 </li>
-                <li class="nav-item" role="presentation">
-                <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
-                </li>
+                <!-- <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
+                </li> -->
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -295,7 +295,7 @@ include('../../inc/header.php');
                                     <div class="row">
                                     <div class="col-12 col-md-4">
                                         <label for="accno" class="form-label">Acc #</label>
-                                        <input type="text" class="form-control" id="accno" value="accno" readonly>
+                                        <input type="text" class="form-control" id="accno" readonly>
                                        
                                     </div>
                                     <div class="col-12 col-md-4">
@@ -420,7 +420,7 @@ include('../../inc/header.php');
                 </div>
            
                 <!-- Payment Schedule -->
-                <?php include ('../car/payment_record.php'); ?>
+                
 
             </div>
         <?php include ('../modals/main_modals.php'); ?>
@@ -475,7 +475,6 @@ include('../../inc/header.php');
                 initialValue = accnoInput.value; 
             }
         }
-
         setInterval(checkValueChange, 500); 
     });
 </script>
@@ -780,3 +779,4 @@ function updateCarList() {
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
 <script src="../../dist/js/manage_car.js"></script>
 <?php include('../../inc/footer.php'); ?>
+</body>
