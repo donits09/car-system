@@ -134,6 +134,22 @@ textarea{
     margin-left:70px;
     position:absolute;
 }
+#c_bank_main{
+    margin-top: 130px;
+    margin-left: 0px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+#c_check_main{
+    margin-top:210px;
+    margin-left:250px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
 @media print {
     body {
         display: none;
@@ -193,6 +209,7 @@ textarea{
     text-align: center;
     font-size: 12px !important;
     position:absolute;
+    background-color: red;
 }
 #c_check{
     margin-top:210px;

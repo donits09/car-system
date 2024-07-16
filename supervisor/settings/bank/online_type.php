@@ -15,7 +15,7 @@ include('../../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <!-- <div class="pd-20" id="car-btn"> -->
-        <h2 class="text-blue h4">Create New Bank</h2>
+        <h2 class="text-blue h4">List of Banks for Online Payment</h2>
         <hr>
         <div class="pd-20">
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">

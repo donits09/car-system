@@ -7,11 +7,27 @@ $c_car_type = $_GET['c_car_type'] ?? '';
 $c_car_amount = $_GET['c_car_amount'] ?? '';
 $c_car_paydate = $_GET['c_car_paydate'] ?? '';
 $c_encoded_by = $_GET['c_encoded_by'] ?? '';
+$c_mop = $_GET['c_mop'] ?? '';
 $c_bank_check = $_GET['c_bank_check'] ?? '';
 $c_bank_online = $_GET['c_bank_online'] ?? '';
-$c_mop = $_GET['c_mop'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
-/* $c_ref_no = $_GET['c_check_no'] ?? ''; */
+$c_ref_no = $_GET['c_ref_no'] ?? '';
+
+$c_bank = '';
+$c_check = '';
+
+if ($c_bank_check == '' || $c_bank_check == null){
+    $c_bank = $c_bank_online;
+}else{
+    $c_bank = $c_bank_check;
+}
+
+if ($c_check_no == '' || $c_check_no == null){
+    $c_check = $c_ref_no;
+}else{
+    $c_check = $c_check_no;
+}
+
 
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
@@ -26,25 +42,7 @@ function fetchBuyerDetails($conn, $accountNo) {
     return false;
 }
 
-$c_check = '';
-$c_online = '';
-$c_no = '';
-$c_ref = '';
-$c_payment_bank = null;
-$c_payment_cash = null; 
 
-
-if ($c_mop == '1'){
-    $c_payment_cash = $c_car_amount;
-}elseif ($c_mop == '2') {
-    $c_check = $c_bank_check;
-    $c_payment_bank = $c_car_amount;
-    /* $c_no = $c_check_no; */
-}elseif ($c_mop == '3') {
-    $c_online = $c_bank_online;
-    $c_payment_bank = $c_car_amount;
-    /* $c_ref = $c_check_no; */
-}
 
 function format_value($value) {
     if ($value === null || $value == 0) {
@@ -86,15 +84,11 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($c_car_type); ?>">
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
         <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
-        <input type="text" name="c_bank_check" id="c_bank" value="<?php echo htmlspecialchars($c_check); ?>">
-        <input type="text" name="c_bank_online" id="c_bank" value="<?php echo htmlspecialchars($c_online); ?>">
         <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>">
-        <!-- <input type="text" name="c_check_no" id="c_check_no" value="<?php echo htmlspecialchars($c_no); ?>"> -->
-        <!-- <input type="text" name="c_ref_no" id="c_check_no" value="<?php echo htmlspecialchars($c_ref); ?>"> -->
         
+        <?php $c_mop = $c_mop ?? 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
-            <input type="text" id="c_mop_cash" value="<?php echo format_value($c_payment_cash); ?>">
-            <input type="text" id="c_mop_bank" value="<?php echo format_value($c_payment_bank); ?>">
+            <input type="text" id="c_mop" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
             <input type="hidden" id="c_mop_value" value="<?php echo $c_mop; ?>">
         </div>
 
@@ -147,18 +141,26 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         ?>
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
         <input type="text" name="c_paydate" id="c_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>">
+        <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
+        <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
     </div>
     <script>
         var cMopValue = document.getElementById('c_mop_value').value;
+        var cBankCheck = document.getElementById('c_bank_main').value;
+        var cCheckNo = document.getElementById('c_check_main').value;
         var cPayDateField = document.getElementById('c_paydate');
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
         if (cMopValue == '1') {
             dynamicMarginDiv.style.marginTop = '190px';
-            cPayDateField.style.display = 'block';
+            cPayDateField.style.display = 'none';
+            cBankCheck.style.display = 'none';
+            cCheckNo.style.display = 'none';
         } else {
-            dynamicMarginDiv.style.marginTop = '190px';
+            dynamicMarginDiv.style.marginTop = '205px';
             cPayDateField.style.display = 'block';
+            cBankCheck.style.display = 'block';
+            cCheckNo.style.display = 'block';
         }
     </script>
     <script>
