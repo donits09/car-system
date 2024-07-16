@@ -103,6 +103,7 @@ function updateCarList() {
 }
 
 function fillBuyerDetails(data) {
+    document.getElementById('create_new').disabled = false;
     document.getElementById('buyer_acc_no').value = data.c_account_no;
     document.getElementById('buyer_date_of_sale').value = data.c_date_of_sale; 
     document.getElementById('buyer_acc_status').value = data.c_account_status; 

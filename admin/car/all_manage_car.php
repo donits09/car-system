@@ -198,7 +198,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <span class="fas fa-print"></span> CAR Preview
         </a>
     </div>
-    
+
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
@@ -346,7 +346,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
         console.log('Query String:', queryString);
 
-        var printUrl = '../../print/preview_car.php?' + queryString;
+        var printUrl = '../../print/preview_other_car.php?' + queryString;
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 

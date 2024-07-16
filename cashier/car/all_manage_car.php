@@ -345,7 +345,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
         console.log('Query String:', queryString);
 
-        var printUrl = '../../print/preview_car.php?' + queryString;
+        var printUrl = '../../print/preview_other_car.php?' + queryString;
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 

@@ -1,8 +1,11 @@
 <?php 
 session_start();
+
 require_once('../../inc/check_session.php');
 check_user_group(1);
+
 include('../../config.php');
+
 $c_account_no = null;
 $c_car_type = '';
 $c_car_amount = 0;
@@ -48,6 +51,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
+    
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
@@ -105,13 +109,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
                 </select>
-            </div>
-        </div>
-    </div>
+            </div>  
+        </div>  
+    </div>  
+
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
-            <div class="col-md-6">  
-                <label for="c_bank_check">Check Bank (Depository)</label>
+            <div class="col-md-6">      
+                <label for="c_bank_check">Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
@@ -135,7 +140,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
-                <label for="c_bank_online">Online Bank (Depository)</label>
+                <label for="c_bank_online">Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
@@ -160,8 +165,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <div class="row">
             <div class="col-md-6">
                 <label for="pay_date">Pay Date</label>
-                <!-- <input type="text" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" required> -->
-                <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>" min="1990-01-01" max="<?php echo date('Y-m-d'); ?>" required>
+                <input type="date" class="form-control" id="c_car_paydate" name="c_car_paydate" value="<?php echo htmlspecialchars($c_car_paydate) ?>" min="1990-01-01" max="<?php echo date('Y-m-d'); ?>" required>
             </div>
             <div class="col-md-6">
                 <label for="encoder">Encoded by</label>
@@ -183,12 +187,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-
     <div class="form-group hidden_fields">
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <?php include ('../modals/main_modals.php'); ?>
+
     <div class="mb-3">
         <a href="javascript:void(0);" class="btn btn-primary" onclick="openPrintWindow()">
             <span class="fas fa-print"></span> CAR Preview
@@ -198,6 +201,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </form>
 <script src="../../dist/js/manage_car.js"></script>
 <script>
+
 $(document).ready(function() {
     $('#car-form').submit(function(e) {
         e.preventDefault();
@@ -492,7 +496,7 @@ function updateCarList() {
 
         console.log('Query String:', queryString);
 
-        var printUrl = '../../print/preview_car.php?' + queryString;
+        var printUrl = '../../print/preview_other_car.php?' + queryString;
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 

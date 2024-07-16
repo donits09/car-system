@@ -39,10 +39,11 @@
             $c_car_amount = $result["c_car_amount"];
             $c_car_no = $result["c_car_no"];
             $c_car_paydate = $result["c_car_paydate"];
-            $c_mop = $result["c_mop"];
             $c_encoded_by = $result["c_encoded_by"];
             $c_bank = $result["c_encoded_by"];
             $c_check_no = $result["c_check_no"];
+            $c_mop = $result["c_mop"];
+            $c_bank = $result["c_bank"];
         }
     } 
 ?>
@@ -176,7 +177,7 @@
             </div>
         <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeOfPaymentChange()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
@@ -188,7 +189,7 @@
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">          
-                <label for="c_bank_check">Bank</label>
+                <label for="c_bank_check">Check Bank (Depository)</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
@@ -212,7 +213,7 @@
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">     
-                <label for="c_bank_online">Bank</label>
+                <label for="c_bank_online">Online Bank (Depository)</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
@@ -228,7 +229,7 @@
             </div>
             <div class="col-md-6">
                 <label for="c_check_no">Ref No</label>
-                <input type="text" class="form-control" id="c_ref_no" name="c_check_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
+                <input type="text" class="form-control" id="c_ref_no" name="c_ref_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
             </div>
         </div>
     </div>
@@ -272,6 +273,26 @@
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
+<script>
+    function handleModeOfPaymentChange() {
+        var mop = document.getElementById('c_mop').value;
+        document.getElementById('c_bank_online').value = '';
+        document.getElementById('c_ref_no').value = '';
+        document.getElementById('c_bank_check').value = '';
+        document.getElementById('c_check_no').value = '';
+
+        if (mop == '2') {
+            document.getElementById('checkList').style.display = 'block';
+            document.getElementById('onlineBankList').style.display = 'none';
+        } else if (mop == '3') {
+            document.getElementById('onlineBankList').style.display = 'block';
+            document.getElementById('checkList').style.display = 'none';
+        } else {
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('onlineBankList').style.display = 'none';
+        }
+    }
+</script>
 <script>
 $(document).ready(function() {
     $('#other-car-form').on('submit', function(e) {
@@ -452,7 +473,7 @@ $(document).ready(function() {
 
         console.log('Query String:', queryString);
 
-        var printUrl = '../../print/preview_car.php?' + queryString;
+        var printUrl = '../../print/preview_other_car.php?' + queryString;
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 

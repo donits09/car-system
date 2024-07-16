@@ -40,7 +40,7 @@
                         <select class="form-control" id="c_department" name="c_department" required>
                             <option value="" disabled <?php echo !isset($row['c_department']) ? 'selected' : ''; ?>></option>
                             <option value="Information Technology" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Information Technology') ? 'selected' : ''; ?>>Information Technology</option>
-                            <option value="Documentation" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Documentation') ? 'selected' : ''; ?>>Documentation</option>
+                            <option value="Documentation and Loan" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Documentation and Loan') ? 'selected' : ''; ?>>Documentation and Loan</option>
                             <option value="Treasury" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Treasury') ? 'selected' : ''; ?>>Treasury</option>
                             <option value="Accounting" <?php echo (isset($row['c_department']) && $row['c_department'] == 'Accounting') ? 'selected' : ''; ?>>Accounting</option>
                         </select>
@@ -50,12 +50,17 @@
                         <select class="form-control" id="c_position" name="c_position" required>
                             <option value="" disabled <?php echo !isset($row['c_position']) ? 'selected' : ''; ?>></option>
                             <option value="IT Manager" <?php echo (isset($row['c_position']) && $row['c_position'] == 'IT Manager') ? 'selected' : ''; ?>>IT Manager</option>
-                            <option value="SoftDev Supervisor" <?php echo (isset($row['c_position']) && $row['c_position'] == 'SoftDev Supervisor') ? 'selected' : ''; ?>>SoftDev Supervisor</option>
+                            <option value="Software Developer Supervisor" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Software Developer Supervisor') ? 'selected' : ''; ?>>Software Developer Supervisor</option>
                             <option value="Software Developer" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Software Developer') ? 'selected' : ''; ?>>Software Developer</option>
+                            <option value="Support Specialist" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Support Specialist') ? 'selected' : ''; ?>>Support Specialist</option>
                             <option value="AVP Treasury" <?php echo (isset($row['c_position']) && $row['c_position'] == 'AVP Treasury') ? 'selected' : ''; ?>>AVP Treasury</option>
                             <option value="Treasury Supervisor" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Treasury Supervisor') ? 'selected' : ''; ?>>Treasury Supervisor</option>
                             <option value="Treasury Assistant" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Treasury Assistant') ? 'selected' : ''; ?>>Treasury Assistant</option>
                             <option value="Cashier" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Cashier') ? 'selected' : ''; ?>>Cashier</option>
+                            <option value="Documentation Supervisor" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Documentation Supervisor') ? 'selected' : ''; ?>>Documentation Supervisor</option>
+                            <option value="Documentation Assistant" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Documentation Assistant') ? 'selected' : ''; ?>>Documentation Assistant</option>
+                            <option value="Accounting Supervisor" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Accounting Supervisor') ? 'selected' : ''; ?>>Accounting Supervisor</option>
+                            <option value="Accounting Assistant" <?php echo (isset($row['c_position']) && $row['c_position'] == 'Accounting Assistant') ? 'selected' : ''; ?>>Accounting Assistant</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -103,7 +108,7 @@
                         <select class="form-control" id="edit_department" name="c_department" required>
                             <option value="Information Technology">Information Technology</option>
                             <option value="Treasury">Treasury</option>
-                            <option value="Documentation">Documentation</option>
+                            <option value="Documentation">Documentation and Loan</option>
                             <option value="Accounting">Accounting</option>
                         </select>
                     </div>
@@ -111,12 +116,17 @@
                         <label for="edit_position" class="form-label">Position</label>
                         <select class="form-control" id="edit_position" name="c_position" required>
                             <option value="IT Manager">IT Manager</option>
-                            <option value="SoftDev Supervisor">SoftDev Supervisor</option>
+                            <option value="Software Developer Supervisor">Software Developer Supervisor</option>
                             <option value="Software Developer">Software Developer</option>
+                            <option value="Support Specialist">Support Specialist</option>
                             <option value="AVP Treasury">AVP Treasury</option>
                             <option value="Treasury Supervisor">Treasury Supervisor</option>
                             <option value="Treasury Assistant">Treasury Assistant</option>
                             <option value="Cashier">Cashier</option>
+                            <option value="Documentation Supervisor">Documentation Supervisor</option>
+                            <option value="Documentation Assistant">Documentation Assistant</option>
+                            <option value="Accounting Supervisor">Accounting Supervisor</option>
+                            <option value="Accounting Assistant">Accounting Assistant</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Update</button>

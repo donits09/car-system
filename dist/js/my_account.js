@@ -12,6 +12,7 @@ $(document).ready(function() {
                 $('#c_realname').val(data.c_realname);
                 $('#c_department').val(data.c_department);
                 $('#c_password').val('');
+                $('#c_position').val(data.c_position);
                 /* $('#password').val(data.c_password); */
             }
         },
