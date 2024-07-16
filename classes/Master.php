@@ -326,7 +326,11 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
-
+		
+		if ($c_check_no == '' || $c_check_no == null){
+			$c_check_no = $c_ref_no;
+		}
+		
 		/* Nag add lang me here -DhenDwen */
 		if ($c_mop == 1) {
 			$c_bank = "";
@@ -410,7 +414,8 @@ Class Master{
 						c_car_amount = '$c_car_amount',
 						c_tran_updated = '$c_tran_date',
 						c_mop = '$c_mop',
-						c_bank = '$c_bank'
+						c_bank = '$c_bank',
+						c_check_no = '$c_check_no'
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 			$save1 = odbc_exec($this->conn, $update1);
@@ -501,7 +506,7 @@ Class Master{
 				$atap_id = odbc_result($atap_id, 'id');
 	
 				foreach ($transaction_type as $key => $tran_type) {
-					$tran_type = addslashes($tran_type);
+					$tran_type = pg_escape_string($tran_type);
 					$atap_amount = addslashes($transaction_amount[$key]);
 					$insert_item = "INSERT INTO t_atap_items (c_atap_no, c_tran_type, c_atap_amount) VALUES ('$c_atap_no', '$tran_type', '$atap_amount')";
 					odbc_exec($conn, $insert_item);

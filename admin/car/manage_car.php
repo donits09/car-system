@@ -496,6 +496,7 @@ function updateCarList() {
         console.log('Query String:', queryString);
 
         var printUrl = '../../print/preview_car.php?' + queryString;
+
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 
