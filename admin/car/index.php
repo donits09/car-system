@@ -420,7 +420,6 @@ include('../../inc/header.php');
                 </div>
            
                 <!-- Payment Schedule -->
-                
 
             </div>
         <?php include ('../modals/main_modals.php'); ?>
@@ -765,10 +764,10 @@ function updateCarList() {
     }
 
     // Trigger transferValue() when Payment Record tab is clicked
-    document.getElementById('payment-record-tab').addEventListener('click', function() {
+    /* document.getElementById('payment-record-tab').addEventListener('click', function() {
         transferValue();
-        //location.reload();
-    });
+        location.reload();
+    }); */
 </script>
 
 
