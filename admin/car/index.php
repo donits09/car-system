@@ -427,7 +427,7 @@ include('../../inc/header.php');
         </div>
     </div>
 </div>
-
+</body>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       
@@ -475,7 +475,6 @@ include('../../inc/header.php');
                 initialValue = accnoInput.value; 
             }
         }
-
         setInterval(checkValueChange, 500); 
     });
 </script>

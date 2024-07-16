@@ -1,3 +1,4 @@
+
 <?php
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
@@ -30,5 +31,3 @@ function redirect($url) {
 // if (!$cnx) {
 //     die("Error connecting to PostgreSQL database: " . pg_last_error());
 // }
-
-?>

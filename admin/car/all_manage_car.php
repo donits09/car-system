@@ -353,4 +353,29 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $('#previewCarModal').modal('show');
     }
 </script>
+<script>
+    function openPrintWindow() {
+        var form = document.getElementById('car-form');
+        if (!form) {
+            console.error('Form not found!');
+            return;
+        }
+
+        var formData = new FormData(form);
+        var queryString = [];
+        for (var pair of formData.entries()) {
+            queryString.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
+        }
+        queryString = queryString.join('&');
+
+        console.log('Query String:', queryString);
+
+        var printUrl = '../../print/preview_car.php?' + queryString;
+        var iframe = document.getElementById('previewCarIframe');
+        iframe.src = printUrl;
+
+        $('#previewCarModal').modal('show');
+    }
+</script>
+
 </body>

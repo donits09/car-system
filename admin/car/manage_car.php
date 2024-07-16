@@ -139,7 +139,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6"> 
                 <label for="c_bank_online">Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online" required>
@@ -191,7 +191,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-
     <div class="mb-3">
         <a href="javascript:void(0);" class="btn btn-primary" onclick="openPrintWindow()">
             <span class="fas fa-print"></span> CAR Preview
@@ -496,7 +495,8 @@ function updateCarList() {
 
         console.log('Query String:', queryString);
 
-        var printUrl = '../../print/preview_other_car.php?' + queryString;
+        var printUrl = '../../print/preview_car.php?' + queryString;
+
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 
