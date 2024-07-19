@@ -224,6 +224,10 @@ Class Master{
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
 
+		if ($c_check_no == '' || $c_check_no == null){
+			$c_check_no = $c_ref_no;
+		}
+
 		/* Nag add lang me here -DhenDwen */          
 		if ($c_mop == 1) {
 			$c_bank = "";

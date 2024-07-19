@@ -73,6 +73,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             resize: none; 
         }
     </style>
+    <script src="<?php echo base_url; ?>dist/header_files/js/html2canvas.min.js"></script>
 </head>
 <body onload="initializePage()">
     <img src="<?php echo base_url; ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">

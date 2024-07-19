@@ -132,7 +132,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_check_no">Check No</label>
-                <input type="text" class="form-control" id="c_check_no" name="c_check_no" value="<?php echo htmlspecialchars(empty($c_check_no) ? '-' : $c_check_no); ?>">
+                <input type="text" class="form-control" id="c_check_no" name="c_check_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
             </div>
         </div>
     </div>
@@ -156,7 +156,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_check_no">Ref No</label>
-                <input type="text" class="form-control" id="c_ref_no" name="c_check_no" value="<?php echo htmlspecialchars(empty($c_check_no) ? '-' : $c_check_no); ?>">
+                <input type="text" class="form-control" id="c_ref_no" name="c_ref_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
             </div>
         </div>
     </div>
@@ -202,6 +202,26 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
+<!-- <script>
+    function handleModeOfPaymentChange() {
+        var mop = document.getElementById('c_mop').value;
+        document.getElementById('c_bank_online').value = '';
+        document.getElementById('c_ref_no').value = '';
+        document.getElementById('c_bank_check').value = '';
+        document.getElementById('c_check_no').value = '';
+
+        if (mop == '2') {
+            document.getElementById('checkList').style.display = 'block';
+            document.getElementById('onlineBankList').style.display = 'none';
+        } else if (mop == '3') {
+            document.getElementById('onlineBankList').style.display = 'block';
+            document.getElementById('checkList').style.display = 'none';
+        } else {
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('onlineBankList').style.display = 'none';
+        }
+    }
+</script> -->
 <script>
  $(document).ready(function() {
     $('#get_atap').on('click', function() {
@@ -329,6 +349,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     }
 });
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
 <script>
     function openPrintWindow() {
         var form = document.getElementById('car-form');
@@ -344,37 +367,37 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         queryString = queryString.join('&');
 
-        console.log('Query String:', queryString);
-
-        var printUrl = '../../print/preview_other_car.php?' + queryString;
-        var iframe = document.getElementById('previewCarIframe');
-        iframe.src = printUrl;
-
-        $('#previewCarModal').modal('show');
-    }
-</script>
-<script>
-    function openPrintWindow() {
-        var form = document.getElementById('car-form');
-        if (!form) {
-            console.error('Form not found!');
-            return;
-        }
-
-        var formData = new FormData(form);
-        var queryString = [];
-        for (var pair of formData.entries()) {
-            queryString.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
-        }
-        queryString = queryString.join('&');
-
-        console.log('Query String:', queryString);
+        /* console.log('Query String:', queryString); */
 
         var printUrl = '../../print/preview_car.php?' + queryString;
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 
-        $('#previewCarModal').modal('show');
+        iframe.onload = function() {
+            $('#previewCarModal').modal('show');
+        };
+    }
+
+    function saveAsPNG() {
+        var iframe = document.getElementById('previewCarIframe');
+
+        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+            
+            domtoimage.toPng(iframe.contentDocument.body)
+                .then(function(dataUrl) {
+                    var downloadLink = document.createElement('a');
+                    downloadLink.href = dataUrl;
+                    downloadLink.download = 'car-preview.png';
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                })
+                .catch(function(error) {
+                    console.error('Error generating image: ', error);
+                });
+        } else {
+            console.error('Iframe content not loaded.');
+        }
     }
 </script>
 
