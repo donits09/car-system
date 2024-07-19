@@ -153,20 +153,43 @@
     </div>
 </div> -->
 
+
 <div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="previewCarModalLabel">CAR Preview</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body" onclick="closePreviewModal()">
+            <div class="modal-body">
                 <iframe id="previewCarIframe" style="width: 100%; height: 310px;" frameborder="0"></iframe>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="saveAsPNG()">Save as PNG</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- <script src="<?php echo base_url; ?>dist/header_files/js/html2canvas.min.js"></script>
+<script>
+    function saveAsPNG() {
+        var iframe = document.getElementById('previewCarIframe');
+        var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+        html2canvas(iframeDocument.body).then(function(canvas) {
+            var link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = 'car_preview.png';
+            link.click();
+        }).catch(function(error) {
+            console.error('Error capturing the iframe content:', error);
+        });
+    }
+</script>
+ -->
 
 
 

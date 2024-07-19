@@ -252,6 +252,26 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
+<!-- <script>
+    function handleModeOfPaymentChange() {
+        var mop = document.getElementById('c_mop').value;
+        document.getElementById('c_bank_online').value = '';
+        document.getElementById('c_ref_no').value = '';
+        document.getElementById('c_bank_check').value = '';
+        document.getElementById('c_check_no').value = '';
+
+        if (mop == '2') {
+            document.getElementById('checkList').style.display = 'block';
+            document.getElementById('onlineBankList').style.display = 'none';
+        } else if (mop == '3') {
+            document.getElementById('onlineBankList').style.display = 'block';
+            document.getElementById('checkList').style.display = 'none';
+        } else {
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('onlineBankList').style.display = 'none';
+        }
+    }
+</script> -->
 <script>
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;

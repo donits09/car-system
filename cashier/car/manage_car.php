@@ -156,7 +156,9 @@ function toggleCarType() {
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
+
                 <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeofPaymentChange()">
+
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>

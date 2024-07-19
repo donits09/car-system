@@ -316,9 +316,15 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
+
 		$atap_id = $_POST['atap_id'];
 		$c_tran_type = $_POST['atap_val'];
-	
+
+		if ($c_check_no == '' || $c_check_no == null){
+			$c_check_no = $c_ref_no;
+		}
+
+
 		if ($c_mop == 1) {
 			$c_bank = "";
 		} elseif ($c_mop == 2) {
