@@ -320,7 +320,6 @@ include('../../inc/header.php');
                                     </tr>
                                 </table>
                             </div>
-
                             <div class="table-container">
                                 <table class="table table-bordered table-striped" id="car-list-table">
                                     <thead class="table-dark">
@@ -354,7 +353,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-
                 <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
                     <div class="card mt-3">
                     <div class="container">
