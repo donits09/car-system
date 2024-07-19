@@ -201,14 +201,15 @@ include('../../inc/header.php');
                                     echo htmlspecialchars($dateTime->format('Y-m-d'));
                                     ?>
                                 </td>
-                                <td class="text-center">
-                                    <?php 
+                                <td class="text-center"><?php 
                                     if ($row['status'] == 0){
-                                        echo 'PENDING'; 
-                                    }else if($row['status'] == 1){
-                                        echo 'PAID'; 
-                                    }else{
-                                        echo 'CANCELLED'; 
+                                        echo  'PENDING' ; 
+                                    } else if($row['status'] == 1){
+                                        echo  'PAID' ; 
+                                    }else if($row['status'] == 2){
+                                        echo  'PARTIAL' ; 
+                                    } else {
+                                        echo  'CANCELLED' ; 
                                     } ?>
                                 </td>
                                 <td class="text-center">

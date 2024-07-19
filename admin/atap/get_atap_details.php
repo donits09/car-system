@@ -15,8 +15,8 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_name, 
                 b.c_phase,
                 b.c_block, 
-                b.c_lot, 
-                SUM(c.c_atap_amount) AS total_amount
+                b.c_lot,
+                c.c_atap_amount
             FROM 
                 t_atap a
             LEFT JOIN 
@@ -36,7 +36,8 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_name, 
                 b.c_phase,
                 b.c_block, 
-                b.c_lot
+                b.c_lot,
+                c.c_atap_amount
             ORDER BY 
                 a.c_tran_updated DESC";
     $stmt = odbc_prepare($conn, $query);
@@ -45,7 +46,7 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
     if ($result = odbc_fetch_array($stmt)) {
         $data = [
             'c_account_no' => $result['c_account_no'],
-            'c_car_amount' => $result['total_amount'],
+            'c_car_amount' => $result['c_atap_amount'], 
             'c_phase' => $result['c_phase'],
             'c_block' => $result['c_block'],
             'c_lot' => $result['c_lot'],

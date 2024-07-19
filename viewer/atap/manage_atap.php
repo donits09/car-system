@@ -158,19 +158,67 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
                     <?php foreach ($transaction_types as $key => $type) : ?>
                         <tr>
-                            <td><input type="text" name="transaction_type[]" class="form-control transaction-type" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>" required></td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-dark dropdown-toggle transaction-type" type="button" id="dropdownMenuButton<?php echo $key; ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <?php echo htmlspecialchars($type['c_tran_type']); ?>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $key; ?>">
+                                        <?php
+                                        $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                                        $type_result = odbc_exec($conn, $car_type_query);
+                                        while ($row = odbc_fetch_array($type_result)) {
+                                            $selected = ($type['c_tran_type'] == $row['c_payment_type']) ? 'active' : '';
+                                            echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+                                        }
+                                        ?>
+                                    </div>
+                                    <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
+                                </div>
+                            </td>
                             <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars($type['c_atap_amount']); ?>" required></td>
                             <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else : ?>
                     <tr>
-                        <td><input type="text" name="transaction_type[]" class="form-control transaction-type" required></td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-dark dropdown-toggle transaction-type" type="button" id="dropdownMenuButton0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Select Type
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton0">
+                                    <?php
+                                    $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                                    $type_result = odbc_exec($conn, $car_type_query);
+                                    while ($row = odbc_fetch_array($type_result)) {
+                                        echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+                                    }
+                                    ?>
+                                </div>
+                                <input type="hidden" name="transaction_type[]">
+                            </div>
+                        </td>
                         <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
                         <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                     </tr>
                 <?php endif; ?>
             </tbody>
+            <script>
+                $(document).ready(function() {
+                    $('.dropdown-menu a').click(function(event) {
+                        event.preventDefault();
+                        var $dropdown = $(this).closest('.dropdown');
+                        var $button = $dropdown.find('.dropdown-toggle');
+                        var $hiddenInput = $dropdown.find('input[type="hidden"]');
+                        $button.text($(this).text());
+                        $hiddenInput.val($(this).data('value'));
+                        $dropdown.find('.dropdown-item').removeClass('active');
+                        $(this).addClass('active');
+                    });
+                });
+            </script>
+
             <tfoot>
                 <tr>
                     <th colspan="1" style="text-align:right;"> <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:</th>
@@ -182,6 +230,17 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
+<script>
+    var dropdownOptions = `
+        <?php
+        $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+        $type_result = odbc_exec($conn, $car_type_query);
+        while ($row = odbc_fetch_array($type_result)) {
+            echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+        }
+        ?>
+    `;
+</script>
 <script>
 $(document).ready(function() { 
 
@@ -208,16 +267,45 @@ $('#transaction-table').on('click', '.remove-row', function() {
     checkRemoveButton();
 });
 
-$('#add-row').on('click', function() {
-    let newRow = `<tr>
-        <td><input type="text" name="transaction_type[]" class="form-control transaction-type" required></td>
-        <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-        <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-    </tr>`;
-    $('#transaction-table tbody').append(newRow);
-    calculateTotal();
-    checkRemoveButton();
+$(document).ready(function() {
+    function initializeDropdown() {
+        $('.dropdown-menu a').off('click').on('click', function(event) {
+            event.preventDefault();
+            var $dropdown = $(this).closest('.dropdown');
+            var $button = $dropdown.find('.dropdown-toggle');
+            var $hiddenInput = $dropdown.find('input[type="hidden"]');
+            $button.text($(this).text());
+            $hiddenInput.val($(this).data('value'));
+            $dropdown.find('.dropdown-item').removeClass('active');
+            $(this).addClass('active');
+        });
+    }
+
+    initializeDropdown();
+
+    $('#add-row').on('click', function() {
+        let newRow = `<tr>
+            <td>
+                <div class="dropdown">
+                    <button class="btn btn-outline-dark dropdown-toggle transaction-type" type="button" id="dropdownMenuButton0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select Type
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton0">
+                        ${dropdownOptions}
+                    </div>
+                    <input type="hidden" name="transaction_type[]">
+                </div>
+            </td>
+            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
+            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+        </tr>`;
+        $('#transaction-table tbody').append(newRow);
+        initializeDropdown();
+        calculateTotal();
+        checkRemoveButton();
+    });
 });
+
 
 $('#transaction-table').on('input', '.transaction-amount', function() {
     calculateTotal();
