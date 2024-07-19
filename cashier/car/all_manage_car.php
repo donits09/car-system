@@ -66,7 +66,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
     </div>
     <div class="form-group" id="tran_type_container" style="display: none;">
-        <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+        <label for="c_tran_type">Payment Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown">
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
@@ -75,11 +75,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
-            <label for="c_car_type">Transaction Type</label>
+            <label for="c_car_type">Payment Type</label>
             <button class="form-control" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-align:left;">
                 <?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : 'Select an option'; ?>
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width:100%;">
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <?php
                 $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
                 $type_result = odbc_exec($conn, $car_type_query);
