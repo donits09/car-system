@@ -150,12 +150,12 @@ textarea{
     font-size: 12px !important;
     position:absolute;
 }
-@media print {
+/* @media print {
     body {
         display: none;
     }
 }
-
+ */
 
 
 /* PREVIEW OTHER CAR */

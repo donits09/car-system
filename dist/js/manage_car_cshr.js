@@ -134,6 +134,8 @@ function toggleCheckDropdown() {
         cRefNo.style.display = "none";
         cBankCheckInput.setAttribute("required", "true");
         cBankOnlineInput.removeAttribute("required");
+        cBankOnlineInput.value = ""; 
+        cRefNo.value = "";
     } else if (modeOfPayment == '3') {
         checkList.style.display = "none";
         cCheckNo.style.display = "none";
@@ -141,6 +143,8 @@ function toggleCheckDropdown() {
         cRefNo.style.display = "block";
         cBankOnlineInput.setAttribute("required", "true");
         cBankCheckInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cCheckNo.value = "";
     } else {
         checkList.style.display = "none";
         cCheckNo.style.display = "none";
@@ -150,8 +154,11 @@ function toggleCheckDropdown() {
         cBankOnlineInput.removeAttribute("required");
         cBankCheckInput.value = "";
         cBankOnlineInput.value = "";
+        cCheckNo.value = "";
+        cRefNo.value = "";
     }
 }
+
 
 $(document).ready(function() {
     $('#comboBoxMenuCheck').on('click', '.dropdown-item', function () {

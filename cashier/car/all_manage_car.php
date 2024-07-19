@@ -156,7 +156,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_check_no">Ref No</label>
-                <input type="text" class="form-control" id="c_ref_no" name="c_check_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
+                <input type="text" class="form-control" id="c_ref_no" name="c_ref_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
             </div>
         </div>
     </div>
@@ -345,7 +345,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
         console.log('Query String:', queryString);
 
-        var printUrl = '../../print/preview_other_car.php?' + queryString;
+        var printUrl = '../../print/preview_car.php?' + queryString;
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 

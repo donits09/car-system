@@ -104,7 +104,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeofPaymentChange()">
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
@@ -199,7 +199,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
-<script>
+<!-- <script>
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;
         document.getElementById('c_bank_online').value = '';
@@ -218,7 +218,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             document.getElementById('onlineBankList').style.display = 'none';
         }
     }
-</script>
+</script> -->
 <script>
 $(document).ready(function() {
     $('#car-form').submit(function(e) {

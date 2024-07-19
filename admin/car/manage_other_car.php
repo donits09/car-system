@@ -176,7 +176,7 @@
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeOfPaymentChange()">
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
@@ -274,7 +274,7 @@
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
-<script>
+<!-- <script>
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;
         document.getElementById('c_bank_online').value = '';
@@ -293,7 +293,7 @@
             document.getElementById('onlineBankList').style.display = 'none';
         }
     }
-</script>
+</script> -->
 <script>
 $(document).ready(function() {
     $('#other-car-form').on('submit', function(e) {
