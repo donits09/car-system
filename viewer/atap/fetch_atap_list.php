@@ -96,6 +96,8 @@ if (!empty($account_no)) {
                         echo  'PENDING' ; 
                     } else if($row['status'] == 1){
                         echo  'PAID' ; 
+                    }else if($row['status'] == 2){
+                        echo  'PARTIAL' ; 
                     } else {
                         echo  'CANCELLED' ; 
                     } ?>

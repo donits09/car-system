@@ -204,12 +204,14 @@ include('../../inc/header.php');
                                 <td class="text-center"><?php 
                                     if ($row['status'] == 0){
                                         echo  'PENDING' ; 
-                                    }else if($row['status'] == 1){
+                                    } else if($row['status'] == 1){
                                         echo  'PAID' ; 
-                                    }else{
+                                    }else if($row['status'] == 2){
+                                        echo  'PARTIAL' ; 
+                                    } else {
                                         echo  'CANCELLED' ; 
                                     } ?>
-                               </td>
+                                </td>
                                <td class="text-center">
                                     <?php
                                     $c_encoded_by = $row['c_encoded_by'];

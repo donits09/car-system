@@ -151,8 +151,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 if ($row['status'] == 1) {
                                     echo '<span class="badge badge-success">PAID</span>';
                                 } elseif ($row['status'] == 2) {
+                                    echo '<span class="badge badge-primary">PARTIAL</span>';
+                                } elseif ($row['status'] == 2) {
                                     echo '<span class="badge badge-danger">CANCELLED</span>';
-                                } else {
+                                }else {
                                     echo '<span class="badge badge-warning">PENDING</span>';
                                 }
                                 ?>
@@ -196,6 +198,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             <th class="text-center">No.</th>
                             <th class="text-center">Transaction Type</th>
                             <th class="text-right">Amount</th>
+                            <th class="text-right">Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -217,6 +220,17 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             <td class="text-center"><?php echo $i++; ?></td>
                             <td class="text-center"><?php echo htmlspecialchars($row_items['c_tran_type']); ?></td>
                             <td class="text-right"><?php echo number_format($amount, 2); ?></td>
+                            <td class="text-center">
+                                <?php
+                                if ($row_items['atap_status'] == 0) {
+                                    echo '<span class="badge badge-warning">Pending</span>';
+                                } elseif ($row_items['atap_status'] == 1) {
+                                    echo '<span class="badge badge-success">Paid</span>';
+                                } else {
+                                    echo '';
+                                }
+                                ?>
+                            </td>
                         </tr>
                     <?php
                     }
