@@ -42,8 +42,6 @@ function fetchBuyerDetails($conn, $accountNo) {
     return false;
 }
 
-
-
 function format_value($value) {
     if ($value === null || $value == 0) {
         return '';
@@ -58,24 +56,250 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="../dist/css/car_preview.css">
-    <style>
-        .small-font {
-            font-size: 12px;
-            white-space: pre-wrap; 
-        }
-        .normal-font {
-            font-size: 18px!important;
-        }
-        textarea {
-            width: 100%;
-            overflow: hidden; 
-            resize: none; 
-        }
+
+<style>
+#btnSave{
+    margin-top:300px;
+    position:absolute;
+}
+.small-font {
+    font-size: 12px;
+    white-space: pre-wrap; 
+}
+.normal-font {
+    font-size: 18px!important;
+}
+textarea {
+    width: 100%;
+    overflow: hidden; 
+    resize: none; 
+}
+body {
+    position: relative;
+    font-size: 8px !important;
+}
+.container {
+    position: relative;
+    width: 500px;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 2; 
+}
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 280px;
+    width: 670px;
+    z-index: 1;
+    object-fit: cover;
+}
+input {
+    border: none;
+    width: 100px;
+    text-align: left;
+    background-color: transparent;
+}
+textarea{
+    width: 100%;
+    text-align: left;
+    font-weight: 300;
+    border: none;
+    background-color: transparent;
+    font-size: 11px !important;
+    resize: none;
+    overflow: hidden;
+}
+#c_current_date {
+    float: right;
+    margin-top: 83px;
+    margin-right: -150px;
+}
+#c_car_type {
+    float: right;
+    margin-top: 180px;
+    margin-right: -180px;
+    width: 300px;
+}
+#c_car_amount {
+    float: right;
+    margin-top: 165px;
+    margin-right: -300px;
+    width: 140px;
+}
+#c_car_amount_words {
+    float: right;
+    margin-top: 145px;
+    margin-right: -290px;
+    width: 340px;
+    height: auto;
+    line-height: 1.2em;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+#c_car_no {
+    float: right;
+    margin-top: 62px;
+    margin-right: -360px;
+    width: 80px;
+}
+#c_received {
+    text-transform: uppercase!important;
+    float: right;
+    margin-top: 100px;
+    margin-right: -380px;
+    width: 350px;
+    padding:0px;
+}
+#c_address {
+    text-transform: uppercase;
+    float: right;
+    margin-top: 115px;
+    margin-right: -350px;
+    width: 360px;
+    text-align: center;
+}
+#c_encoded_by {
+    text-transform: uppercase!important;
+    float: left;
+    margin-top: 5px;
+    width: auto;
+    margin-left:470px;
+    text-align: center;
+    font-size: 10px !important;
+}
+#c_paydate {
+    float: left;
+    margin-top: 0px;
+    width: 150px;
+    margin-left:70px;
+    text-align: center;
+    font-size: 10px !important;
+}
+#c_loc{
+    text-transform: uppercase;
+    float:left;
+    margin-top: -45px;
+    margin-right: 145px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+}
+#c_acc_no{
+    text-transform: uppercase;
+    float: right;
+    margin-top: 80px;
+    margin-right: 100px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+#c_bank{
+    margin-top: 150px;
+    margin-right: 50px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+.dynamic-margin {
+    width: 100px;
+    height: 100px;
+    margin-left:70px;
+    position:absolute;
+}
+#c_bank_main{
+    margin-top: 130px;
+    margin-left: -100px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+#c_check_main{
+    margin-top:210px;
+    margin-left:150px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
+/* @media print {
+    body {
+        display: none;
+    }
+}
+ */
+
+
+/* PREVIEW OTHER CAR */
+#c_name {
+    text-transform: uppercase;
+    float: right;
+    margin-top: 100px;
+    margin-right: -380px;
+    width: 350px;
+    padding:0px;
+}
+#c_phase{
+    text-transform: uppercase;
+    float:left;
+    margin-top: -800px;
+    margin-right: 145px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+}
+#location{
+    text-transform: uppercase;
+    margin-top: 100px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+}
+#c_amount_words {
+    float: right;
+    margin-top: 135px;
+    margin-right: -290px;
+    width: 340px;
+    height: auto;
+    line-height: 1.2em;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+#c_paydate_prev {
+    float: left;
+    margin-top: 0px;
+    width: 150px;
+    margin-left:70px;
+    text-align: center;
+    font-size: 10px !important;
+
+}
+#c_bank{
+    margin-top: 130px;
+    margin-left: -160px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+    background-color: red;
+}
+#c_check{
+    margin-top:210px;
+    margin-left:80px;
+    width: auto;
+    text-align: center;
+    font-size: 12px !important;
+    position:absolute;
+}
     </style>
-    <script src="<?php echo base_url; ?>dist/header_files/js/html2canvas.min.js"></script>
 </head>
-<body onload="initializePage()">
+
+<body onload="initializePage()" id="previewCarContent">
     <img src="<?php echo base_url; ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
     <div class="container">
         <div class="box_middle">
@@ -92,7 +316,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <input type="text" id="c_mop" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
             <input type="hidden" id="c_mop_value" value="<?php echo $c_mop; ?>">
         </div>
-
+        <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button>      
         <?php
         if ($buyerDetails) {
             $lname = $buyerDetails["c_b1_last_name"];
@@ -144,8 +368,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         <input type="text" name="c_paydate" id="c_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>">
         <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
         <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
-    </div>
-    <script>
+        <script>
         var cMopValue = document.getElementById('c_mop_value').value;
         var cBankCheck = document.getElementById('c_bank_main').value;
         var cCheckNo = document.getElementById('c_check_main').value;
@@ -153,12 +376,12 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
         if (cMopValue == '1') {
-            dynamicMarginDiv.style.marginTop = '190px';
+            dynamicMarginDiv.style.marginTop = '185px';
             cPayDateField.style.display = 'none';
             cBankCheck.style.display = 'none';
             cCheckNo.style.display = 'none';
         } else {
-            dynamicMarginDiv.style.marginTop = '205px';
+            dynamicMarginDiv.style.marginTop = '200px';
             cPayDateField.style.display = 'block';
             cBankCheck.style.display = 'block';
             cCheckNo.style.display = 'block';
@@ -259,5 +482,36 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             }
         });
     </script>
+    </div>
+    <script>
+    function saveAsImage() {
+        var btnSave = document.getElementById('btnSave');
+        
+        btnSave.style.display = 'none';
+
+        var carNumber = document.getElementById('c_car_no').value || 'unknown_car';
+
+        var today = new Date().toISOString().split('T')[0];
+
+        var filename = 'CAR' + carNumber + '_' + today + '.png';
+
+        html2canvas(document.getElementById('previewCarContent'), {
+            scale: window.devicePixelRatio, 
+            useCORS: true, 
+            logging: true, 
+        }).then(function(canvas) {
+            var link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = filename;
+            link.click();
+            btnSave.style.display = 'block';
+        }).catch(function(error) {
+            console.error('Error saving image:', error);
+
+            btnSave.style.display = 'block';
+        });
+    }
+</script>
+<script src="<?php echo base_url; ?>dist/header_files/html2canvas.min.js_0.5.0-beta4/cdnjs/html2canvas.min.js"></script>
 </body>
 </html>
