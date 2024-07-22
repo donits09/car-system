@@ -39,7 +39,7 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="../dist/css/car_preview.css">
+    <!-- <link rel="stylesheet" href="../dist/css/car_preview.css"> -->
     <style>
         .small-font {
             font-size: 12px;
@@ -53,9 +53,217 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             overflow: hidden;
             resize: none;
         }
+        body {
+            position: relative;
+            font-size: 8px !important;
+        }
+        .container {
+            position: relative;
+            width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 2; 
+        }
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 280px;
+            width: 670px;
+            z-index: 1;
+            object-fit: cover;
+        }
+        input {
+            border: none;
+            width: 100px;
+            text-align: left;
+            background-color: transparent;
+        }
+        textarea{
+            width: 100%;
+            text-align: left;
+            font-weight: 300;
+            border: none;
+            background-color: transparent;
+            font-size: 11px !important;
+            resize: none;
+            overflow: hidden;
+        }
+        #c_current_date {
+            float: right;
+            margin-top: 83px;
+            margin-right: -150px;
+        }
+        #c_car_type {
+            float: right;
+            margin-top: 190px;
+            margin-right: -180px;
+            width: 300px;
+        }
+        #c_car_amount {
+            float: right;
+            margin-top: 165px;
+            margin-right: -300px;
+            width: 140px;
+        }
+        #c_car_amount_words {
+            float: right;
+            margin-top: 150px;
+            margin-right: -290px;
+            width: 340px;
+            height: auto;
+            line-height: 1.2em;
+            overflow: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #c_car_no {
+            float: right;
+            margin-top: 62px;
+            margin-right: -360px;
+            width: 80px;
+        }
+        #c_received {
+            text-transform: uppercase!important;
+            float: right;
+            margin-top: 100px;
+            margin-right: -380px;
+            width: 350px;
+            padding:0px;
+        }
+        #c_address {
+            text-transform: uppercase;
+            float: right;
+            margin-top: 120px;
+            margin-right: -350px;
+            width: 360px;
+            text-align: center;
+        }
+        #c_encoded_by {
+            text-transform: uppercase!important;
+            float: left;
+            margin-top: 5px;
+            width: auto;
+            margin-left:470px;
+            text-align: center;
+            font-size: 10px !important;
+        }
+        #c_paydate {
+            float: left;
+            margin-top: -5px;
+            width: 150px;
+            margin-left:70px;
+            text-align: center;
+            font-size: 10px !important;
+        }
+        #c_loc{
+            text-transform: uppercase;
+            float:left;
+            margin-top: -45px;
+            margin-right: 145px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+        }
+        #c_acc_no{
+            text-transform: uppercase;
+            float: right;
+            margin-top: 80px;
+            margin-right: 100px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_bank{
+            margin-top: 150px;
+            margin-right: 100px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        .dynamic-margin {
+            width: 100px;
+            height: 100px;
+            margin-left:70px;
+            position:absolute;
+        }
+        #c_name {
+            text-transform: uppercase;
+            float: right;
+            margin-top: 100px;
+            margin-right: -380px;
+            width: 350px;
+            padding:0px;
+        }
+        #c_phase{
+            text-transform: uppercase;
+            float:left;
+            margin-top: -800px;
+            margin-right: 145px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+        }
+        #location{
+            text-transform: uppercase;
+            margin-top: 100px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+        }
+        #c_amount_words {
+            float: right;
+            margin-top: 140px;
+            margin-right: -290px;
+            width: 340px;
+            height: auto;
+            line-height: 1.2em;
+            overflow: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        #c_paydate_prev {
+            float: left;
+            margin-top: 0px;
+            width: 150px;
+            margin-left:70px;
+            text-align: center;
+            font-size: 10px !important;
+        }
+        #c_bank{
+            margin-top: 130px;
+            margin-left: -160px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_check{
+            margin-top:210px;
+            margin-left:80px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        .btn-container {
+            display: flex;
+            float: right;
+        }
+        #btnSave {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            margin-top: 70px;
+            font-size: 12px;
+        }      
     </style>
 </head>
-<body onload="convertCarAmountToWords()">
+<body onload="convertCarAmountToWords()" id="previewCarContent">
     <img src="<?php echo base_url; ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
     <div class="container">
         <div class="box_middle">
@@ -96,16 +304,19 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
                     }
                 }
             }
-            ?>
+        ?>
 
         <textarea name="c_name" id="c_name"><?php echo htmlspecialchars($c_name); ?></textarea>
         <textarea name="c_address" id="c_address">--------------</textarea>
-        <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($c_loc); ?>" />
+        <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($c_loc); ?>">
 
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
         <input type="text" name="c_paydate_prev" id="c_paydate_prev" value="<?php echo htmlspecialchars($c_car_paydate); ?>">
         <input type="text" name="c_bank" id="c_bank" value="<?php echo htmlspecialchars($c_bank); ?>">
         <input type="text" name="c_check" id="c_check" value="<?php echo htmlspecialchars($c_check); ?>">
+    </div>
+    <div class="btn-container">
+        <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button> 
     </div>
     <script>
         function convertToWords(number) {
@@ -221,5 +432,36 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             }
         });
     </script>
+    </div>
+    <script>
+        function saveAsImage() {
+            var btnSave = document.getElementById('btnSave');
+            
+            btnSave.style.display = 'none';
+
+            var carNumber = document.getElementById('c_car_no').value || 'unknown_car';
+
+            var today = new Date().toISOString().split('T')[0];
+
+            var filename = 'CAR' + carNumber + '_' + today + '.png';
+
+            html2canvas(document.getElementById('previewCarContent'), {
+                scale: window.devicePixelRatio, 
+                useCORS: true, 
+                logging: true, 
+            }).then(function(canvas) {
+                var link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = filename;
+                link.click();
+                btnSave.style.display = 'block';
+            }).catch(function(error) {
+                console.error('Error saving image:', error);
+
+                btnSave.style.display = 'block';
+            });
+        }
+    </script>
+<script src="<?php echo base_url; ?>dist/header_files/html2canvas.min.js_0.5.0-beta4/cdnjs/html2canvas.min.js"></script>
 </body>
 </html>

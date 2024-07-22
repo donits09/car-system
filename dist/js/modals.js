@@ -12,3 +12,7 @@
     $('#editUserModal').modal('hide');
     $('#addUserModal').modal('hide');
   }
+
+  function closeModal3() {
+    $('#previewCarModal').modal('hide');
+  }
