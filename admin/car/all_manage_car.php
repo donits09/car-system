@@ -101,7 +101,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
  
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            e.preventDefault();
+            //e.preventDefault();
             var selectedValue = $(this).data('value');
             updateAtapVal(selectedValue);
 

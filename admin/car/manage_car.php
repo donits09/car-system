@@ -92,46 +92,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
         <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
     </div>
-    <script>
-        $(document).ready(function() {
-      
-        function updateAtapVal(selectedValue) {
-            $('#atap_val').val(selectedValue);
-        }
-
- 
-        $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            e.preventDefault();
-            var selectedValue = $(this).data('value');
-            updateAtapVal(selectedValue);
-
-            $('#dropdownMenuButton').text(selectedValue);
-            $('#c_car_type').val(selectedValue); 
-        });
-
-        var initialSelectedValue = $('#c_car_type').val();
-        updateAtapVal(initialSelectedValue);
-    });
-
-    </script>
-
-    <script>
-    function toggleCarType() {
-        var atapNo = document.getElementById('c_atap_no').value;
-        var carTypeContainer = document.getElementById('car_type_container');
-        var tranTypeContainer =document.getElementById('tran_type_container');
-
-        if (atapNo.trim() === '') {
-            carTypeContainer.style.display = 'block';
-            tranTypeContainer.style.display = 'none';
-        } else {
-            tranTypeContainer.style.display = 'block';
-            carTypeContainer.style.display = 'none';  
-        }
-    }
-    </script>
+   
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
-    <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
+    <input type="text" class="form-control" id="atap_val" name="atap_val" style="background-color:red;" readonly>
 
     <hr>
     <div class="form-group">
@@ -675,3 +638,40 @@ function updateCarList() {
         $('#previewCarModal').modal('show');
     }
 </script>
+<script>
+    $(document).ready(function() {
+      
+        function updateAtapVal(selectedValue) {
+            $('#atap_val').val(selectedValue);
+        }
+ 
+        $('.dropdown-menu a.dropdown-item').on('click', function(e) {
+            //e.preventDefault();
+            var selectedValue = $(this).data('value');
+            updateAtapVal(selectedValue);
+
+            $('#dropdownMenuButton').text(selectedValue);
+            $('#c_car_type').val(selectedValue); 
+        });
+
+        var initialSelectedValue = $('#c_car_type').val();
+        updateAtapVal(initialSelectedValue);
+    });
+
+    </script>
+
+    <script>
+    function toggleCarType() {
+        var atapNo = document.getElementById('c_atap_no').value;
+        var carTypeContainer = document.getElementById('car_type_container');
+        var tranTypeContainer =document.getElementById('tran_type_container');
+
+        if (atapNo.trim() === '') {
+            carTypeContainer.style.display = 'block';
+            tranTypeContainer.style.display = 'none';
+        } else {
+            tranTypeContainer.style.display = 'block';
+            carTypeContainer.style.display = 'none';  
+        }
+    }
+    </script>

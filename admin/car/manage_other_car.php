@@ -105,7 +105,7 @@
 
  
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            e.preventDefault();
+            //e.preventDefault();
             var selectedValue = $(this).data('value');
             updateAtapVal(selectedValue);
 
