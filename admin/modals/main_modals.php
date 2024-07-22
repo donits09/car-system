@@ -179,12 +179,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="previewCarModalLabel">CAR Preview</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button onclick="closeModal3()" class="btn customized-modal" data-dismiss="modal">x</button>
             </div>
             <div class="modal-body">
-                <iframe id="previewCarIframe" src="<?php echo base_url; ?>print/preview_car.php" style="width: 100%; height: 500px; border: none;"></iframe>
+                <iframe id="previewCarIframe" src="<?php echo base_url; ?>print/preview_car.php" style="width: 100%; height: 340px; border: none;"></iframe>
                 <div id="previewCarContent" style="display: none;"></div>
             </div>
             <div class="modal-footer">

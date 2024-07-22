@@ -440,9 +440,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     }
 });
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
-
 <script>
     $(document).ready(function() {
         function updateAtapId(selectedValue) {
@@ -532,28 +529,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $('#previewCarModal').modal('show');
         };
 
-    }
-
-    function saveAsPNG() {
-        var iframe = document.getElementById('previewCarIframe');
-
-        if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
-            
-            domtoimage.toPng(iframe.contentDocument.body)
-                .then(function(dataUrl) {
-                    var downloadLink = document.createElement('a');
-                    downloadLink.href = dataUrl;
-                    downloadLink.download = 'car-preview.png';
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
-                })
-                .catch(function(error) {
-                    console.error('Error generating image: ', error);
-                });
-        } else {
-            console.error('Iframe content not loaded.');
-        }
     }
 </script>
 
