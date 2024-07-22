@@ -44,50 +44,6 @@
     </div>
 </div>
 
-<!-- 
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Car Details</h5>
-                <button onclick="closeModal()" class="btn customized-modal" data-dismiss="modal" aria-label="Close">x</button>
-            </div>
-            <div class="modal-body">
-                <form id="edit-car-form">
-                    <div class="form-group">
-                        <label for="edit-account-no">Account No.</label>
-                        <input type="text" class="form-control" id="edit-c-account-no" name="c_account_no" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-payment-type">Payment Type</label>
-                        <select class="form-control" id="edit-c-car-type" name="c_car_type" required>
-                            <option value=""></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-amount">Amount</label>
-                        <input type="text" class="form-control" id="edit-c-car-amount" name="c_car_amount" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-car-no">CAR No.</label>
-                        <input type="text" class="form-control" id="edit-c-car-no" name="c_car_no" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-pay-date">Pay Date</label>
-                        <input type="date" class="form-control" id="edit-c-car-paydate" name="c_car_paydate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-encoder">Encoded by</label>
-                        <input type="text" class="form-control" id="edit-c-encoded-by" name="c_encoded_by" readonly>
-                    </div>
-                    <input type="hidden" id="edit-id" name="id">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> -->
-
 <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -132,47 +88,6 @@
     </div>
   </div>
 </div>
-
-<!-- Modal for Preview Car -->
-<!-- <div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" role="document" style="height: 80vh;">
-
-<div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="previewCarModalLabel">CAR Preview</h5>
-            </div>
-            <div class="modal-body" onclick="closePreviewModal()">
-                <iframe id="previewCarIframe" style="width: 100%; height: 500px;" frameborder="0"></iframe>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelled</button>
-            </div>
-        </div>
-    </div>
-</div> -->
-<!-- 
-
-<div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="previewCarModalLabel">CAR Preview</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <iframe id="previewCarIframe" src="<?php echo base_url; ?>print/preview_car.php" style="width: 100%; height: 500px; border: none;"></iframe>
-                <div id="previewCarContent" style="display: none;"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="saveAsImage()">Save as PNG</button>
-            </div>
-        </div>
-    </div>
-</div> -->
 
 <div class="modal fade" id="previewCarModal" tabindex="-1" role="dialog" aria-labelledby="previewCarModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

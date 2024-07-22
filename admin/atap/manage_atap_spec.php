@@ -101,6 +101,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     border-radius: 0px;
     text-align: center;
 }
+.hidden_fields{
+    display:none;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_atap.css">
 <form id="atap-form" method="post" action="">
@@ -263,7 +266,8 @@ $('#transaction-table').on('click', '.remove-row', function() {
     $(this).closest('tr').remove();
     calculateTotal();
     checkRemoveButton();
-});$(document).ready(function() {
+});
+$(document).ready(function() {
     function initializeDropdown() {
         $('.dropdown-menu a').off('click').on('click', function(event) {
             event.preventDefault();
@@ -301,6 +305,7 @@ $('#transaction-table').on('click', '.remove-row', function() {
         checkRemoveButton();
     });
 });
+
 $('#transaction-table').on('input', '.transaction-amount', function() {
     calculateTotal();
 });

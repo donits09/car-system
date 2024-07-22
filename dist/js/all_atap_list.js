@@ -1,4 +1,4 @@
-    $(document).ready(function() {
+    //$(document).ready(function() {
     function loadModal(title, url, modalId) {
         start_loader();
         $.ajax({
@@ -82,4 +82,4 @@
         });
         $('#confirm_modal').modal('show');
     };
-});
+//});

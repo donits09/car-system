@@ -245,10 +245,10 @@ include('../../inc/header.php');
 <!-- <script src="../../dist/js/manage_car.js"></script> -->
 <script>
 $(document).ready(function() {
-    function updateAccountNo() {
-        var accountNo = $('#buyer_acc_no').val();
-        $('#create_new').attr('data-account-no', accountNo);
-    }
+    // function updateAccountNo() {
+    //     var accountNo = $('#buyer_acc_no').val();
+    //     $('#create_new').attr('data-account-no', accountNo);
+    // }
     updateAccountNo();
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         updateAccountNo();

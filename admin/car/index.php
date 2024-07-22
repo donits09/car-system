@@ -356,7 +356,11 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
                     <div class="card mt-3">
                     <div class="container">
-                            <h2 class="text-blue h4">ATAP List</h2>
+                    <h2 class="text-blue h4">ATAP List</h2>
+                            <hr>
+                            <button type="button" id="create_new_atap" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()" disabled>
+                                <span class="fa fa-edit"></span> Create New ATAP
+                            </button>
                             <hr>
                             <div class="container">
                                 <div class="row">
@@ -425,6 +429,23 @@ include('../../inc/header.php');
     </div>
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const accnoInput = document.getElementById('accno');
+        const createNewBtn = document.getElementById('create_new_atap');
+        let initialValue = accnoInput.value; 
+     
+        function checkValueChange() {
+           
+            if (accnoInput.value !== initialValue) {
+                createNewBtn.disabled = false; 
+                initialValue = accnoInput.value; 
+            }
+        }
+
+        setInterval(checkValueChange, 500); 
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
       
@@ -556,7 +577,13 @@ $(document).ready(function() {
     });
 });
 </script>
-
+<script>
+    function updateAccountNo() {
+        var accountNo = $('#buyer_acc_no').val();
+        console.log(accountNo);
+        $('#create_new_atap').data('account-no', accountNo); 
+    }
+</script>
 <!-- GETTING OF ACCOUNT NO FOR PASSING -->
 <script>
     function updateAccountNo() {
@@ -618,7 +645,6 @@ $(document).ready(function() {
 
 <!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
 <script>
-    $(document).ready(function() {
     function loadModal(title, url, modalId) {
         start_loader();
         $.ajax({
@@ -637,58 +663,63 @@ $(document).ready(function() {
             }
         });
     }
-
-    $(document).on('click', '.view_data', function() {
-        var accountId = $(this).data('id');
-        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
-    });
-
-    $('#create_new').click(function() {
-        var accountNo = $(this).data('account-no');
-        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
-    });
-
-    $(document).on('click', '.edit_data', function() {
-        var accountId = $(this).data('id');
-        var accountNo = $(this).data('account-no');
-    
-        if (!accountNo) {
-            loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
-        } else {
-            loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
-        }
-    });
-
-  
-    $('#create_other_new').click(function() {
-        loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
-    });
-
-    $(document).on('click', '.delete_data', function() {
-        var carId = $(this).data('id');
-        var carNo = $(this).data('car-no');
-        _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
-    });
-
-    window._conf = function(msg, func, params) {
-        $('#confirm_modal .modal-body').html(msg);
-        $('#confirm_modal #confirm').off('click').on('click', function() {
-            func.apply(this, params);
+    $(document).ready(function() {
+        $(document).on('click', '.view_data', function() {
+            var accountId = $(this).data('id');
+            loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
         });
-        $('#confirm_modal').modal('show');
-    };
 
-    $(document).on('click', '.view_atap', function() {
-        var atapId = $(this).data('id');
-        var atapNo = $(this).data('no');
-        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
-    });
-});
+        $('#create_new_atap').click(function() {
+            var accountNo = $('#buyer_acc_no').val();
+            loadModal('Create New ATAP', '../atap/manage_atap_spec.php?c_account_no=' + accountNo, '#createCarModal');
+        });
 
-$(document).ready(function() {
-    calculateTotalAmount();
+        $('#create_new').click(function() {
+            var accountNo = $(this).data('account-no');
+            loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
+        });
+
+        $(document).on('click', '.edit_data', function() {
+            var accountId = $(this).data('id');
+            var accountNo = $(this).data('account-no');
+        
+            if (!accountNo) {
+                loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
+            } else {
+                loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+            }
+        });
+
     
-});
+        $('#create_other_new').click(function() {
+            loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
+        });
+
+        $(document).on('click', '.delete_data', function() {
+            var carId = $(this).data('id');
+            var carNo = $(this).data('car-no');
+            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
+        });
+
+        window._conf = function(msg, func, params) {
+            $('#confirm_modal .modal-body').html(msg);
+            $('#confirm_modal #confirm').off('click').on('click', function() {
+                func.apply(this, params);
+            });
+            $('#confirm_modal').modal('show');
+        };
+
+        $(document).on('click', '.view_atap', function() {
+            var atapId = $(this).data('id');
+            var atapNo = $(this).data('no');
+            loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+        });
+    });
+
+    $(document).ready(function() {
+        calculateTotalAmount();
+        
+    });
 
 </script>
 <script>
