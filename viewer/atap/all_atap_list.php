@@ -43,9 +43,7 @@ include('../../inc/header.php');
             <a id="create_other_atap" class="btn btn-flat btn-success" href="javascript:void(0)">
                 <span class="fa fa-edit"></span> Create Other ATAP
             </a>
-            <div class="pd-20">
             <hr>
-        </div>
         <div class="table-container">
             <table class="table table-bordered table-striped" id="data-table">
                 <thead>
@@ -230,11 +228,13 @@ include('../../inc/header.php');
                                         Action
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
+                                   
                                     <div class="dropdown-menu" role="menu">
                                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
                                             <span class="fa fa-eye text-primary"></span> View
                                         </a>
                                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                                        <?php if ($row['c_encoded_by'] == $_SESSION['username']){ ?>
                                         <a class="dropdown-item edit_atap <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
                                             data-acc-no="<?php echo $row['c_account_no']; ?>"
                                             data-id="<?php echo $row['id']; ?>"
@@ -245,6 +245,7 @@ include('../../inc/header.php');
                                         <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
                                             <span class="fa fa-ban text-danger"></span> Cancel
                                         </a>
+                                        <?php }; ?>
                                     </div>
                                 </td>
                             </tr>
@@ -260,6 +261,8 @@ include('../../inc/header.php');
         <?php include ('../modals/main_modals.php'); ?>
     </div>
 </div>
+</div>
+</body>
 <script>
    function delete_atap(atapId, atapNo) {
     start_loader();
@@ -296,5 +299,5 @@ include('../../inc/header.php');
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_atap_list.js"></script>
-</body>
-<!-- <?php include('../../inc/footer.php'); ?> -->
+
+<?php include('../../inc/footer.php'); ?>
