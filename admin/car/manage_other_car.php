@@ -463,14 +463,17 @@ $(document).ready(function() {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert("This ATAP has already been PAID.");
+                        clearTxt();
                     } else if (response.data.status === '3') {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert('This ATAP has already been CANCELLED');
+                        clearTxt();
                     } else if (response.data.status === '0' && (response.data.c_account_no !== '' && response.data.c_account_no !== null)) {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert('The selected ATAP is a regular account.');
+                        clearTxt();
                     } else {
                         populateForm(response.data);
                         fetchTranType(atapNo);
@@ -478,22 +481,23 @@ $(document).ready(function() {
                         $('#tran_type_container').show();
                     }
                 } else {
-                    clearTxt();
                     $('#car_type_container').show();
                     $('#tran_type_container').hide();
                     alert('No account number found for the given ATAP No.');
+                    clearTxt();
                 }
             },
             error: function() {
-                clearTxt();
                 $('#car_type_container').show();
                 $('#tran_type_container').hide();
                 alert('An error occurred while fetching ATAP details.');
+                clearTxt();
             }
         });
     }
 
     function clearTxt(){
+        $('#c_atap_no').val('');
         $('#c_name').val('').removeClass('glow-effect');
         $('#c_phase').val('').removeClass('glow-effect');
         $('#c_block').val('').removeClass('glow-effect');

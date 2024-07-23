@@ -324,10 +324,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
+                            clearTxt();
                         } else if (response.data.status === '3') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert('This ATAP has already been CANCELLED');
+                            clearTxt();
                         } else {
                             populateForm(response.data);
                             fetchBuyerDetails(response.data.c_account_no);
@@ -336,23 +338,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             $('#tran_type_container').show();
                         }
                     } else {
-                        clearTxt();
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert('No account number found for the given ATAP No.');
+                        clearTxt();
                     }
                 } else {
-                    clearTxt();
                     $('#car_type_container').show();
                     $('#tran_type_container').hide();
                     alert('No ATAP details found for the given ATAP No.');
+                    clearTxt();
                 }
             },
             error: function() {
-                clearTxt();
                 $('#car_type_container').show();
                 $('#tran_type_container').hide();
                 alert('An error occurred while fetching ATAP details.');
+                clearTxt();
             }
         });
     }
