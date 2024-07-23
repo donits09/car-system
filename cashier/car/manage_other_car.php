@@ -469,12 +469,12 @@ $(document).ready(function() {
                         $('#tran_type_container').hide();
                         alert('This ATAP has already been CANCELLED');
                         clearTxt();
-                    } else if (response.data.status === '0' && (response.data.c_account_no !== '' && response.data.c_account_no !== null)) {
+                    } else if ((response.data.status === '0' || response.data.status === '2') && (response.data.c_account_no !== '' && response.data.c_account_no !== null)) {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert('The selected ATAP is a regular account.');
                         clearTxt();
-                    } else {
+                    }else {
                         populateForm(response.data);
                         fetchTranType(atapNo);
                         $('#car_type_container').hide();
