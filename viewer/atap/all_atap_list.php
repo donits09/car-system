@@ -234,6 +234,7 @@ include('../../inc/header.php');
                                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
                                             <span class="fa fa-eye text-primary"></span> View
                                         </a>
+                                        <?php if ($row['c_encoded_by'] == $_SESSION['username']){ ?>
                                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
                                         <a class="dropdown-item edit_atap <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
                                             data-acc-no="<?php echo $row['c_account_no']; ?>"
@@ -245,6 +246,7 @@ include('../../inc/header.php');
                                         <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
                                             <span class="fa fa-ban text-danger"></span> Cancel
                                         </a>
+                                        <?php }; ?>
                                     </div>
                                 </td>
                             </tr>

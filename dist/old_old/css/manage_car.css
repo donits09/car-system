@@ -1,0 +1,33 @@
+
+.hidden_fields{
+    display:none;
+}
+.dropdown-item.active {
+    background-color: #007bff;
+    color: #ffffff;
+}
+.green-row {
+    background-color: #cbd2d9 !important;
+    /* color:white !important; */
+    font-weight: bold !important;
+    font-style: italic;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 5px rgba(81, 203, 238, 0.8); 
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(81, 203, 238, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 5px rgba(81, 203, 238, 0.8); 
+    }
+}
+
+.glow-effect {
+    animation: glow 1s ease-in-out; 
+}
+#btnsave{
+    width:100%;
+}

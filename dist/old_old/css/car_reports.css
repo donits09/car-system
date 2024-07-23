@@ -1,0 +1,53 @@
+.main_header {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+    font-weight: bolder;
+    text-align: center;
+}
+#header {
+    font-size: 25px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+#subheader {
+    font-size: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+#current_date {
+    font-size: 15px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+}
+
+.pd-20 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.pd-20 label {
+    flex: 0 0 auto;
+    margin-right: 10px;
+}
+
+.pd-20 input,
+.pd-20 button {
+    flex: 1 1 auto;
+    margin-right: 10px;
+}
+.sub_container {
+    display: flex;
+    justify-content: space-between; 
+}
+
+.date_container {
+    border: 1px solid gainsboro;
+    width: calc(50% - 5px);
+    padding: 10px;
+}
+
+.btn_container {
+    border: 1px solid gainsboro;
+    width: calc(50% - 5px); 
+    padding: 10px;
+}
+body{
+    margin-bottom:50px!important;
+}

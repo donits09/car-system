@@ -1,0 +1,23 @@
+modal.css
+
+.btn.btn-modal {
+    margin-left:10%;
+    margin-right:10%;
+    margin-bottom: 5%;
+    background-color: black;
+    color:white;
+    margin-top:0;
+}
+.modal-header.close{
+    display: none;
+}
+.btn.btn-secondary.customized-modal{
+    border-radius: 100px;
+}
+.modal-content{
+    color:black!important;
+}
+#previewCarModal .modal-dialog{
+    max-height: 80vh;
+    max-width: 105vh;
+}
