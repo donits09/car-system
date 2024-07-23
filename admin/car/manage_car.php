@@ -16,7 +16,6 @@ $c_tran_date = date('Y-m-d H:i:s');
 $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
     $accountId = $_GET['id'];
@@ -51,7 +50,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
-    
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
