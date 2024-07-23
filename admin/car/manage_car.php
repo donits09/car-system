@@ -56,7 +56,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <div class="col-sm-8">
             <div class="form-group">
                 <label for="c_atap_no">ATAP No.</label>
-                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no" oninput="toggleCarType()">
             </div>
         </div>
         <div class="col-sm-4" style="margin-top: 25px;">
@@ -86,13 +86,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown">
+        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
         <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
     </div>
-   
+    
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
 
@@ -646,7 +646,7 @@ function updateCarList() {
         }
  
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            //e.preventDefault();
+            e.preventDefault();
             var selectedValue = $(this).data('value');
             updateAtapVal(selectedValue);
 

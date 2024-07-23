@@ -299,7 +299,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $(document).ready(function() {
             function initializeDropdown() {
                 $('.dropdown-menu a').off('click').on('click', function(event) {
-                    event.preventDefault();
+                    //event.preventDefault();
                     var $dropdown = $(this).closest('.dropdown');
                     var $button = $dropdown.find('.dropdown-toggle');
                     var $hiddenInput = $dropdown.find('input[type="hidden"]');

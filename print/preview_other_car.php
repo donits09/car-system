@@ -2,7 +2,7 @@
 include('../config.php');
 
 $c_car_no = $_GET['c_car_no'] ?? '';
-$c_car_type = $_GET['c_car_type'] ?? '';
+$c_car_type = $_GET['atap_val'] ?? '';
 $c_car_amount = $_GET['c_car_amount'] ?? '0.00';
 $c_car_paydate = $_GET['c_car_paydate'] ?? date('Y-m-d');
 $c_encoded_by = $_GET['c_encoded_by'] ?? '';
@@ -315,9 +315,9 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
         <input type="text" name="c_bank" id="c_bank" value="<?php echo htmlspecialchars($c_bank); ?>">
         <input type="text" name="c_check" id="c_check" value="<?php echo htmlspecialchars($c_check); ?>">
     </div>
-    <div class="btn-container">
+    <!-- <div class="btn-container">
         <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button> 
-    </div>
+    </div> -->
     <script>
         function convertToWords(number) {
             var ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
@@ -462,6 +462,11 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             });
         }
     </script>
+    <script>
+    window.addEventListener('load', function() {
+        initializePage();
+    });
+</script>
 <script src="<?php echo base_url; ?>dist/header_files/html2canvas.min.js_0.5.0-beta4/cdnjs/html2canvas.min.js"></script>
 </body>
 </html>

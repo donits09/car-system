@@ -3,7 +3,7 @@ include('../config.php');
 
 $c_account_no = $_GET['c_account_no'] ?? '';
 $c_car_no = $_GET['c_car_no'] ?? '';
-$c_car_type = $_GET['c_car_type'] ?? '';
+$c_car_type = $_GET['atap_val'] ?? '';
 $c_car_amount = $_GET['c_car_amount'] ?? '';
 $c_car_paydate = $_GET['c_car_paydate'] ?? '';
 $c_encoded_by = $_GET['c_encoded_by'] ?? '';
@@ -210,7 +210,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_bank_main{
-            margin-top: 130px;
+            margin-top: 150px;
             margin-left: -10px;
             width: auto;
             text-align: center;
@@ -310,9 +310,9 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
         <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
     </div>
-    <div class="btn-container">
+    <!-- <div class="btn-container">
         <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button> 
-    </div>
+    </div> -->
     <script>
         var cMopValue = document.getElementById('c_mop_value').value;
         var cBankCheck = document.getElementById('c_bank_main').value;
