@@ -19,7 +19,7 @@
             $c_name = $result["c_name"];
         }
     } 
-?
+?>
 // <form id="bank-type-form">
 <style>
 #btnsave{
