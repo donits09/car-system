@@ -13,7 +13,7 @@ include('../../../inc/header.php');
 
 <style>
     .card-header{
-        font-size: 15px;
+        /* font-size: 15px; */
         font-weight: bold;
         background-color: white !important;
         color: black !important;
@@ -27,9 +27,9 @@ include('../../../inc/header.php');
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">
+                <h5 class="card-header">
                     My Account Details
-                </div>
+                </h5>
                 <div class="card-body">
                     <form id="user_details">
                         <input type="hidden" id="id" name="id">

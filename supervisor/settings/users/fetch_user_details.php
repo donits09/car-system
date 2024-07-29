@@ -5,7 +5,7 @@ require_once('../../../config.php');
 
 $user = $_SESSION['username'];
 
-$get_user_details = "SELECT id, c_employee_code, c_realname, c_department, c_password FROM t_car_users WHERE c_employee_code = ?";
+$get_user_details = "SELECT id, c_employee_code, c_realname, c_department, c_password, c_position FROM t_car_users WHERE c_employee_code = ?";
 $user_stmt = odbc_prepare($conn, $get_user_details);
 
     if ($user_stmt === false) {

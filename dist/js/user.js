@@ -34,42 +34,38 @@ $(document).ready(function() {
 
     $('#addUserForm').submit(function(e) {
         e.preventDefault();
-        // if (confirm("Are you sure you want to save this car payment?")) {
-            var _this = $(this);
-
-            start_loader();
-
-            $.ajax({
-                url: "../../../classes/Master.php?f=save_car_users",
-                data: new FormData(_this[0]),
-                cache: false,
-                contentType: false,
-                processData: false,
-                method: 'POST',
-                dataType: 'json',
-                error: function(err) {
-                    console.log(err);
-                    alert_toast("An error occurred.", 'error');
-                    end_loader();
-                },
-                success: function(resp) {
-                    console.log(resp);
-                    if (resp && resp.status === 'success') {
-                        alert_toast(resp.msg, 'success');
-                        setTimeout(function() {
-                            location.reload();
-                        }, 2000);
-                    } else if (resp && resp.status === 'failed') {
-                        alert_toast(' &#10060;' + resp.msg, 'failed');
-                    } else {
-                        alert_toast("An unexpected error occurred", 'error');
-                    }
-                    end_loader();
+        var _this = $(this);
+    
+        start_loader();
+    
+        $.ajax({
+            url: "../../../classes/Master.php?f=save_car_users",
+            data: new FormData(_this[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    alert_toast(resp.msg, 'error');
+                } else {
+                    alert_toast("An unexpected error occurred", 'error');
                 }
-
-            });
-        //}
-    });
+                end_loader();
+            }
+        });
+    });    
 
     $('#editUserForm').submit(function(e) {
         e.preventDefault();
@@ -92,14 +88,13 @@ $(document).ready(function() {
                     end_loader();
                 },
                 success: function(resp) {
-                    console.log(resp);
                     if (resp && resp.status === 'success') {
                         alert_toast(resp.msg, 'success');
                         setTimeout(function() {
                             location.reload();
                         }, 2000);
-                    } else if (resp && resp.status === 'failed') {
-                        alert_toast(' &#10060;' + resp.msg, 'failed');
+                    } else if (resp && resp.status === 'failed' && resp.msg) {
+                        alert_toast(resp.msg, 'error');
                     } else {
                         alert_toast("An unexpected error occurred", 'error');
                     }

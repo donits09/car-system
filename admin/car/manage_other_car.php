@@ -240,7 +240,7 @@
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
-                <label for="c_bank_check">Check Bank (Depository)</label>
+                <label for="c_bank_check">Check Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
@@ -264,7 +264,7 @@
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6"> 
-                <label for="c_bank_online">Online Bank (Depository)</label>
+                <label for="c_bank_online">Online Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
