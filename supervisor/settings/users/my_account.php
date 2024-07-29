@@ -18,6 +18,9 @@ include('../../../inc/header.php');
         background-color: white !important;
         color: black !important;
     }
+    #btnsave{
+        width: 100% !important;
+    }
 </style>
 
 <div class="container mt-5">
@@ -50,7 +53,7 @@ include('../../../inc/header.php');
                             <label for="c_password" class="form-label">Password</label>
                             <input type="password" class="form-control txt" id="c_password" name="c_password">
                         </div>
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
                     </form>
                 </div>
             </div>

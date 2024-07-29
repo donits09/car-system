@@ -631,7 +631,6 @@ Class Master{
 		$c_encoded_by = addslashes($c_encoded_by);
 		$c_tran_date = addslashes($c_tran_date);
 		$atap_remarks = pg_escape_string($atap_remarks);
-	
 		$data = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks";
 		$values = "'$c_account_no', '$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks'";
 		$resp = array();

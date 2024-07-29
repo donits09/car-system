@@ -104,6 +104,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 .hidden_fields{
     display:none;
 }
+#btnsave{
+    width: 100% !important;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_atap.css">
 <form id="atap-form" method="post" action="">

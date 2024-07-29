@@ -44,6 +44,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     font-size: 11px;
     font-style: italic;
 }
+#btnsave{
+    width: 100% !important;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <body>
@@ -56,7 +59,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <div class="col-sm-8">
             <div class="form-group">
                 <label for="c_atap_no">ATAP No.</label>
-                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no" oninput="toggleCarType()">
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
             </div>
         </div>
         <div class="col-sm-4" style="margin-top: 25px;">
@@ -302,10 +305,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
+                            clearTxt();
                         } else if (response.data.status === '3') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert('This ATAP has already been CANCELLED');
+                            clearTxt();
                         } else {
                             populateForm(response.data);
                             fetchBuyerDetails(response.data.c_account_no);
@@ -314,23 +319,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             $('#tran_type_container').show();
                         }
                     } else {
-                        clearTxt();
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert('No account number found for the given ATAP No.');
+                        clearTxt();
                     }
                 } else {
-                    clearTxt();
                     $('#car_type_container').show();
                     $('#tran_type_container').hide();
                     alert('No ATAP details found for the given ATAP No.');
+                    clearTxt();
                 }
             },
             error: function() {
-                clearTxt();
                 $('#car_type_container').show();
                 $('#tran_type_container').hide();
                 alert('An error occurred while fetching ATAP details.');
+                clearTxt();
             }
         });
     }
