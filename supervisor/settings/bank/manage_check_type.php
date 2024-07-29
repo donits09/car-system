@@ -20,7 +20,9 @@
         }
     } 
 ?>
+
 <form id="bank-type-form">
+
 <style>
 #btnsave{
     width: 100% !important;
