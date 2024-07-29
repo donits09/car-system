@@ -44,7 +44,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     font-size: 11px;
     font-style: italic;
 }
-
+#btnsave{
+    width: 100% !important;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="car-form" method="post" action="">

@@ -103,6 +103,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     border-radius: 0px;
     text-align: center;
 }
+#btnsave{
+    width: 100% !important;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_atap.css">
 <form id="atap-form" method="post" action="">

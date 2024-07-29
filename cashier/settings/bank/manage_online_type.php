@@ -20,6 +20,11 @@
         }
     } 
 ?>
+<style>
+#btnsave{
+    width: 100% !important;
+}
+</style>
 <form id="car-type-form">
     <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
     <div class="form-group">
@@ -37,6 +42,6 @@
             <option value="1" <?php echo ($status == '1') ? 'selected' : ''; ?>>Inactive</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../../dist/js/manage_online_type.js"></script>
