@@ -15,10 +15,11 @@ Class Master{
 		if (empty($id)) {
 			$check_query = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_employee_code'";
 			$check_result = odbc_exec($this->conn, $check_query);
-	
+
+			odbc_fetch_row($check_result);
 			if (odbc_num_rows($check_result) > 0) {
 				$resp['status'] = 'failed';
-				$resp['msg'] = "Employee code already exists.";
+				$resp['msg'] = "Employee already exists.";
 				echo json_encode($resp);
 				return;
 			}
@@ -41,9 +42,10 @@ Class Master{
 			$check_query = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_employee_code' AND id != '$id'";
 			$check_result = odbc_exec($this->conn, $check_query);
 	
+			odbc_fetch_row($check_result);
 			if (odbc_num_rows($check_result) > 0) {
 				$resp['status'] = 'failed';
-				$resp['msg'] = "Employee code already exists.";
+				$resp['msg'] = "Employee already exists.";
 				echo json_encode($resp);
 				return;
 			}
@@ -899,6 +901,17 @@ Class Master{
 		$resp = array();
 	
 		if (empty($id)) {
+			$check_bank = "SELECT * FROM t_car_check WHERE c_bank_type = '$c_bank_type'";
+			$result_check = odbc_exec($this->conn, $check_bank);
+
+			odbc_fetch_row($result_check);
+			if (odbc_num_rows($result_check) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Check bank already exists.";
+				echo json_encode($resp);
+				return;
+			}
+
 			$insert = "INSERT INTO t_car_check ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert);
 	
@@ -911,11 +924,22 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
 		} else {
+			$check_bank = "SELECT * FROM t_car_check WHERE c_bank_type = '$c_bank_type' AND id <> '$id'";
+			$result_check = odbc_exec($this->conn, $check_bank);
+
+			odbc_fetch_row($result_check);
+			if (odbc_num_rows($result_check) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Check bank already exists.";
+				echo json_encode($resp);
+				return;
+			}
+
 			$update = "UPDATE t_car_check SET 
 						c_bank_type = '$c_bank_type',
 						c_name = '$c_name',
 						status = '$status'
-					  WHERE id = '$id'";
+					WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	
 			if ($save) {
@@ -927,7 +951,6 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
 		}
-	
 		echo json_encode($resp);
 	}
 
@@ -964,13 +987,24 @@ Class Master{
 
 	function save_car_online() {
 		extract($_POST);
-	
+
 		$data = "c_bank_type, status, c_name";
 		$values = "'$c_bank_type', '$status', '$c_name'";
 	
 		$resp = array();
-	
+
 		if (empty($id)) {
+			$check_online = "SELECT * FROM t_car_online WHERE c_bank_type = '$c_bank_type'";
+			$result_online = odbc_exec($this->conn, $check_online);
+
+			odbc_fetch_row($result_online);
+			if (odbc_num_rows($result_online) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Online bank already exists.";
+				echo json_encode($resp);
+				return;
+			}
+
 			$insert = "INSERT INTO t_car_online ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert);
 	
@@ -983,11 +1017,22 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
 		} else {
+			$check_online = "SELECT * FROM t_car_online WHERE c_bank_type = '$c_bank_type' AND id <> '$id'";
+			$result_online = odbc_exec($this->conn, $check_online);
+
+			odbc_fetch_row($result_online);
+			if (odbc_num_rows($result_online) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Online bank already exists.";
+				echo json_encode($resp);
+				return;
+			}
+
 			$update = "UPDATE t_car_online SET 
 						c_bank_type = '$c_bank_type',
 						c_name = '$c_name',
 						status = '$status'
-					  WHERE id = '$id'";
+					WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	
 			if ($save) {
@@ -999,22 +1044,21 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
 		}
-	
 		echo json_encode($resp);
 	}
 
-	/* function delete_car_online($carTypeId, $carType) {
+	/* function delete_car_online($onlineTypeId, $onlineType) {
 		$resp = array();
 	
-		if (isset($carTypeId) && isset($carType)) {
+		if (isset($onlineTypeId) && isset($onlineType)) {
 			$sql = "DELETE FROM t_car_online WHERE id = ?";
 			$stmt = odbc_prepare($this->conn, $sql);
 	
 			if ($stmt) {
-				$result = @odbc_execute($stmt, array($carTypeId)); 
+				$result = @odbc_execute($stmt, array($onlineTypeId)); 
 	
 				if ($result) {
-					$this->car_logs('Car Online Bank', "DELETED - $carType");
+					$this->car_logs('Car Online Bank', "DELETED - $onlineType");
 					$resp['status'] = 'success';
 					$resp['msg'] = "Car online bank successfully deleted.";
 				} else {
@@ -1048,12 +1092,13 @@ Class Master{
 			return;
 		}
 	
-		$update_fields = array(
+		/* Password lang and need ma update dito den shunga ka */
+		/* $update_fields = array(
 			"c_employee_code = '$c_employee_code'",
 			"c_realname = '$c_realname'",
 			"c_department = '$c_department'",
 			"c_position = '$c_position'"
-		);
+		); */
 	
 		if (!empty($c_password)) {
 			$hashed_password = password_hash($c_password, PASSWORD_BCRYPT);
@@ -1078,6 +1123,177 @@ Class Master{
 			$resp['err'] = odbc_errormsg($this->conn);
 		}
 	
+		echo json_encode($resp);
+	}
+
+	function save_emp_position() {
+		extract($_POST);
+		$data = "c_position, status";
+		$values = "'$c_position', '$status'";
+		$resp = array();
+	
+		if (empty($id)) {
+			$check_pos_exist = "SELECT * FROM t_emp_position WHERE c_position = '$c_position'";
+			$result_pos = odbc_exec($this->conn, $check_pos_exist);
+
+			odbc_fetch_row($result_pos);
+			if (odbc_num_rows($result_pos) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Position already exists.";
+				echo json_encode($resp);
+				return;
+			}
+
+			$insert = "INSERT INTO t_emp_position ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+
+			if ($save) {
+				$this->car_logs('User Position', "ADDED - $c_position");
+				$resp['status'] = 'success';
+				$resp['msg'] = "New user position successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$check_pos_exist = "SELECT * FROM t_emp_position WHERE c_position = '$c_position' AND id <> '$id'";
+			$result_pos = odbc_exec($this->conn, $check_pos_exist);
+
+			odbc_fetch_row($result_pos);
+			if (odbc_num_rows($result_pos) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Position already exists.";
+				echo json_encode($resp);
+				return;
+			}
+
+			$update = "UPDATE t_emp_position SET c_position = '$c_position', status = '$status' WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+
+			if ($save) {
+				$this->car_logs('User Position', "UPDATED - $c_position");
+				$resp['status'] = 'success';
+				$resp['msg'] = "User position successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+		echo json_encode($resp);
+	}	
+
+	function delete_emp_position($positionId, $positionType) {
+		$resp = array();
+	
+		if (isset($positionId) && isset($positionType)) {
+			$sql = "DELETE FROM t_emp_position WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($positionId)); 
+	
+				if ($result) {
+					$this->car_logs('User Position', "DELETED - $positionType");
+					$resp['status'] = 'success';
+					$resp['msg'] = "User position successfully deleted.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Position not provided.';
+		}
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
+
+	function save_emp_department() {
+		extract($_POST);
+		$resp = array();
+	
+		if (empty($id)) {
+			$check_dep_exist = "SELECT * FROM t_emp_department WHERE c_department = '$c_department'";
+			$result = odbc_exec($this->conn, $check_dep_exist);
+	
+			if (odbc_num_rows($result) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Department already exists.";
+				echo json_encode($resp);
+				return;
+			}
+	
+			$data = "c_department, status";
+			$values = "'$c_department', '$status'";
+			$insert = "INSERT INTO t_emp_department ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				$this->car_logs('User Department', "ADDED - $c_department");
+				$resp['status'] = 'success';
+				$resp['msg'] = "New user department successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$check_dep_exist = "SELECT * FROM t_emp_department WHERE c_department = '$c_department' AND id <> '$id'";
+			$result = odbc_exec($this->conn, $check_dep_exist);
+	
+			if (odbc_num_rows($result) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Department already exists.";
+				echo json_encode($resp);
+				return;
+			}
+	
+			$update = "UPDATE t_emp_department SET c_department = '$c_department', status = '$status' WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				$this->car_logs('User Department', "UPDATED - $c_department");
+				$resp['status'] = 'success';
+				$resp['msg'] = "User department successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+		echo json_encode($resp);
+	}	
+
+	function delete_emp_department($departmentId, $departmentType) {
+		$resp = array();
+	
+		if (isset($departmentId) && isset($departmentType)) {
+			$sql = "DELETE FROM t_emp_department WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($departmentId)); 
+	
+				if ($result) {
+					$this->car_logs('User Department', "DELETED - $departmentType");
+					$resp['status'] = 'success';
+					$resp['msg'] = "User department successfully deleted.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Department not provided.';
+		}
+	
+		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
 	
@@ -1147,7 +1363,7 @@ switch ($action) {
 			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
 		}
 		break;
-	case 'delete_car_check':
+	/* case 'delete_car_check':
 		if (isset($_POST['carTypeId']) && isset($_POST['carType'])) {
 			echo $Master->delete_car_check($_POST['carTypeId'], $_POST['carType']);
 		} else {
@@ -1155,12 +1371,12 @@ switch ($action) {
 		}
 		break;
 	case 'delete_car_online':
-		if (isset($_POST['carTypeId']) && isset($_POST['carType'])) {
-			echo $Master->delete_car_online($_POST['carTypeId'], $_POST['carType']);
+		if (isset($_POST['onlineTypeId']) && isset($_POST['onlineType'])) {
+			echo $Master->delete_car_online($_POST['onlineTypeId'], $_POST['onlineType']);
 		} else {
 			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
 		}
-		break;
+		break; */
     case 'save_car_users':
         echo $Master->save_car_users();
         break;
@@ -1189,6 +1405,28 @@ switch ($action) {
 			echo json_encode(array('status' => 'failed', 'msg' => 'ATAP # not provided.'));
 		}
 		break;
+	case 'save_emp_position':
+		echo $Master->save_emp_position();
+		break;
+	case 'delete_emp_position':
+		if (isset($_POST['positionId']) && isset($_POST['positionType'])) {
+			echo $Master->delete_emp_position($_POST['positionId'], $_POST['positionType']);
+		} else {
+			echo json_encode(array('status' => 'failed', 'msg' => 'Position not provided.'));
+		}
+		break;
+	case 'save_emp_department':
+		echo $Master->save_emp_department();
+		break;
+	case 'delete_emp_department':
+		if (isset($_POST['departmentId']) && isset($_POST['departmentType'])) {
+			echo $Master->delete_emp_department($_POST['departmentId'], $_POST['departmentType']);
+		} else {
+			echo json_encode(array('status' => 'failed', 'msg' => 'Department not provided.'));
+		}
+		break;
     default:
         break;
 }
+
+    

@@ -43,6 +43,10 @@ include('../../../inc/header.php');
                             <input type="text" class="form-control txt" style="background-color: white;" id="c_department" name="c_department" readonly>
                         </div>
                         <div class="form-group">
+                            <label for="c_position" class="form-label">Position</label>
+                            <input type="text" class="form-control txt" style="background-color: white;" id="c_position" name="c_position" readonly>
+                        </div>
+                        <div class="form-group">
                             <label for="c_password" class="form-label">Password</label>
                             <input type="password" class="form-control txt" id="c_password" name="c_password">
                         </div>

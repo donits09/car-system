@@ -169,7 +169,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
-                <label for="c_bank_check">Check Bank (Depository)</label>
+                <label for="c_bank_check">Check Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
@@ -193,7 +193,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
-                <label for="c_bank_online">Online Bank (Depository)</label>
+                <label for="c_bank_online">Online Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
@@ -518,17 +518,31 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $('#atap_val').val(''); 
             }
         });
+    }
+</script>
+<script>
+    function openPrintWindow() {
+        var form = document.getElementById('car-form');
+        if (!form) {
+            console.error('Form not found!');
+            return;
+        }
 
-        /* console.log('Query String:', queryString); */
+        var formData = new FormData(form);
+        var queryString = [];
+        for (var pair of formData.entries()) {
+            queryString.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
+        }
+        queryString = queryString.join('&');
+
+        console.log('Query String:', queryString);
 
         var printUrl = '../../print/preview_car.php?' + queryString;
+
         var iframe = document.getElementById('previewCarIframe');
         iframe.src = printUrl;
 
-        iframe.onload = function() {
-            $('#previewCarModal').modal('show');
-        };
-
+        $('#previewCarModal').modal('show');
     }
 </script>
 

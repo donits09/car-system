@@ -19,7 +19,7 @@ $(document).on('click', '.edit_data', function() {
     var carTypeId = $(this).data('id');
     var carType = $(this).data('car-type');
 
-    _conf("Are you sure you want to delete this car type permanently?", delete_check, [carTypeId, carType]);
+    _conf("Are you sure you want to delete this check type permanently?", delete_check, [carTypeId, carType]);
 }); */
 
 function loadModal(title, url, modalId) {
@@ -79,14 +79,10 @@ window._conf = function(msg, func, params) {
 } */
 
 $(document).ready(function() {
-    $('#car-type-form').submit(function(e) {
+    $('#bank-type-form').submit(function(e) {
         e.preventDefault();
         var _this = $(this);
 
-        // var confirmed = confirm('Are you sure you want to save the changes?');
-        // if (!confirmed) {
-        //     return false;
-        // }
         start_loader();
 
         $.ajax({
@@ -109,14 +105,13 @@ $(document).ready(function() {
                     setTimeout(function() {
                         location.reload();
                     }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    alert_toast(resp.msg, 'error');
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
                 end_loader();
             }
-
         });
     });
 });

@@ -7,19 +7,19 @@ function validateAlphaNumericInput(event) {
 }
 
 $('#create_new').click(function() {
-    loadModal('Create New Bank', 'manage_online_type.php', '#createCarModal');
+    loadModal('Create New Department', 'manage_department.php', '#createCarModal');
 });
 
 $(document).on('click', '.edit_data', function() {
-    var onlineTypeId = $(this).data('id');
-    loadModal('Edit Bank Details', 'manage_online_type.php?id=' + onlineTypeId, '#createCarModal');
+    var departmentId = $(this).data('id');
+    loadModal('Edit Department', 'manage_department.php?id=' + departmentId, '#createCarModal');
 });
 
-/* $(document).on('click', '.delete_data', function() {
-    var onlineTypeId = $(this).data('id');
-    var onlineType = $(this).data('bank-type');
-    _conf("Are you sure you want to delete this online type permanently?", delete_online, [onlineTypeId, onlineType]);
-}); */
+$(document).on('click', '.delete_data', function() {
+    var departmentId = $(this).data('id');
+    var departmentType = $(this).data('department-type');
+    _conf("Are you sure you want to delete this car type permanently?", delete_department, [departmentId, departmentType]);
+});
 
 function loadModal(title, url, modalId) {
     start_loader();
@@ -48,12 +48,12 @@ window._conf = function(msg, func, params) {
     $('#confirm_modal').modal('show');
 };
 
-/* function delete_online(onlineTypeId, onlineType) {
+function delete_department(departmentId, departmentType) {
     start_loader();
     $.ajax({
-        url: "../../../classes/Master.php?f=delete_car_online",
+        url: "../../../classes/Master.php?f=delete_emp_department",
         method: "POST",
-        data: { onlineTypeId: onlineTypeId, onlineType: onlineType },
+        data: { departmentId: departmentId, departmentType: departmentType },
         dataType: "json",
         error: function(err) {
             console.log(err);
@@ -75,17 +75,17 @@ window._conf = function(msg, func, params) {
             end_loader();
         }
     });
-} */
+}
 
 $(document).ready(function() {
-    $('#bank-type-form').submit(function(e) {
+    $('#department-form').submit(function(e) {
         e.preventDefault();
         var _this = $(this);
 
         start_loader();
 
         $.ajax({
-            url: "../../../classes/Master.php?f=save_car_online",
+            url: "../../../classes/Master.php?f=save_emp_department",
             data: new FormData(_this[0]),
             cache: false,
             contentType: false,
@@ -114,3 +114,4 @@ $(document).ready(function() {
         });
     });
 });
+

@@ -40,8 +40,16 @@ function isActive($pages) {
     body.modal-open {
       overflow: hidden;
     }
+    .dropdown-item {
+      position: relative;
+    }
 
-
+    .dropdown-item .fas {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-45%);
+    }
   </style>
 </head>
 <body>
@@ -79,13 +87,23 @@ function isActive($pages) {
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/logs?page=index">User Logs</a>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-submenu">
-                        <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Bank Types <i class="fas fa-caret-right float-right"></i>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownBank">
-                            <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/check_type.php">Check</a></li>
-                            <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/online_type.php">Online</a></li>
-                        </ul>
+                          <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Bank Types <i class="fas fa-caret-right float-right"></i>
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdownBank">
+                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/check_type.php">Check</a></li>
+                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/online_type.php">Online</a></li>
+                          </ul>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-submenu">
+                          <a class="dropdown-item" href="#" id="navbarDropdownPosition" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Users Details<i class="fas fa-caret-right float-right"></i>
+                          </a>
+                          <ul class="dropdown-menu" aria-labelledby="navbarDropdownPosition">
+                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/index_department.php">Department</a></li>
+                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/index_position.php">Position</a></li>
+                          </ul>
                         </div>
                     </div>
                 </li>

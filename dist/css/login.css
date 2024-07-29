@@ -20,9 +20,10 @@ body {
     padding: 20px 0;
     text-align: center;
     margin-bottom: 30px;
+    height: 80px;
 }
 .header h1 {
-    font-size: 36px;
+    font-size: 33px;
     font-weight: bold;
 }
 .card {
@@ -44,5 +45,15 @@ body {
     border: none;
 }
 .btn-primary:hover {
-    background-color: #007bff;
+    background-color: #0f70d7;
+}
+.login-logo {
+    width: 150px;
+    height: auto;
+    pointer-events: none;
+    margin-bottom: -5px;
+}
+.line {
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
