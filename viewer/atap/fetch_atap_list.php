@@ -136,7 +136,9 @@ if (!empty($account_no)) {
                         <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
                             <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
                         </a>
+
                         <?php }; ?>
+
                     </div>
                 </td>
             </tr>
