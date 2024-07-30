@@ -7,10 +7,8 @@ require_once('../../../config.php');
 include('../../../inc/navbar.php');  
 include('../../../inc/header.php');
 ?>
-
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
-
 <style>
     .card-header{
         font-size: 15px;
@@ -22,7 +20,6 @@ include('../../../inc/header.php');
         width: 100% !important;
     }
 </style>
-
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">

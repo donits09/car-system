@@ -106,7 +106,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </style>
 <script>
     function calculateTotal() {
-        console.log('Calculating total...');
         let total = 0;
         var inputs = document.querySelectorAll('.transaction-amount');
         for (var i = 0; i < inputs.length; i++) {
