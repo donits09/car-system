@@ -147,12 +147,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         <tr>
                             <th>Status:</th>
                             <td>
-                                <?php
+                            <?php
                                 if ($row['status'] == 1) {
                                     echo '<span class="badge badge-success">PAID</span>';
                                 } elseif ($row['status'] == 2) {
                                     echo '<span class="badge badge-primary">PARTIAL</span>';
-                                } elseif ($row['status'] == 2) {
+                                } elseif ($row['status'] == 3) {
                                     echo '<span class="badge badge-danger">CANCELLED</span>';
                                 }else {
                                     echo '<span class="badge badge-warning">PENDING</span>';

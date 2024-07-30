@@ -104,6 +104,36 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     width: 100% !important;
 }
 </style>
+<script>
+    function calculateTotal() {
+        let total = 0;
+        var inputs = document.querySelectorAll('.transaction-amount');
+        for (var i = 0; i < inputs.length; i++) {
+            let value = parseFloat(inputs[i].value.replace(/,/g, ''));
+            if (!isNaN(value)) {
+                total += value;
+            }
+        }
+
+        function formatNumberWithCommas(number) {
+            var parts = number.toFixed(2).split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
+        }
+
+        console.log('Total:', total);
+        document.getElementById('total-amount').textContent = formatNumberWithCommas(total);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var inputs = document.querySelectorAll('.transaction-amount');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener('input', calculateTotal);
+        }
+
+        calculateTotal();
+    });
+</script>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="atap-form" method="post" action="">
     <input type="hidden" name="id" value="<?php echo isset($atapId) ? $atapId : '' ?>">
@@ -179,7 +209,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
                                 </div>
                             </td>
-                            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars($type['c_atap_amount']); ?>" required></td>
+                            <td>
+                                <input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars(number_format((float)$type['c_atap_amount'], 2, '.', '')); ?>" required>
+                            </td>
                             <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                         </tr>
                     <?php endforeach; ?>
@@ -233,6 +265,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
+
 <script>
     var dropdownOptions = `
         <?php
@@ -246,14 +279,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </script>
 <script>
 $(document).ready(function() { 
-
-function calculateTotal() {
-    let total = 0;
-    $('.transaction-amount').each(function() {
-        total += parseFloat($(this).val()) || 0;
-    });
-    $('#total-amount').text(formatNumber(total.toFixed(2)));
-}
 
 function formatNumber(number) {
     return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
