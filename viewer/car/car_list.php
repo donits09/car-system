@@ -150,7 +150,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
         </button>
         <div class="dropdown-menu" role="menu">
             <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                <span class="fa fa-eye text-primary"></span> View
+                <!-- <span class="fa fa-eye text-primary"></span> -->View 
             </a>
         </div>
     </td>

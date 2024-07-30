@@ -82,7 +82,7 @@ include('manage_user.php');
                                     data-group="<?php echo $row['c_group']; ?>" 
                                     data-department="<?php echo $row['c_department']; ?>"
                                     data-position="<?php echo $row['c_position']; ?>">
-                                    <span class="fa fa-edit text-primary"></span> Edit
+                                    <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-ban text-danger"></span> Inactive</a>

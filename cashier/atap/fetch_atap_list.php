@@ -93,13 +93,13 @@ if (!empty($account_no)) {
                 <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
                 <td class="text-center"><?php 
                     if ($row['status'] == 0){
-                        echo  'PENDING' ; 
+                        echo  '<span class="badge badge-warning">PENDING</span>'; 
                     } else if($row['status'] == 1){
-                        echo  'PAID' ; 
+                        echo  '<span class="badge badge-primary">PAID</span>'; 
                     }else if($row['status'] == 2){
-                        echo  'PARTIAL' ; 
+                        echo  '<span class="badge badge-success">PARTIAL</span>'; 
                     } else {
-                        echo  'CANCELLED' ; 
+                        echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                     } ?>
                 </td>
                 <td class="text-center">
@@ -122,7 +122,7 @@ if (!empty($account_no)) {
                     </button>
                     <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
-                            <span class="fa fa-eye text-primary"></span> View
+                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
                         </a>
                     </div>
                 </td>

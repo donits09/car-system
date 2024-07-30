@@ -31,7 +31,15 @@ check_session();
 ?>
 <link rel="stylesheet" href="../dist/css/login.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/login.css">
+<style>
+.login-logo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
 
+</style>
 <body>
     <div class="header">
         <h1>Welcome!</h1>
