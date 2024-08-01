@@ -82,6 +82,7 @@ include('../../inc/header.php');
     }
     .hidden_fields{
         display:none;
+        
     }
     .disabled-link {
         pointer-events: none; 
@@ -121,7 +122,7 @@ include('../../inc/header.php');
                         <input type="number" id="acc_no" name="acc_no" class="form-control" maxlength="11" oninput="validateNumberInput(event)">
                     </div>
                     <div class="col-md-3 form-group">
-                        <button type="submit" id="searchAcc" class="btn btn-primary" onclick="calculateTotalAmount()">
+                        <button type="submit" id="searchAcc" class="btn btn-primary" onclick="calculateTotalAmount(); switchToBuyerDetails()">
                             <span class="fa fa-search"></span> Search Account
                         </button>
                     </div>
@@ -154,7 +155,7 @@ include('../../inc/header.php');
                         <input type="number" id="lot" name="lot" class="form-control" min="0" step="1" oninput="validateNumberInput(event)">
                     </div>
                     <div class="col-md-2 form-group">
-                        <button type="submit" id="searchLoc" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Location</button>
+                        <button type="submit" id="searchLoc" class="btn btn-primary" onclick="calculateTotalAmount(); switchToBuyerDetails()"><span class="fa fa-search"></span> Search Location</button>
                     </div>
                 </div>
             </form>
@@ -172,7 +173,7 @@ include('../../inc/header.php');
                         <input type="text" id="first_name" name="first_name" class="form-control">
                     </div>
                     <div class="col-md-3 form-group">
-                        <button type="submit" id="searchName" class="btn btn-primary" onclick="calculateTotalAmount()"><span class="fa fa-search"></span> Search Name</button>
+                        <button type="submit" id="searchName" class="btn btn-primary" onclick="calculateTotalAmount(); switchToBuyerDetails()"><span class="fa fa-search"></span> Search Name</button>
                     </div>
                 </div>
             </form>
@@ -188,6 +189,9 @@ include('../../inc/header.php');
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
@@ -305,7 +309,7 @@ include('../../inc/header.php');
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">
-                                            <label for="search" class="form-label" style="float:right;">Search:</label>
+                                            <label for="remarks" class="form-label" style="float:right;">Search:</label>
                                         </td>
                                         <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
@@ -363,7 +367,7 @@ include('../../inc/header.php');
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
-                                        <label for="accno" class="form-label">Acc #</label>
+                                        <label for="atap_accno" class="form-label">Acc #</label>
                                         <input type="text" class="form-control" id="atap_accno" readonly>
                                     </div>
                                     <div class="col-12 col-md-4">
@@ -419,13 +423,147 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-
+                <div class="tab-pane fade" id="payment-record" role="tabpanel" aria-labelledby="payment-record-tab">
+                    <div class="card mt-3">
+                        <div class="container">
+                            <h2 class="text-blue h4">Payment Record </h2>
+                            <hr>
+                            <a href="<?php echo base_url ?>admin/car/print_payment_record.php?id=<?php echo $id; ?>", target="_blank" id="print_pr" class="btn btn-flat btn-success" href="javascript:void(0)">
+                                <span class="fa fa-download"></span> Print
+                            </a>
+                            <hr>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <label for="acct_no" class="form-label">Acc #</label>
+                                        <input type="text" class="form-control" id="acct_no" readonly>
+                                       
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="fullname_pr" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="fullname_pr" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="car_buyer_loc_pr" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="car_buyer_loc_pr" name="car_buyer_loc_pr" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                            </div>
+                            <div class="table-container">
+                                <table class="table table-bordered table-striped" id="car-list-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:center;font-size:13px;">DUE DATE</th>
+                                            <th style="text-align:center;font-size:13px;">PAY DATE</th>
+                                            <th style="text-align:center;font-size:13px;">OR NO</th>
+                                            <th style="text-align:center;font-size:13px;">AMOUNT PAID</th>
+                                            <th style="text-align:center;font-size:13px;">SURCHARGE</th>
+                                            <th style="text-align:center;font-size:13px;">INTEREST</th>
+                                            <th style="text-align:center;font-size:13px;">PRINCIPAL</th>
+                                            <th style="text-align:center;font-size:13px;">REBATE</th>
+                                            <th style="text-align:center;font-size:13px;">PERIOD</th>
+                                            <th style="text-align:center;font-size:13px;">BALANCE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="payment-record-content">
+                                        <?php include ('../car/payment_record.php'); ?> 
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php include ('../modals/main_modals.php'); ?>
         </div>
     </div>
 </div>
 </body>
+<script>
+function switchToBuyerDetails() {
+    var buyerDetailsTab = document.getElementById('buyer-details-tab');
+    var carListTab = document.getElementById('car-list-tab');
+    var atapListTab = document.getElementById('atap-list-tab');
+    var paymentRecordTab = document.getElementById('payment-record-tab');
+    var buyerDetailsPane = document.getElementById('buyer-details');
+    var carListPane = document.getElementById('car-list');
+    var atapListPane = document.getElementById('atap-list');
+    var paymentRecordPane = document.getElementById('payment-record');
+    
+    buyerDetailsTab.classList.add('active');
+    buyerDetailsTab.setAttribute('aria-selected', 'true');
+    buyerDetailsPane.classList.add('show', 'active');
+
+    carListTab.classList.remove('active');
+    carListTab.setAttribute('aria-selected', 'false');
+    carListPane.classList.remove('show', 'active');
+
+    atapListTab.classList.remove('active');
+    atapListTab.setAttribute('aria-selected', 'false');
+    atapListPane.classList.remove('show', 'active');
+
+    paymentRecordTab.classList.remove('active');
+    paymentRecordTab.setAttribute('aria-selected', 'false');
+    paymentRecordPane.classList.remove('show', 'active');
+}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var paymentRecordTab = document.getElementById('payment-record-tab');
+    var acctNoInput = document.getElementById('acct_no');
+    var searchAcc = document.getElementById('searchAcc');
+    var searchLoc = document.getElementById('searchLoc');
+    var searchName = document.getElementById('searchName');
+    var paymentRecordContent = document.getElementById('payment-record-content');
+
+    if (!paymentRecordTab || !acctNoInput || !searchAcc || !searchLoc || !searchName || !paymentRecordContent) {
+        console.error('One or more elements not found:', {
+            paymentRecordTab,
+            acctNoInput,
+            searchAcc,
+            searchLoc,
+            searchName,
+            paymentRecordContent
+        });
+        return;
+    }
+
+    function fetchPaymentRecord(event) {
+        console.log('Event target ID:', event.target.id);
+        console.log('Account number input value:', acctNoInput.value);
+
+        var acctNo = acctNoInput.value;
+        if (!acctNo) {
+            console.error('Account number is empty');
+            return;
+        }
+
+        var url = `payment_record.php?acct_no=${acctNo}`;
+        console.log('Fetching URL:', url);
+
+        fetch(url)
+            .then(response => {
+                console.log('Fetch response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                paymentRecordContent.innerHTML = data;
+                console.log('Payment record content updated');
+            })
+            .catch(error => console.error('Error fetching payment record:', error));
+    }
+
+    [searchAcc, searchLoc, searchName, paymentRecordTab].forEach(function (element) {
+        element.addEventListener('click', fetchPaymentRecord);
+    });
+});
+
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const accnoInput = document.getElementById('accno');
@@ -576,7 +714,7 @@ $(document).ready(function() {
 
 <!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
 <script>
-    $(document).ready(function() {
+
     function loadModal(title, url, modalId) {
         start_loader();
         $.ajax({
@@ -595,7 +733,7 @@ $(document).ready(function() {
             }
         });
     }
-
+    $(document).ready(function() {
     $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
         loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');

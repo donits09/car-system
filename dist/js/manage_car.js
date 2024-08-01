@@ -29,14 +29,6 @@ function validateAlphaNumericInput(event) {
     input.value = value;
 }
 
-function validateAlphaNumericInput(event) {
-    const input = event.target;
-    let value = input.value;
-
-    value = value.replace(/[^a-zA-Z0-9-\s]/g, '');
-    input.value = value;
-}
-
 $(document).ready(function () {
     $('#c_car_type').on('input', function () {
         var input = $(this).val().toLowerCase();
