@@ -230,12 +230,12 @@ include('../../inc/header.php');
                                             data-acc-no="<?php echo $row['c_account_no']; ?>"
                                             data-id="<?php echo $row['id']; ?>"
                                             data-no="<?php echo $row['c_atap_no'] ?>">
-                                            <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
+                                            <span class="fa fa-edit text-primary"></span> Edit
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
-                                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
-                                        </a> -->
+                                           <span class="fa fa-ban text-danger"></span> Cancel
+                                        </a>-->
                                     </div>
                                 </td>
                             </tr>
