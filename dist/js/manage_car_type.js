@@ -108,14 +108,13 @@ $(document).ready(function() {
                     setTimeout(function() {
                         location.reload();
                     }, 2000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    alert_toast(resp.msg, 'error');
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
                 end_loader();
             }
-
         });
     });
 });

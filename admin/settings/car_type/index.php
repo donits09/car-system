@@ -29,13 +29,14 @@ include('../../../inc/header.php');
                     <tr>
                         <th>#</th>
                         <th>Payment Type</th>
+                        <th>Payment Status</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="car-type-body">
                 <?php
-                    $get_car_types = "SELECT id, c_payment_type, status FROM t_car_type ORDER BY status DESC";
+                    $get_car_types = "SELECT id, c_payment_type, payment_status, status FROM t_car_type ORDER BY payment_status,status ASC";
                     $stmt = odbc_prepare($conn, $get_car_types);
                     if (odbc_execute($stmt)) {
                         $i = 1; 
@@ -44,6 +45,23 @@ include('../../../inc/header.php');
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
                                 <td class="text-center"><?php echo htmlspecialchars($row['c_payment_type']); ?></td>
+                                <td class="text-center">
+                                    <?php 
+                                        $payment_status = trim($row['payment_status']);
+
+                                        if ($payment_status == 'C'){
+                                            echo 'CAR';
+                                        }
+                                        elseif ($payment_status == 'O'){
+                                            echo 'OR';
+                                        }
+                                        elseif ($payment_status == 'ST'){
+                                            echo 'SPECIAL TYPE';   
+                                        } else {
+                                            echo htmlspecialchars($payment_status);
+                                        }
+                                    ?>
+                                </td>
                                 <td class="text-center"><?php echo $row['status'] == 0 ? 'Active' : 'Inactive'; ?></td>
                                 <td align="center">
                                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
@@ -54,6 +72,7 @@ include('../../../inc/header.php');
                                         <a class="dropdown-item edit_data" href="javascript:void(0)" 
                                         data-id="<?php echo $row['id']; ?>" 
                                         data-payment-type="<?php echo ($row['c_payment_type']); ?>" 
+                                        data-payment-stat="<?php echo ($row['payment_status']); ?>"
                                         data-payment-status="<?php echo ($row['status']); ?>">
                                             <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                                         </a>

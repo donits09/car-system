@@ -3,6 +3,12 @@
 ?>
 <link rel="stylesheet" href="../../../dist/css/table.css">
 
+<style>
+    #btnsave{
+        width:100%;
+    }
+</style>
+
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -69,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id="btnsave">Submit</button>
                 </form>
             </div>
         </div>
@@ -135,7 +141,7 @@
                             ?>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="submit" class="btn btn-primary" id="btnsave">Update</button>
                 </form>
             </div>
         </div>

@@ -50,7 +50,7 @@ include('../../../inc/header.php');
                             <input type="text" class="form-control txt" style="background-color: white;" id="c_position" name="c_position" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="c_password" class="form-label">Password</label>
+                            <label for="c_password" class="form-label">Change Password</label>
                             <input type="password" class="form-control txt" id="c_password" name="c_password">
                         </div>
                         <button type="submit" class="btn btn-primary" id="btnsave">Save</button>

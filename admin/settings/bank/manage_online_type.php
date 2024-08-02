@@ -20,12 +20,13 @@
         }
     } 
 ?>
-<form id="bank-type-form">
+
 <style>
 #btnsave{
     width: 100% !important;
 }
 </style>
+<form id="bank-type-form">
 <!-- <form id="car-type-form"> -->
     <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
     <div class="form-group">

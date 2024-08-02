@@ -31,6 +31,7 @@ check_session();
 ?>
 <link rel="stylesheet" href="../dist/css/login.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/login.css">
+<link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url ?>dist/header_files/favicon/alsc-32.png">
 <style>
 .login-logo {
     max-width: 100%;
@@ -38,7 +39,6 @@ check_session();
     display: block;
     margin: 0 auto;
 }
-
 </style>
 <body>
     <div class="header">

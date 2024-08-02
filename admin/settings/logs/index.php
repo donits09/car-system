@@ -21,6 +21,16 @@ include('../../../inc/header.php');
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
 
+<style>
+#btn-filter{
+    width: 100px;
+    margin-left: -40px;
+}
+#end_date{
+    margin-left: -20px;
+}
+</style>
+
 <body>
     <div class="container mt-5">
         <div class="card mt-3">
@@ -31,14 +41,18 @@ include('../../../inc/header.php');
                     <div class="row">
                         <div class="col-md-3">
                             <label for="start_date">Start Date:</label>
-                            <input type="text" id="start_date" name="start_date" class="form-control datepicker" value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : ''; ?>">
+                            <input type="text" id="start_date" name="start_date" class="form-control datepicker" 
+                                value="<?php echo date('m/d/Y'); ?>">
                         </div>
                         <div class="col-md-3">
                             <label for="end_date">End Date:</label>
-                            <input type="text" id="end_date" name="end_date" class="form-control datepicker" value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : ''; ?>">
+                            <input type="text" id="end_date" name="end_date" class="form-control datepicker" 
+                                value="<?php echo date('m/d/Y'); ?>">
                         </div>
                         <div class="col-md-1 align-self-end">
-                            <button type="submit" class="btn btn-primary"><span class="fa fa-filter"></span> Filter</button>
+                            <button type="submit" class="btn btn-primary" id="btn-filter">
+                                <span class="fa fa-filter"></span> Filter
+                            </button>
                         </div>
                     </div>
                 </form>

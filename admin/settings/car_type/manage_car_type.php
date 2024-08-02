@@ -4,6 +4,7 @@
     $c_account_no = null;
     $c_payment_type = '';
     $status = '';
+    $payment_status = '';
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_type_query = "SELECT * FROM t_car_type WHERE id = ?";
@@ -15,6 +16,7 @@
             $id = $result["id"];
             $c_payment_type = $result["c_payment_type"];
             $status = $result["status"];
+            $payment_status = trim($result["payment_status"]);
         }
     } 
 ?>
@@ -28,6 +30,14 @@
     <div class="form-group">
         <label for="c_payment_type">Payment Type</label>
         <input type="text" class="form-control" id="c_payment_type" name="c_payment_type" value="<?php echo htmlspecialchars($c_payment_type) ?>" oninput="validateAlphaNumericInput(event)" required>
+    </div>
+    <div class="form-group">
+        <label for="payment_status">Payment Status</label>
+        <select class="form-control" id="payment_status" name="payment_status" required>
+            <option value="C" <?php echo ($payment_status == 'C') ? 'selected' : ''; ?>>CAR</option>
+            <option value="O" <?php echo ($payment_status == 'O') ? 'selected' : ''; ?>>OR</option>
+            <option value="ST" <?php echo ($payment_status == 'ST') ? 'selected' : ''; ?>>SPECIAL TYPE</option>
+        </select>
     </div>
     <div class="form-group">
         <label for="status">Status</label>
