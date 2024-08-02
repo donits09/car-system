@@ -575,11 +575,20 @@ Class Master{
 	function save_car_type() {
 		extract($_POST);
 	
-		$data = "c_payment_type, status";
-		$values = "'$c_payment_type','0'";
+		$data = "c_payment_type,status,payment_status";
+		$values = "'$c_payment_type','0', '$payment_status'";
 		$resp = array();
 	
 		if (empty($id)) {
+			$check_car_exist = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment_type' and payment_status = '$payment_status'";
+			$result = odbc_exec($this->conn, $check_car_exist);
+	
+			if (odbc_num_rows($result) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "CAR type already exists.";
+				echo json_encode($resp);
+				return;
+			}
 			
 			$insert = "INSERT INTO t_car_type ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert);
@@ -593,9 +602,20 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
 		} else {
+			$check_car_exist = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment_type' and payment_status = '$payment_status' and id <> '$id'";
+			$result = odbc_exec($this->conn, $check_car_exist);
+	
+			if (odbc_num_rows($result) > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "CAR type already exists.";
+				echo json_encode($resp);
+				return;
+			}
+
 			$update = "UPDATE t_car_type SET 
 						c_payment_type = '$c_payment_type',
-						status = '$status'
+						status = '$status',
+						payment_status = '$payment_status'
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	
