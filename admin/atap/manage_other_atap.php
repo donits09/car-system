@@ -175,11 +175,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="transaction">Transaction</label>
         <table class="table table-striped" id="transaction-table">
             <thead>
-                <tr>
-                    <th>Transaction Type</th>
+                <th>Transaction Name</th>
+                    <th>Type</th>
                     <th>Amount</th>
                     <th>Action</th>
-                </tr>
             </thead>
             <tbody>
                 <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
@@ -203,7 +202,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
                                 </div>
                             </td>
-                            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars($type['c_atap_amount']); ?>" required></td>
+                            <td>
+                                <input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars(number_format((float)$type['c_atap_amount'], 2, '.', '')); ?>" required>
+                            </td>
                             <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                         </tr>
                     <?php endforeach; ?>
@@ -257,6 +258,36 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script>
+    function calculateTotal() {
+        let total = 0;
+        var inputs = document.querySelectorAll('.transaction-amount');
+        for (var i = 0; i < inputs.length; i++) {
+            let value = parseFloat(inputs[i].value.replace(/,/g, ''));
+            if (!isNaN(value)) {
+                total += value;
+            }
+        }
+
+        function formatNumberWithCommas(number) {
+            var parts = number.toFixed(2).split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.join('.');
+        }
+
+        console.log('Total:', total);
+        document.getElementById('total-amount').textContent = formatNumberWithCommas(total);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var inputs = document.querySelectorAll('.transaction-amount');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].addEventListener('input', calculateTotal);
+        }
+
+        calculateTotal();
+    });
+</script>
+<script>
     var dropdownOptions = `
         <?php
         $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY id ASC";
@@ -269,15 +300,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </script>
 <script>
     $(document).ready(function() {
-  
-        function calculateTotal() {
-            let total = 0;
-            $('.transaction-amount').each(function() {
-                total += parseFloat($(this).val()) || 0;
-            });
-            $('#total-amount').text(formatNumber(total.toFixed(2)));
-        }
-
        
         function formatNumber(number) {
             return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');

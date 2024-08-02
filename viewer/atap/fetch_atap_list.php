@@ -93,13 +93,13 @@ if (!empty($account_no)) {
                 <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
                 <td class="text-center"><?php 
                     if ($row['status'] == 0){
-                        echo  'PENDING' ; 
+                        echo  '<span class="badge badge-warning">PENDING</span>'; 
                     } else if($row['status'] == 1){
-                        echo  'PAID' ; 
+                        echo  '<span class="badge badge-primary">PAID</span>'; 
                     }else if($row['status'] == 2){
-                        echo  'PARTIAL' ; 
+                        echo  '<span class="badge badge-success">PARTIAL</span>'; 
                     } else {
-                        echo  'CANCELLED' ; 
+                        echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                     } ?>
                 </td>
                 <td class="text-center">
@@ -120,21 +120,25 @@ if (!empty($account_no)) {
                         Action
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
-                    <div class="dropdown-menu" role="menu">
+                    <di class="dropdown-menu" role="menu">
                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
-                            <span class="fa fa-eye text-primary"></span> View
+                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
                         </a>
+                        <?php if ($row['c_encoded_by'] == $username){ ?>
                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
                         <a class="dropdown-item edit_atap_spec <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
                             data-acc-no="<?php echo $row['c_account_no']; ?>"
                             data-id="<?php echo $row['id']; ?>"
                             data-no="<?php echo $row['c_atap_no']; ?>">
-                            <span class="fa fa-edit text-primary"></span> Edit
+                            <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                         </a>
                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
                         <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
-                            <span class="fa fa-ban text-danger"></span> Cancel
+                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
                         </a>
+
+                        <?php }; ?>
+
                     </div>
                 </td>
             </tr>
@@ -149,3 +153,4 @@ if (!empty($account_no)) {
     echo "<script>$('#totalAtapAmount').text('0.00');</script>";
 }
 ?>
+<!-- <script src="../../dist/js/all_atap_list.js"></script> -->

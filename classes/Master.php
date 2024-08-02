@@ -313,6 +313,114 @@ Class Master{
 	// 	}
 	// 	echo json_encode($resp);
 	// }
+
+	function update_items_status() {
+		$resp = array();
+	
+		error_log(print_r($_POST['items'], true));
+	
+		if (isset($_POST['items']) && is_array($_POST['items'])) {
+			$items = $_POST['items'];
+			$conn = $this->conn;
+
+			$atapNo = null;
+	
+			foreach ($items as $item) {
+				error_log("Item data: " . print_r($item, true));
+	
+				$atapId = isset($item['atapId']) ? $item['atapId'] : null;
+				$status = isset($item['status']) ? $item['status'] : null;
+				$atapNo = isset($item['atapNo']) ? $item['atapNo'] : $atapNo;
+	
+				if ($atapId !== null) {
+					$sql = "UPDATE t_atap_items SET atap_status = ? WHERE id = ?";
+					$stmt = odbc_prepare($conn, $sql);
+	
+					if ($stmt) {
+						$result = @odbc_execute($stmt, array($status, $atapId));
+	
+						if ($result) {
+							$resp['status'] = 'success';
+							$resp['msg'] = "ATAP status successfully updated.";
+						} else {
+							$resp['status'] = 'failed';
+							$resp['err'] = odbc_errormsg($conn);
+							break;
+						}
+					} else {
+						$resp['status'] = 'failed';
+						$resp['err'] = odbc_errormsg($conn);
+						break;
+					}
+				} else {
+					$resp['status'] = 'failed';
+					$resp['msg'] = 'ATAP ID or ATAP No not provided.';
+					break;
+				}
+			}
+	
+			if ($atapNo !== null) {
+				$check_status_sql = "SELECT atap_status FROM t_atap_items WHERE c_atap_no = ?";
+				$check_status_stmt = odbc_prepare($conn, $check_status_sql);
+	
+				if ($check_status_stmt) {
+					$check_result = @odbc_execute($check_status_stmt, array($atapNo));
+	
+					if ($check_result) {
+						$hasPartial = false;
+						$allPaid = true;
+	
+						while ($row = odbc_fetch_array($check_status_stmt)) {
+							if ($row['atap_status'] == 1) {
+								$hasPartial = true;
+							} elseif ($row['atap_status'] == 0) {
+								$allPaid = false;
+							}
+						}
+	
+						$new_status = 0;
+						if ($allPaid) {
+							$new_status = 1; 
+						} elseif ($hasPartial) {
+							$new_status = 2; 
+						} else {
+							$new_status = 0;
+						}
+
+						$update_atap_sql = "UPDATE t_atap SET status = ? WHERE c_atap_no = ?";
+						$update_atap_stmt = odbc_prepare($conn, $update_atap_sql);
+	
+						if ($update_atap_stmt) {
+							$update_result = @odbc_execute($update_atap_stmt, array($new_status, $atapNo));
+	
+							if ($update_result) {
+								$resp['status'] = 'success';
+								$resp['msg'] = "ATAP and items status successfully updated.";
+							} else {
+								$resp['status'] = 'failed';
+								$resp['err'] = odbc_errormsg($conn);
+							}
+						} else {
+							$resp['status'] = 'failed';
+							$resp['err'] = odbc_errormsg($conn);
+						}
+					} else {
+						$resp['status'] = 'failed';
+						$resp['err'] = odbc_errormsg($conn);
+					}
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($conn);
+				}
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Invalid data format.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
 	
 	function save_car_payment() {
 		extract($_POST);
@@ -1423,6 +1531,9 @@ switch ($action) {
 		} else {
 			echo json_encode(array('status' => 'failed', 'msg' => 'ATAP # not provided.'));
 		}
+		break;
+	case 'update_items_status':
+			echo $Master->update_items_status();
 		break;
 	case 'save_emp_position':
 		echo $Master->save_emp_position();

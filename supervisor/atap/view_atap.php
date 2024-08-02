@@ -152,7 +152,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     echo '<span class="badge badge-success">PAID</span>';
                                 } elseif ($row['status'] == 2) {
                                     echo '<span class="badge badge-primary">PARTIAL</span>';
-                                } elseif ($row['status'] == 2) {
+                                } elseif ($row['status'] == 3) {
                                     echo '<span class="badge badge-danger">CANCELLED</span>';
                                 }else {
                                     echo '<span class="badge badge-warning">PENDING</span>';
@@ -193,10 +193,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 </table>
 
                 <table class="table table-bordered">
-                    <thead>
+                   <thead>
                         <tr>
                             <th class="text-center">No.</th>
-                            <th class="text-center">Transaction Type</th>
+                            <th class="text-center">Transaction Name</th>
+                            <th class="text-center">Type</th>
                             <th class="text-right">Amount</th>
                             <th class="text-right">Status</th>
                         </tr>
@@ -219,6 +220,35 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         <tr>
                             <td class="text-center"><?php echo $i++; ?></td>
                             <td class="text-center"><?php echo htmlspecialchars($row_items['c_tran_type']); ?></td>
+                            <td class="text-center">
+                            <?php
+                                $c_payment = $row_items['c_tran_type'];
+                                $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
+                                $results = odbc_exec($conn, $get_pstatus_qry);
+
+                                if ($p_status = odbc_fetch_array($results)) {
+                                    $pstatus = trim($p_status["payment_status"]); 
+                                    $statusText = ''; 
+
+                                    switch ($pstatus) {
+                                        case 'C':
+                                            $statusText = '<span class="badge badge-secondary">CAR</span>';
+                                            break;
+                                        case 'S':
+                                            $statusText = '<span class="badge badge-secondary">Special</span>';
+                                            break;
+                                        case 'O':
+                                            $statusText = '<span class="badge badge-secondary">OR</span>';
+                                            break;
+                                        default:
+                                            $statusText = '<span class="badge badge-secondary">Other</span>';
+                                            break;
+                                    }
+
+                                    echo $statusText;
+                                }
+                                ?>
+                            </td>
                             <td class="text-right"><?php echo number_format($amount, 2); ?></td>
                             <td class="text-center">
                                 <?php

@@ -93,13 +93,13 @@ if (!empty($account_no)) {
                 <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
                 <td class="text-center"><?php 
                     if ($row['status'] == 0){
-                        echo  'PENDING' ; 
+                        echo  '<span class="badge badge-warning">PENDING</span>'; 
                     } else if($row['status'] == 1){
-                        echo  'PAID' ; 
+                        echo  '<span class="badge badge-primary">PAID</span>'; 
                     }else if($row['status'] == 2){
-                        echo  'PARTIAL' ; 
+                        echo  '<span class="badge badge-success">PARTIAL</span>'; 
                     } else {
-                        echo  'CANCELLED' ; 
+                        echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                     } ?>
                 </td>
                 <td class="text-center">
@@ -120,21 +120,23 @@ if (!empty($account_no)) {
                         Action
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
-                    <div class="dropdown-menu" role="menu">
+                    <di class="dropdown-menu" role="menu">
                         <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
-                            <span class="fa fa-eye text-primary"></span> View
+                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item edit_atap_spec" href="javascript:void(0)" 
+                        <?php if ($row['c_encoded_by'] == $username){ ?>
+                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                        <a class="dropdown-item edit_atap_spec <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
                             data-acc-no="<?php echo $row['c_account_no']; ?>"
                             data-id="<?php echo $row['id']; ?>"
-                            data-no="<?php echo $row['c_atap_no'] ?>">
-                            <span class="fa fa-edit text-primary"></span> Edit
+                            data-no="<?php echo $row['c_atap_no']; ?>">
+                            <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                         </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
-                            <span class="fa fa-ban text-danger"></span> Cancel
+                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                        <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
                         </a>
+                        <?php }; ?>
                     </div>
                 </td>
             </tr>
@@ -149,3 +151,50 @@ if (!empty($account_no)) {
     echo "<script>$('#totalAtapAmount').text('0.00');</script>";
 }
 ?>
+<script>
+    function loadModal(title, url, modalId) {
+        start_loader();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                $(modalId + ' .modal-body').html(response);
+                $(modalId + ' .modal-title').text(title);
+                $(modalId).modal('show');
+                end_loader();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("An error occurred while loading data.");
+                end_loader();
+            }
+        });
+    }
+    
+     $(document).on('click', '.edit_atap_spec', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        var accountNo = $(this).data('acc-no');
+        var modalTitle = 'Edit ATAP Details ';
+        var modalSelector = '#createCarModal';
+        var url;
+    
+        url = '../atap/manage_atap_spec.php?id=' + atapId + '&no=' + atapNo + '&acc-no=' + accountNo;
+        
+        loadModal(modalTitle, url, modalSelector);
+    });
+    
+    window._conf = function(msg, func, params) {
+        $('#confirm_modal .modal-body').html(msg);
+        $('#confirm_modal #confirm').off('click').on('click', function() {
+            func.apply(this, params);
+        });
+        $('#confirm_modal').modal('show');
+    };
+
+    $(document).on('click', '.delete_data', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        _conf("Are you sure you want to cancel this ATAP permanently?", delete_atap, [atapId, atapNo]);
+    });
+</script>

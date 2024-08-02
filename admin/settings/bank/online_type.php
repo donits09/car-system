@@ -57,7 +57,7 @@ include('../../../inc/header.php');
                                         data-id="<?php echo $row['id']; ?>" 
                                         data-bank-type="<?php echo ($row['c_bank_type']); ?>" 
                                         data-bank-status="<?php echo ($row['status']); ?>">
-                                            <span class="fa fa-edit text-primary"></span> Edit
+                                            <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                                         </a>
 
                                         <!-- <div class="dropdown-divider"></div>

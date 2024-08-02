@@ -18,10 +18,22 @@
         });
     }
 
-    $('#create_new_atap').click(function() {
-        loadModal('Create New ATAP', '../atap/manage_atap.php', '#createCarModal');
+    $(document).on('click', '.view_atap', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        $('#viewModal').modal('hide'); 
+        setTimeout(function() {
+            loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+        }, 500); 
     });
-
+    
+    $('#create_new_atap').click(function() {
+        $('#createCarModal').modal('hide'); 
+        setTimeout(function() {
+            loadModal('Create New ATAP', '../atap/manage_atap.php', '#createCarModal');
+        }, 500); 
+    });
+    
     $('#create_other_atap').click(function() {
         loadModal('Create New ATAP', '../atap/manage_other_atap.php', '#createCarModal');
     });
@@ -29,12 +41,6 @@
     $(document).on('click', '.view_data', function() {
         var accountId = $(this).data('id');
         loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
-    });
-
-    $(document).on('click', '.view_atap', function() {
-        var atapId = $(this).data('id');
-        var atapNo = $(this).data('no');
-        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
 
     $(document).on('click', '.delete_data', function() {
