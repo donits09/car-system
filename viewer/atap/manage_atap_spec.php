@@ -150,11 +150,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="transaction">Transaction</label>
         <table class="table table-striped" id="transaction-table">
             <thead>
-                <tr>
-                    <th>Transaction Type</th>
+                <th>Transaction Name</th>
+                    <th>Type</th>
                     <th>Amount</th>
                     <th>Action</th>
-                </tr>
             </thead>
             <tbody>
                 <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
