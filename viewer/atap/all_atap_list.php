@@ -305,5 +305,4 @@ if (odbc_execute($stmt)) {
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_atap_list.js"></script>
-
 <?php include('../../inc/footer.php'); ?>
