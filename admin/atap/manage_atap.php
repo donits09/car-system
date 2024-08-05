@@ -249,7 +249,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <script>
         document.querySelectorAll('.dropdown-item').forEach(function(item) {
             item.addEventListener('click', function(e) {
-                e.preventDefault();
+                //e.preventDefault();
 
                 var dropdownButton = this.closest('.dropdown').querySelector('.dropdown-toggle');
                 dropdownButton.textContent = this.textContent;
@@ -372,7 +372,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </script>
 <script>
 $(document).ready(function() { 
-
+    function calculateTotal() {
+    let total = 0;
+    $('.transaction-amount').each(function() {
+        total += parseFloat($(this).val()) || 0;
+    });
+    $('#total-amount').text(formatNumber(total.toFixed(2)));
+}
 function formatNumber(number) {
     return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -460,7 +466,7 @@ checkRemoveButton();
 calculateTotal();
 
 $('#atap-form').submit(function(e) {
-    e.preventDefault();
+    //e.preventDefault();
 
     if ($(this).data('formSubmitting')) return;
     $(this).data('formSubmitting', true);

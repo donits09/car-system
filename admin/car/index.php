@@ -977,7 +977,7 @@ $(document).ready(function() {
         $(document).on('click', '.view_atap', function() {
             var atapId = $(this).data('id');
             var atapNo = $(this).data('no');
-            loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+            loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
         });
     });
 
