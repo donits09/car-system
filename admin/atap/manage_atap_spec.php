@@ -154,10 +154,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="transaction">Transaction</label>
         <table class="table table-striped" id="transaction-table">
             <thead>
-                <th>Transaction Name</th>
+                <tr>
+                    <th>Transaction Name</th>
                     <th>Type</th>
                     <th>Amount</th>
                     <th>Action</th>
+                 </tr>
             </thead>
             <tbody>
                 <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
@@ -173,9 +175,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                         $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
                                         $type_result = odbc_exec($conn, $car_type_query);
                                         while ($row = odbc_fetch_array($type_result)) {
+
                                             $selected = ($type['c_tran_type'] == $row['c_payment_type']) ? 'active' : '';
                                             echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                                             /* echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>"; */
+
+//                                             $selected = (isset($type['c_tran_type']) && $type['c_tran_type'] == $row['c_payment_type']) ? 'active' : '';
+//                                             echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+
                                         }
                                         ?>
                                     </div>
@@ -228,11 +235,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton0">
                                     <?php
+
                                     $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
                                     $type_result = odbc_exec($conn, $car_type_query);
                                     while ($row = odbc_fetch_array($type_result)) {
                                         echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                                         /* echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>"; */
+
                                     }
                                     ?>
                                 </div>
@@ -251,7 +260,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <script>
                 document.querySelectorAll('.dropdown-item').forEach(function(item) {
                     item.addEventListener('click', function(e) {
-                        e.preventDefault();
+
+                        //e.preventDefault();
 
                         var dropdownButton = this.closest('.dropdown').querySelector('.dropdown-toggle');
                         dropdownButton.textContent = this.textContent;
@@ -290,7 +300,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         //event.preventDefault();
                         var $dropdown = $(this).closest('.dropdown');
                         var $button = $dropdown.find('.dropdown-toggle');
-                        var $hiddenInput = $dropdown.find('input[type="hidden"]');
+
+                       // var $hiddenInput = $dropdown.find('input[type="hidden"]');
+
+                        var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
+
                         var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
                         var $statusText = $dropdown.closest('tr').find('.payment-status-text');
                         var paymentStatus = $(this).data('status');
@@ -316,9 +330,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     });
                 });
             </script>
-            <tfoot>
+             <tfoot>
                 <tr>
+
                     <!-- <th colspan="1" style="text-align:right;"> <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:</th> -->
+
                     <th colspan="1" style="text-align:right;">
                         <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:
                     </th>
@@ -404,7 +420,11 @@ $(document).ready(function() {
             //event.preventDefault();
             var $dropdown = $(this).closest('.dropdown');
             var $button = $dropdown.find('.dropdown-toggle');
-            var $hiddenInput = $dropdown.find('input[type="hidden"]');
+
+            //var $hiddenInput = $dropdown.find('input[type="hidden"]');
+
+            var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
+
             var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
             var $statusText = $dropdown.closest('tr').find('.payment-status-text');
             var paymentStatus = $(this).data('status');
@@ -439,11 +459,19 @@ $(document).ready(function() {
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton0">
                         <?php
+
                             $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
                             $type_result = odbc_exec($conn, $car_type_query);
                             while ($row = odbc_fetch_array($type_result)) {
                                 echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                             }
+
+//                         $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+//                         $type_result = odbc_exec($conn, $car_type_query);
+//                         while ($row = odbc_fetch_array($type_result)) {
+//                             echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+//                         }
+
                         ?>
                     </div>
                     <input type="hidden" name="transaction_type[]">
@@ -457,7 +485,7 @@ $(document).ready(function() {
             <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
         </tr>`;
         $('#transaction-table tbody').append(newRow);
-        initializeDropdown();
+        initializeDropdown();  
         calculateTotal();
         checkRemoveButton();
     });

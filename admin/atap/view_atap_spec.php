@@ -145,7 +145,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         <tr>
                             <th>Status:</th>
                             <td>
-                                <?php
+                            <?php
                                 if ($row['status'] == 1) {
                                     echo '<span class="badge badge-success">PAID</span>';
                                 } elseif ($row['status'] == 2) {
@@ -189,6 +189,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tr>
                     </tbody>
                 </table>
+
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -201,148 +202,120 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tr>
                     </thead>
                     <tbody>
-                    <?php
-                    $i = 1;
-                    $atapNo = $_GET['no'];
-                    $get_atap_items = "SELECT * FROM t_atap_items WHERE c_atap_no = ?";
-                    $stmt_items = odbc_prepare($conn, $get_atap_items);
-                    odbc_execute($stmt_items, array($atapNo));
+                        <?php
+                        $i = 1;
+                        $atapNo = $_GET['no'];
+                        $get_atap_items = "SELECT * FROM t_atap_items WHERE c_atap_no = ?";
+                        $stmt_items = odbc_prepare($conn, $get_atap_items);
+                        odbc_execute($stmt_items, array($atapNo));
 
-                    $totalAmount = 0;
-                    $enableSaveButton = true; 
+                        $totalAmount = 0;
 
-                    while ($row_items = odbc_fetch_array($stmt_items)) {
-                        $amount = $row_items['c_atap_amount'];
-                        $itemId = $row_items['id'];
-                        $totalAmount += $amount; 
+                        while ($row_items = odbc_fetch_array($stmt_items)) {
+                            $amount = $row_items['c_atap_amount'];
+                            $itemId = $row_items['id'];
+                            $totalAmount += $amount;
 
-                        $c_payment = $row_items['c_tran_type'];
-                        $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
-                        $results = odbc_exec($conn, $get_pstatus_qry);
-
-                        if ($p_status = odbc_fetch_array($results)) {
-                            $pstatus = trim($p_status["payment_status"]); 
-                            $statusText = ''; 
-
-                            switch ($pstatus) {
-                                case 'C':
-                                    $statusText = '<span class="badge badge-secondary">CAR</span>';
-                                    break;
-                                case 'S':
-                                    $statusText = '<span class="badge badge-secondary">Special</span>';
-                                    break;
-                                case 'O':
-                                    $statusText = '<span class="badge badge-secondary">OR</span>';
-                                    break;
-                                default:
-                                    $statusText = '<span class="badge badge-secondary">Other</span>';
-                                    break;
-                            }
-                        }
-
-                        if ($row_items['atap_status'] == 0 && $pstatus == 'O') {
-                            $enableSaveButton = false; 
-                        }
-                        ?>
-                        <tr>
-                            <td class="text-center"><?php echo $i++; ?></td>
-                            <td class="text-center"><?php echo htmlspecialchars($row_items['c_tran_type']); ?></td>
-                            <td class="text-center"><?php echo $statusText; ?></td>
-                            <td class="text-right"><?php echo number_format($amount, 2); ?></td>
-                            <td class="text-center">
+                            ?>
+                            <tr>
+                                <td class="text-center"><?php echo $i++; ?></td>
+                                <td class="text-center"><?php echo htmlspecialchars($row_items['c_tran_type']); ?></td>
+                                <td class="text-center">
                                 <?php
-                                if ($row_items['atap_status'] == 0) {
-                                    echo '<span class="badge badge-warning">Pending</span>';
-                                } elseif ($row_items['atap_status'] == 1) {
-                                    echo '<span class="badge badge-success">Paid</span>';
-                                } else {
-                                    echo '';
-                                }
-                                ?>
-                            </td>
-                            <td align="center">
-                                <?php if ($pstatus != 'C') { ?>
+                                    $c_payment = $row_items['c_tran_type'];
+                                    $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
+                                    $results = odbc_exec($conn, $get_pstatus_qry);
+
+                                    if ($p_status = odbc_fetch_array($results)) {
+                                        $pstatus = trim($p_status["payment_status"]); 
+                                        $statusText = ''; 
+
+                                        switch ($pstatus) {
+                                            case 'C':
+                                                $statusText = '<span class="badge badge-secondary">CAR</span>';
+                                                break;
+                                            case 'S':
+                                                $statusText = '<span class="badge badge-secondary">Special</span>';
+                                                break;
+                                            case 'O':
+                                                $statusText = '<span class="badge badge-secondary">OR</span>';
+                                                break;
+                                            default:
+                                                $statusText = '<span class="badge badge-secondary">Other</span>';
+                                                break;
+                                        }
+
+                                        echo $statusText;
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-right"><?php echo number_format($amount, 2); ?></td>
+                                <td class="text-center">
                                     <?php
+                                    if ($row_items['atap_status'] == 0) {
+                                        echo '<span class="badge badge-warning">Pending</span>';
+                                    } elseif ($row_items['atap_status'] == 1) {
+                                        echo '<span class="badge badge-success">Paid</span>';
+                                    } else {
+                                        echo '';
+                                    }
+                                    ?>
+                                </td>
+                                <td align="center">
+                                    <?php if ($pstatus != 'C') { ?>
+                                        <?php
                                             $get_main_atap_stats = "SELECT status FROM t_atap WHERE c_atap_no = '$atapNo'";
                                             $results = odbc_exec($conn, $get_main_atap_stats);
                                             if ($main_atap = odbc_fetch_array($results)) {
                                                 $stats = $main_atap["status"];
                                             }
                                         ?>
-                                    <input type="checkbox" class="atap-status" data-id="<?php echo $itemId; ?>" data-no="<?php echo $atapNo; ?>" <?php echo ($stats == 3) ? 'disabled' : ''; ?>
-                                        <?php 
-                                            $isChecked = ($row_items['atap_status'] == 1) ? 'checked' : ''; 
-                                            $isDisabled = ($row_items['atap_status'] == 1) ? 'disabled' : ''; 
-                                            echo $isChecked . ' ' . $isDisabled;
-                                        ?>>
-                                    <input type="hidden" class="hidden-item-id" id="atapId" value="<?php echo $itemId; ?>" readonly>
-                                    <input type="hidden" class="hidden-atap-status" id="status" value="<?php echo ($row_items['atap_status'] == 1) ? '1' : '0'; ?>" readonly>
-                                    <button type="button" class="btn btn-primary btn-save-status d-none">Save</button>
-                                <?php } else { ?>
-                                    <span>---</span>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php
-                    }
-                    ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colspan="3" class="text-right">Total Amount:</th>
-                            <th class="text-right"><?php echo number_format($totalAmount, 2); ?></th>
-                        </tr>
+                                        <input type="checkbox" class="atap-status" data-id="<?php echo $itemId; ?>" data-no="<?php echo $atapNo; ?>" <?php echo ($row_items['atap_status'] == 1) ? 'checked' : ''; ?> <?php echo ($stats == 3) ? 'disabled' : ''; ?>>
+                                        <input type="hidden" class="hidden-item-id" id="atapId" value="<?php echo $itemId; ?>" readonly>
+                                        <input type="hidden" class="hidden-atap-status" id="status" value="<?php echo ($row_items['atap_status'] == 1) ? '1' : '0'; ?>" readonly>
+                                        <button type="button" class="btn btn-primary btn-save-status d-none">Save</button>
+                                    <?php } else { ?>
+                                        <span>---</span>
+                                    <?php } ?>
+                                </td>
+                            </tr>
                         <?php
-                            $get_main_atap_stats = "SELECT status FROM t_atap WHERE c_atap_no = '$atapNo'";
-                            $results = odbc_exec($conn, $get_main_atap_stats);
-                            if ($main_atap = odbc_fetch_array($results)) {
-                                $stats = $main_atap["status"];
-                            }
+                        }
                         ?>
-                        <tr>
-                            <td colspan="6" class="text-center">
-                                <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" <?php echo (($stats == 1 || $stats == 3) || ($stats == 2 || $stats == 0) && $pstatus == 'C') ? 'disabled' : ''; ?>>Save</button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-right">Total Amount:</th>
+                                <th class="text-right"><?php echo number_format($totalAmount, 2); ?></th>
+                            </tr>
+                            <?php
+                                $get_main_atap_stats = "SELECT status FROM t_atap WHERE c_atap_no = '$atapNo'";
+                                $results = odbc_exec($conn, $get_main_atap_stats);
+                                if ($main_atap = odbc_fetch_array($results)) {
+                                    $stats = $main_atap["status"];
+                                }
+                            ?>
+                            <tr>
+                                <!-- <td colspan="6" class="text-center">
+                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" <?php echo (($stats == 1 || $stats == 3) || ($stats == 2 || $stats == 0) && $pstatus == 'C') ? 'disabled' : ''; ?>>Save</button>
+                                </td> -->
+                                <td colspan="6" class="text-center">
+                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;">Save</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
             </div>
-            <?php include ('../modals/main_modals.php'); ?>
+        
         </div>
-    <?php
-        } else {
-            echo "No data found for the given ID.";
-        }
+<?php
     } else {
-        echo "Invalid request.";
+        echo "No data found for the given ID.";
     }
-    ?>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const checkboxes = document.querySelectorAll('.atap-status');
-    const saveButton = document.querySelector('.btn-save-status-all');
-
-    function updateSaveButtonState() {
-        let anyEnabledCheckbox = false;
-        checkboxes.forEach(checkbox => {
-            if (!checkbox.hasAttribute('disabled')) {
-                anyEnabledCheckbox = true;
-            }
-        });
-
-        if (anyEnabledCheckbox) {
-            saveButton.disabled = false;
-        } else {
-            saveButton.disabled = true;
-        }
-    }
-    updateSaveButtonState();
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateSaveButtonState);
-    });
-});
-</script>
+} else {
+    echo "Invalid request.";
+}
+?>
 <script>
 $(document).on('change', '.atap-status', function() {
     var $checkbox = $(this);
@@ -404,7 +377,7 @@ $(document).on('click', '.btn-save-status-all', function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        location.reload(); 
+                        updateAtapList();
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
