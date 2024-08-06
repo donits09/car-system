@@ -496,19 +496,30 @@ include('../../inc/header.php');
 </div>
 </body>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const acctNoInput = document.getElementById('acct_no');
-    const printPrLink = document.getElementById('print_pr');
+    document.addEventListener('DOMContentLoaded', function() {
+        const acctNoInput = document.getElementById('acct_no');
+        const printPrLink = document.getElementById('print_pr');
 
-    function updatePrintLink() {
-        const acctNoValue = acctNoInput.value;
-        printPrLink.href = `<?php echo base_url ?>admin/car/print_payment_record.php?id=${acctNoValue}`;
-    }
+        if (!acctNoInput || !printPrLink) {
+            console.error('Required elements not found');
+            return;
+        }
 
-    updatePrintLink();
+        function updatePrintLink() {
+            const acctNoValue = acctNoInput.value;
+            console.log('Account Number Value:', acctNoValue); 
+            printPrLink.href = `<?php echo base_url ?>admin/car/print_payment_record.php?id=${acctNoValue}`;
+        }
 
-    acctNoInput.addEventListener('input', updatePrintLink);  
-});
+        const intervalId = setInterval(() => {
+            if (acctNoInput.value !== '') {
+                updatePrintLink();
+                clearInterval(intervalId); 
+            }
+        }, 500);
+
+        acctNoInput.addEventListener('input', updatePrintLink);
+    });
 </script>
 <script>
 function switchToBuyerDetails() {
@@ -975,6 +986,12 @@ $(document).ready(function() {
         };
 
         $(document).on('click', '.view_atap', function() {
+            var atapId = $(this).data('id');
+            var atapNo = $(this).data('no');
+            loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+        });
+
+        $(document).on('click', '.view_atap_spec', function() {
             var atapId = $(this).data('id');
             var atapNo = $(this).data('no');
             loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');

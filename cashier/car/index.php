@@ -810,6 +810,12 @@ $(document).ready(function() {
         }
     });
 
+    $(document).on('click', '.view_atap_spec', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+    });
+
     $('#create_other_new').click(function() {
         loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
     });

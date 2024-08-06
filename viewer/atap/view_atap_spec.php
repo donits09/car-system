@@ -198,7 +198,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             <th class="text-center">Type</th>
                             <th class="text-right">Amount</th>
                             <th class="text-right">Status</th>
-                            <th class="text-right">Action</th>
+                            <!-- <th class="text-right">Action</th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -261,7 +261,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     }
                                     ?>
                                 </td>
-                                <td align="center">
+                                <!-- <td align="center">
                                     <?php if ($pstatus != 'C') { ?>
                                         <input type="checkbox" class="atap-status" data-id="<?php echo $itemId; ?>" data-no="<?php echo $atapNo; ?>" <?php echo ($row_items['atap_status'] == 1) ? 'checked' : ''; ?>>
                                         <input type="hidden" class="hidden-item-id" id="atapId" value="<?php echo $itemId; ?>" readonly>
@@ -270,7 +270,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     <?php } else { ?>
                                         <span>---</span>
                                     <?php } ?>
-                                </td>
+                                </td> -->
                             </tr>
                         <?php
                         }
@@ -281,11 +281,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <th colspan="3" class="text-right">Total Amount:</th>
                                 <th class="text-right"><?php echo number_format($totalAmount, 2); ?></th>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <td colspan="6" class="text-center">
                                     <button type="button" class="btn btn-primary btn-save-status-all">Save</button>
                                 </td>
-                            </tr>
+                            </tr> -->
                         </tfoot>
                     </table>
             </div>
