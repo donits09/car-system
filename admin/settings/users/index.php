@@ -75,17 +75,17 @@ include('manage_user.php');
                             </button>
                             <div class="dropdown-menu" role="menu">
                                 <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                    data-id="<?php echo $row['id']; ?>"
+                                    data-id="<?php echo $row['id']; ?>" 
                                     data-employee_code="<?php echo $row['c_employee_code']; ?>" 
                                     data-password="<?php echo $row['c_password']; ?>" 
                                     data-realname="<?php echo $row['c_realname']; ?>" 
                                     data-group="<?php echo $row['c_group']; ?>" 
-                                    data-department="<?php echo $row['c_department']; ?>"
+                                    data-department="<?php echo $row['c_department']; ?>" 
                                     data-position="<?php echo $row['c_position']; ?>">
                                     <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-ban text-danger"></span> Inactive</a>
+                                <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>"><span class="fa fa-ban text-danger"></span> Delete</a>
                             </div>
                         </td>
                     </tr>

@@ -34,6 +34,7 @@
     <div class="form-group">
         <label for="payment_status">Payment Status</label>
         <select class="form-control" id="payment_status" name="payment_status" required>
+            <option value="" <?php echo ($payment_status == '') ? 'selected' : ''; ?>></option>
             <option value="C" <?php echo ($payment_status == 'C') ? 'selected' : ''; ?>>CAR</option>
             <option value="O" <?php echo ($payment_status == 'O') ? 'selected' : ''; ?>>OR</option>
             <option value="ST" <?php echo ($payment_status == 'ST') ? 'selected' : ''; ?>>SPECIAL TYPE</option>
