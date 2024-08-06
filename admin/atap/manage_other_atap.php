@@ -219,7 +219,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                             case 'C':
                                                 $statusText = '<span class="badge badge-secondary">CAR</span>';
                                                 break;
-                                            case 'ST':
+                                            case 'S':
                                                 $statusText = '<span class="badge badge-secondary">Special</span>';
                                                 break;
                                             case 'O':
@@ -272,7 +272,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <script>
                 document.querySelectorAll('.dropdown-item').forEach(function(item) {
                     item.addEventListener('click', function(e) {
-                        e.preventDefault();
+                        //e.preventDefault();
 
                         var dropdownButton = this.closest('.dropdown').querySelector('.dropdown-toggle');
                         dropdownButton.textContent = this.textContent;
@@ -290,7 +290,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             case 'C':
                                 statusText = '<span class="badge badge-secondary">CAR</span>';
                                 break;
-                            case 'ST':
+                            case 'S':
                                 statusText = '<span class="badge badge-secondary">Special</span>';
                                 break;
                             case 'O':
