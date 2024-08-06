@@ -59,7 +59,7 @@ include('../../inc/header.php');?>
                 <img src="images/Header.jpg" class="img-thumbnail" style="height:110px;width:750px;margin-left:-105px;border:none;margin-bottom:-5px;z-index:-1;position: relative;margin-bottom:-35px;" alt="">
                 <h4 style="margin-top:-25px; text-align:center; font-weight:normal;">BUYER'S INFORMATION AND PAYMENT RECORDS</h4>
 
-                    <div class="container" style="margin-top:15px;">
+                    <div class="container" style="margin-top:15px;margin-left:0.2px;">
                         <div class="buyer_info">
                            
                         <?php
@@ -114,7 +114,7 @@ include('../../inc/header.php');?>
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">Price=FA*SQM : </th><td><?php echo number_format($house_total,2); ?> = <?php echo $row1['c_floor_area'];?>.0 * <?php echo number_format($row1['c_house_price_sqm'],2); ?></td>
                                     <th style="padding-left:5px; width:150px;">Disc. Amt. : </th><td>(<?php echo $row1['c_h_discount'];?>%) <?php echo number_format ($row1['c_h_discount_amount'],2);?></td>
-                                    <th style="padding-left:5px; width:150px;">Rate : </th><td><?php echo $row1['c_fixed_rate'];?></td>
+                                    <th style="padding-left:5px; width:150px;">Rate : </th><td><?php echo $row1['c_fixed_factor'];?></td>
                                 </tr>
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">Total C.Price: </th><td><?php echo number_format($row1['c_tcp'],2);?></td>
@@ -143,7 +143,7 @@ include('../../inc/header.php');?>
             <td class="report-content-cell">
                 <div class="main" style="margin-top:-30px;width:1100px;">
                     <div class="container">
-                        <div id="tab-3" class="tab-content" style="border:solid 1px gainsboro;width:1100px;">  
+                        <div id="tab-3" class="tab-content" style="border:solid 1px gainsboro;width:1100px;margin-left:21px;">  
                             <table class="table table-striped" style="text-align:right;font-size:11px;">
                             <?php
                             // Connection to PostgreSQL database
@@ -222,9 +222,9 @@ include('../../inc/header.php');?>
                             </div>
                         </div>
                     </div>
-                    <div class="main" style="margin-top:-30px;width:1100px;">
+                    <div class="main" style="margin-top:-30px;width:1100px;margin-left:21px;">
                         <div class="container" style="margin-top:-30px;width:1100px;">
-                            <div id="tab-3" class="tab-content" style="border:solid 1px gainsboro;width:1100px;">  
+                            <div id="tab-3" class="tab-content" style="gainsboro;width:1100px;">  
                             <?php  
                             $id = pg_escape_string($_GET['id']);
                             ?>

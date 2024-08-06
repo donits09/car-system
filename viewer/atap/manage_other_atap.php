@@ -219,7 +219,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                             case 'C':
                                                 $statusText = '<span class="badge badge-secondary">CAR</span>';
                                                 break;
-                                            case 'S':
+                                            case 'ST':
                                                 $statusText = '<span class="badge badge-secondary">Special</span>';
                                                 break;
                                             case 'O':
@@ -291,7 +291,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             case 'C':
                                 statusText = '<span class="badge badge-secondary">CAR</span>';
                                 break;
-                            case 'S':
+                            case 'ST':
                                 statusText = '<span class="badge badge-secondary">Special</span>';
                                 break;
                             case 'O':

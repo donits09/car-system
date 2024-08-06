@@ -220,7 +220,7 @@ class Path extends Shape
                     );
                     break;
 
-                case 's': // shorthand cubic bezierCurveTo, relative
+                case 'ST': // shorthand cubic bezierCurveTo, relative
 
                     // transform to absolute x,y
                     $tempX = $x + $current[3];
@@ -256,7 +256,7 @@ class Path extends Shape
                     $y = $tempY;
                     break;
 
-                case 'S': // shorthand cubic bezierCurveTo, absolute
+                case 'ST': // shorthand cubic bezierCurveTo, absolute
                     $tempX = $current[3];
                     $tempY = $current[4];
 
