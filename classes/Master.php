@@ -316,7 +316,8 @@ Class Master{
 
 	function update_items_status() {
 		$resp = array();
-	
+		$Logs = false;
+
 		error_log(print_r($_POST['items'], true));
 	
 		if (isset($_POST['items']) && is_array($_POST['items'])) {
@@ -340,6 +341,7 @@ Class Master{
 						$result = @odbc_execute($stmt, array($status, $atapId));
 	
 						if ($result) {
+							$Logs = true;
 							$resp['status'] = 'success';
 							$resp['msg'] = "ATAP status successfully updated.";
 						} else {
@@ -394,6 +396,7 @@ Class Master{
 							$update_result = @odbc_execute($update_atap_stmt, array($new_status, $atapNo));
 	
 							if ($update_result) {
+								$Logs = true;
 								$resp['status'] = 'success';
 								$resp['msg'] = "ATAP and items status successfully updated.";
 							} else {
@@ -413,6 +416,11 @@ Class Master{
 					$resp['err'] = odbc_errormsg($conn);
 				}
 			}
+
+			if ($atapNo !== null && $Logs && $atapId !== null) {
+				$this->car_logs('Car Type Management - ATAP', "UPDATED PAYMENT STATUS - $atapNo");
+			}
+
 		} else {
 			$resp['status'] = 'failed';
 			$resp['msg'] = 'Invalid data format.';
