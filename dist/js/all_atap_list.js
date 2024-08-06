@@ -23,7 +23,7 @@
         var atapNo = $(this).data('no');
         $('#viewModal').modal('hide'); 
         setTimeout(function() {
-            loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+            loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
         }, 500); 
     });
     

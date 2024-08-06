@@ -1,7 +1,6 @@
 <?php 
 require_once('../../config.php');
-    
-include('../../inc/header.php');    ?>
+include('../../inc/header.php');?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
