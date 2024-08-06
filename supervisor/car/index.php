@@ -501,6 +501,32 @@ include('../../inc/header.php');
 </div>
 </body>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const acctNoInput = document.getElementById('acct_no');
+        const printPrLink = document.getElementById('print_pr');
+
+        if (!acctNoInput || !printPrLink) {
+            console.error('Required elements not found');
+            return;
+        }
+
+        function updatePrintLink() {
+            const acctNoValue = acctNoInput.value;
+            console.log('Account Number Value:', acctNoValue); 
+            printPrLink.href = `<?php echo base_url ?>admin/car/print_payment_record.php?id=${acctNoValue}`;
+        }
+
+        const intervalId = setInterval(() => {
+            if (acctNoInput.value !== '') {
+                updatePrintLink();
+                clearInterval(intervalId); 
+            }
+        }, 500);
+
+        acctNoInput.addEventListener('input', updatePrintLink);
+    });
+</script>
+<script>
 function switchToBuyerDetails() {
     var buyerDetailsTab = document.getElementById('buyer-details-tab');
     var carListTab = document.getElementById('car-list-tab');

@@ -466,7 +466,7 @@ checkRemoveButton();
 calculateTotal();
 
 $('#atap-form').submit(function(e) {
-    //e.preventDefault();
+    e.preventDefault();
 
     if ($(this).data('formSubmitting')) return;
     $(this).data('formSubmitting', true);

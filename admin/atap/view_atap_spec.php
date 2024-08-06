@@ -296,11 +296,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 }
                             ?>
                             <tr>
-                                <!-- <td colspan="6" class="text-center">
-                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" <?php echo (($stats == 1 || $stats == 3) || ($stats == 2 || $stats == 0) && $pstatus == 'C') ? 'disabled' : ''; ?>>Save</button>
-                                </td> -->
                                 <td colspan="6" class="text-center">
-                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;">Save</button>
+                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" <?php echo ($stats == 3) ? 'disabled' : ''; ?>>Save</button>
                                 </td>
                             </tr>
                         </tfoot>

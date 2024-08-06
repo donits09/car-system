@@ -297,11 +297,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 $results = odbc_exec($conn, $get_main_atap_stats);
                                 if ($main_atap = odbc_fetch_array($results)) {
                                     $stats = $main_atap["status"];
+                               
                                 }
                             ?>
                             <tr>
                                 <td colspan="6" class="text-center">
-                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" <?php echo (($stats == 1 || $stats == 3) || ($stats == 2 || $stats == 0) && $pstatus == 'C') ? 'disabled' : ''; ?>>Save</button>
+                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" <?php echo (($stats == 1 || $stats == 3) || (($stats == 0) && $pstatus == 'C') || (($stats == 2) && $pstatus == 'O')) ? 'disabled' : ''; ?>>Save</button>
                                 </td>
                             </tr>
                         </tfoot>
