@@ -122,9 +122,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             });
         });
     </script>
-
-
-
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">

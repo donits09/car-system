@@ -163,21 +163,29 @@ Class Master{
 		$resp = array();
 	
 		if (isset($atapId) && isset($atapNo)) {
+			error_log("Attempting to cancel ATAP with number: $atapNo");
+	
 			$sql = "UPDATE t_atap SET status = 3 WHERE id = ?";
+			$sql2 = "UPDATE t_atap_items SET atap_status = 3 WHERE c_atap_no = ?";
 			$stmt = odbc_prepare($this->conn, $sql);
+			$stmt2 = odbc_prepare($this->conn, $sql2);
 	
-			if ($stmt) {
-				$result = @odbc_execute($stmt, array($atapId)); 
+			if ($stmt && $stmt2) {
+				$result = @odbc_execute($stmt, array($atapId));
+				$result2 = @odbc_execute($stmt2, array($atapNo));
 	
-				if ($result) {
+				if ($result && $result2) {
 					$this->car_logs('Car Management - ATAP', "CANCELLED - ATAP#$atapNo");
 					$resp['status'] = 'success';
 					$resp['msg'] = "ATAP successfully cancelled.";
 				} else {
+					error_log("Error executing updates for ATAP with number: $atapNo");
 					$resp['status'] = 'failed';
 					$resp['err'] = odbc_errormsg($this->conn);
 				}
 			} else {
+				
+				error_log("Error preparing statements for ATAP with number: $atapNo");
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
@@ -189,6 +197,7 @@ Class Master{
 		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
+	
 	
 	function delete_car_type($carTypeId, $carType) {
 		$resp = array();

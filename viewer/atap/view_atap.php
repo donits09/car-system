@@ -257,7 +257,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 } elseif ($row_items['atap_status'] == 1) {
                                     echo '<span class="badge badge-success">Paid</span>';
                                 } else {
-                                    echo '';
+                                    echo '<span class="badge badge-danger">Cancelled</span>';
                                 }
                                 ?>
                             </td>

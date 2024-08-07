@@ -252,14 +252,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <td class="text-right"><?php echo number_format($amount, 2); ?></td>
                                 <td class="text-center">
                                     <?php
-                                    if ($row_items['atap_status'] == 0) {
-                                        echo '<span class="badge badge-warning">Pending</span>';
-                                    } elseif ($row_items['atap_status'] == 1) {
-                                        echo '<span class="badge badge-success">Paid</span>';
-                                    } else {
-                                        echo '';
-                                    }
-                                    ?>
+                                if ($row_items['atap_status'] == 0) {
+                                    echo '<span class="badge badge-warning">Pending</span>';
+                                } elseif ($row_items['atap_status'] == 1) {
+                                    echo '<span class="badge badge-success">Paid</span>';
+                                } else {
+                                    echo '<span class="badge badge-danger">Cancelled</span>';
+                                }
+                                ?>
                                 </td>
                                 <td align="center">
                                     <?php if ($pstatus != 'C') { ?>
