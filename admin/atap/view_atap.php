@@ -252,14 +252,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <td class="text-right"><?php echo number_format($amount, 2); ?></td>
                                 <td class="text-center">
                                     <?php
-                                    if ($row_items['atap_status'] == 0) {
-                                        echo '<span class="badge badge-warning">Pending</span>';
-                                    } elseif ($row_items['atap_status'] == 1) {
-                                        echo '<span class="badge badge-success">Paid</span>';
-                                    } else {
-                                        echo '';
-                                    }
-                                    ?>
+                                if ($row_items['atap_status'] == 0) {
+                                    echo '<span class="badge badge-warning">Pending</span>';
+                                } elseif ($row_items['atap_status'] == 1) {
+                                    echo '<span class="badge badge-success">Paid</span>';
+                                } else {
+                                    echo '<span class="badge badge-danger">Cancelled</span>';
+                                }
+                                ?>
                                 </td>
                                 <td align="center">
                                     <?php if ($pstatus != 'C') { ?>
@@ -288,10 +288,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <th colspan="3" class="text-right">Total Amount:</th>
                                 <th class="text-right"><?php echo number_format($totalAmount, 2); ?></th>
                             </tr>
-                            
+                            <?php
+                                $get_main_atap_stats = "SELECT status FROM t_atap WHERE c_atap_no = '$atapNo'";
+                                $results = odbc_exec($conn, $get_main_atap_stats);
+                                if ($main_atap = odbc_fetch_array($results)) {
+                                    $stats = $main_atap["status"];
+                                }
+                            ?>
                             <tr>
                                 <td colspan="6" class="text-center">
-                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;">Save</button>
+                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" <?php echo ($stats == 3) ? 'disabled' : ''; ?>>Save</button>
                                 </td>
                             </tr>
                         </tfoot>
