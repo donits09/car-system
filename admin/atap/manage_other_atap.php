@@ -3,9 +3,7 @@ session_start();
 
 require_once('../../inc/check_session.php');
 check_user_group(1);
-
 include('../../config.php');
-
 $atap_remarks = '';
 $c_atap_no = null;
 $c_phase = '';
@@ -16,7 +14,6 @@ $c_encoded_by = '';
 $c_tran_date = date('Y-m-d H:i:s');
 $transaction_types = []; 
 $payment_status = null;
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_atap_query = "SELECT 
         a.id, 
@@ -57,7 +54,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $atapNo = $_GET['no'];
     $stmt = odbc_prepare($conn, $get_atap_query);
     odbc_execute($stmt, array($atapId));
-
+////test
     if ($result = odbc_fetch_array($stmt)) {
         $c_atap_no = $result["c_atap_no"];
         $c_phase = $result["c_phase"];
@@ -68,7 +65,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_tran_date = $result["c_tran_date"];
         $atap_remarks = $result["atap_remarks"];
     }
-
     $get_transaction_types_query = "SELECT * FROM t_atap_items WHERE c_atap_no = ?";
     $stmt_types = odbc_prepare($conn, $get_transaction_types_query);
     odbc_execute($stmt_types, array($atapNo));
