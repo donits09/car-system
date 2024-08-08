@@ -370,7 +370,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     statusText = '<span class="badge badge-secondary">Other</span>';
                                     break;
                             }
-
                             paymentStatusSpan.innerHTML = statusText;
                         });
                     });
