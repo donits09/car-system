@@ -54,7 +54,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $atapNo = $_GET['no'];
     $stmt = odbc_prepare($conn, $get_atap_query);
     odbc_execute($stmt, array($atapId));
-////test
+
     if ($result = odbc_fetch_array($stmt)) {
         $c_atap_no = $result["c_atap_no"];
         $c_phase = $result["c_phase"];

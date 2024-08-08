@@ -5,7 +5,7 @@ require_once('../../inc/check_session.php');
 check_user_group(1);
 
 include('../../config.php');
-
+$selected = ''; 
 $c_name = '';
 $c_account_no = null;
 $atap_remarks = '';
@@ -149,183 +149,251 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
     <div class="form-group">
-        <label for="transaction">Transaction</label>
         <table class="table table-striped" id="transaction-table">
-    <thead>
-        <tr>
-            <th>Transaction Name</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
-            <?php foreach ($transaction_types as $key => $type) : ?>
-            <tr>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-outline-dark dropdown-toggle transaction-type" type="button" id="dropdownMenuButton<?php echo $key; ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php echo htmlspecialchars($type['c_tran_type']); ?>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo $key; ?>">
-                        <?php
-                        $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-                        $type_result = odbc_exec($conn, $car_type_query);
-                        while ($row = odbc_fetch_array($type_result)) {
-                            $selected = (isset($type['c_tran_type']) && $type['c_tran_type'] == $row['c_payment_type']) ? 'active' : '';
-                            echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
-                        }
-                        ?>
-                    </div>
-                    <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
-                </div>
-            </td>
-            <td>
-                <span class="payment-status">
-                    <?php
-                    $c_payment = $type['c_tran_type'];
-                    $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
-                    $results = odbc_exec($conn, $get_pstatus_qry);
+            <thead>
+                <th>Transaction Name</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+            </thead>
+            <tbody>
+                <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
+                    <?php foreach ($transaction_types as $key => $type) : ?>
+                        <tr>
+                            <td>
+                                <div class="dropdown">
+                                    <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
+                                    <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
+                                        <?php
+                                        $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                                        $type_result = odbc_exec($conn, $car_type_query);
+                                        while ($row = odbc_fetch_array($type_result)) {
+                                            echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+                                        }
+                                        ?>
+                                    </div>
+                                    <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
+                                </div>
+                                <script>
+                                $(document).ready(function () {
+                                    $('.c_car_type').on('input', function () {
+                                        var input = $(this).val().toLowerCase();
+                                        var comboBoxMenu = $(this).siblings('.comboBoxMenu');
+                                        var hasVisibleOptions = false;
+                                        comboBoxMenu.find('.dropdown-item').each(function () {
+                                            if ($(this).text().toLowerCase().startsWith(input)) {
+                                                $(this).show();
+                                                hasVisibleOptions = true;
+                                            } else {
+                                                $(this).hide();
+                                            }
+                                        });
 
-                    if ($p_status = odbc_fetch_array($results)) {
-                        $pstatus = trim($p_status["payment_status"]); 
-                        $statusText = ''; 
+                                        if (hasVisibleOptions) {
+                                            comboBoxMenu.show();
+                                        } else {
+                                            comboBoxMenu.hide();
+                                        }
+                                    });
 
-                        switch ($pstatus) {
+                                    $('.comboBoxMenu').on('click', '.dropdown-item', function () {
+                                        var selectedText = $(this).data('value');
+                                        $(this).closest('.dropdown').find('.c_car_type').val(selectedText);
+                                        $(this).closest('.comboBoxMenu').hide();
+                                    });
+
+                                    $('.c_car_type').on('focus click', function () {
+                                        $(this).siblings('.comboBoxMenu').show();
+                                    });
+
+                                    $(document).on('click', function (e) {
+                                        if (!$(e.target).closest('.dropdown').length) {
+                                            $('.comboBoxMenu').hide();
+                                        }
+                                    });
+                                });
+                                </script>
+                            </td>
+                            <td>
+                                <span class="payment-status">
+                                    <?php
+                                    $c_payment = $type['c_tran_type'];
+                                    $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
+                                    $results = odbc_exec($conn, $get_pstatus_qry);
+
+                                    if ($p_status = odbc_fetch_array($results)) {
+                                        $pstatus = trim($p_status["payment_status"]); 
+                                        $statusText = ''; 
+
+                                        switch ($pstatus) {
+                                            case 'C':
+                                                $statusText = '<span class="badge badge-secondary">CAR</span>';
+                                                break;
+                                            case 'ST':
+                                                $statusText = '<span class="badge badge-secondary">Special</span>';
+                                                break;
+                                            case 'O':
+                                                $statusText = '<span class="badge badge-secondary">OR</span>';
+                                                break;
+                                            default:
+                                                $statusText = '<span class="badge badge-secondary">Other</span>';
+                                                break;
+                                        }
+
+                                        echo $statusText;
+                                    }
+                                    ?>
+                                </span>
+                            </td>
+                            <td>
+                                <input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars(number_format((float)$type['c_atap_amount'], 2, '.', '')); ?>" required>
+                            </td>
+                            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else : ?>
+                    <tr>
+                        <td>
+                            <div class="dropdown">
+                                <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
+                                <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
+                                    <?php
+                                    $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                                    $type_result = odbc_exec($conn, $car_type_query);
+                                    while ($row = odbc_fetch_array($type_result)) {
+                                        echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+                                    }
+                                    ?>
+                                </div>
+                                <input type="hidden" name="transaction_type[]">
+                                <input type="hidden" name="payment_status[]">
+                            </div>
+                            <script>
+                                $(document).ready(function () {
+                                    $('.c_car_type').on('input', function () {
+                                        var input = $(this).val().toLowerCase();
+                                        var comboBoxMenu = $(this).siblings('.comboBoxMenu');
+                                        var hasVisibleOptions = false;
+                                        comboBoxMenu.find('.dropdown-item').each(function () {
+                                            if ($(this).text().toLowerCase().startsWith(input)) {
+                                                $(this).show();
+                                                hasVisibleOptions = true;
+                                            } else {
+                                                $(this).hide();
+                                            }
+                                        });
+
+                                        if (hasVisibleOptions) {
+                                            comboBoxMenu.show();
+                                        } else {
+                                            comboBoxMenu.hide();
+                                        }
+                                    });
+
+                                    $('.comboBoxMenu').on('click', '.dropdown-item', function () {
+                                        var selectedText = $(this).data('value');
+                                        $(this).closest('.dropdown').find('.c_car_type').val(selectedText);
+                                        $(this).closest('.comboBoxMenu').hide();
+                                    });
+
+                                    $('.c_car_type').on('focus click', function () {
+                                        $(this).siblings('.comboBoxMenu').show();
+                                    });
+
+                                    $(document).on('click', function (e) {
+                                        if (!$(e.target).closest('.dropdown').length) {
+                                            $('.comboBoxMenu').hide();
+                                        }
+                                    });
+                                });
+                            </script>
+                        </td>
+                        <td>
+                            <span class="payment-status-text"></span>
+                        </td>
+                        <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01"></td>
+                        <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+            <script>
+                document.querySelectorAll('.dropdown-item').forEach(function(item) {
+                    item.addEventListener('click', function(e) {
+                        //e.preventDefault();
+
+                        var dropdownButton = this.closest('.dropdown').querySelector('.dropdown-toggle');
+                        dropdownButton.textContent = this.textContent;
+
+                        var hiddenInput = this.closest('.dropdown').querySelector('input[type="hidden"]');
+                        hiddenInput.value = this.getAttribute('data-value');
+
+                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status');
+                        var status = this.getAttribute('data-status').trim(); 
+                        var statusText = '';
+
+                        console.log('Selected status:', status);
+
+                        switch (status) {
                             case 'C':
-                                $statusText = '<span class="badge badge-secondary">CAR</span>';
+                                statusText = '<span class="badge badge-secondary">CAR</span>';
                                 break;
                             case 'ST':
-                                $statusText = '<span class="badge badge-secondary">Special</span>';
+                                statusText = '<span class="badge badge-secondary">Special</span>';
                                 break;
                             case 'O':
-                                $statusText = '<span class="badge badge-secondary">OR</span>';
+                                statusText = '<span class="badge badge-secondary">OR</span>';
                                 break;
                             default:
-                                $statusText = '<span class="badge badge-secondary">Other</span>';
+                                statusText = '<span class="badge badge-secondary">Other</span>';
                                 break;
                         }
+                        paymentStatusSpan.innerHTML = statusText;
+                    });
+                });
+            </script>
+            <script>
+                $(document).ready(function() {
+                    $('.dropdown-menu a').click(function(event) {
+                        //event.preventDefault();
+                        var $dropdown = $(this).closest('.dropdown');
+                        var $button = $dropdown.find('.dropdown-toggle');
+                        var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
+                        var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
+                        var $statusText = $dropdown.closest('tr').find('.payment-status-text');
+                        var paymentStatus = $(this).data('status');
 
-                        echo $statusText;
-                    }
-                    ?>
-                </span>
-            </td>
-                    <td>
-                        <input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo htmlspecialchars(number_format((float)$type['c_atap_amount'], 2, '.', '')); ?>" required>
-                    </td>
-                    <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+                        console.log("Selected Payment Status:", paymentStatus);
+
+                        $button.text($(this).text());
+                        $hiddenInput.val($(this).data('value'));
+                        $hiddenStatusInput.val(paymentStatus);
+
+                        if (paymentStatus.trim() == 'C') {
+                            $statusText.html('<span class="badge badge-secondary">CAR</span>');
+                        } else if (paymentStatus.trim() == 'S') {
+                            $statusText.html('<span class="badge badge-secondary">Special</span>');
+                        } else if (paymentStatus.trim() == 'O') {
+                            $statusText.html('<span class="badge badge-secondary">OR</span>');
+                        } else {
+                            $statusText.html('<span class="badge badge-secondary">Other</span>');
+                        }
+
+                        $dropdown.find('.dropdown-item').removeClass('active');
+                        $(this).addClass('active');
+                    });
+                });
+            </script>
+            <tfoot>
+                <tr>
+                    <th colspan="1" style="text-align:right;">
+                        <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:
+                    </th>
+                    <th></th>
+                    <th id="total-amount" class="total-amount">0.00</th>
+                    <th></th>
                 </tr>
-            <?php endforeach; ?>
-        <?php else : ?>
-            <tr>
-                <td>
-                    <div class="dropdown">
-                        <button class="btn btn-outline-dark dropdown-toggle transaction-type" type="button" id="dropdownMenuButton0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select Type
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton0">
-                            <?php
-                            $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-                            $type_result = odbc_exec($conn, $car_type_query);
-                            while ($row = odbc_fetch_array($type_result)) {
-                                echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
-                            }
-                            ?>
-                        </div>
-                        <input type="hidden" name="transaction_type[]">
-                        <input type="hidden" name="payment_status[]">
-                    </div>
-                </td>
-                <td>
-                    <span class="payment-status-text"></span>
-                </td>
-                <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-    <script>
-        document.querySelectorAll('.dropdown-item').forEach(function(item) {
-            item.addEventListener('click', function(e) {
-                //e.preventDefault();
-
-                var dropdownButton = this.closest('.dropdown').querySelector('.dropdown-toggle');
-                dropdownButton.textContent = this.textContent;
-
-                var hiddenInput = this.closest('.dropdown').querySelector('input[type="hidden"]');
-                hiddenInput.value = this.getAttribute('data-value');
-
-                var paymentStatusSpan = this.closest('tr').querySelector('.payment-status');
-                var status = this.getAttribute('data-status').trim(); 
-                var statusText = '';
-
-                console.log('Selected status:', status);
-
-                switch (status) {
-                    case 'C':
-                        statusText = '<span class="badge badge-secondary">CAR</span>';
-                        break;
-                    case 'ST':
-                        statusText = '<span class="badge badge-secondary">Special</span>';
-                        break;
-                    case 'O':
-                        statusText = '<span class="badge badge-secondary">OR</span>';
-                        break;
-                    default:
-                        statusText = '<span class="badge badge-secondary">Other</span>';
-                        break;
-                }
-
-                paymentStatusSpan.innerHTML = statusText;
-            });
-        });
-    </script>
-    <script>
-    $(document).ready(function() {
-        $('.dropdown-menu a').click(function(event) {
-            //event.preventDefault();
-            var $dropdown = $(this).closest('.dropdown');
-            var $button = $dropdown.find('.dropdown-toggle');
-            var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
-            var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
-            var $statusText = $dropdown.closest('tr').find('.payment-status-text');
-            var paymentStatus = $(this).data('status');
-
-            console.log("Selected Payment Status:", paymentStatus); 
-
-            $button.text($(this).text());
-            $hiddenInput.val($(this).data('value'));
-            $hiddenStatusInput.val(paymentStatus);
-
-            if (paymentStatus.trim() == 'C') {
-                $statusText.html('<span class="badge badge-secondary">CAR</span>');
-            } else if (paymentStatus.trim() == 'S') {
-                $statusText.html('<span class="badge badge-secondary">Special</span>');
-            } else if (paymentStatus.trim() == 'O') {
-                $statusText.html('<span class="badge badge-secondary">OR</span>');
-            } else {
-                $statusText.html('<span class="badge badge-secondary">Other</span>');
-            }
-
-            $dropdown.find('.dropdown-item').removeClass('active');
-            $(this).addClass('active');
-        });
-    });
-    </script>
-    <tfoot>
-        <tr>
-            <th colspan="1" style="text-align:right;">
-                <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:
-            </th>
-            <th></th>
-            <th id="total-amount" class="total-amount">0.00</th>
-            <th></th>
-        </tr>
-    </tfoot>
-</table>
-
+            </tfoot>
+        </table>
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
@@ -365,7 +433,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
         $type_result = odbc_exec($conn, $car_type_query);
         while ($row = odbc_fetch_array($type_result)) {
-            echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+            echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
         }
         ?>
     `;
@@ -398,13 +466,12 @@ $(document).ready(function() {
         $('.dropdown-menu a').off('click').on('click', function(event) {
             //event.preventDefault();
             var $dropdown = $(this).closest('.dropdown');
-            var $button = $dropdown.find('.dropdown-toggle');
+            var $input = $dropdown.find('input[name="c_car_type"]');
             var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
             var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
             var $statusText = $dropdown.closest('tr').find('.payment-status-text');
             var paymentStatus = $(this).data('status');
-
-            $button.text($(this).text());
+            $input.val($(this).data('value'));
             $hiddenInput.val($(this).data('value'));
             $hiddenStatusInput.val(paymentStatus);
 
@@ -420,41 +487,77 @@ $(document).ready(function() {
 
             $dropdown.find('.dropdown-item').removeClass('active');
             $(this).addClass('active');
-        });
-    }
-    initializeDropdown(); 
 
-    $('#add-row').on('click', function() {
-        let newRow = `<tr>
-            <td>
-                <div class="dropdown">
-                    <button class="btn btn-outline-dark dropdown-toggle transaction-type" type="button" id="dropdownMenuButton0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Select Type
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton0">
-                        <?php
-                        $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-                        $type_result = odbc_exec($conn, $car_type_query);
-                        while ($row = odbc_fetch_array($type_result)) {
-                            echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
-                        }
-                        ?>
-                    </div>
-                    <input type="hidden" name="transaction_type[]">
-                    <input type="hidden" name="payment_status[]">
-                </div>
-            </td>
-            <td>
-                <span class="payment-status-text"></span>
-            </td>
-            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-        </tr>`;
-        $('#transaction-table tbody').append(newRow);
-        initializeDropdown();  
+            $dropdown.find('.dropdown-menu').hide();
+        });
+
+        $('.dropdown input[name="c_car_type"]').off('input').on('input', function () {
+                var input = $(this).val().toLowerCase();
+                var $menu = $(this).siblings('.dropdown-menu');
+                var hasVisibleOptions = false;
+                $menu.find('.dropdown-item').each(function () {
+                    if ($(this).text().toLowerCase().startsWith(input)) {
+                        $(this).show();
+                        hasVisibleOptions = true;
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+                $menu.toggle(hasVisibleOptions);
+            });
+
+            $('.dropdown input[name="c_car_type"]').off('focus click').on('focus click', function () {
+                var $menu = $(this).siblings('.dropdown-menu');
+                $menu.show();
+            });
+
+            function positionDropdown() {
+                $('.dropdown').each(function () {
+                    var $input = $(this).find('input[name="c_car_type"]');
+                    var $menu = $(this).find('.dropdown-menu');
+                    var inputOffset = $input.offset();
+                    $menu.css({
+                        top: inputOffset.top + $input.outerHeight(),
+                        left: inputOffset.left,
+                        width: $input.outerWidth()
+                    });
+                });
+            }
+
+            $(window).on('resize', positionDropdown);
+            positionDropdown();
+    }
+
+    $('#transaction-table').on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
         calculateTotal();
         checkRemoveButton();
     });
+
+    $('#add-row').on('click', function() {
+            let newRow = `<tr>
+                <td>
+                    <div class="dropdown">
+                        <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" name="c_car_type" placeholder="Type or select an option" autocomplete="off">
+                        <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
+                            ${dropdownOptions}
+                        </div>
+                        <input type="hidden" name="transaction_type[]">
+                        <input type="hidden" name="payment_status[]">
+                    </div>
+                </td>
+                <td>
+                    <span class="payment-status-text"></span>
+                </td>
+                <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+            </tr>`;
+            $('#transaction-table tbody').append(newRow);
+            initializeDropdown();
+            calculateTotal();
+            checkRemoveButton();
+        });
 });
        
 
