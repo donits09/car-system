@@ -111,10 +111,10 @@ $current_date = date('Y-m-d');
                                         if ($buyer_details) {
                                             echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
                                         } else {
-                                            echo "Unknown";
+                                            echo "-";
                                         }
                                     } else {
-                                        echo "Unknown";
+                                        echo "-";
                                     }
                                 } else {
                                     echo htmlspecialchars($row['c_name']);
@@ -181,7 +181,7 @@ $current_date = date('Y-m-d');
                                 } elseif ($row['c_mop'] == 2) {
                                     echo "Check";
                                 } else {
-                                    echo "Unknown";
+                                    echo "-";
                                 }
                                 ?>
                             </td>
@@ -192,7 +192,7 @@ $current_date = date('Y-m-d');
                                 } elseif ($row['status'] == 1) {
                                     echo "CANCELLED";
                                 } else {
-                                    echo "Unknown";
+                                    echo "-";
                                 }
                                 ?>
                             </td>
@@ -212,7 +212,7 @@ $current_date = date('Y-m-d');
                                 if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
                                     echo htmlspecialchars($encoder["c_realname"]);
                                 } else {
-                                    echo "Unknown";
+                                    echo "-";
                                 }
                                 ?>
                             </td>

@@ -48,10 +48,10 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                     if ($buyer_details) {
                         echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
                     } else {
-                        echo "Unknown";
+                        echo "-";
                     }
                 } else {
-                    echo "Unknown";
+                    echo "-";
                 }
             } else {
                 echo htmlspecialchars($row['c_name']);
@@ -121,7 +121,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
         } elseif ($row['c_mop'] == 3) {
             echo "Online";
         } else {
-            echo "Unknown";
+            echo "-";
         }
         ?>
     </td>
