@@ -411,20 +411,24 @@ function isActive($pages) {
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     try {
-                        let data = JSON.parse(xhr.responseText);
-                        notify_container.innerHTML = ''; 
-                        let title = document.createElement('h2');
-                        title.textContent = 'Notifications';
-                        title.classList.add('notification-title');
-                        notify_container.appendChild(title);
-                        let messageList = document.createElement('ul');
-                        messageList.classList.add('notification-list');
-                        data.forEach(notification => {
-                            let li = document.createElement('li');
-                            li.innerHTML = formatFirstWordBold(notification.message);
-                            messageList.appendChild(li);
-                        });
-                        notify_container.appendChild(messageList);
+                        if (xhr.getResponseHeader('Content-Type') === 'application/json') {
+                            let data = JSON.parse(xhr.responseText);
+                            notify_container.innerHTML = ''; 
+                            let title = document.createElement('h2');
+                            title.textContent = 'Notifications';
+                            title.classList.add('notification-title');
+                            notify_container.appendChild(title);
+                            let messageList = document.createElement('ul');
+                            messageList.classList.add('notification-list');
+                            data.forEach(notification => {
+                                let li = document.createElement('li');
+                                li.innerHTML = formatFirstWordBold(notification.message);
+                                messageList.appendChild(li);
+                            });
+                            notify_container.appendChild(messageList);
+                        } else {
+                            console.error('Unexpected response format:', xhr.responseText);
+                        }
                     } catch (error) {
                         console.error('Error parsing JSON:', error);
                     }
@@ -432,6 +436,7 @@ function isActive($pages) {
                     console.error('Request failed with status:', xhr.status);
                 }
             };
+
         }
     });
 
