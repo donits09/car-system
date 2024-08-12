@@ -136,7 +136,7 @@
                         } elseif ($row['c_mop'] == 3) {
                             echo "Online";
                         } else {
-                            echo "Unknown";
+                            echo "-";
                         }
                         ?>
                     </td>

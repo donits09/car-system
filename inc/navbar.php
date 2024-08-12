@@ -50,6 +50,87 @@ function isActive($pages) {
       top: 50%;
       transform: translateY(-45%);
     }
+
+
+    .notify {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .notify-btn {
+        position: relative;
+    }
+
+    .icon-button {
+        width: 30px; 
+        height: 30px;
+        border: none;
+        background: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .icon-button__badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 20px;
+        height: 20px;
+        background: red;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 12px;
+    }
+
+    .notify-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: #fff;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        display: none;
+        z-index: 1000;
+        width: 300px;
+    }
+
+    .notify-menu.show {
+        display: block;
+    }
+
+    .notification-title {
+        font-size: 18px;
+        color: black;
+        padding: 7px;
+        background-color: gainsboro;
+        margin: 0;
+    }
+
+    .notification-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .notification-list li {
+        padding: 7px;
+        font-size: 14px;
+        background-color: #f2f2f2;
+        color: black;
+        cursor: pointer;
+    }
+
+    .notification-list li:hover {
+        background-color: #007bff;
+        color: white;
+    }
+
   </style>
 </head>
 <body>
@@ -241,77 +322,125 @@ function isActive($pages) {
     <?php } ?>
 
     <?php if ($c_group == 4) { ?>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <!-- <li class="nav-item dropdown<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBell" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Bell
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBell">
-                    
-                </div>
-            </li> -->
-            <li class="nav-item<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
-                <a class="nav-link" href="<?php echo base_url ?>viewer/car?page=car_list">Home</a>
-            </li>
-            <li class="nav-item dropdown<?php echo isActive(['/viewer/atap/atap_list.php']) ? ' active' : ''; ?>">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Files
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
-                    <a class="dropdown-item" href="<?php echo base_url ?>viewer/atap/all_atap_list.php">ATAP List</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <?php echo htmlspecialchars($c_realname); ?>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
-                    <a class="dropdown-item" href="<?php echo base_url ?>viewer/settings/users/my_account.php">My Account</a>
-                    <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
-                </div>
-            </li>
-        </ul>
-    </div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
+                    <div class="notify">
+                        <a class="nav-link" href="#" id="notify-btn">
+                            <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
+                            <span class="icon-button__badge" id="show_notif">0</span>
+                        </a>
+                        <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
+                    <a class="nav-link" href="<?php echo base_url ?>viewer/car?page=car_list">Home</a>
+                </li>
+                <li class="nav-item dropdown<?php echo isActive(['/viewer/atap/atap_list.php']) ? ' active' : ''; ?>">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Files
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
+                        <a class="dropdown-item" href="<?php echo base_url ?>viewer/atap/all_atap_list.php">ATAP List</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php echo htmlspecialchars($c_realname); ?>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                        <a class="dropdown-item" href="<?php echo base_url ?>viewer/settings/users/my_account.php">My Account</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
     <?php } ?>
   </div>
 </nav>
 </body>
 </html>
-<!-- <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const bellDropdown = document.getElementById('navbarDropdownBell');
-    const notificationsMenu = bellDropdown.nextElementSibling;
+<script>
+    const username = "<?php echo $_SESSION['username']; ?>";
+    const baseURL = "<?php echo base_url; ?>";
+</script>
 
-    bellDropdown.addEventListener('click', function () {
+<script>
+    const notify_btn = document.getElementById('notify-btn');
+    const notify_label = document.getElementById('show_notif');
+    const notify_container = document.getElementById('notify-menu');
+    const xhr = new XMLHttpRequest();
 
-        fetch('<?php echo base_url ?>notif/notif.php')
-            .then(response => response.json())
-            .then(data => {
-                notificationsMenu.innerHTML = ''; 
-                if (data.notifications && data.notifications.length > 0) {
-                    data.notifications.forEach(notification => {
-                        const notificationItem = document.createElement('a');
-                        notificationItem.classList.add('dropdown-item');
-                        notificationItem.href = notification.link;
-                        notificationItem.textContent = notification.message;
-                        notificationsMenu.appendChild(notificationItem);
-                    });
-                } else {
-                    const noNotifications = document.createElement('div');
-                    noNotifications.classList.add('dropdown-item');
-                    noNotifications.textContent = 'No new notifications';
-                    notificationsMenu.appendChild(noNotifications);
+    function notify_me() {
+        xhr.open('GET', `<?php echo base_url; ?>notif/select.php?username=<?php echo urlencode($username); ?>`, true);
+        xhr.send();
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                try {
+                    let get_data = JSON.parse(xhr.responseText);
+                    if (Array.isArray(get_data)) {
+                        notify_label.innerHTML = get_data.length;
+                        notify_container.innerHTML = '';
+                        get_data.forEach(notification => {
+                            let div = document.createElement('div');
+                            div.textContent = notification.message;
+                            notify_container.appendChild(div);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching notifications:', error);
-                const errorNotification = document.createElement('div');
-                errorNotification.classList.add('dropdown-item');
-                errorNotification.textContent = 'Error loading notifications';
-                notificationsMenu.appendChild(errorNotification);
-            });
-    });
-});
+            }
+        };
+    }
 
-</script> -->
+    window.onload = () => {
+        // notify_me(); 
+        setInterval(() => {
+            // notify_me(); 
+        }, 10000); 
+    };
+
+    notify_btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        notify_container.classList.toggle('show');
+        if (notify_container.classList.contains('show')) {
+            xhr.open('GET', `<?php echo base_url; ?>notif/data.php?username=<?php echo urlencode($username); ?>`, true);
+            xhr.send();
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    try {
+                        let data = JSON.parse(xhr.responseText);
+                        notify_container.innerHTML = ''; 
+                        let title = document.createElement('h2');
+                        title.textContent = 'Notifications';
+                        title.classList.add('notification-title');
+                        notify_container.appendChild(title);
+                        let messageList = document.createElement('ul');
+                        messageList.classList.add('notification-list');
+                        data.forEach(notification => {
+                            let li = document.createElement('li');
+                            li.innerHTML = formatFirstWordBold(notification.message);
+                            messageList.appendChild(li);
+                        });
+                        notify_container.appendChild(messageList);
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
+                    }
+                } else {
+                    console.error('Request failed with status:', xhr.status);
+                }
+            };
+        }
+    });
+
+    function formatFirstWordBold(msg) {
+        let words = msg.split(' ');
+        if (words.length > 0) {
+            words[0] = '<strong>' + words[0] + '</strong>';
+        }
+        return words.join(' ');
+    }
+
+</script>
