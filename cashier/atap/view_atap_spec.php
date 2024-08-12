@@ -160,7 +160,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tr>
                         <tr>
                             <th>Remarks:</th>
-                            <td>
+                            <td style="max-width: 200px; word-wrap: break-word;">
                                 <?php echo htmlspecialchars($row['atap_remarks']); ?>
                             </td>
                         </tr>

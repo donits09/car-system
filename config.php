@@ -3,10 +3,7 @@
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
 
-
 define('base_url','http://localhost/car/');
-
-//define('base_url','http://localhost/car/');
 
 global $dsn, $user, $pass;
 $dsn = "PostgreSQL30"; 
