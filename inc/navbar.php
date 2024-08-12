@@ -63,7 +63,7 @@ function isActive($pages) {
     }
 
     .icon-button {
-        width: 30px; /* Adjust the size if needed */
+        width: 30px; 
         height: 30px;
         border: none;
         background: transparent;
@@ -77,7 +77,7 @@ function isActive($pages) {
         position: absolute;
         top: -5px;
         right: -5px;
-        width: 20px; /* Adjust the size if needed */
+        width: 20px;
         height: 20px;
         background: red;
         color: #fff;
@@ -97,7 +97,7 @@ function isActive($pages) {
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         display: none;
         z-index: 1000;
-        width: 300px; /* Adjust width if needed */
+        width: 300px;
     }
 
     .notify-menu.show {
