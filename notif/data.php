@@ -8,11 +8,25 @@ if (!$conn) {
     echo json_encode(['error' => 'Failed to connect to database. Please try again later.']);
     exit;
 }
+function timeAgo($timestamp) {
+    $currentTime = time();
+    $notificationTime = strtotime($timestamp);
+    $timeDiff = $currentTime - $notificationTime;
 
+    if ($timeDiff < 60) {
+        return $timeDiff . 's ago';
+    } elseif ($timeDiff < 3600) {
+        return floor($timeDiff / 60) . 'm ago';
+    } elseif ($timeDiff < 86400) {
+        return floor($timeDiff / 3600) . 'h ago';
+    } else {
+        return floor($timeDiff / 86400) . 'd ago';
+    }
+}
 $username = isset($_GET['username']) ? $_GET['username'] : 'Guest';
 
 try {
-    $sql = "SELECT message FROM t_car_notif WHERE user_to_be_notified = ? ORDER BY date_created";
+    $sql = "SELECT * FROM t_car_notif WHERE user_to_be_notified = ? ORDER BY date_created";
     $stmt = odbc_prepare($conn, $sql);
     if (!$stmt) {
         throw new Exception('Failed to prepare the statement: ' . odbc_errormsg($conn));

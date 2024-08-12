@@ -97,7 +97,7 @@ function isActive($pages) {
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         display: none;
         z-index: 1000;
-        width: 300px;
+        width: 200px;
     }
 
     .notify-menu.show {
@@ -105,7 +105,7 @@ function isActive($pages) {
     }
 
     .notification-title {
-        font-size: 18px;
+        font-size: 15px;
         color: black;
         padding: 7px;
         background-color: gainsboro;
@@ -121,14 +121,22 @@ function isActive($pages) {
     .notification-list li {
         padding: 7px;
         font-size: 14px;
-        background-color: #f2f2f2;
+        background-color: white;
         color: black;
         cursor: pointer;
     }
 
-    .notification-list li:hover {
+    /* .notification-list li:hover {
         background-color: #007bff;
         color: white;
+    } */
+
+    .unseen-notification {
+        background-color: whitesmoke;
+    }
+
+    .seen-notification {
+        background-color: white;
     }
 
   </style>
@@ -145,6 +153,16 @@ function isActive($pages) {
     <?php if ($c_group == 1) { ?>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
+                    <div class="notify">
+                        <a class="nav-link" href="#" id="notify-btn">
+                            <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
+                            <span class="icon-button__badge" id="show_notif">0</span>
+                        </a>
+                        <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
+                        </div>
+                    </div>
+                </li>
                 <li class="nav-item<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
                 <a class="nav-link" href="<?php echo base_url ?>admin/car?page=car_list">Home</a>
                 </li>
@@ -213,6 +231,16 @@ function isActive($pages) {
     <?php if ($c_group == 2) { ?>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown<?php echo isActive(['/supervisor/car?page=car_list']) ? ' active' : ''; ?>">
+            <div class="notify">
+                <a class="nav-link" href="#" id="notify-btn">
+                    <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
+                    <span class="icon-button__badge" id="show_notif">0</span>
+                </a>
+                <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
+                </div>
+            </div>
+        </li>
         <li class="nav-item<?php echo isActive(['/supervisor/car?page=car_list']) ? ' active' : ''; ?>">
           <a class="nav-link" href="<?php echo base_url ?>supervisor/car?page=car_list">Home</a>
         </li>
@@ -268,6 +296,16 @@ function isActive($pages) {
       <?php if ($c_group == 3) { ?>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown<?php echo isActive(['/cashier/car?page=car_list']) ? ' active' : ''; ?>">
+                <div class="notify">
+                    <a class="nav-link" href="#" id="notify-btn">
+                        <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
+                        <span class="icon-button__badge" id="show_notif">0</span>
+                    </a>
+                    <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
+                    </div>
+                </div>
+             </li>
               <li class="nav-item<?php echo isActive(['/cashier/car?page=car_list']) ? ' active' : ''; ?>">
                   <a class="nav-link" href="<?php echo base_url ?>cashier/car?page=car_list">Home</a>
               </li>
@@ -324,7 +362,7 @@ function isActive($pages) {
     <?php if ($c_group == 4) { ?>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
+                <li class="nav-item dropdown<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
                     <div class="notify">
                         <a class="nav-link" href="#" id="notify-btn">
                             <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
@@ -403,45 +441,78 @@ function isActive($pages) {
     };
 
     notify_btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        notify_container.classList.toggle('show');
-        if (notify_container.classList.contains('show')) {
-            xhr.open('GET', `<?php echo base_url; ?>notif/data.php?username=<?php echo urlencode($username); ?>`, true);
-            xhr.send();
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    try {
-                        if (xhr.getResponseHeader('Content-Type') === 'application/json') {
-                            let data = JSON.parse(xhr.responseText);
-                            notify_container.innerHTML = ''; 
-                            let title = document.createElement('h2');
-                            title.textContent = 'Notifications';
-                            title.classList.add('notification-title');
-                            notify_container.appendChild(title);
-                            let messageList = document.createElement('ul');
-                            messageList.classList.add('notification-list');
-                            data.forEach(notification => {
-                                let li = document.createElement('li');
-                                li.innerHTML = formatFirstWordBold(notification.message);
-                                messageList.appendChild(li);
+    e.preventDefault();
+    notify_container.classList.toggle('show');
+    if (notify_container.classList.contains('show')) {
+        xhr.open('GET', `<?php echo base_url; ?>notif/data.php?username=<?php echo urlencode($username); ?>`, true);
+        xhr.send();
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                try {
+                    if (xhr.getResponseHeader('Content-Type') === 'application/json') {
+                        let data = JSON.parse(xhr.responseText);
+                        notify_container.innerHTML = ''; 
+                        
+                        let title = document.createElement('h2');
+                        title.textContent = 'Notifications';
+                        title.classList.add('notification-title');
+                        notify_container.appendChild(title);
+                        
+                        let messageList = document.createElement('ul');
+                        messageList.classList.add('notification-list');
+                        
+                        data.forEach(notification => {
+                            let li = document.createElement('li');
+                            li.innerHTML = formatFirstWordBold(notification.message);
+                            li.classList.add('notification-item');
+                            li.setAttribute('data-id', notification.notif_id);
+                            li.setAttribute('data-atap-no', notification.c_atap_no); 
+
+                            if (notification.seen_status == 0) {
+                                li.style.backgroundColor = 'whitesmoke'; 
+                            } else {
+                                li.style.backgroundColor = 'white';
+                            }
+                            
+                            li.addEventListener('click', () => {
+                                let notifId = notification.notif_id;
+                                let atapNo = li.getAttribute('data-atap-no'); 
+
+                                let xhrUpdate = new XMLHttpRequest();
+                                xhrUpdate.open('GET', `<?php echo base_url; ?>notif/notif.php?notif_id=${notifId}`, true);
+                                xhrUpdate.send();
+                                xhrUpdate.onload = function () {
+                                    if (xhrUpdate.status === 200) {
+                                        console.log('Response:', xhrUpdate.responseText);
+                                        window.location.href = `<?php echo base_url; ?>admin/atap/all_atap_list.php?atap_no=${atapNo}`; // Corrected URL with ?
+                                    } else {
+                                        console.error('Request failed with status:', xhrUpdate.status);
+                                    }
+                                };
                             });
-                            notify_container.appendChild(messageList);
-                        } else {
-                            console.error('Unexpected response format:', xhr.responseText);
-                        }
-                    } catch (error) {
-                        console.error('Error parsing JSON:', error);
+
+                            
+                            messageList.appendChild(li);
+                        });
+                        
+                        notify_container.appendChild(messageList);
+                    } else {
+                        console.error('Unexpected response format:', xhr.responseText);
                     }
-                } else {
-                    console.error('Request failed with status:', xhr.status);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
                 }
-            };
+            } else {
+                console.error('Request failed with status:', xhr.status);
+            }
+        };
+    }
+});
 
-        }
-    });
 
-    function formatFirstWordBold(msg) {
-        let words = msg.split(' ');
+
+    function formatFirstWordBold(text) {
+        let words = text.split(' ');
         if (words.length > 0) {
             words[0] = '<strong>' + words[0] + '</strong>';
         }

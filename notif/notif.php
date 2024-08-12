@@ -1,20 +1,34 @@
 <?php
-require('notif_con.php');
-
-$username = $_GET['username'];
-
-$query = 'UPDATE t_car_notif SET seen_status = 1 WHERE user_to_be_notified = :username';
-$stm = $pdo->prepare($query);
-$stm->bindParam(':usertype', $username);
-
-if ($stm->execute()) {
-    $query2 = 'SELECT message AS msg FROM t_car_notif WHERE seen_status = 1 AND user_to_be_notified = :username';
-    $stm2 = $pdo->prepare($query2);
-    $stm2->bindParam(':username', $username);
-
-    if ($stm2->execute()) {
-        $result = $stm2->fetchAll();
-        echo json_encode($result);
-    }
+include('../config.php');
+$conn = odbc_connect($dsn, $user, $pass);
+if (!$conn) {
+    error_log('Database connection failed: ' . odbc_errormsg(), 0);
+    header('Content-Type: application/json');
+    echo json_encode(['error' => 'Failed to connect to database. Please try again later.']);
+    exit;
 }
+
+$notif_id = $_GET['notif_id'] ?? null;
+var_dump($notif_id); 
+
+if (!$notif_id) {
+    echo json_encode(['success' => false, 'message' => 'Notification ID is missing.']);
+    exit;
+}
+
+try {
+    $query = 'UPDATE t_car_notif SET seen_status = 1 WHERE notif_id = ?';
+
+    $stm = odbc_prepare($conn, $query);
+
+    if (odbc_execute($stm, [$notif_id])) {
+        echo json_encode(['success' => true, 'message' => 'Notification updated successfully.']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to update notification.']);
+    }
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+}
+
+odbc_close($conn);
 ?>
