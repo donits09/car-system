@@ -58,7 +58,8 @@ include('../../../inc/header.php');
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-department-type="<?php echo $row['c_department']; ?>">
-                                            <span class="fa fa-trash text-danger"></span> Remove
+                                            <!-- <span class="fa fa-trash text-danger"></span>  -->
+                                            Remove
                                         </a>
                                     </div>
                                 </td>
