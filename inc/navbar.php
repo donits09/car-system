@@ -143,7 +143,7 @@ function isActive($pages) {
 </head>
 <body>
 <nav class="navbar navbar-expand-lg">
-    <input type="text" value="<?php echo $c_group; ?>" id="c_group">
+    <input type="hidden" value="<?php echo $c_group; ?>" id="c_group">
   <div class="container">
     <a class="navbar-brand" href="#">
         <img src="<?php echo base_url ?>images/logo.jpg" alt="ALSC Logo"> CASH ACKNOWLEDGEMENT RECEIPT ENCODING
