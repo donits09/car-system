@@ -400,7 +400,8 @@ function isActive($pages) {
 </body>
 </html>
 <script>
-    const username = "<?php echo $_SESSION['username']; ?>";
+    /* const username = "<?php echo $_SESSION['username']; ?>"; */
+    const baseURL = "<?php echo $c_group; ?>";
     const baseURL = "<?php echo base_url; ?>";
 </script>
 
@@ -411,7 +412,7 @@ function isActive($pages) {
     const xhr = new XMLHttpRequest();
 
     function notify_me() {
-        xhr.open('GET', `<?php echo base_url; ?>notif/select.php?username=<?php echo urlencode($username); ?>`, true);
+        xhr.open('GET', `<?php echo base_url; ?>notif/select.php?c_group=<?php echo urlencode($c_group); ?>`, true);
         xhr.send();
         xhr.onload = () => {
             if (xhr.status === 200) {
@@ -444,7 +445,7 @@ function isActive($pages) {
     e.preventDefault();
     notify_container.classList.toggle('show');
     if (notify_container.classList.contains('show')) {
-        xhr.open('GET', `<?php echo base_url; ?>notif/data.php?username=<?php echo urlencode($username); ?>`, true);
+        xhr.open('GET', `<?php echo base_url; ?>notif/data.php?c_group=<?php echo urlencode($c_group); ?>`, true);
         xhr.send();
         xhr.onload = function () {
             if (xhr.status === 200) {
@@ -463,7 +464,8 @@ function isActive($pages) {
                         
                         data.forEach(notification => {
                             let li = document.createElement('li');
-                            li.innerHTML = formatFirstWordBold(notification.message);
+                            /* li.innerHTML = formatFirstWordBold(notification.message); */
+                            li.innerHTML = notification.message;
                             li.classList.add('notification-item');
                             li.setAttribute('data-id', notification.notif_id);
                             li.setAttribute('data-atap-no', notification.c_atap_no); 
@@ -484,7 +486,7 @@ function isActive($pages) {
                                 xhrUpdate.onload = function () {
                                     if (xhrUpdate.status === 200) {
                                         console.log('Response:', xhrUpdate.responseText);
-                                        window.location.href = `<?php echo base_url; ?>admin/atap/all_atap_list.php?atap_no=${atapNo}`; // Corrected URL with ?
+                                        window.location.href = `<?php echo base_url; ?>cashier/atap/all_atap_list.php?atap_no=${atapNo}`; // Corrected URL with ?
                                     } else {
                                         console.error('Request failed with status:', xhrUpdate.status);
                                     }
@@ -511,12 +513,12 @@ function isActive($pages) {
 
 
 
-    function formatFirstWordBold(text) {
+    /* function formatFirstWordBold(text) {
         let words = text.split(' ');
         if (words.length > 0) {
             words[0] = '<strong>' + words[0] + '</strong>';
         }
         return words.join(' ');
-    }
+    } */
 
 </script>

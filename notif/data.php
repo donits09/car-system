@@ -23,7 +23,8 @@ function timeAgo($timestamp) {
         return floor($timeDiff / 86400) . 'd ago';
     }
 }
-$username = isset($_GET['username']) ? $_GET['username'] : 'Guest';
+/* $username = isset($_GET['username']) ? $_GET['username'] : 'Guest'; */
+$c_group = isset($_GET['c_group']) ? $_GET['c_group'] : 'Guest';
 
 try {
     $sql = "SELECT * FROM t_car_notif WHERE user_to_be_notified = ? ORDER BY date_created";
@@ -32,7 +33,7 @@ try {
         throw new Exception('Failed to prepare the statement: ' . odbc_errormsg($conn));
     }
     
-    $result = odbc_execute($stmt, [$username]);
+    $result = odbc_execute($stmt, [$c_group]);
     if (!$result) {
         throw new Exception('Failed to execute the statement: ' . odbc_errormsg($conn));
     }

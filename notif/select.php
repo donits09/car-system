@@ -2,11 +2,11 @@
 header('Content-Type: application/json');
 require('notif_con.php');
 
-$username = $_GET['username'];
+$c_group = $_GET['c_group'];
 
-$query = "SELECT COUNT(*) FROM t_car_notif WHERE seen_status = 0 and user_to_be_notified = :username";
+$query = "SELECT COUNT(*) FROM t_car_notif WHERE seen_status = 0 and user_to_be_notified = :c_group";
 $stm = $pdo->prepare($query);
-$stm->bindParam(':username', $username);
+$stm->bindParam(':c_group', $c_group);
 $stm->execute();
 
 if ($stm->rowCount() > 0) {
