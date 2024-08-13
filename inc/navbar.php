@@ -401,6 +401,7 @@ function isActive($pages) {
 </body>
 </html>
 <script>
+
     //const username = "<?php echo $_SESSION['username']; ?>";
     const cGroup = document.getElementById('c_group').value; 
     const baseURL = "<?php echo base_url; ?>";
@@ -413,7 +414,9 @@ function isActive($pages) {
     e.preventDefault();
     notify_container.classList.toggle('show');
     if (notify_container.classList.contains('show')) {
+
         xhr.open('GET', `${baseURL}notif/data.php?cGroup=${cGroup}`, true);
+
         xhr.send();
         xhr.onload = function () {
             if (xhr.status === 200) {
@@ -432,7 +435,8 @@ function isActive($pages) {
                         
                         data.forEach(notification => {
                             let li = document.createElement('li');
-                            li.innerHTML = formatFirstWordBold(notification.message);
+                            /* li.innerHTML = formatFirstWordBold(notification.message); */
+                            li.innerHTML = notification.message;
                             li.classList.add('notification-item');
                             li.setAttribute('data-id', notification.notif_id);
                             li.setAttribute('data-atap-no', notification.c_atap_no); 
@@ -443,6 +447,7 @@ function isActive($pages) {
                                 li.style.backgroundColor = 'white';
                             }
                             li.addEventListener('click', () => {
+
                             let notifId = notification.notif_id;
                             let atapNo = li.getAttribute('data-atap-no');
 
@@ -464,6 +469,7 @@ function isActive($pages) {
                                         redirectUrl = `<?php echo base_url; ?>supervisor/atap/all_atap_list.php?atap_no=${atapNo}`;
                                     } else if (cGroup === '1') {
                                         redirectUrl = `<?php echo base_url; ?>admin/atap/all_atap_list.php?atap_no=${atapNo}`;
+
                                     } else {
                                         console.error('Unknown cGroup value:', cGroup);
                                         return;
@@ -494,12 +500,12 @@ function isActive($pages) {
 
 
 
-    function formatFirstWordBold(text) {
+    /* function formatFirstWordBold(text) {
         let words = text.split(' ');
         if (words.length > 0) {
             words[0] = '<strong>' + words[0] + '</strong>';
         }
         return words.join(' ');
-    }
+    } */
 
 </script>

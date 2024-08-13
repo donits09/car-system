@@ -9,6 +9,7 @@ if (!$conn) {
     exit;
 }
 
+
 $cGroup = isset($_GET['cGroup']) ? $_GET['cGroup'] : 'Guest';
 
 try {
@@ -18,7 +19,9 @@ try {
         throw new Exception('Failed to prepare the statement: ' . odbc_errormsg($conn));
     }
     
+
     $result = odbc_execute($stmt, [$cGroup]);
+
     if (!$result) {
         throw new Exception('Failed to execute the statement: ' . odbc_errormsg($conn));
     }
