@@ -75,6 +75,7 @@ include('../../inc/header.php');
         font-style: italic;
         font-weight: bold;
         color:black;
+        pointer-events: none;
     }
     #b_details{
         text-align: left;

@@ -20,19 +20,24 @@ include('../../inc/header.php');
     .hidden_fields{
         display:none;
     }
+    #spec_idno {
+        border: none;
+        background-color: transparent;
+        cursor: default;
+        text-align: center;
+        pointer-events: none; 
+    }
 </style>
-
 <?php 
-$atap_no = isset($_GET['atap_no']) ? htmlspecialchars($_GET['atap_no']) : ''; 
+    $atap_no = isset($_GET['atap_no']) ? htmlspecialchars($_GET['atap_no']) : ''; 
 ?>
-
 <body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
             <h2 class="text-blue h4">Authority to Accept Payment</h2>
             <hr>
-            <a id="create_new_atap" class="btn btn-flat btn-primary" href="javascript:void(0)">
+            <a id="create_new_atap" class="btn btn-flat btn-primary" href="javascript:void(0)" onclick="handleCreateNewATAP()">
                 <span class="fa fa-edit"></span> Create New ATAP
             </a>
             <a id="create_other_atap" class="btn btn-flat btn-success" href="javascript:void(0)">
@@ -113,7 +118,7 @@ $atap_no = isset($_GET['atap_no']) ? htmlspecialchars($_GET['atap_no']) : '';
                                 ?>
                                 <tr class="<?php echo $rowClass; ?>">
                                     <td class="text-center"><?php echo $i++; ?></td>
-                                    <td class="text-center"><?php echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); ?></td>
+                                    <td class="text-center"><input type="text" id="spec_idno" value="<?php echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); ?>"></td>
                                     <td class="text-center"><?php echo htmlspecialchars($row['c_atap_no']); ?></td>
                                     <td class="text-center">
                                         <?php
@@ -477,8 +482,6 @@ $atap_no = isset($_GET['atap_no']) ? htmlspecialchars($_GET['atap_no']) : '';
         </div>
     </div>
 </div>
-
-
 <script>
    function delete_atap(atapId, atapNo) {
     start_loader();
@@ -511,6 +514,9 @@ $atap_no = isset($_GET['atap_no']) ? htmlspecialchars($_GET['atap_no']) : '';
         }
     });
 }
+
+</script>
+<script>
 
 </script>
 <script src="../../dist/js/table.js"></script>
