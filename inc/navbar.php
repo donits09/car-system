@@ -143,6 +143,7 @@ function isActive($pages) {
 </head>
 <body>
 <nav class="navbar navbar-expand-lg">
+    <input type="text" value="<?php echo $c_group; ?>" id="c_group">
   <div class="container">
     <a class="navbar-brand" href="#">
         <img src="<?php echo base_url ?>images/logo.jpg" alt="ALSC Logo"> CASH ACKNOWLEDGEMENT RECEIPT ENCODING
@@ -400,51 +401,19 @@ function isActive($pages) {
 </body>
 </html>
 <script>
-    const username = "<?php echo $_SESSION['username']; ?>";
+    //const username = "<?php echo $_SESSION['username']; ?>";
+    const cGroup = document.getElementById('c_group').value; 
     const baseURL = "<?php echo base_url; ?>";
-</script>
-
-<script>
     const notify_btn = document.getElementById('notify-btn');
     const notify_label = document.getElementById('show_notif');
     const notify_container = document.getElementById('notify-menu');
     const xhr = new XMLHttpRequest();
 
-    function notify_me() {
-        xhr.open('GET', `<?php echo base_url; ?>notif/select.php?username=<?php echo urlencode($username); ?>`, true);
-        xhr.send();
-        xhr.onload = () => {
-            if (xhr.status === 200) {
-                try {
-                    let get_data = JSON.parse(xhr.responseText);
-                    if (Array.isArray(get_data)) {
-                        notify_label.innerHTML = get_data.length;
-                        notify_container.innerHTML = '';
-                        get_data.forEach(notification => {
-                            let div = document.createElement('div');
-                            div.textContent = notification.message;
-                            notify_container.appendChild(div);
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error parsing JSON:', error);
-                }
-            }
-        };
-    }
-
-    window.onload = () => {
-        // notify_me(); 
-        setInterval(() => {
-            // notify_me(); 
-        }, 10000); 
-    };
-
     notify_btn.addEventListener('click', (e) => {
     e.preventDefault();
     notify_container.classList.toggle('show');
     if (notify_container.classList.contains('show')) {
-        xhr.open('GET', `<?php echo base_url; ?>notif/data.php?username=<?php echo urlencode($username); ?>`, true);
+        xhr.open('GET', `${baseURL}notif/data.php?cGroup=${cGroup}`, true);
         xhr.send();
         xhr.onload = function () {
             if (xhr.status === 200) {
@@ -473,25 +442,39 @@ function isActive($pages) {
                             } else {
                                 li.style.backgroundColor = 'white';
                             }
-                            
                             li.addEventListener('click', () => {
-                                let notifId = notification.notif_id;
-                                let atapNo = li.getAttribute('data-atap-no'); 
+                            let notifId = notification.notif_id;
+                            let atapNo = li.getAttribute('data-atap-no');
 
-                                let xhrUpdate = new XMLHttpRequest();
-                                xhrUpdate.open('GET', `<?php echo base_url; ?>notif/notif.php?notif_id=${notifId}`, true);
-                                xhrUpdate.send();
-                                xhrUpdate.onload = function () {
-                                    if (xhrUpdate.status === 200) {
-                                        console.log('Response:', xhrUpdate.responseText);
-                                        window.location.href = `<?php echo base_url; ?>admin/atap/all_atap_list.php?atap_no=${atapNo}`; // Corrected URL with ?
-                                    } else {
-                                        console.error('Request failed with status:', xhrUpdate.status);
-                                    }
-                                };
-                            });
-
+                            let cGroup = document.getElementById('c_group').value; 
                             
+                            let xhrUpdate = new XMLHttpRequest();
+                            xhrUpdate.open('GET', `<?php echo base_url; ?>notif/notif.php?notif_id=${notifId}`, true);
+                            xhrUpdate.send();
+                            xhrUpdate.onload = function () {
+                                if (xhrUpdate.status === 200) {
+                                    console.log('Response:', xhrUpdate.responseText);
+
+                                    let redirectUrl;
+                                    if (cGroup === '4') {
+                                        redirectUrl = `<?php echo base_url; ?>viewer/atap/all_atap_list.php?atap_no=${atapNo}`;
+                                    } else if (cGroup === '3') {
+                                        redirectUrl = `<?php echo base_url; ?>cashier/atap/all_atap_list.php?atap_no=${atapNo}`;
+                                    } else if (cGroup === '2') {
+                                        redirectUrl = `<?php echo base_url; ?>supervisor/atap/all_atap_list.php?atap_no=${atapNo}`;
+                                    } else if (cGroup === '1') {
+                                        redirectUrl = `<?php echo base_url; ?>admin/atap/all_atap_list.php?atap_no=${atapNo}`;
+                                    } else {
+                                        console.error('Unknown cGroup value:', cGroup);
+                                        return;
+                                    }
+
+                                    window.location.href = redirectUrl;
+                                } else {
+                                    console.error('Request failed with status:', xhrUpdate.status);
+                                }
+                            };
+                        });
                             messageList.appendChild(li);
                         });
                         

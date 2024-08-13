@@ -77,6 +77,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $c_atap_no = $_GET['c_atap_no'];
 }
 ?>
+<?php
+    $specIdNo = isset($_GET['spec_idno']) ? $_GET['spec_idno'] : '';
+?>
 <style>
 .bold-text {
     padding: 5px;
@@ -114,7 +117,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     ?>
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="number" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> required>
+        <input type="number" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($specIdNo); ?>" <?php echo $readonly; ?> required>
     </div>
     <div class="form-group">
         <label for="name">Name</label>
