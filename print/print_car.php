@@ -1,5 +1,5 @@
 <?php
-//updated
+
 include('../config.php');
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
@@ -26,7 +26,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $accountId = $_GET['id'];
     $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                       a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                      b.c_block, b.c_lot, a.c_car_paydate, a.c_bank, a.c_check_no
+                      b.c_block, b.c_lot, a.c_car_paydate, a.c_bank, a.c_check_no, a.c_remarks
                       FROM t_car_payment a
                       LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
                       WHERE a.c_car_no = ?";
@@ -40,6 +40,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_car_paydate = $row['c_car_paydate'];
         $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         $carDetails = fetchCarDetails($conn, $row['c_car_no']);
+        $c_remarks = $row['c_remarks'];
         ?>
 <!DOCTYPE html>
 <html>
@@ -58,6 +59,28 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             overflow: hidden; 
             resize: none; 
         }
+        #c_check_main{
+            margin-top:170px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_remarks{
+            margin-left: 180px;
+            width: 250px;
+            text-align: center;
+            font-size: 12px !important;
+            margin-top:-35px;
+        }
+        #c_paydate_main {
+            float: left;
+            margin-top: -10px;
+            width: auto;
+            margin-left:70px;
+            text-align: center;
+            font-size: 10px !important;
+        }
     </style>
 </head>
 <body onload="initializePage()">
@@ -71,8 +94,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($row['c_car_type']); ?>">
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
         <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
-        <input type="text" name="c_bank" id="c_bank" value="<?php echo $row['c_bank']; ?>">
-        <input type="text" name="c_check_no" id="c_check_no" value="<?php echo $row['c_check_no']; ?>">
+        
         <!-- <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>"> -->
         
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
@@ -120,6 +142,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <textarea name="c_received" id="c_received"><?php echo $fullName; ?></textarea>
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
+            <input type="text" name="c_bank" id="c_bank" value="<?php echo $row['c_bank']; ?>">
+            <input type="text" name="c_check_main" id="c_check_main" value="<?php echo $row['c_check_no']; ?>">
         <?php } else if ($carDetails) {
             $car_no = $carDetails["c_car_no"];
             $c_name = $carDetails["c_name"];
@@ -157,7 +181,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             }
         ?>
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
-        <input type="text" name="c_paydate" id="c_paydate" value="<?php echo $c_car_paydate; ?>">
+        <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
+        <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_car_paydate; ?>">
     </div>
     <script>
         var cMopValue = document.getElementById('c_mop_value').value;

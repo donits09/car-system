@@ -12,6 +12,7 @@ $c_bank_check = $_GET['c_bank_check'] ?? '';
 $c_bank_online = $_GET['c_bank_online'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
 $c_ref_no = $_GET['c_ref_no'] ?? '';
+$c_remarks = $_GET['c_remarks'] ?? '';
 
 $c_bank = '';
 $c_check = '';
@@ -116,7 +117,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_car_type {
             float: right;
-            margin-top: 180px;
+            margin-top: 185px;
             margin-right: -180px;
             width: 300px;
         }
@@ -170,9 +171,9 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_paydate {
             float: left;
-            margin-top: 0px;
-            width: 150px;
-            margin-left:70px;
+            margin-top: -10px;
+            width: auto;
+            margin-left:85px;
             text-align: center;
             font-size: 10px !important;
         }
@@ -189,7 +190,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             text-transform: uppercase;
             float: right;
             margin-top: 80px;
-            margin-right: 100px;
+            margin-left: -10px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -218,8 +219,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_check_main{
-            margin-top:210px;
-            margin-left:200px;
+            margin-top:170px;
+            margin-left:-10px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -237,6 +238,12 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             padding: 8px 16px;
             border-radius: 5px;
             font-size: 12px;
+        }
+        #c_remarks{
+            margin-left: 180px;
+            width: 250px;
+            text-align: center;
+            font-size: 12px !important;
         }
     </style>
 </head>
@@ -295,6 +302,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <textarea name="c_received" id="c_received"><?php echo $fullName; ?></textarea>
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
+            <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
+            <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
         <?php } ?>
 
         <?php
@@ -306,9 +315,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         ?>
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
+        <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
         <input type="text" name="c_paydate" id="c_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>">
-        <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
-        <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
     </div>
     <!-- <div class="btn-container">
         <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button> 
@@ -321,12 +329,12 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
         if (cMopValue == '1') {
-            dynamicMarginDiv.style.marginTop = '185px';
+            dynamicMarginDiv.style.marginTop = '190px';
             cPayDateField.style.display = 'none';
             cBankCheck.style.display = 'none';
             cCheckNo.style.display = 'none';
         } else {
-            dynamicMarginDiv.style.marginTop = '200px';
+            dynamicMarginDiv.style.marginTop = '205px';
             cPayDateField.style.display = 'block';
             cBankCheck.style.display = 'block';
             cCheckNo.style.display = 'block';
@@ -460,7 +468,3 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
 <script src="<?php echo base_url; ?>dist/header_files/html2canvas.min.js_0.5.0-beta4/cdnjs/html2canvas.min.js"></script>
 </body>
 </html>
-
-
-
-

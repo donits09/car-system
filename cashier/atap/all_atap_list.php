@@ -27,6 +27,12 @@ include('../../inc/header.php');
         text-align: center;
         pointer-events: none; 
     }
+    .btn.btn-flat.btn-default.btn-sm.dropdown-toggle.dropdown-icon {
+        margin: 0; 
+        padding: 5px 10px; 
+        width: auto; 
+    }
+
     /* .status-pending {
         background-color: orange !important;
     }
@@ -480,7 +486,45 @@ include('../../inc/header.php');
         <?php include ('../modals/main_modals.php'); ?>
     </div>
 </div>
+<script>
+    
+function loadModal(title, url, modalId) {
+    start_loader();
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(response) {
+            $(modalId + ' .modal-body').html(response);
+            $(modalId + ' .modal-title').text(title);
+            $(modalId).modal('show');
+            end_loader();
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText);
+            alert("An error occurred while loading data.");
+            end_loader();
+        }
+    });
+}
+
+$(document).on('click', '.view_atap', function() {
+    var atapId = $(this).data('id');
+    var atapNo = $(this).data('no');
+    $('#viewModal').modal('hide'); 
+    setTimeout(function() {
+        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+    }, 500); 
+});
+
+window._conf = function(msg, func, params) {
+    $('#confirm_modal .modal-body').html(msg);
+    $('#confirm_modal #confirm').off('click').on('click', function() {
+        func.apply(this, params);
+    });
+    $('#confirm_modal').modal('show');
+};
+</script>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/all_atap_list.js"></script>
+<!-- <script src="../../dist/js/all_atap_list.js"></script> -->
 </body>
 <?php include('../../inc/footer.php'); ?>

@@ -373,7 +373,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
                         if (paymentStatus.trim() == 'C') {
                             $statusText.html('<span class="badge badge-secondary">CAR</span>');
-                        } else if (paymentStatus.trim() == 'S') {
+                        } else if (paymentStatus.trim() == 'ST') {
                             $statusText.html('<span class="badge badge-secondary">Special</span>');
                         } else if (paymentStatus.trim() == 'O') {
                             $statusText.html('<span class="badge badge-secondary">OR</span>');
@@ -480,7 +480,7 @@ $(document).ready(function() {
 
             if (paymentStatus.trim() == 'C') {
                 $statusText.html('<span class="badge badge-secondary">CAR</span>');
-            } else if (paymentStatus.trim() == 'S') {
+            } else if (paymentStatus.trim() == 'ST') {
                 $statusText.html('<span class="badge badge-secondary">Special</span>');
             } else if (paymentStatus.trim() == 'O') {
                 $statusText.html('<span class="badge badge-secondary">OR</span>');

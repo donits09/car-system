@@ -16,6 +16,7 @@ $c_tran_date = date('Y-m-d H:i:s');
 $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
+$c_remarks = '';
 
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
@@ -33,6 +34,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_mop = $result["c_mop"];
         $c_bank = $result["c_bank"];
         $c_check_no = $result["c_check_no"];
+        $c_remarks = $result["c_remarks"];
     }
 } else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
     $c_account_no = $_GET['c_account_no'];
@@ -188,6 +190,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
+    </div>
+    <div class="form-group">
+        <label for="remarks" class="form-label">
+            Remarks 
+        </label>
+        <textarea class="form-control txt" rows="2" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
     </div>
     <div class="form-group">
         <div class="row">

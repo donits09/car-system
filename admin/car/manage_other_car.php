@@ -19,11 +19,12 @@
     $c_lot = '';
     $c_block = '';
     $c_check_no = '';
+    $c_remarks = '';
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.c_check_no
+                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
         $accountId = $_GET['id'];
@@ -43,6 +44,7 @@
             $c_mop = $result["c_mop"];
             $c_bank = $result["c_bank"];
             $c_check_no = $result["c_check_no"];
+            $c_remarks = $result["c_remarks"];
         }
     } 
 ?>
@@ -182,7 +184,12 @@
         <label for="name">Name</label>
         <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
-    
+    <div class="form-group">
+        <label for="remarks" class="form-label">
+            Remarks 
+        </label>
+        <textarea class="form-control txt" rows="2" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
+    </div>
     <div class="row align-items-end">
         <div class="col-md-6 form-group">
             <label for="c_phase" class="control-label">Phase</label>

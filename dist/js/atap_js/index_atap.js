@@ -416,7 +416,7 @@ function calculateTotalAmount() {
 
     for (var i = 0; i < rows.length; i++) {
         if (rows[i].style.display !== "none") {
-            var amountCell = rows[i].getElementsByTagName("td")[6]; 
+            var amountCell = rows[i].getElementsByTagName("td")[7]; 
             if (amountCell) {
                 var amountValue = amountCell.textContent.trim().replace(',', '');
                 total += parseFloat(amountValue);

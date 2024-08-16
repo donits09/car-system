@@ -34,8 +34,6 @@ include('../../inc/header.php');
             
         endif;
     endif;
-
-  
     }
 ?>
 <link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
@@ -294,7 +292,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-                
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
@@ -315,7 +312,6 @@ include('../../inc/header.php');
                                     <div class="col-12 col-md-4">
                                         <label for="accno" class="form-label">Acc #</label>
                                         <input type="text" class="form-control" id="accno" readonly>
-                                       
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label for="fullname" class="form-label">Name</label>
@@ -347,12 +343,10 @@ include('../../inc/header.php');
                                             <th>Account No.</th>
                                             <th>CAR No.</th>
                                             <th>Payment Type</th>
+                                            <th>Remarks</th>
                                             <th>Name</th>
                                             <th>Location</th>
                                             <th>Amount</th>
-                                            <th>MoP</th>
-                                            <th>Bank</th>
-                                            <th>Transaction Date</th>
                                             <th>Pay Date</th>
                                             <th>Encoder</th>
                                             <th>Action</th>
@@ -362,7 +356,7 @@ include('../../inc/header.php');
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="6" class="text-right">Total Amount:</th>
+                                            <th colspan="7" class="text-right">Total Amount:</th>
                                             <th id="totalAmount" class="text-center"></th>
                                             <th colspan="5"></th>
                                         </tr>
@@ -467,7 +461,7 @@ include('../../inc/header.php');
                                 <hr>
                             </div>
                             <div class="table-container">
-                                <table class="table table-bordered table-striped" id="car-list-table">
+                                <table class="table table-bordered table-striped" id="payment-list-table">
                                     <thead>
                                         <tr>
                                             <th style="text-align:center;font-size:13px;">DUE DATE</th>
@@ -605,107 +599,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 </script>
-<!-- 
-<script>
-   document.addEventListener('DOMContentLoaded', function () {
-    var atapRecordTab = document.getElementById('atap-list-tab');
-    var acctNoInput = document.getElementById('atap_accno');
-    var searchAcc = document.getElementById('searchAcc');
-    var searchLoc = document.getElementById('searchLoc');
-    var searchName = document.getElementById('searchName');
-
-    if (!atapRecordTab || !acctNoInput || !searchAcc || !searchLoc || !searchName) {
-        console.error('One or more elements not found:', {
-            atapRecordTab,
-            acctNoInput,
-            searchAcc,
-            searchLoc,
-            searchName
-        });
-        return;
-    }
-
-    searchName.addEventListener('click', function () {
-        var acctNo = acctNoInput.value;
-        if (!acctNo) {
-            console.error('Account number is empty');
-            return;
-        }
-
-        var url = `../atap/fetch_atap_list.php?acct_no=${acctNo}`;
-        console.log('Fetching URL:', url);
-
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('atap-list-body').innerHTML = data;
-                console.log('Payment record content updated');
-            })
-            .catch(error => console.error('Error fetching payment record:', error));
-    });
-
-    searchLoc.addEventListener('click', function () {
-        var acctNo = acctNoInput.value;
-        if (!acctNo) {
-            console.error('Account number is empty');
-            return;
-        }
-
-        var url = `../atap/fetch_atap_list.php?acct_no=${acctNo}`;
-        console.log('Fetching URL:', url);
-
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('atap-list-body').innerHTML = data;
-                console.log('Payment record content updated');
-            })
-            .catch(error => console.error('Error fetching payment record:', error));
-    });
-
-    searchAcc.addEventListener('click', function () {
-        var acctNo = acctNoInput.value;
-        if (!acctNo) {
-            console.error('Account number is empty');
-            return;
-        }
-
-        var url = `../atap/fetch_atap_list.php?acct_no=${acctNo}`;
-        console.log('Fetching URL:', url);
-
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('atap-list-body').innerHTML = data;
-                console.log('Payment record content updated');
-            })
-            .catch(error => console.error('Error fetching payment record:', error));
-    });
-
-    paymentRecordTab.addEventListener('click', function () {
-        var acctNo = acctNoInput.value;
-        if (!acctNo) {
-            console.error('Account number is empty');
-            return;
-        }
-
-        var url = `../atap/fetch_atap_list.php?acct_no=${acctNo}`;
-        console.log('Fetching URL:', url);
-
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('atap-list-body').innerHTML = data;
-                console.log('Payment record content updated');
-            })
-            .catch(error => console.error('Error fetching payment record:', error));
-    });
-});
-</script>
- -->
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const accnoInput = document.getElementById('accno');

@@ -12,6 +12,11 @@ include('../../inc/header.php');
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
 <style>
+    .btn.btn-flat.btn-default.btn-sm.dropdown-toggle.dropdown-icon {
+        margin: 0; 
+        padding: 5px 10px; 
+        width: auto; 
+    }
     .green-row {
         background-color: #cbd2d9 !important;
         font-weight: bold !important;

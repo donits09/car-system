@@ -327,15 +327,10 @@ include('../../inc/header.php');
                                             <th>Account No.</th>
                                             <th>CAR No.</th>
                                             <th>Payment Type</th>
+                                            <th>Remarks</th>
                                             <th>Name</th>
                                             <th>Location</th>
                                             <th>Amount</th>
-                                            <th>MoP</th>
-
-                                            <th>Bank</th>
-<!--                                             <th>Transaction Date</th> -->
-
-                                            <th>Transaction Date/Time</th>
                                             <th>Pay Date</th>
                                             <th>Encoder</th>
                                             <th>Action</th>
@@ -345,7 +340,7 @@ include('../../inc/header.php');
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="6" class="text-right">Total Amount:</th>
+                                            <th colspan="7" class="text-right">Total Amount:</th>
                                             <th id="totalAmount" class="text-center"></th>
                                             <th colspan="5"></th>
                                         </tr>
@@ -453,7 +448,7 @@ include('../../inc/header.php');
                                 <hr>
                             </div>
                             <div class="table-container">
-                                <table class="table table-bordered table-striped" id="car-list-table">
+                                <table class="table table-bordered table-striped" id="payment-list-table">
                                     <thead>
                                         <tr>
                                             <th style="text-align:center;font-size:13px;">DUE DATE</th>
@@ -788,7 +783,7 @@ $(document).ready(function() {
     $(document).on('click', '.delete_data', function() {
         var atapId = $(this).data('id');
         var atapNo = $(this).data('no');
-        _conf("Are you sure you want to cancel this ATAP permanently?", delete_atap, [atapId, atapNo]);
+        _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
     });
 
     window._conf = function(msg, func, params) {

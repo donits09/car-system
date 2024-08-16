@@ -154,7 +154,7 @@ function isActive($pages) {
     <?php if ($c_group == 1) { ?>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
+                <!-- <li class="nav-item dropdown<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
                     <div class="notify">
                         <a class="nav-link" href="#" id="notify-btn">
                             <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
@@ -163,7 +163,7 @@ function isActive($pages) {
                         <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
                         </div>
                     </div>
-                </li>
+                </li> -->
                 <li class="nav-item<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
                 <a class="nav-link" href="<?php echo base_url ?>admin/car?page=car_list">Home</a>
                 </li>
@@ -232,7 +232,7 @@ function isActive($pages) {
     <?php if ($c_group == 2) { ?>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item dropdown<?php echo isActive(['/supervisor/car?page=car_list']) ? ' active' : ''; ?>">
+        <!-- <li class="nav-item dropdown<?php echo isActive(['/supervisor/car?page=car_list']) ? ' active' : ''; ?>">
             <div class="notify">
                 <a class="nav-link" href="#" id="notify-btn">
                     <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
@@ -241,7 +241,7 @@ function isActive($pages) {
                 <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
                 </div>
             </div>
-        </li>
+        </li> -->
         <li class="nav-item<?php echo isActive(['/supervisor/car?page=car_list']) ? ' active' : ''; ?>">
           <a class="nav-link" href="<?php echo base_url ?>supervisor/car?page=car_list">Home</a>
         </li>
@@ -259,8 +259,8 @@ function isActive($pages) {
                 Settings
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/settings/car_type?page=index">CAR Type</a>
-                <div class="dropdown-divider"></div>
+                <!-- <a class="dropdown-item" href="<?php echo base_url ?>supervisor/settings/car_type?page=index">CAR Type</a>
+                <div class="dropdown-divider"></div> -->
                 <div class="dropdown-submenu">
                 <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Bank Types <i class="fas fa-caret-right float-right"></i>
@@ -297,7 +297,7 @@ function isActive($pages) {
       <?php if ($c_group == 3) { ?>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ml-auto">
-            <li class="nav-item dropdown<?php echo isActive(['/cashier/car?page=car_list']) ? ' active' : ''; ?>">
+            <!-- <li class="nav-item dropdown<?php echo isActive(['/cashier/car?page=car_list']) ? ' active' : ''; ?>">
                 <div class="notify">
                     <a class="nav-link" href="#" id="notify-btn">
                         <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
@@ -306,7 +306,7 @@ function isActive($pages) {
                     <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
                     </div>
                 </div>
-             </li>
+             </li> -->
               <li class="nav-item<?php echo isActive(['/cashier/car?page=car_list']) ? ' active' : ''; ?>">
                   <a class="nav-link" href="<?php echo base_url ?>cashier/car?page=car_list">Home</a>
               </li>
@@ -324,8 +324,8 @@ function isActive($pages) {
                       Settings
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/settings/car_type?page=index">CAR Type</a>
-                      <div class="dropdown-divider"></div>
+                      <!-- <a class="dropdown-item" href="<?php echo base_url ?>cashier/settings/car_type?page=index">CAR Type</a>
+                      <div class="dropdown-divider"></div> -->
                       <div class="dropdown-submenu">
                           <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               Bank Types<i class="fas fa-caret-right float-right"></i>
@@ -363,7 +363,7 @@ function isActive($pages) {
     <?php if ($c_group == 4) { ?>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
+                <!-- <li class="nav-item dropdown<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
                     <div class="notify">
                         <a class="nav-link" href="#" id="notify-btn">
                             <img src="<?php echo base_url; ?>notif/Notif.png" width="30" height="30" alt="Notifications">
@@ -372,7 +372,7 @@ function isActive($pages) {
                         <div class="notify-menu" id="notify-menu" aria-labelledby="notify-btn">
                         </div>
                     </div>
-                </li>
+                </li> -->
                 <li class="nav-item<?php echo isActive(['/viewer/car?page=car_list']) ? ' active' : ''; ?>">
                     <a class="nav-link" href="<?php echo base_url ?>viewer/car?page=car_list">Home</a>
                 </li>

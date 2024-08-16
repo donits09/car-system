@@ -26,6 +26,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
     <td class="text-center"><?php echo $row['c_account_no']; ?></td>
     <td class="text-center"><?php echo $row['c_car_no']; ?></td>
     <td class="text-center"><?php echo $row['c_car_type']; ?></td>
+    <td class="text-center"><?php echo $row['c_remarks']; ?></td>
     <td class="text-center">
         <?php
             $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
@@ -104,33 +105,6 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
     ?>
     </td>
     <td class="text-center"><?php echo number_format($row['c_car_amount'],2); ?></td>
-    <td class="text-center">
-        <?php 
-        if ($row['c_mop'] == 1) {
-            echo "Cash";
-        } elseif ($row['c_mop'] == 2) {
-            echo "Check";
-        } elseif ($row['c_mop'] == 3) {
-            echo "Online";
-        } else {
-            echo "-";
-        }
-        ?>
-    </td>
-    <td class="text-center">
-        <?php 
-        if ($row['c_bank'] == '') {
-            echo "-";
-        }else {
-            echo htmlspecialchars($row['c_bank']);
-        }
-        ?>
-    </td>
-    <td class="text-center tran-date">
-        <?php
-        $dateTime = new DateTime($row['c_tran_date']);
-        echo htmlspecialchars($dateTime->format('Y-m-d')); 
-        ?>
     </td>
     <td class="text-center"><?php echo $row['c_car_paydate']; ?></td>
     <?php

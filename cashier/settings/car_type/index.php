@@ -28,15 +28,15 @@ include('../../../inc/header.php');
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Payment Type</th>
-                        <th>Payment Status</th>
+                        <th>Transaction Name</th>
+                        <th>Type</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="car-type-body">
                 <?php
-                    $get_car_types = "SELECT id, c_payment_type, payment_status, status FROM t_car_type ORDER BY payment_status,status ASC";
+                    $get_car_types = "SELECT id, c_payment_type, payment_status, status FROM t_car_type ORDER BY c_payment_type ASC";
                     $stmt = odbc_prepare($conn, $get_car_types);
                     if (odbc_execute($stmt)) {
                         $i = 1; 

@@ -10,7 +10,7 @@
         $accountId = $_GET['id'];
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.c_check_no
+                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
         $stmt = odbc_prepare($conn, $get_car_query);
@@ -161,6 +161,12 @@
                         $dateTime = new DateTime($row['c_tran_date']);
                         echo htmlspecialchars($dateTime->format('Y-m-d')); 
                     ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Remarks:</th>
+                    <td style="max-width: 200px; word-wrap: break-word;">
+                        <?php echo htmlspecialchars($row['c_remarks']); ?>
                     </td>
                 </tr>
                 <tr>

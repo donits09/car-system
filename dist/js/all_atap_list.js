@@ -75,7 +75,7 @@ $(document).on('click', '.view_data', function() {
 $(document).on('click', '.delete_data', function() {
     var atapId = $(this).data('id');
     var atapNo = $(this).data('no');
-    _conf("Are you sure you want to cancel this ATAP permanently?", delete_atap, [atapId, atapNo]);
+    _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
 });
 
 $(document).on('click', '.edit_atap', function() {
