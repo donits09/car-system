@@ -17,6 +17,8 @@ include('../../inc/header.php');
         /* color:white !important; */
         font-weight: bold !important;
         font-style: italic;
+
+        
     }
     .btn.btn-flat.btn-default.btn-sm.dropdown-toggle.dropdown-icon {
         margin: 0; 
