@@ -53,3 +53,7 @@ body {
     pointer-events: none;
     margin-bottom: -5px;
 }
+.line {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}

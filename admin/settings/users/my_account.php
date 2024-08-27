@@ -35,19 +35,19 @@ include('../../../inc/header.php');
                         <input type="hidden" id="id" name="id">
                         <div class="form-group">
                             <label for="c_employee_code" class="form-label">Employee ID</label>
-                            <input type="text" class="form-control txt" id="c_employee_code" name="c_employee_code" readonly>
+                            <input type="text" class="form-control txt" style="background-color: white;" id="c_employee_code" name="c_employee_code" readonly>
                         </div>
                         <div class="form-group">
                             <label for="c_realname" class="form-label">Name</label>
-                            <input type="text" class="form-control txt" id="c_realname" name="c_realname" readonly>
+                            <input type="text" class="form-control txt" style="background-color: white;" id="c_realname" name="c_realname" readonly>
                         </div>
                         <div class="form-group">
                             <label for="c_department" class="form-label">Department</label>
-                            <input type="text" class="form-control txt" id="c_department" name="c_department" readonly>
+                            <input type="text" class="form-control txt" style="background-color: white;" id="c_department" name="c_department" readonly>
                         </div>
                         <div class="form-group">
                             <label for="c_position" class="form-label">Position</label>
-                            <input type="text" class="form-control txt" id="c_position" name="c_position" readonly>
+                            <input type="text" class="form-control txt" style="background-color: white;" id="c_position" name="c_position" readonly>
                         </div>
                         <div class="form-group">
                             <label for="c_password" class="form-label">Change Password</label>
