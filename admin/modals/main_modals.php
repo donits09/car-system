@@ -127,3 +127,17 @@
         </div>
     </div>
 </div>
+
+<!-- Hindi ubra yung modal-lg, kaya hindi responsive yung resizing ng modal ihh nasa (modals.css) -->
+<div class="modal fade" id="viewModalsummary" tabindex="-1" role="dialog" aria-labelledby="viewModalSummaryLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalSummaryLabel">CAR Transaction List</h5>
+                <button onclick="closeModal4()" class="btn customized-modal" data-dismiss="modal">x</button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>

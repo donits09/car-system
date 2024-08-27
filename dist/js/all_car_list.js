@@ -261,7 +261,7 @@ $(document).ready(function() {
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
                         location.reload();
-                    }, 1000);
+                    }, 300);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
                 } else {

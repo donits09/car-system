@@ -51,7 +51,12 @@ check_session();
                 <div class="card card-container p-2">
                     <div class="card-body text-center">
                         <img src="<?php echo base_url; ?>images/login.jpg" alt="Logo" class="login-logo">
-                        <hr class="line">
+                        <hr style="margin-top: 10px;">
+                        <!-- <div class="d-flex justify-content-center mb-1">
+                            <div id="date" style="font-size: 15px; margin-right: 10px; color: gray;"></div>
+                            <div id="clock" style="font-size: 15px; color: gray;"></div>
+                        </div>
+                        <hr style="margin-top: 10px;"> -->
                         <?php if (isset($error)): ?>
                             <div class="alert alert-danger"><?php echo $error; ?></div>
                         <?php endif; ?>
@@ -71,4 +76,28 @@ check_session();
             </div>
         </div>
     </div>
+
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            var timeString = hours + ':' + minutes + ':' + seconds + ' ' + ampm;
+            document.getElementById('clock').innerHTML = timeString;
+
+            var options = { year: 'numeric', month: 'long', day: 'numeric' };
+            var dateString = now.toLocaleDateString(undefined, options);
+            document.getElementById('date').innerHTML = dateString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 </body>

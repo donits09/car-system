@@ -345,35 +345,75 @@ include('../../inc/header.php');
                                 </table>
                             </div>
 
-                            <div class="table-container">
-                                <table class="table table-bordered table-striped" id="car-list-table">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Account No.</th>
-                                            <th>CAR No.</th>
-                                            <th>Payment Type</th>
-                                            <th>Name</th>
-                                            <th>Location</th>
-                                            <th>Amount</th>
-                                            <th>MoP</th>
-                                            <th>Bank</th>
-                                            <th>Transaction Date</th>
-                                            <th>Pay Date</th>
-                                            <th>Encoder</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="car-list-body">
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="6" class="text-right">Total Amount:</th>
-                                            <th id="totalAmount" class="text-center"></th>
-                                            <th colspan="5"></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <ul class="nav nav-tabs" id="tableTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="car-list-tab" data-toggle="tab" href="#car-list-table-container" role="tab" aria-controls="car-list-table-container" aria-selected="true">CAR List</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="summary-table-tab" data-toggle="tab" href="#car-summary-container" role="tab" aria-controls="car-summary-container" aria-selected="false">CAR Summary</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="tableTabContent">
+                                <!-- First Tab CAR List Table -->
+                                <div class="tab-pane fade show active" id="car-list-table-container" role="tabpanel" aria-labelledby="car-list-tab">
+                                    <div class="table-container">
+                                        <table class="table table-bordered table-striped" id="car-list-table">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Account No.</th>
+                                                    <th>CAR No.</th>
+                                                    <th>Payment Type</th>
+                                                    <th>Name</th>
+                                                    <th>Location</th>
+                                                    <th>Amount</th>
+                                                    <th>MoP</th>
+                                                    <th>Bank</th>
+                                                    <th>Last Pay Date</th>
+                                                    <th>Pay Date</th>
+                                                    <th>Encoder</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="car-list-body">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="6" class="text-right">Total Amount:</th>
+                                                    <th id="totalAmount" class="text-center"></th>
+                                                    <th colspan="5"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Second Tab CAR Summary Table -->
+                                <div class="tab-pane fade" id="car-summary-container" role="tabpanel" aria-labelledby="summary-table-tab">
+                                    <div class="table-container">
+                                        <table class="table table-bordered table-striped" id="another-table-list">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 25%;">Payment Type</th>
+                                                    <th style="width: 20%;">Count of Payment</th>
+                                                    <th style="width: 20%;">Transaction Date</th>
+                                                    <th style="width: 20%;">Total</th>
+                                                    <th style="width: 10%;">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="car-summary-body">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="4" class="text-right">Total Amount:</th>
+                                                    <th id="totalAmountSummary" class="text-center"></th>
+                                                    <th colspan="3"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -858,6 +898,12 @@ $(document).ready(function() {
         var atapNo = $(this).data('no');
         loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
+
+    $(document).on('click', '.view_summary', function() {
+        var carType = $(this).data('car-type');
+        var accountNo = $('#buyer_acc_no').val();
+        loadModal('CAR Transaction List', 'view_summary.php?car_type=' + encodeURIComponent(carType) + '&account-no=' + accountNo, '#viewModalsummary');
+    });
     
 });
 
@@ -910,6 +956,28 @@ function updateCarList() {
         calculateTotalAmount();
 }
 
+</script>
+
+<!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
+<script>
+$(document).ready(function() {
+    $('#summary-table-tab').on('click', function() {
+        const accountNo = $('#buyer_acc_no').val();
+
+        $.ajax({
+            url: 'car_summary.php',
+            type: 'GET',
+            data: { buyer_acc_no: accountNo },
+            success: function(data) {
+                $('#car-summary-body').html(data);
+                $('.dropdown-toggle').dropdown();
+            },
+            error: function() {
+                $('#car-summary-body').html('<tr><td colspan="6" class="text-center">Error loading data</td></tr>');
+            }
+        });
+    });
+});
 </script>
 
 <script src="../../dist/js/table.js"></script>
