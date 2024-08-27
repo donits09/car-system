@@ -41,7 +41,7 @@
                     <td><?php echo $row['c_car_no']; ?></td>
                 </tr>
                 <tr>
-                    <th>Payment Type:</th>
+                    <th>Transaction Type:</th>
                     <td><?php echo $row['c_car_type']; ?></td>
                 </tr>
                 <tr>

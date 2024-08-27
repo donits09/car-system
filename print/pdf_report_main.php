@@ -119,7 +119,7 @@ $html .= '
                 <th>CAR No.</th>
                 <th>Buyer Name</th>
                 <th>Account No.</th>
-                <th>Payment Type</th>
+                <th>Transaction Type</th>
                 <th>Location</th>
                 <th>Cash</th>
                 <th>Check</th>

@@ -1,5 +1,3 @@
-modal.css
-
 .btn.btn-modal {
     margin-left:10%;
     margin-right:10%;
@@ -20,4 +18,8 @@ modal.css
 #previewCarModal .modal-dialog{
     max-height: 80vh;
     max-width: 105vh;
+}
+#previewORModal .modal-dialog{
+    height: 100%;
+    max-width: 102vh;
 }

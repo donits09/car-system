@@ -205,6 +205,9 @@ include('../../inc/header.php');
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">OR List</a>
+                </li>
+                <li class="nav-item" role="presentation">
                     <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
                 </li>
             </ul>
@@ -342,7 +345,7 @@ include('../../inc/header.php');
                                             <th>No</th>
                                             <th>Account No.</th>
                                             <th>CAR No.</th>
-                                            <th>Payment Type</th>
+                                            <th>Transaction Type</th>
                                             <th>Remarks</th>
                                             <th>Name</th>
                                             <th>Location</th>
@@ -433,6 +436,76 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
+
+                <div class="tab-pane fade" id="or-list" role="tabpanel" aria-labelledby="or-list-tab">
+                    <div class="card mt-3">
+                        <div class="container">
+                            <h2 class="text-blue h4">OR List</h2>
+                            <hr>
+                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                                <span class="fa fa-edit"></span> Create New OR
+                            </button>
+                            <hr>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <label for="or_accno" class="form-label">Acc #</label>
+                                        <input type="text" class="form-control" id="or_accno" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="or_fullname" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="or_fullname" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="or_buyer_loc" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="or_buyer_loc" name="or_buyer_loc" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                                <table>
+                                    <tr>
+                                        <td style="width:80%;border:none;">
+                                            <label for="search" class="form-label" style="float:right;">Search:</label>
+                                        </td>
+                                        <td style="width:20%;border:none;">
+                                            <input type="text" id="searchInputOR" onkeyup="filterTableOR()" class="form-control">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-container">
+                                <table class="table table-bordered table-striped" id="or-list-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Account No.</th>
+                                            <th>ATAP No.</th>
+                                            <th>Name</th>
+                                            <th>Total Amount</th>
+                                            <th>Transaction Date</th>
+                                            <th>Status</th>
+                                            <th>Encoder</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="or-list-body">
+                                        <?php include('../other_fees/fetch_or_list.php'); ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" class="text-right">Total Amount:</th>
+                                            <th id="totalORAmount" class="text-center"></th>
+                                            <th colspan="4"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="tab-pane fade" id="payment-record" role="tabpanel" aria-labelledby="payment-record-tab">
                     <div class="card mt-3">
                         <div class="container">
@@ -521,10 +594,12 @@ function switchToBuyerDetails() {
     var buyerDetailsTab = document.getElementById('buyer-details-tab');
     var carListTab = document.getElementById('car-list-tab');
     var atapListTab = document.getElementById('atap-list-tab');
+    var orListTab = document.getElementById('or-list-tab');
     var paymentRecordTab = document.getElementById('payment-record-tab');
     var buyerDetailsPane = document.getElementById('buyer-details');
     var carListPane = document.getElementById('car-list');
     var atapListPane = document.getElementById('atap-list');
+    var orListPane = document.getElementById('or-list');
     var paymentRecordPane = document.getElementById('payment-record');
     
     buyerDetailsTab.classList.add('active');
@@ -538,6 +613,10 @@ function switchToBuyerDetails() {
     atapListTab.classList.remove('active');
     atapListTab.setAttribute('aria-selected', 'false');
     atapListPane.classList.remove('show', 'active');
+
+    orListTab.classList.remove('active');
+    orListTab.setAttribute('aria-selected', 'false');
+    orListPane.classList.remove('show', 'active');
 
     paymentRecordTab.classList.remove('active');
     paymentRecordTab.setAttribute('aria-selected', 'false');
@@ -603,12 +682,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('DOMContentLoaded', function() {
         const accnoInput = document.getElementById('accno');
         const createNewBtn = document.getElementById('create_new_atap');
+        const createNewOrBtn = document.getElementById('create_new_or');
         let initialValue = accnoInput.value; 
      
         function checkValueChange() {
            
             if (accnoInput.value !== initialValue) {
                 createNewBtn.disabled = false; 
+                createNewOrBtn.disabled = false; 
                 initialValue = accnoInput.value; 
             }
         }
@@ -747,6 +828,8 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<!-- GETTING OF ACCOUNT NO FOR PASSING -->
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
@@ -754,13 +837,16 @@ $(document).ready(function() {
         $('#create_new_atap').data('account-no', accountNo); 
     }
 </script>
-<!-- GETTING OF ACCOUNT NO FOR PASSING -->
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        //document.getElementById('accno').value = accountNo;
-        //console.log(accountNo);
         $('#create_new').data('account-no', accountNo); 
+    }
+</script>
+<script>
+    function updateAccountNo() {
+        var accountNo = $('#buyer_acc_no').val();
+        $('#create_new_or').data('account-no', accountNo); 
     }
   
 </script>
@@ -849,6 +935,12 @@ $(document).ready(function() {
             loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
         });
 
+        $('#create_new_or').click(function() {
+            var accountNo = $(this).data('account-no');
+            loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
+        });
+
+
         $(document).on('click', '.edit_data', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');
@@ -860,7 +952,6 @@ $(document).ready(function() {
             }
         });
 
-    
         $('#create_other_new').click(function() {
             loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
         });

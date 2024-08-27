@@ -28,11 +28,11 @@
 <form id="car-type-form">
     <input type="hidden" name="id" value="<?php echo isset($id) ? $id : '' ?>">
     <div class="form-group">
-        <label for="c_payment_type">Payment Type</label>
+        <label for="c_transaction_name">Transaction Name</label>
         <input type="text" class="form-control" id="c_payment_type" name="c_payment_type" value="<?php echo htmlspecialchars($c_payment_type) ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
     <div class="form-group">
-        <label for="payment_status">Payment Status</label>
+        <label for="transaction_type">Transaction Type</label>
         <select class="form-control" id="payment_status" name="payment_status" required>
             <option value="" <?php echo ($payment_status == '') ? 'selected' : ''; ?>></option>
             <option value="C" <?php echo ($payment_status == 'C') ? 'selected' : ''; ?>>CAR</option>

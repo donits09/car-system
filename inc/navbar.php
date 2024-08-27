@@ -167,43 +167,51 @@ function isActive($pages) {
                 <li class="nav-item<?php echo isActive(['/admin/car?page=car_list']) ? ' active' : ''; ?>">
                 <a class="nav-link" href="<?php echo base_url ?>admin/car?page=car_list">Home</a>
                 </li>
-                <li class="nav-item dropdown<?php echo isActive(['/admin/car/all_car_list.php']) ? ' active' : ''; ?>">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Files
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
-                    <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">CAR List</a>
-                    <a class="dropdown-item" href="<?php echo base_url ?>admin/atap/all_atap_list.php">ATAP List</a>
-                </div>
+                <li class="nav-item dropdown<?php echo isActive(['/admin/car/all_car_list.php', '/admin/atap/all_atap_list.php', '/admin/other_fees/all_of_list.php']) ? ' active' : ''; ?>">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownFiles" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Files
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
+                        <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">CAR List</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>admin/atap/all_atap_list.php">ATAP List</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>admin/other_fees/all_of_list.php">Other Fees</a>
+                    </div>
                 </li>
-
-                <li class="nav-item dropdown<?php echo isActive(['car_type', 'user', 'bank']) ? ' active' : ''; ?>">
+                <li class="nav-item dropdown<?php echo isActive([
+                        'car_type',
+                        'users',
+                        'logs',
+                        'bank/check_type.php',
+                        'bank/online_type.php',
+                        'users/index_department.php',
+                        'users/index_position.php'
+                    ]) ? ' active' : ''; ?>">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Settings
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                        <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">CAR Type</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/car_type?page=index">Transaction Types</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users?page=index">System Users</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/logs?page=index">User Logs</a>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-submenu">
-                          <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Bank Types <i class="fas fa-caret-right float-right"></i>
-                          </a>
-                          <ul class="dropdown-menu" aria-labelledby="navbarDropdownBank">
-                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/check_type.php">Check</a></li>
-                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/online_type.php">Online</a></li>
-                          </ul>
+                            <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Bank Types <i class="fas fa-caret-right float-right"></i>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownBank">
+                                <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/check_type.php">Check</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/bank/online_type.php">Online</a></li>
+                            </ul>
                         </div>
                         <div class="dropdown-divider"></div>
                         <div class="dropdown-submenu">
-                          <a class="dropdown-item" href="#" id="navbarDropdownPosition" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Users Details<i class="fas fa-caret-right float-right"></i>
-                          </a>
-                          <ul class="dropdown-menu" aria-labelledby="navbarDropdownPosition">
-                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/index_department.php">Department</a></li>
-                              <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/index_position.php">Position</a></li>
-                          </ul>
+                            <a class="dropdown-item" href="#" id="navbarDropdownPosition" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Users Details<i class="fas fa-caret-right float-right"></i>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownPosition">
+                                <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/index_department.php">Department</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/index_position.php">Position</a></li>
+                            </ul>
                         </div>
                     </div>
                 </li>
@@ -218,13 +226,13 @@ function isActive($pages) {
                 </div>
                 </li>
                 <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <?php echo htmlspecialchars($c_realname); ?>
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
-                    <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/my_account.php">My Account</a>
-                    <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
-                </div>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php echo htmlspecialchars($c_realname); ?>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownProfile">
+                        <a class="dropdown-item" href="<?php echo base_url ?>admin/settings/users/my_account.php">My Account</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>auth/logout.php">Logout</a>
+                    </div>
                 </li>
             </ul>
         </div>
@@ -259,7 +267,7 @@ function isActive($pages) {
                 Settings
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                <!-- <a class="dropdown-item" href="<?php echo base_url ?>supervisor/settings/car_type?page=index">CAR Type</a>
+                <!-- <a class="dropdown-item" href="<?php echo base_url ?>supervisor/settings/car_type?page=index">Transaction Types</a>
                 <div class="dropdown-divider"></div> -->
                 <div class="dropdown-submenu">
                 <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -324,7 +332,7 @@ function isActive($pages) {
                       Settings
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownSettings">
-                      <!-- <a class="dropdown-item" href="<?php echo base_url ?>cashier/settings/car_type?page=index">CAR Type</a>
+                      <!-- <a class="dropdown-item" href="<?php echo base_url ?>cashier/settings/car_type?page=index">Transaction Typess</a>
                       <div class="dropdown-divider"></div> -->
                       <div class="dropdown-submenu">
                           <a class="dropdown-item" href="#" id="navbarDropdownBank" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -498,14 +506,14 @@ function isActive($pages) {
     }
 });
 
-
-
-    /* function formatFirstWordBold(text) {
-        let words = text.split(' ');
-        if (words.length > 0) {
-            words[0] = '<strong>' + words[0] + '</strong>';
+function isActive($pages) {
+    $currentPage = $_SERVER['REQUEST_URI']; 
+    foreach ($pages as $page) {
+        if (strpos($currentPage, $page) !== false) {
+            return true;
         }
-        return words.join(' ');
-    } */
+    }
+    return false;
+}
 
 </script>
