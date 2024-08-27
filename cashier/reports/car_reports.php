@@ -340,7 +340,7 @@ $current_date = date('Y-m-d');
         startDate = formatToISO(startDate);
         endDate = formatToISO(endDate);
 
-        var url = '../../print/pdf_report_cashier.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+        var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
         window.open(url, '_blank');
     });
 
