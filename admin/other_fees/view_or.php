@@ -1,23 +1,18 @@
 <?php
     session_start();
-    /* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
-        require_once('../logout.php');
-        exit();
-    } */
 
     require_once('../../inc/check_session.php');
-    check_user_group(3);
-
-    include('../../config.php');
+    check_user_group(1);
     $c_encoded_by = '';
+    include('../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
         $accountId = $_GET['id'];
-        $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, a.c_bank, b.c_name, b.c_phase,
+        $get_or_query = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
+                    a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.c_check_no, a.c_remarks
-                        FROM t_car_payment a
-                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
-        $stmt = odbc_prepare($conn, $get_car_query);
+                        FROM t_or_payment a
+                        LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no WHERE a.id = ?";
+        $stmt = odbc_prepare($conn, $get_or_query);
         odbc_execute($stmt, array($accountId));
         $result = odbc_fetch_array($stmt);
         if($result){
@@ -37,12 +32,12 @@
                     <?php } ?>
                 </tr>
                 <tr>
-                    <th>CAR No.:</th>
-                    <td><?php echo $row['c_car_no']; ?></td>
+                    <th>OR No.:</th>
+                    <td><?php echo $row['c_or_no']; ?></td>
                 </tr>
                 <tr>
                     <th>Transaction Type:</th>
-                    <td><?php echo $row['c_car_type']; ?></td>
+                    <td><?php echo $row['c_or_type']; ?></td>
                 </tr>
                 <tr>
                     <th style="width: 30%;">Name:</th>
@@ -127,7 +122,7 @@
                 </tr>
                 <tr>
                     <th>Amount:</th>
-                    <td><?php echo number_format($row['c_car_amount'],2); ?></td>
+                    <td><?php echo number_format($row['c_or_amount'],2); ?></td>
                 </tr>
                 <tr>
                     <th>Mode of Payment:</th>
@@ -175,7 +170,7 @@
                 </tr>
                 <tr>
                     <th>Pay Date:</th>
-                    <td><?php echo $row['c_car_paydate']; ?></td>
+                    <td><?php echo $row['c_or_paydate']; ?></td>
                 </tr>
                 <tr>
                     <th>Encoded by:</th>

@@ -7,7 +7,7 @@ function validateAlphaNumericInput(event) {
 }
 
 $('#create_new').click(function() {
-    loadModal('Create New Car Type', 'manage_car_type.php', '#createCarModal');
+    loadModal('Create New Transaction Type', 'manage_car_type.php', '#createCarModal');
 });
 
 $(document).on('click', '.edit_data', function() {

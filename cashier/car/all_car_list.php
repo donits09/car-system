@@ -51,7 +51,7 @@ include('../../inc/header.php');
                             <th>No</th>
                             <th>Account No.</th>
                             <th>CAR No.</th>
-                            <th>Payment Type</th>
+                            <th>Transaction Type</th>
                             <th>Remarks</th>
                             <th>Name</th>
                             <th>Location</th>

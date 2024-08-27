@@ -15,11 +15,11 @@ include('../../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <!-- <div class="pd-20" id="car-btn"> -->
-        <h2 class="text-blue h4">CAR Type</h2>
+        <h2 class="text-blue h4">Transaction Types</h2>
         <hr>
         <div class="pd-20">
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New Payment Type
+                <span class="fa fa-edit"></span> Create New Transaction Type
             </a>
             <hr>
         </div>

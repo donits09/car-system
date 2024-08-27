@@ -1,12 +1,8 @@
 <?php 
 session_start();
-/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
-    require_once('../logout.php');
-    exit();
-} */
 
 require_once('../../inc/check_session.php');
-check_user_group(2);
+check_user_group(1);
 
 include('../../config.php');
 include('../../inc/navbar.php');    
@@ -32,14 +28,14 @@ include('../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
-        <h2 class="text-blue h4">Cash Acknowledgement Receipt - Full List</h2>
-        <hr>
         <!-- <div class="pd-20" id="car-btn"> -->
+        <h2 class="text-blue h4">Other Fees - Full List</h2>
+        <hr>
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New Payment 
+                <span class="fa fa-edit"></span> Create New OR
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
-                <span class="fa fa-edit"></span> Create Other Payment 
+                <span class="fa fa-edit"></span> Create Other OR
             </a>
             <div class="pd-20">
             <hr>
@@ -50,7 +46,7 @@ include('../../inc/header.php');
                     <tr>
                         <th>No</th>
                         <th>Account No.</th>
-                        <th>CAR No.</th>
+                        <th>OR No.</th>
                         <th>Transaction Type</th>
                         <th>Remarks</th>
                         <th>Name</th>
@@ -65,13 +61,13 @@ include('../../inc/header.php');
                         <?php
                         $username = $_SESSION['username'];
 
-                        $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
+                        $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
+                    a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.e_status, a.c_remarks
-                        FROM t_car_payment a
-                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE status != 1
+                        FROM t_or_payment a
+                        LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no WHERE status != 1
                         ORDER BY a.c_tran_updated DESC";
-                        $stmt = odbc_prepare($conn, $car_list);
+                        $stmt = odbc_prepare($conn, $or_list);
 
                         $result = odbc_execute($stmt, array($username));
 
@@ -87,8 +83,8 @@ include('../../inc/header.php');
                                     <td class="text-center">
                                         <?php echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); ?>
                                     </td>
-                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
-                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_or_no']); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_or_type']); ?></td>
                                     <td class="text-center"><?php echo htmlspecialchars($row['c_remarks']); ?></td>
                                     <td class="text-center">
                                         <?php
@@ -167,8 +163,8 @@ include('../../inc/header.php');
                                         }
                                         ?>
                                     </td>
-                                    <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
-                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
+                                    <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_or_paydate']); ?></td>
                                     <td class="text-center">
                                         <?php
                                         $c_encoded_by = $row['c_encoded_by'];
@@ -189,30 +185,27 @@ include('../../inc/header.php');
                                     </button>
                                     <div class="dropdown-menu" role="menu">
                                         <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
+                                            <!-- <span class="fa fa-eye text-primary"></span> -->View
                                         </a>
-                                        <div class="dropdown-divider"></div>
-                                  
-                                        <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo htmlspecialchars($row['c_car_no']); ?>" target="_blank">
-                                            <!-- <span class="fas fa-print"></span>  -->Print
-                                        </a>
-                                        <?php if($row['e_status'] == 0){ ?>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item edit_data" href="javascript:void(0)" 
                                         data-id="<?php echo $row['id']; ?>" 
                                         data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                                        data-payment-type="<?php echo htmlspecialchars($row['c_car_type']); ?>" 
-                                        data-amount="<?php echo htmlspecialchars($row['c_car_amount']); ?>" 
-                                        data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>" 
-                                        data-pay-date="<?php echo htmlspecialchars($row['c_car_paydate']); ?>" 
+                                        data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
+                                        data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
+                                        data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
+                                        data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
                                         data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
-                                            <!-- <span class="fa fa-edit text-info"></span>  -->Edit
+                                            Edit
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
-                                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
+                                        <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
+                                            Print
                                         </a>
-                                        <?php } ?>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
+                                            Cancel
+                                        </a>
                                     </div>
                                 </td>
                                 </tr>
@@ -234,14 +227,15 @@ include('../../inc/header.php');
     </div>
 </div>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/all_car_list.js"></script>
-
+<script src="../../dist/js/of_js/all_of_list.js"></script>
+<script src="../../dist/js/export_scripts.js"></script>
 <!-- <script src="../../dist/js/manage_car.js"></script> -->
 <script>
+
 $(document).ready(function() {
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        $('#create_new').attr('data-account-no', accountNo);
+        $('#create_new_of').attr('data-account-no', accountNo);
     }
     updateAccountNo();
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
