@@ -1,9 +1,5 @@
 <?php
 session_start();
-/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
-    require_once('../logout.php');
-    exit();
-} */
 
 require_once('../../inc/check_session.php');
 check_user_group(3);
@@ -11,6 +7,7 @@ check_user_group(3);
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
+
 ?>
 <?php
     $c_remarks = '';
@@ -42,70 +39,71 @@ include('../../inc/header.php');
 <link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/index.css">
 <style>
-        .table-container {
-            margin-bottom: 20px;
-        }
+    .table-container {
+        margin-bottom: 20px;
+    }
 
-        .table-container label {
-            margin-right: 10px; 
-        }
+    .table-container label {
+        margin-right: 10px; 
+    }
 
-        .table-container input[type="text"] {
-            width: 150px;
-            padding: 5px; 
-        }
-        label {
-            color: black;
-        }
+    .table-container input[type="text"] {
+        width: 150px;
+        padding: 5px; 
+    }
+    label{
+        color:black;
+    }
 
-        .container {
-            width: 100%;
-            height: auto;
-        }
-
-        body {
-            width: 100%;
-        }
-        body.modal-open {
-            overflow: hidden;
-            padding-right: 0 !important;
-        }
-        #buyer_loc {
-            border: none;
-            background-color: transparent;
-            font-size: 14px;
-            font-style: italic;
-            font-weight: bold;
-            color: black;
-        }
-        #b_details {
-            text-align: left;
-            border: none;
-        }
-        .table {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: #212529;
-        }
-        .table-bordered {
-            border: 1px solid #dee2e6;
-        }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        .table-dark {
-            color: #fff;
-            background-color: #343a40;
-        }
-        .table-dark th, .table-dark td, .table-dark thead th {
-            border-color: #454d55;
-        }
-        .disabled-link {
-            pointer-events: none; 
-            opacity: 0.5; 
-            cursor: not-allowed; 
-        }
-    </style>
+    .container {
+    width: 100%;
+    height:auto;
+    }
+    
+    body{
+        width:100%;
+    }
+    body.modal-open {
+        overflow: hidden;
+        padding-right: 0 !important;
+    }
+    #buyer_loc{
+        border:none;
+        background-color: transparent;
+        font-size: 14px;
+        font-style: italic;
+        font-weight: bold;
+        color:black;
+        pointer-events: none;
+    }
+    #b_details{
+        text-align: left;
+        border: none;
+    }
+    .table {
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #212529;
+    }
+    .table-bordered {
+        border: 1px solid #dee2e6;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+    .table-dark {
+        color: #fff;
+        background-color: #343a40;
+    }
+    .table-dark th, .table-dark td, .table-dark thead th {
+        border-color: #454d55;
+    }
+    .disabled-link {
+        pointer-events: none; 
+        opacity: 0.5; 
+        cursor: not-allowed; 
+    }
+</style>
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
@@ -114,7 +112,7 @@ include('../../inc/header.php');
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
         <table class="table">
-        <form id="search-type-form">
+                <form id="search-type-form">
                     <div class="row align-items-end">
                         <div class="col-md-3 form-group">
                             <label for="search_type" class="control-label">Search By:</label>
@@ -337,6 +335,33 @@ include('../../inc/header.php');
                                     </tr>
                                 </table>
                             </div>
+                            <div class="table-container">
+                                <table class="table table-bordered table-striped" id="car-list-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Account No.</th>
+                                            <th>CAR No.</th>
+                                            <th>Transaction Type</th>
+                                            <th>Remarks</th>
+                                            <th>Name</th>
+                                            <th>Location</th>
+                                            <th>Amount</th>
+                                            <th>Pay Date</th>
+                                            <th>Encoder</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="car-list-body">
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="text-right">Total Amount:</th>
+                                            <th id="totalAmount" class="text-center"></th>
+                                            <th colspan="5"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             
                             <ul class="nav nav-tabs" id="tableTab" role="tablist">
                                 <li class="nav-item" role="presentation">
@@ -411,16 +436,19 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-                
                 <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
                     <div class="card mt-3">
                     <div class="container">
-                            <h2 class="text-blue h4">ATAP List</h2>
+                    <h2 class="text-blue h4">ATAP List</h2>
+                            <hr>
+                            <button type="button" id="create_new_atap" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()" disabled>
+                                <span class="fa fa-edit"></span> Create New ATAP
+                            </button>
                             <hr>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
-                                        <label for="accno" class="form-label">Acc #</label>
+                                        <label for="atap_accno" class="form-label">Acc #</label>
                                         <input type="text" class="form-control" id="atap_accno" readonly>
                                     </div>
                                     <div class="col-12 col-md-4">
@@ -472,7 +500,6 @@ include('../../inc/header.php');
                                     </tfoot>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -481,7 +508,7 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">Payment Record </h2>
                             <hr>
-                            <a href="<?php echo base_url ?>admin/car/print_payment_record.php?id=<?php echo $id; ?>", target="_blank" id="print_pr" class="btn btn-flat btn-success" href="javascript:void(0)">
+                            <a href="javascript:void(0)" target="_blank" id="print_pr" class="btn btn-flat btn-success">
                                 <span class="fa fa-download"></span> Print
                             </a>
                             <hr>
@@ -490,7 +517,6 @@ include('../../inc/header.php');
                                     <div class="col-12 col-md-4">
                                         <label for="acct_no" class="form-label">Acc #</label>
                                         <input type="text" class="form-control" id="acct_no" readonly>
-                                       
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label for="fullname_pr" class="form-label">Name</label>
@@ -505,7 +531,7 @@ include('../../inc/header.php');
                                 <hr>
                             </div>
                             <div class="table-container">
-                                <table class="table table-bordered table-striped" id="car-list-table">
+                                <table class="table table-bordered table-striped" id="payment-list-table">
                                     <thead>
                                         <tr>
                                             <th style="text-align:center;font-size:13px;">DUE DATE</th>
@@ -528,7 +554,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-
             </div>
         <?php include ('../modals/main_modals.php'); ?>
         </div>
@@ -646,6 +671,23 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const accnoInput = document.getElementById('accno');
+        const createNewBtn = document.getElementById('create_new_atap');
+        let initialValue = accnoInput.value; 
+     
+        function checkValueChange() {
+           
+            if (accnoInput.value !== initialValue) {
+                createNewBtn.disabled = false; 
+                initialValue = accnoInput.value; 
+            }
+        }
+
+        setInterval(checkValueChange, 500); 
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
       
         function disableExportLinks() {
             document.getElementById('export_csv').classList.add('disabled-link');
@@ -691,7 +733,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 initialValue = accnoInput.value; 
             }
         }
-
         setInterval(checkValueChange, 500); 
     });
 </script>
@@ -776,14 +817,15 @@ $(document).ready(function() {
     });
 });
 </script>
-
 <!-- GETTING OF ACCOUNT NO FOR PASSING -->
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        console.log(accountNo);
+        //document.getElementById('accno').value = accountNo;
+        //console.log(accountNo);
         $('#create_new').data('account-no', accountNo); 
     }
+  
 </script>
 
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
@@ -799,7 +841,7 @@ $(document).ready(function() {
     document.getElementById("searchInput").addEventListener("input", function() {
         filterTable();
     });
-
+    
     document.getElementById("searchInputAtap").addEventListener("input", function() {
         filterTableAtap();
     });
@@ -835,7 +877,6 @@ $(document).ready(function() {
 
 <!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
 <script>
-$(document).ready(function() {
     function loadModal(title, url, modalId) {
         start_loader();
         $.ajax({
@@ -854,69 +895,60 @@ $(document).ready(function() {
             }
         });
     }
-
-    $(document).on('click', '.view_data', function() {
-        var accountId = $(this).data('id');
-        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
-    });
-
-    $('#create_new').click(function() {
-        var accountNo = $(this).data('account-no');
-        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
-    });
-
-    $(document).on('click', '.edit_data', function() {
-        var accountId = $(this).data('id');
-        var accountNo = $(this).data('account-no');
-    
-        if (!accountNo) {
-            loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
-        } else {
-            loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
-        }
-    });
-
-    $(document).on('click', '.view_atap_spec', function() {
-        var atapId = $(this).data('id');
-        var atapNo = $(this).data('no');
-        loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
-    });
-
-    $('#create_other_new').click(function() {
-        loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
-    });
-
-    $(document).on('click', '.delete_data', function() {
-        var carId = $(this).data('id');
-        var carNo = $(this).data('car-no');
-        _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
-    });
-
-    window._conf = function(msg, func, params) {
-        $('#confirm_modal .modal-body').html(msg);
-        $('#confirm_modal #confirm').off('click').on('click', function() {
-            func.apply(this, params);
+    $(document).ready(function() {
+        $(document).on('click', '.view_data', function() {
+            var accountId = $(this).data('id');
+            loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
         });
-        $('#confirm_modal').modal('show');
-    };
+
+
+
+        $('#create_new').click(function() {
+            var accountNo = $(this).data('account-no');
+            loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
+        });
+
+        $(document).on('click', '.edit_data', function() {
+            var accountId = $(this).data('id');
+            var accountNo = $(this).data('account-no');
+        
+            if (!accountNo) {
+                loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
+            } else {
+                loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+            }
+        });
+
+    
+        $('#create_other_new').click(function() {
+            loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
+        });
+
+        $(document).on('click', '.delete_data', function() {
+            var carId = $(this).data('id');
+            var carNo = $(this).data('car-no');
+            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
+        });
+
+        window._conf = function(msg, func, params) {
+            $('#confirm_modal .modal-body').html(msg);
+            $('#confirm_modal #confirm').off('click').on('click', function() {
+                func.apply(this, params);
+            });
+            $('#confirm_modal').modal('show');
+        };
 
     $(document).on('click', '.view_atap', function() {
         var atapId = $(this).data('id');
         var atapNo = $(this).data('no');
         loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
+});
 
-    $(document).on('click', '.view_summary', function() {
-        var carType = $(this).data('car-type');
-        var accountNo = $('#buyer_acc_no').val();
-        loadModal('CAR Transaction List', 'view_summary.php?car_type=' + encodeURIComponent(carType) + '&account-no=' + accountNo, '#viewModalsummary');
+    $(document).ready(function() {
+        calculateTotalAmount();
     });
 });
-
-$(document).ready(function() {
-    calculateTotalAmount();
-});
-
 </script>
 <script>
 function delete_car(carId, carNo) {
@@ -951,30 +983,6 @@ function delete_car(carId, carNo) {
         }
     });
 }
-</script>
-<script>
-$(document).ready(function() {
-    $('#car-list-tab').on('click', function(e) {
-        e.preventDefault(); 
-
-        var username = $('#username').val();
-        var buyer_acc_no = $('#buyer_acc_no').val();
-
-        $.ajax({
-            url: 'car_list.php',
-            type: 'GET',
-            data: { username: username, buyer_acc_no: buyer_acc_no },
-            success: function(response) {
-              
-                $('#car-list-body').html(response);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching car list:', error);
-              
-            }
-        });
-    });
-});
 function updateCarList() {
     const accountNo = document.getElementById('buyer_acc_no').value;
     fetch(`car_list.php?account_no=${accountNo}`)
@@ -1010,9 +1018,8 @@ $(document).ready(function() {
 </script>
 
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/index_cshr.js"></script>
+<script src="../../dist/js/index.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>
-<script src="../../dist/js/manage_car_cshr.js"></script>
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
-
+<script src="../../dist/js/manage_car.js"></script>
 <?php include('../../inc/footer.php'); ?>

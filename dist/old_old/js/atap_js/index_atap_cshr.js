@@ -1,4 +1,3 @@
-//Updating ng car-list-table body everytime na may click function or searching
 
 //  ATAP MAIN FUNCTIONS
 function filterTableAtap() {

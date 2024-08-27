@@ -119,7 +119,7 @@ if (isset($_GET['id'])) {
             <tr>
                 <th>No.</th>
                 <th>CAR No.</th>
-                <th>Payment Type</th>
+                <th>Transaction Type</th>
                 <th>Location</th>
                 <th>Cash</th>
                 <th>Check</th>

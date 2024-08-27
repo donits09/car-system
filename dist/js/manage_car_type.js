@@ -7,7 +7,7 @@ function validateAlphaNumericInput(event) {
 }
 
 $('#create_new').click(function() {
-    loadModal('Create New Car Type', 'manage_car_type.php', '#createCarModal');
+    loadModal('Create New Transaction Type', 'manage_car_type.php', '#createCarModal');
 });
 
 $(document).on('click', '.edit_data', function() {
@@ -18,7 +18,7 @@ $(document).on('click', '.edit_data', function() {
 $(document).on('click', '.delete_data', function() {
     var carTypeId = $(this).data('id');
     var carType = $(this).data('car-type');
-    _conf("Are you sure you want to cancel this car type permanently?", delete_car_type, [carTypeId, carType]);
+    _conf("Are you sure you want to cancel this transaction type permanently?", delete_car_type, [carTypeId, carType]);
 });
 
 function loadModal(title, url, modalId) {

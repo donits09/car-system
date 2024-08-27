@@ -64,6 +64,19 @@
     </div>
 </div>
 
+<div class="modal fade" id="createOrModal" tabindex="-1" role="dialog" aria-labelledby="createOrModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createOrModalLabel">Create New OR</h5>
+                <button onclick="closeModal()" class="btn customized-modal"" data-dismiss="modal" aria-label="Close">x</button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="confirm_modal" tabindex="-1" role="dialog" aria-labelledby="confirm_modal_label" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -137,6 +150,22 @@
                 <button onclick="closeModal4()" class="btn customized-modal" data-dismiss="modal">x</button>
             </div>
             <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="previewORModal" tabindex="-1" role="dialog" aria-labelledby="previewORModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewORModalLabel">OR Preview</h5>
+                <button onclick="closeModal3()" class="btn customized-modal" data-dismiss="modal">x</button>
+            </div>
+            <div class="modal-body">
+                <iframe id="previewORIframe" src="<?php echo base_url; ?>print/preview_or.php" style="width: 100%; height: 500px; border: none;"></iframe>
+                <div id="previewORContent" style="display: none;"></div>
+            </div>
+            <div class="modal-footer">
             </div>
         </div>
     </div>

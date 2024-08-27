@@ -15,11 +15,11 @@ include('../../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <!-- <div class="pd-20" id="car-btn"> -->
-        <h2 class="text-blue h4">CAR Type</h2>
+        <h2 class="text-blue h4">Transaction Types</h2>
         <hr>
         <div class="pd-20">
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New Payment Type
+                <span class="fa fa-edit"></span> Create New Transaction Type
             </a>
             <hr>
         </div>
@@ -28,15 +28,15 @@ include('../../../inc/header.php');
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Payment Type</th>
-                        <th>Payment Status</th>
+                        <th>Transaction Name</th>
+                        <th>Type</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="car-type-body">
                 <?php
-                    $get_car_types = "SELECT id, c_payment_type, payment_status, status FROM t_car_type ORDER BY payment_status,status ASC";
+                    $get_car_types = "SELECT id, c_payment_type, payment_status, status FROM t_car_type ORDER BY c_payment_type ASC";
                     $stmt = odbc_prepare($conn, $get_car_types);
                     if (odbc_execute($stmt)) {
                         $i = 1; 

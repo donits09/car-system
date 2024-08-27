@@ -1,5 +1,3 @@
-modal.css
-
 .btn.btn-modal {
     margin-left:10%;
     margin-right:10%;
@@ -27,3 +25,7 @@ modal.css
     margin-top: 0;
 }
 
+#previewORModal .modal-dialog{
+    height: 100%;
+    max-width: 102vh;
+}

@@ -319,6 +319,33 @@ include('../../inc/header.php');
                                 </table>
                             </div>
 
+                            <div class="table-container">
+                                <table class="table table-bordered table-striped" id="car-list-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Account No.</th>
+                                            <th>CAR No.</th>
+                                            <th>Transaction Type</th>
+                                            <th>Remarks</th>
+                                            <th>Name</th>
+                                            <th>Location</th>
+                                            <th>Amount</th>
+                                            <th>Pay Date</th>
+                                            <th>Encoder</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="car-list-body">
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="7" class="text-right">Total Amount:</th>
+                                            <th id="totalAmount" class="text-center"></th>
+                                            <th colspan="5"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             <ul class="nav nav-tabs" id="tableTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active" id="car-list-tab" data-toggle="tab" href="#car-list-table-container" role="tab" aria-controls="car-list-table-container" aria-selected="true">CAR List</a>
@@ -490,7 +517,7 @@ include('../../inc/header.php');
                                 <hr>
                             </div>
                             <div class="table-container">
-                                <table class="table table-bordered table-striped" id="car-list-table">
+                                <table class="table table-bordered table-striped" id="payment-list-table">
                                     <thead>
                                         <tr>
                                             <th style="text-align:center;font-size:13px;">DUE DATE</th>
@@ -825,7 +852,7 @@ $(document).ready(function() {
     $(document).on('click', '.delete_data', function() {
         var atapId = $(this).data('id');
         var atapNo = $(this).data('no');
-        _conf("Are you sure you want to cancel this ATAP permanently?", delete_atap, [atapId, atapNo]);
+        _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
     });
 
     window._conf = function(msg, func, params) {

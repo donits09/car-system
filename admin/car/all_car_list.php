@@ -18,6 +18,11 @@ include('../../inc/header.php');
         font-weight: bold !important;
         font-style: italic;
     }
+    .btn.btn-flat.btn-default.btn-sm.dropdown-toggle.dropdown-icon {
+        margin: 0; 
+        padding: 5px 10px; 
+        width: auto; 
+    }
 </style>
 <body>
 <div class="container mt-5">
@@ -42,13 +47,11 @@ include('../../inc/header.php');
                         <th>No</th>
                         <th>Account No.</th>
                         <th>CAR No.</th>
-                        <th>Payment Type</th>
+                        <th>Transaction Type</th>
+                        <th>Remarks</th>
                         <th>Name</th>
                         <th>Location</th>
                         <th>Amount</th>
-                        <th>MoP</th>
-                        <th>Bank</th>
-                        <th>Transaction Date</th>
                         <th>Pay Date</th>
                         <th>Encoder</th>
                         <th>Action</th>
@@ -60,7 +63,7 @@ include('../../inc/header.php');
 
                         $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.e_status
+                    b.c_block, b.c_lot, a.e_status, a.c_remarks
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE status != 1
                         ORDER BY a.c_tran_updated DESC";
@@ -82,6 +85,7 @@ include('../../inc/header.php');
                                     </td>
                                     <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
                                     <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_remarks']); ?></td>
                                     <td class="text-center">
                                         <?php
                                         $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
@@ -160,34 +164,6 @@ include('../../inc/header.php');
                                         ?>
                                     </td>
                                     <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
-                                    <td class="text-center">
-                                        <?php
-                                        if ($row['c_mop'] == 1) {
-                                            echo "Cash";
-                                        } elseif ($row['c_mop'] == 2) {
-                                            echo "Check";
-                                        } elseif ($row['c_mop'] == 3) {
-                                            echo "Online";
-                                        } else {
-                                            echo "-";
-                                        }
-                                        ?>
-                                    </td>
-                                    <td class="text-center">
-                                        <?php 
-                                        if ($row['c_bank'] == '') {
-                                            echo "-";
-                                        }else {
-                                            echo htmlspecialchars($row['c_bank']);
-                                        }
-                                        ?>
-                                    </td>
-                                    <td class="text-center tran-date">
-                                        <?php
-                                        $dateTime = new DateTime($row['c_tran_date']);
-                                        echo htmlspecialchars($dateTime->format('Y-m-d'));
-                                        ?>
-                                    </td>
                                     <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                                     <td class="text-center">
                                         <?php
@@ -241,9 +217,9 @@ include('../../inc/header.php');
                     </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="6" class="text-right" id="totalAmt">Total amount:</th>
+                        <th colspan="7" class="text-right" id="totalAmt">Total amount:</th>
                         <th id="totalAmount" class="text-center"></th>
-                        <th colspan="5"></th>
+                        <th colspan="3"></th>
                     </tr>
                 </tfoot>
             </table>
@@ -296,7 +272,7 @@ $(document).ready(function() {
         let totalAmount = 0;
         table.rows({ filter: 'applied' }).every(function(rowIdx, tableLoop, rowLoop) {
             var data = this.data();
-            var amount = parseFloat(data[6].replace(/,/g, ''));
+            var amount = parseFloat(data[7].replace(/,/g, ''));
             if (!isNaN(amount)) {
                 totalAmount += amount;
             }

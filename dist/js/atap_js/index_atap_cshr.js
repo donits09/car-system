@@ -55,6 +55,29 @@ $(document).ready(function() {
     });
 });
 
+$(document).ready(function() {
+    $('#or-list-tab').on('click', function(e) {
+        e.preventDefault(); 
+
+        var username = $('#username').val();
+        var buyer_acc_no = $('#buyer_acc_no').val();
+
+        $.ajax({
+            url: '../other_fees/fetch_or_list.php',
+            type: 'GET',
+            data: { username: username, buyer_acc_no: buyer_acc_no },
+            success: function(response) {
+              
+                $('#or-list-body').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching car list:', error);
+              
+            }
+        });
+    });
+});
+
 function delete_atap(atapId, atapNo) {
     start_loader();
     $.ajax({

@@ -36,7 +36,7 @@ include('../../../inc/header.php');
                 </thead>
                 <tbody id="car-type-body">
                 <?php
-                    $get_bank_types = "SELECT id, c_bank_type, c_name, status FROM t_car_check ORDER BY status DESC";
+                    $get_bank_types = "SELECT id, c_bank_type, c_name, status FROM t_car_check ORDER BY c_name ASC";
                     $stmt = odbc_prepare($conn, $get_bank_types);
                     if (odbc_execute($stmt)) {
                         $i = 1; 

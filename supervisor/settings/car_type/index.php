@@ -19,7 +19,7 @@ include('../../../inc/header.php');
         <hr>
         <div class="pd-20">
             <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New Payment Type
+                <span class="fa fa-edit"></span> Create New Transaction Type
             </a>
             <hr>
         </div>
@@ -28,7 +28,7 @@ include('../../../inc/header.php');
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Payment Type</th>
+                        <th>Transaction Type</th>
                         <th>Payment Status</th>
                         <th>Status</th>
                         <th>Action</th>

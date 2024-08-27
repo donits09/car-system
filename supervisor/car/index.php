@@ -363,7 +363,7 @@ include('../../inc/header.php');
                                                     <th>No</th>
                                                     <th>Account No.</th>
                                                     <th>CAR No.</th>
-                                                    <th>Payment Type</th>
+                                                    <th>Transaction Type</th>
                                                     <th>Name</th>
                                                     <th>Location</th>
                                                     <th>Amount</th>
@@ -511,7 +511,7 @@ include('../../inc/header.php');
                                 <hr>
                             </div>
                             <div class="table-container">
-                                <table class="table table-bordered table-striped" id="car-list-table">
+                                <table class="table table-bordered table-striped" id="payment-list-table">
                                     <thead>
                                         <tr>
                                             <th style="text-align:center;font-size:13px;">DUE DATE</th>
