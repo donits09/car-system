@@ -67,3 +67,18 @@ function exportPDF() {
 }
 
 document.getElementById('export_pdf').addEventListener('click', exportPDF);
+
+// EXPORT TO PDF (Summary of Payment)
+function exportPDFsummary() {
+    let account_no = document.getElementById('accountNo').value;
+    let car_type = document.getElementById('carType').value;
+
+    if (account_no && car_type) {
+        let url = `../../print/pdf_payment_type.php?account_no=${encodeURIComponent(account_no)}&car_type=${encodeURIComponent(car_type)}`;
+        window.open(url, '_blank');
+    } else {
+        console.error('Account number or car type is empty or not found.');
+    }
+}
+
+document.getElementById('export_summary').addEventListener('click', exportPDFsummary);
