@@ -1,33 +1,35 @@
 body { 
     font-family: DejaVu Sans, sans-serif;
-    margin: 0;
-    margin-top: -10mm;
-    margin: 1px;
+    margin-top: -5mm;
+    margin-right: 5mm;
+    margin-bottom: 5mm;
+    margin-left: 5mm;
 }
+
 h2, h5, h3, p { 
     margin: 2px 0; 
     padding: 0; 
 }
 .encoded_by {
-    font-size: 10px;
+    font-size: 9px;
     text-align: right;
 }
 .pdf-font {
-    font-size: 10px;
+    font-size: 9px;
 }
 table { 
     width: 100%; 
     border-collapse: collapse; 
-    font-size: 10px;
+    font-size: 9px;
 }
 th, td { 
     border: 1px solid black; 
-    padding: 5px; /* Reduced padding */
+    padding: 4px;
     text-align: center; 
 }
 th { 
     background-color: #f2f2f2; 
-    font-size: 10px;
+    font-size: 9px;
 }
 tfoot td { 
     font-weight: bold; 
@@ -41,35 +43,35 @@ header {
 header .info-box {
     display: inline-block;
     width: 30%;
-    padding: 2px; /* Reduced padding */
+    padding: 2px;
     border: 1px solid #000;
     vertical-align: top;
 }
 header .b-info {
     font-weight: bold;
-    font-size: 10px;
+    font-size: 9px;
 }
 header p {
-    font-size: 10px;
+    font-size: 9px;
 }
 footer {
     position: fixed;
-    bottom: -20px; /* Adjust as needed */
+    bottom: -20px;
     left: 0;
     right: 0;
     text-align: right;
-    font-size: 10px;
+    font-size: 9px;
     margin: 0;
     padding: 0;
 }
 
 .footer-content {
     border-top: 1px solid #000;
-    padding-top: 2px; /* Reduced padding */
+    padding-top: 2px;
 }
 
 table {
-    margin-top: 2mm; /* Adjust as needed */
+    margin-top: 2mm;
     width: 100%;
     border-collapse: collapse;
     page-break-inside: auto;

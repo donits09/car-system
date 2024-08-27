@@ -16,3 +16,7 @@
   function closeModal3() {
     $('#previewCarModal').modal('hide');
   }
+  
+  function closeModal4() {
+    $('#viewModalsummary').modal('hide');
+  }

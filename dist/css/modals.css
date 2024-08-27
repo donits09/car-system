@@ -19,6 +19,12 @@
     max-height: 80vh;
     max-width: 105vh;
 }
+#viewModalsummary .modal-dialog {
+    width: 80% !important;
+    max-width: 90%;
+    margin-top: 0;
+}
+
 #previewORModal .modal-dialog{
     height: 100%;
     max-width: 102vh;
