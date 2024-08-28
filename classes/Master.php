@@ -1154,7 +1154,7 @@ Class Master{
 	function save_atap_payment() {
 		extract($_POST);
 		$conn = $this->conn;
-
+	
 		$get_max_query = "SELECT MAX(c_atap_no) AS max_atap_no FROM t_atap";
 		$results = odbc_exec($conn, $get_max_query);
 		if ($row = odbc_fetch_array($results)) {
@@ -1163,15 +1163,18 @@ Class Master{
 		} else {
 			$new_atap_no = 1;
 		}
-
+	
 		$prev_c_atap_no = addslashes($c_atap_no);
 		$c_account_no = isset($c_account_no) ? addslashes($c_account_no) : '';
 		$c_atap_no = addslashes($new_atap_no);
 		$c_encoded_by = addslashes($c_encoded_by);
 		$c_tran_date = addslashes($c_tran_date);
 		$atap_remarks = pg_escape_string($atap_remarks);
-		$data = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks";
-		$values = "'$c_account_no', '$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks'";
+		$approval_status = isset($approval_status) ? (int)$approval_status : 0; 
+		$approver = isset($approver) ? pg_escape_string($approver) : ''; 
+		
+		$data = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks, approval_status, approver";
+		$values = "'$c_account_no', '$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks', '$approval_status', '$approver'";
 		$resp = array();
 	
 		if (empty($id)) {
@@ -1179,7 +1182,7 @@ Class Master{
 			$save_atap = odbc_exec($conn, $insert_atap);
 	
 			if ($save_atap) {
-				$atap_id = odbc_exec($conn, "SELECT @@IDENTITY AS id");
+				$atap_id = odbc_exec($conn, "SELECT LASTVAL() AS id");
 				$atap_id = odbc_result($atap_id, 'id');
 	
 				foreach ($transaction_type as $key => $tran_type) {
@@ -1199,7 +1202,9 @@ Class Master{
 		} else {
 			$update_atap = "UPDATE t_atap SET 
 							c_tran_updated = '$c_tran_date',
-							atap_remarks = '$atap_remarks'
+							atap_remarks = '$atap_remarks',
+							approval_status = '$approval_status',
+							approver = '$approver'
 							WHERE c_atap_no = '$prev_c_atap_no'";
 			$save_atap = odbc_exec($conn, $update_atap);
 	
@@ -1225,6 +1230,7 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
+	
 	function save_other_atap_payment() {
 		extract($_POST);
 		$conn = $this->conn;

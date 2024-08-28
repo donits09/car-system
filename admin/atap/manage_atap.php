@@ -64,6 +64,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_tran_date = $result["c_tran_date"];
         $atap_remarks = $result["atap_remarks"];
         $c_name = $result["c_name"];
+        $current_approval_status = $result['approval_status'];
+        $current_approver = $result['approver'];
     }
 
     $get_transaction_types_query = "SELECT * FROM t_atap_items WHERE c_atap_no = ?";
@@ -107,6 +109,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 #btnsave{
     width: 100% !important;
 }
+#approver_cont{
+    background-color: gainsboro;
+    padding:10px;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="atap-form" method="post" action="">
@@ -129,6 +135,57 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </label>
         <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks" required><?php echo htmlspecialchars($atap_remarks) ?></textarea>
     </div>
+
+    <div class="container mt-4" id="approver_cont">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="form-check-label">Approval Type</label><br>
+                    <hr>
+                    <div class="form-check">
+                        <input type="radio" id="with_approval" name="approval_status" value="1" class="form-check-input" 
+                            <?php if (isset($current_approval_status) && $current_approval_status == 1) echo 'checked'; ?>>
+                        <label for="with_approval" class="form-check-label">With Approval</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" id="without_approval" name="approval_status" value="0" class="form-check-input" 
+                            <?php if (isset($current_approval_status) && $current_approval_status == 0) echo 'checked'; ?>>
+                        <label for="without_approval" class="form-check-label">Without Approval</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="c_approver">Approver</label>
+                    <select id="c_approver" name="approver" class="form-control">
+                        <?php
+                        $app_query = "
+                            SELECT a.code, b.c_realname
+                            FROM t_approvers_list a
+                            INNER JOIN t_car_users b ON a.code = b.c_employee_code::INTEGER
+                            WHERE a.status = '1'
+                            ORDER BY a.id ASC
+                        ";
+                        $type_result = odbc_exec($conn, $app_query);
+                        while ($row = odbc_fetch_array($type_result)) {
+                            $code = htmlspecialchars($row['code'], ENT_QUOTES, 'UTF-8');
+                            $realname = htmlspecialchars($row['c_realname'], ENT_QUOTES, 'UTF-8');
+                            $selected = ($code == $current_approver) ? 'selected' : '';
+                            echo "<option value='$code' $selected>$realname</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <br>
     <div class="container mt-4" id="approver_cont">
         <div class="row">
             <div class="col-md-12">
@@ -194,6 +251,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         ?>
         <input type="text" class="form-control" value="<?php echo $realname ?>" readonly>
     </div>
+
     <div class="form-group hidden_fields">
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
