@@ -362,7 +362,7 @@ $(document).ready(function() {
     });
 
     $('#c_or_no').on('input', function() {
-        const orNo = $(this).val();
+        const orNo = $('#c_or_no').val();
         const orNoError = $('#or_no_error');
         const submitButton = $('#btnsave');
 
