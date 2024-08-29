@@ -16,6 +16,8 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_phase,
                 b.c_block, 
                 b.c_lot, 
+                c.c_atap_amount,
+                a.approval_status,
                 SUM(c.c_atap_amount) AS total_amount
             FROM 
                 t_atap a
@@ -36,7 +38,9 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_name, 
                 b.c_phase,
                 b.c_block, 
-                b.c_lot
+                b.c_lot,
+                c.c_atap_amount,
+                a.approval_status
             ORDER BY 
                 a.c_tran_updated DESC";
 
@@ -51,7 +55,8 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
             'c_block' => $result['c_block'],
             'c_lot' => $result['c_lot'],
             'c_car_amount' => $result['total_amount'],
-            'status' => $result['status']
+            'status' => $result['status'],
+            'approval_status' => $result['approval_status']
         ];
 
         echo json_encode(['status' => 'success', 'data' => $data, 'message' => 'ATAP details found']);

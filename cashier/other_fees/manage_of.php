@@ -2,7 +2,7 @@
 session_start();
 
 require_once('../../inc/check_session.php');
-check_user_group(1);
+check_user_group(3);
 
 include('../../config.php');
 
@@ -334,7 +334,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
+                url: '../../cashier/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -428,18 +428,7 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        const appStats = $('#approval_status').val();
-                        if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
-                        }else if (response.data.approval_status === '3') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP was disapproved.');
-                            clearTxt();
-                        }else if (response.data.status === '1') {
+                        if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");

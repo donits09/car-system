@@ -325,6 +325,7 @@ function isActive($pages) {
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                       <a class="dropdown-item" href="<?php echo base_url ?>cashier/car/all_car_list.php">Car List</a>
                       <a class="dropdown-item" href="<?php echo base_url ?>cashier/atap/all_atap_list.php">ATAP List</a>
+                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/other_fees/all_of_list.php">Other Fees</a>
                   </div>
               </li>
               <li class="nav-item dropdown<?php echo isActive(['car_type', 'user', 'bank']) ? ' active' : ''; ?>">

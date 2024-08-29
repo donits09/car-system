@@ -18,9 +18,8 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_name, 
                 b.c_phase,
                 b.c_block, 
-                b.c_lot,
-                c.c_atap_amount,
-                a.approval_status
+                b.c_lot, 
+                SUM(c.c_atap_amount) AS total_amount
             FROM 
                 t_atap a
             LEFT JOIN 
@@ -40,36 +39,24 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_name, 
                 b.c_phase,
                 b.c_block, 
-                b.c_lot,
-                c.c_atap_amount,
-                a.approval_status
+                b.c_lot
             ORDER BY 
                 a.c_tran_updated DESC";
-    
+
     $stmt = odbc_prepare($conn, $query);
-    
-    if (!$stmt) {
-        echo json_encode(['status' => 'error', 'message' => 'SQL preparation failed: ' . odbc_errormsg()]);
-        exit;
-    }
-    
-    $executed = odbc_execute($stmt, array($c_atap_no));
-    
-    if (!$executed) {
-        echo json_encode(['status' => 'error', 'message' => 'SQL execution failed: ' . odbc_errormsg()]);
-        exit;
-    }
-    
+    odbc_execute($stmt, array($c_atap_no));
+
     if ($result = odbc_fetch_array($stmt)) {
         $data = [
             'c_account_no' => $result['c_account_no'],
-            'c_or_amount' => $result['c_atap_amount'], 
+            'c_name' => $result['c_name'],
             'c_phase' => $result['c_phase'],
             'c_block' => $result['c_block'],
             'c_lot' => $result['c_lot'],
-            'status' => $result['status'],
-            'approval_status' => $result['approval_status']
+            'c_or_amount' => $result['total_amount'],
+            'status' => $result['status']
         ];
+
         echo json_encode(['status' => 'success', 'data' => $data, 'message' => 'ATAP details found']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No ATAP details found']);
