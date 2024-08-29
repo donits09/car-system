@@ -54,6 +54,7 @@ include('../../inc/header.php');
                         <th>Total Amount</th>
                         <th>Transaction Date</th>
                         <th>Status</th>
+                        <th>Approval Status</th>
                         <th>Requester</th>
                         <th>Action</th>
                     </tr>
@@ -68,6 +69,8 @@ include('../../inc/header.php');
                             a.c_tran_updated, 
                             a.atap_remarks, 
                             a.status, 
+                            a.approval_status,
+                            a.approver,
                             b.c_name, 
                             b.c_phase,
                             b.c_block, 
@@ -88,6 +91,8 @@ include('../../inc/header.php');
                             a.c_tran_updated, 
                             a.atap_remarks, 
                             a.status, 
+                            a.approval_status,
+                            a.approver,
                             b.c_name, 
                             b.c_phase,
                             b.c_block, 
@@ -208,6 +213,21 @@ include('../../inc/header.php');
                                         echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                                     } ?>
                                 </td>
+                                <td class="text-center">
+                                <?php 
+                                    if ($row['approval_status'] == 1) {
+                                        echo '<span class="badge badge-success">Doesn\'t need Approval</span>'; 
+                                    } else if($row['approval_status'] == 0) {
+                                        echo '<span class="badge badge-warning">Pending for Approval</span>'; 
+                                    } else if($row['approval_status'] == 2) {
+                                        echo '<span class="badge badge-primary">Approved</span>'; 
+                                    }else if($row['approval_status'] == 3) {
+                                        echo '<span class="badge badge-danger">Disapproved</span>'; 
+                                    }else {
+                                        echo '<span class="badge badge-secondary">---</span>'; 
+                                    } 
+                                ?>
+                                </td>
                                <td class="text-center">
                                     <?php
                                     $c_encoded_by = $row['c_encoded_by'];
@@ -221,17 +241,29 @@ include('../../inc/header.php');
                                     }
                                     ?>
                                 </td>
+                                <!-- 0 - walang approval or totally approved/ 1 - needs approval / 2 - disapproved -->
                                 <td align="center">
                                     <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
                                         Action
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
-                                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
+                                        <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                                            View 
                                         </a>
+                                        <?php if ($row['approver'] == $_SESSION["username"] && $row['approval_status'] == 0) { ?>
+                                            <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                                            <a class="dropdown-item approve_atap" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                                                Approved
+                                            </a>
+                                            <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                                            <a class="dropdown-item disapprove_atap" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                                                Disapproved
+                                            </a>
+                                        <?php } ?>
                                     </div>
                                 </td>
+
                             </tr>
                             <?php 
                         }
@@ -282,6 +314,79 @@ window._conf = function(msg, func, params) {
     $('#confirm_modal').modal('show');
 };
 </script>
+<script>
+$(document).on('click', '.approve_atap', function() {
+    var atapId = $(this).data('id');
+    var atapNo = $(this).data('no');
+    _conf("Are you sure you want to approve this ATAP?", approve_atap, [atapId, atapNo]);
+});
+$(document).on('click', '.disapprove_atap', function() {
+    var atapId = $(this).data('id');
+    var atapNo = $(this).data('no');
+    _conf("Are you sure you want to disapprove this ATAP?", disapprove_atap, [atapId, atapNo]);
+});
+function approve_atap(atapId, atapNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=approve_atap",
+        method: "POST",
+        data: { atapId: atapId, atapNo: atapNo },
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove();
+                    location.reload(); 
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+                end_loader();
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+                end_loader();
+            }
+        }
+    });
+}
+function disapprove_atap(atapId, atapNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=disapprove_atap",
+        method: "POST",
+        data: { atapId: atapId, atapNo: atapNo },
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove();
+                    location.reload(); 
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+                end_loader();
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+                end_loader();
+            }
+        }
+    });
+}
 </script>
 <script src="../../dist/js/table.js"></script>
 <!-- <script src="../../dist/js/all_atap_list.js"></script> -->

@@ -197,8 +197,68 @@ Class Master{
 		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
+
+	function approve_atap($atapId, $atapNo) {
+		$resp = array();
 	
+		if (isset($atapId) && isset($atapNo)) {
+			$sql = "UPDATE t_atap SET approval_status = 2 WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
 	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($atapId));
+			
+				if ($result) {
+					$resp['status'] = 'success';
+					$resp['msg'] = "ATAP successfully approved.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				error_log("Error preparing statements for ATAP with number: $atapNo");
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'ATAP ID or ATAP No not provided.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
+	
+	function disapprove_atap($atapId, $atapNo) {
+		$resp = array();
+	
+		if (isset($atapId) && isset($atapNo)) {
+			$sql = "UPDATE t_atap SET approval_status = 3 WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($atapId));
+			
+				if ($result) {
+					$resp['status'] = 'success';
+					$resp['msg'] = "ATAP successfully disapproved.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				error_log("Error preparing statements for ATAP with number: $atapNo");
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'ATAP ID or ATAP No not provided.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
 	function delete_car_type($carTypeId, $carType) {
 		$resp = array();
 	
@@ -1253,13 +1313,15 @@ Class Master{
 		$atap_remarks = pg_escape_string($atap_remarks);
 		$c_encoded_by = addslashes($c_encoded_by);
 		$c_tran_date = addslashes($c_tran_date);
+		$approval_status = isset($approval_status) ? (int)$approval_status : 0; 
+		$approver = isset($approver) ? pg_escape_string($approver) : ''; 
 	
 		$data = "c_atap_no, c_name, c_phase, c_block, c_lot";
 		$values = "'$c_atap_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 		
 		$c_account_no = '';
-		$data1 = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks";
-		$values1 = "'$c_account_no','$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks'";
+		$data1 = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks, approval_status, approver";
+		$values1 = "'$c_account_no','$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks', '$approval_status', '$approver'";
 		$resp = array();
 		
 		if (empty($id)) {
@@ -1295,7 +1357,9 @@ Class Master{
 							WHERE c_atap_no = '$prev_c_atap_no'";
 			$update_atap1 = "UPDATE t_atap SET 
 							 c_tran_updated = '$c_tran_date',
-							 atap_remarks = '$atap_remarks'
+							 atap_remarks = '$atap_remarks',
+							 approval_status = '$approval_status',
+							 approver = '$approver'
 							 WHERE c_atap_no = '$prev_c_atap_no'";
 			$save_atap = odbc_exec($conn, $update_atap);
 			$save_atap1 = odbc_exec($conn, $update_atap1);
@@ -1956,6 +2020,20 @@ switch ($action) {
 	case 'delete_atap':
 		if (isset($_POST['atapId']) && isset($_POST['atapNo'])) {
 			echo $Master->delete_atap($_POST['atapId'], $_POST['atapNo']);
+		} else {
+			echo json_encode(array('status' => 'failed', 'msg' => 'ATAP # not provided.'));
+		}
+		break;
+	case 'approve_atap':
+		if (isset($_POST['atapId']) && isset($_POST['atapNo'])) {
+			echo $Master->approve_atap($_POST['atapId'], $_POST['atapNo']);
+		} else {
+			echo json_encode(array('status' => 'failed', 'msg' => 'ATAP # not provided.'));
+		}
+		break;
+	case 'disapprove_atap':
+		if (isset($_POST['atapId']) && isset($_POST['atapNo'])) {
+			echo $Master->disapprove_atap($_POST['atapId'], $_POST['atapNo']);
 		} else {
 			echo json_encode(array('status' => 'failed', 'msg' => 'ATAP # not provided.'));
 		}

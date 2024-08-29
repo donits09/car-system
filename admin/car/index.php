@@ -884,13 +884,13 @@ $(document).ready(function() {
         $('#create_new').data('account-no', accountNo); 
     }
 </script>
-<script>
+<!-- <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
         $('#create_new_or').data('account-no', accountNo); 
     }
   
-</script>
+</script> -->
 
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
 <script>

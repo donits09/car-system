@@ -12,6 +12,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
+        a.approval_status,
+        a.approver,
         b.c_name, 
         b.c_phase,
         b.c_block, 
@@ -34,6 +36,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
+        a.approval_status,
+        a.approver,
         b.c_name, 
         b.c_phase,
         b.c_block, 
@@ -162,6 +166,41 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             <th>Remarks:</th>
                             <td style="max-width: 200px; word-wrap: break-word;">
                                 <?php echo htmlspecialchars($row['atap_remarks']); ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Approval Status:</th>
+                            <td>
+                            <?php 
+                                if ($row['approval_status'] == 1) {
+                                    echo '<span class="badge badge-success">Doesn\'t need Approval</span>'; 
+                                } else if($row['approval_status'] == 0) {
+                                    echo '<span class="badge badge-warning">Pending for Approval</span>'; 
+                                } else if($row['approval_status'] == 2) {
+                                    echo '<span class="badge badge-primary">Approved</span>'; 
+                                }else if($row['approval_status'] == 3) {
+                                    echo '<span class="badge badge-danger">Disapproved</span>'; 
+                                }else {
+                                    echo '<span class="badge badge-secondary">---</span>'; 
+                                } 
+                            ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Approver:</th>
+                            <td>
+                                <?php
+                                $c_approver = $row['approver'];
+                                $get_approver_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_approver'";
+                                $results = odbc_exec($conn, $get_approver_details_qry);
+
+                                if ($approver = odbc_fetch_array($results)) {
+                                    $realname = $approver["c_realname"];
+                                    echo htmlspecialchars($realname);
+                                }else{
+                                    echo htmlspecialchars('---');
+                                }
+                                ?>
                             </td>
                         </tr>
                         <tr>
