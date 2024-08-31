@@ -338,7 +338,6 @@ include('../../inc/header.php');
                                     </tr>
                                 </table>
                             </div>
-
                             <ul class="nav nav-tabs" id="tableTab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link active" id="car-list-tab" data-toggle="tab" href="#car-list-table-container" role="tab" aria-controls="car-list-table-container" aria-selected="true">CAR List</a>
@@ -477,7 +476,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-
                 <div class="tab-pane fade" id="or-list" role="tabpanel" aria-labelledby="or-list-tab">
                     <div class="card mt-3">
                         <div class="container">
@@ -545,8 +543,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-
-
                 <div class="tab-pane fade" id="payment-record" role="tabpanel" aria-labelledby="payment-record-tab">
                     <div class="card mt-3">
                         <div class="container">
@@ -860,6 +856,8 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success'); 
                     $('#buyer_remarks').val(resp.remarks);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error'); 
                 } else {
                     alert_toast("An unexpected error occurred", 'error'); 
                 }
@@ -869,7 +867,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
 <!-- GETTING OF ACCOUNT NO FOR PASSING -->
 <script>
     function updateAccountNo() {
@@ -905,7 +902,6 @@ $(document).ready(function() {
     document.getElementById("searchInput").addEventListener("input", function() {
         filterTable();
     });
-
     
     document.getElementById("searchInputAtap").addEventListener("input", function() {
         filterTableAtap();
@@ -982,7 +978,6 @@ $(document).ready(function() {
             loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
         });
 
-
         $(document).on('click', '.edit_data', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');
@@ -1043,9 +1038,7 @@ $(document).ready(function() {
 
     $(document).ready(function() {
         calculateTotalAmount();
-        
     });
-
 </script>
 <script>
 function delete_car(carId, carNo) {

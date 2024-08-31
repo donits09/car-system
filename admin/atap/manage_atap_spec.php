@@ -116,7 +116,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     width: 100% !important;
 }
 #approver_cont{
-    background-color: gainsboro;
+    background-color: whitesmoke;
     padding:10px;
 }
 </style>
@@ -143,20 +143,19 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <hr>
-                    <table style="border: none; border-collapse: collapse;">
+                    <table style="border-collapse: collapse;">
                         <tr>
-                            <td style="border: none;">
+                            <td>
                                 <label class="form-check-label">Approval Type:</label><br>
                             </td>
-                            <td style="border: none;">
+                            <td>
                                 <div class="form-check">
                                     <input type="radio" id="with_approval" name="approval_status" value="0" class="form-check-input"
                                         <?php if (isset($current_approval_status) && $current_approval_status == 0) echo 'checked'; ?>>
                                     <label for="with_approval" class="form-check-label">With Approval</label>
                                 </div>
                             </td>
-                            <td style="border: none;">
+                            <td>
                                 <div class="form-check">
                                     <input type="radio" id="without_approval" name="approval_status" value="1" class="form-check-input"
                                         <?php if (isset($current_approval_status) && $current_approval_status == 1) echo 'checked'; ?>>
@@ -166,9 +165,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tr>
                     </table>
                 </div>
+                <hr>
             </div>
         </div>
-        <hr>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">

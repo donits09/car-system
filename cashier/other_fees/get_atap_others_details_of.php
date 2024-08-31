@@ -1,6 +1,9 @@
 <?php
 include('../../config.php');
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
     $c_atap_no = $_POST['c_atap_no'];
     $query = "SELECT 
@@ -16,8 +19,6 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_phase,
                 b.c_block, 
                 b.c_lot, 
-                c.c_atap_amount,
-                a.approval_status,
                 SUM(c.c_atap_amount) AS total_amount
             FROM 
                 t_atap a
@@ -38,13 +39,13 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_name, 
                 b.c_phase,
                 b.c_block, 
-                b.c_lot,
-                c.c_atap_amount,
-                a.approval_status
+                b.c_lot
             ORDER BY 
                 a.c_tran_updated DESC";
+
     $stmt = odbc_prepare($conn, $query);
     odbc_execute($stmt, array($c_atap_no));
+
     if ($result = odbc_fetch_array($stmt)) {
         $data = [
             'c_account_no' => $result['c_account_no'],
@@ -52,10 +53,10 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
             'c_phase' => $result['c_phase'],
             'c_block' => $result['c_block'],
             'c_lot' => $result['c_lot'],
-            'c_car_amount' => $result['total_amount'],
-            'status' => $result['status'],
-            'approval_status' => $result['approval_status']
+            'c_or_amount' => $result['total_amount'],
+            'status' => $result['status']
         ];
+
         echo json_encode(['status' => 'success', 'data' => $data, 'message' => 'ATAP details found']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No ATAP details found']);
