@@ -507,10 +507,10 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     const appStats = $('#approval_status').val();
                     if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
+                        $('#car_type_container').show();
+                        $('#tran_type_container').hide();
+                        alert('The selected ATAP requires approval.');
+                        clearTxt();
                     }else if (response.data.approval_status === '3') {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();

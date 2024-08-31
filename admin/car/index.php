@@ -968,7 +968,8 @@ $(document).ready(function() {
         });
 
         $('#create_new').click(function() {
-            var accountNo = $(this).data('account-no');
+            /* var accountNo = $(this).data('account-no'); */
+            var accountNo = $('#buyer_acc_no').val();
             loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
         });
 
@@ -1016,6 +1017,11 @@ $(document).ready(function() {
             var atapId = $(this).data('id');
             var atapNo = $(this).data('no');
             loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+        });
+
+        $(document).on('click', '.view_or_spec', function() {
+            var orId = $(this).data('id');
+            loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
         });
 
         $(document).on('click', '.view_summary', function() {

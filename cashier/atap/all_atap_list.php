@@ -75,6 +75,7 @@ include('../../inc/header.php');
                                 <th>Total Amount</th>
                                 <th>Transaction Date</th>
                                 <th>Status</th>
+                                <th>Approval Status</th>
                                 <th>Requester</th>
                                 <th>Action</th>
                             </tr>
@@ -90,6 +91,8 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
+                                a.approval_status,
+                                a.approver,
                                 b.c_name, 
                                 b.c_phase,
                                 b.c_block, 
@@ -112,6 +115,8 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
+                                a.approval_status,
+                                a.approver,
                                 b.c_name, 
                                 b.c_phase,
                                 b.c_block, 
@@ -234,6 +239,21 @@ include('../../inc/header.php');
                                         } ?>
                                     </td>
                                     <td class="text-center">
+                                    <?php 
+                                        if ($row['approval_status'] == 1) {
+                                            echo '<span class="badge badge-success">Doesn\'t need Approval</span>'; 
+                                        } else if($row['approval_status'] == 0) {
+                                            echo '<span class="badge badge-warning">Pending for Approval</span>'; 
+                                        } else if($row['approval_status'] == 2) {
+                                            echo '<span class="badge badge-primary">Approved</span>'; 
+                                        }else if($row['approval_status'] == 3) {
+                                            echo '<span class="badge badge-danger">Disapproved</span>'; 
+                                        }else {
+                                            echo '<span class="badge badge-secondary">---</span>'; 
+                                        } 
+                                    ?>
+                                    </td>
+                                    <td class="text-center">
                                         <?php
                                         $c_encoded_by = $row['c_encoded_by'];
                                         $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
@@ -294,6 +314,7 @@ include('../../inc/header.php');
                             <th>Total Amount</th>
                             <th>Transaction Date</th>
                             <th>Status</th>
+                            <th>Approval Status</th>
                             <th>Requester</th>
                             <th>Action</th>
                         </tr>
@@ -308,6 +329,8 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
+                                a.approval_status,
+                                a.approver,
                                 b.c_name, 
                                 b.c_phase,
                                 b.c_block, 
@@ -327,7 +350,9 @@ include('../../inc/header.php');
                                 a.c_tran_date, 
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
-                                a.status, 
+                                a.status,
+                                a.approval_status,
+                                a.approver, 
                                 b.c_name, 
                                 b.c_phase,
                                 b.c_block, 
@@ -448,7 +473,22 @@ include('../../inc/header.php');
                                             echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                                         } ?>
                                     </td>
-                                <td class="text-center">
+                                    <td class="text-center">
+                                    <?php 
+                                        if ($row['approval_status'] == 1) {
+                                            echo '<span class="badge badge-success">Doesn\'t need Approval</span>'; 
+                                        } else if($row['approval_status'] == 0) {
+                                            echo '<span class="badge badge-warning">Pending for Approval</span>'; 
+                                        } else if($row['approval_status'] == 2) {
+                                            echo '<span class="badge badge-primary">Approved</span>'; 
+                                        }else if($row['approval_status'] == 3) {
+                                            echo '<span class="badge badge-danger">Disapproved</span>'; 
+                                        }else {
+                                            echo '<span class="badge badge-secondary">---</span>'; 
+                                        } 
+                                    ?>
+                                    </td>
+                                    <td class="text-center">
                                         <?php
                                         $c_encoded_by = $row['c_encoded_by'];
                                         $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";

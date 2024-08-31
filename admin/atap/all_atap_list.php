@@ -41,7 +41,7 @@ include('../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
-            <h2 class="text-blue h4">Authority to Accept Payment</h2>
+            <h2 class="text-blue h4">Authority to Accept Payment - Full List</h2>
             <hr>
             <a id="create_new_atap" class="btn btn-flat btn-primary" href="javascript:void(0)" onclick="handleCreateNewATAP()">
                 <span class="fa fa-edit"></span> Create New ATAP

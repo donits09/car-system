@@ -18,7 +18,7 @@
             });
         }
     
-        $('#create_new').click(function() {
+        $('#create_new_of').click(function() {
             loadModal('Create New OR', '../other_fees/manage_of.php', '#createCarModal');
         });
     

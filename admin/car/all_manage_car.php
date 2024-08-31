@@ -418,15 +418,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
     function clearTxt(){
         const atapNoField = $('#c_atap_no');
-        // const buyerNameField = $('#buyer_name');
+        const buyerNameField = $('#buyer_name');
         const amountField = $('#c_car_amount');
-        // const accField = $('#c_account_no');
+        const accField = $('#c_account_no');
         const statusField = $('#status');
 
         atapNoField.val('');
-        // buyerNameField.val('');
+        buyerNameField.val('');
         amountField.val('');
-        // accField.val('');
+        accField.val('');
         statusField.val('');
 
     }
