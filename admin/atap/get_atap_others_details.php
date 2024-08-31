@@ -56,7 +56,6 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
             'status' => $result['status'],
             'approval_status' => $result['approval_status']
         ];
-
         echo json_encode(['status' => 'success', 'data' => $data, 'message' => 'ATAP details found']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No ATAP details found']);

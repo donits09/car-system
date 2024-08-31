@@ -52,7 +52,6 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
             'c_car_amount' => $result['total_amount'],
             'status' => $result['status']
         ];
-
         echo json_encode(['status' => 'success', 'data' => $data, 'message' => 'ATAP details found']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'No ATAP details found']);
