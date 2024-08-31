@@ -43,7 +43,6 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 a.approval_status
             ORDER BY 
                 a.c_tran_updated DESC";
-
     $stmt = odbc_prepare($conn, $query);
     odbc_execute($stmt, array($c_atap_no));
 
