@@ -45,7 +45,6 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 a.c_tran_updated DESC";
     $stmt = odbc_prepare($conn, $query);
     odbc_execute($stmt, array($c_atap_no));
-
     if ($result = odbc_fetch_array($stmt)) {
         $data = [
             'c_account_no' => $result['c_account_no'],
