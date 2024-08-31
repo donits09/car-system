@@ -31,7 +31,7 @@ include('../../inc/header.php');
         <!-- <div class="pd-20" id="car-btn"> -->
         <h2 class="text-blue h4">Other Fees - Full List</h2>
         <hr>
-            <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
+            <a id="create_new_of" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                 <span class="fa fa-edit"></span> Create New OR
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">

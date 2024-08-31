@@ -502,10 +502,12 @@ $(document).ready(function() {
         const atapNoField = $('#c_atap_no');
         const amountField = $('#c_car_amount');
         const statusField = $('#status');
+        const accField = $('#c_account_no');
 
         atapNoField.val('');
         amountField.val('');
         statusField.val('');
+        accField.val('');
     }
 
     function populateForm(data) {
