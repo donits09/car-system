@@ -428,7 +428,18 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        if (response.data.status === '1') {
+                        const appStats = $('#approval_status').val();
+                        if (response.data.approval_status === '0') {
+                            $('#car_type_container').show();
+                            $('#tran_type_container').hide();
+                            alert('The selected ATAP requires approval.');
+                            clearTxt();
+                        }else if (response.data.approval_status === '3') {
+                            $('#car_type_container').show();
+                            $('#tran_type_container').hide();
+                            alert('The selected ATAP was disapproved.');
+                            clearTxt();
+                        }else if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
@@ -471,9 +482,11 @@ $(document).ready(function() {
         const atapNoField = $('#c_atap_no');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
+        const accField = $('#c_account_no');
 
         atapNoField.val('');
         amountField.val('');
+        accField.val('');
         statusField.val('');
     }
 

@@ -2,7 +2,7 @@
 session_start();
 
 require_once('../../inc/check_session.php');
-check_user_group(3);
+check_user_group(2);
 
 include('../../config.php');
 include('../../inc/navbar.php');    

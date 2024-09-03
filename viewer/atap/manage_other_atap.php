@@ -173,14 +173,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             <td>
                                 <div class="form-check">
                                     <input type="radio" id="with_approval" name="approval_status" value="0" class="form-check-input"
-                                        <?php if (isset($current_approval_status) && $current_approval_status == 0) echo 'checked'; ?>>
+                                        <?php if (isset($current_approval_status) && $current_approval_status == 0) echo 'checked'; ?> onclick="toggleApproverSelect()">
                                     <label for="with_approval" class="form-check-label">With Approval</label>
                                 </div>
                             </td>
                             <td>
                                 <div class="form-check">
                                     <input type="radio" id="without_approval" name="approval_status" value="1" class="form-check-input"
-                                        <?php if (isset($current_approval_status) && $current_approval_status == 1) echo 'checked'; ?>>
+                                        <?php if (isset($current_approval_status) && $current_approval_status == 1) echo 'checked'; ?> onclick="toggleApproverSelect()">
                                     <label for="without_approval" class="form-check-label">Without Approval</label>
                                 </div>
                             </td>
@@ -190,12 +190,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <hr>
             </div>
         </div>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="c_approver">Approver</label>
                     <select id="c_approver" name="approver" class="form-control">
-                        <option value="" disabled selected>Select an approver</option>
+                        <option value="" disabled selected>--------------------</option>
                         <?php
                         $app_query = "
                             SELECT a.code, b.c_realname
@@ -213,10 +214,46 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         }
                         ?>
                     </select>
+
+                    <input type="text" id="c_approver_text" class="form-control" disabled style="display: none;" placeholder="No Approval Required">
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleApproverSelect() {
+            var approverSelect = document.getElementById('c_approver');
+            var approverText = document.getElementById('c_approver_text');
+            var withApproval = document.getElementById('with_approval').checked;
+            
+            if (withApproval) {
+                approverSelect.style.display = 'block';
+                approverSelect.required = true;
+                approverText.style.display = 'none';
+            } else {
+                approverSelect.value = ""; 
+                approverSelect.style.display = 'none';
+                approverSelect.required = false;
+                approverText.style.display = 'block';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleApproverSelect();
+            var form = document.querySelector('form'); 
+            form.addEventListener('submit', function(event) {
+                var approverSelect = document.getElementById('c_approver');
+                var withApproval = document.getElementById('with_approval').checked;
+
+                if (withApproval && approverSelect.value === "") {
+                    event.preventDefault(); 
+                    alert('Please select an approver.');
+                    approverSelect.focus();
+                }
+            });
+        });
+    </script>
     
     <div class="form-group">
         <label for="encoder">Encoded by</label>

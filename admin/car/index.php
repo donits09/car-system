@@ -126,7 +126,6 @@ include('../../inc/header.php');
                     </div>
                 </form>
             </table>
-
             <!-- By Account # -->
             <form id="account-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('account')">
             <input type="hidden" id="username" class="form-control" value="<?php echo $username ?>">
@@ -330,7 +329,7 @@ include('../../inc/header.php');
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">
-                                            <label for="remarks" class="form-label" style="float:right;">Search:</label>
+                                            <label for="searchInput" class="form-label" style="float:right;">Search:</label>
                                         </td>
                                         <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
@@ -457,7 +456,7 @@ include('../../inc/header.php');
                                             <th>Total Amount</th>
                                             <th>Transaction Date</th>
                                             <th>Status</th>
-                                            <th>Encoder</th>
+                                            <th>Requester</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -481,10 +480,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">OR List</h2>
                             <hr>
-                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
-                            </button>
-                            <hr>
+                            </button> 
+                            <hr> -->
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -519,11 +518,11 @@ include('../../inc/header.php');
                                         <tr>
                                             <th>No</th>
                                             <th>Account No.</th>
-                                            <th>ATAP No.</th>
+                                            <th>OR No.</th>
                                             <th>Name</th>
                                             <th>Total Amount</th>
                                             <th>Transaction Date</th>
-                                            <th>Status</th>
+                                            <!-- <th>Status</th> -->
                                             <th>Encoder</th>
                                             <th>Action</th>
                                         </tr>
@@ -650,7 +649,6 @@ function switchToBuyerDetails() {
     atapListTab.classList.remove('active');
     atapListTab.setAttribute('aria-selected', 'false');
     atapListPane.classList.remove('show', 'active');
-
     orListTab.classList.remove('active');
     orListTab.setAttribute('aria-selected', 'false');
     orListPane.classList.remove('show', 'active');
@@ -933,7 +931,6 @@ $(document).ready(function() {
     document.getElementById("searchName").addEventListener("click", function(event) {
         searchAndCalculateTotal(event, 'last-name');
     });
-
 </script>
 
 <!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
@@ -1012,7 +1009,6 @@ $(document).ready(function() {
             var atapNo = $(this).data('no');
             loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
         });
-
         $(document).on('click', '.view_atap_spec', function() {
             var atapId = $(this).data('id');
             var atapNo = $(this).data('no');
@@ -1023,7 +1019,6 @@ $(document).ready(function() {
             var orId = $(this).data('id');
             loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
         });
-
         $(document).on('click', '.view_summary', function() {
             var carType = $(this).data('car-type');
             var accountNo = $('#buyer_acc_no').val();
@@ -1035,7 +1030,6 @@ $(document).ready(function() {
             loadModal('CAR Transaction List', 'view_summary.php?car_type=' + encodeURIComponent(carType) + '&account-no=' + accountNo, '#viewModalsummary');
         });
     });
-
     $(document).ready(function() {
         calculateTotalAmount();
     });

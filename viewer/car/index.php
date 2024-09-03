@@ -36,7 +36,6 @@ include('../../inc/header.php');
     endif;
     }
 ?>
-
 <link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/index.css">
 <style>
@@ -192,6 +191,9 @@ include('../../inc/header.php');
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">OR List</a>
+                </li>
+                <li class="nav-item" role="presentation">
                     <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
                 </li>
             </ul>
@@ -217,56 +219,56 @@ include('../../inc/header.php');
                                 </div>
                                 <div class="col-md-4">
                                     <label for="date_of_sale" class="form-label">Date of Sale</label>
-                                    <input type="text" class="form-control txt" id="buyer_date_of_sale" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_date_of_sale" name="buyer_date_of_sale" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="acc_status" class="form-label">Account Status</label>
-                                    <input type="text" class="form-control txt" id="buyer_acc_status" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_acc_status" name="buyer_acc_status" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="lname" class="form-label">Last Name</label>
-                                    <input type="text" class="form-control txt" id="buyer_lname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_lname" name="buyer_lname" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="fname" class="form-label">First Name</label>
-                                    <input type="text" class="form-control txt" id="buyer_fname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_fname" name="buyer_fname" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="mname" class="form-label">Middle Name</label>
-                                    <input type="text" class="form-control txt" id="buyer_mname" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_mname" name="buyer_mname" readonly>
                                 </div>
 
 
                                 <div class="col-md-4">
                                     <label for="bal" class="form-label">Balance</label>
-                                    <input type="text" class="form-control txt" id="buyer_bal" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_bal" name="buyer_bal" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="tcp" class="form-label">Net TCP</label>
-                                    <input type="text" class="form-control txt" id="buyer_tcp" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_tcp" name="buyer_tcp" readonly>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label for="ret" class="form-label">Account Option</label>
-                                    <input type="text" class="form-control txt" id="buyer_ret" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_ret" name="buyer_ret" readonly>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label for="email" class="form-label">Email Address</label>
-                                    <input type="text" class="form-control txt" id="buyer_email" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_email" name="buyer_email" readonly>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label for="mobile" class="form-label">Mobile #</label>
-                                    <input type="text" class="form-control txt" id="buyer_mobile" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_mobile" name="buyer_mobile" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="title" class="form-label">Title</label>
-                                    <input type="text" class="form-control txt" id="buyer_title" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_title" name="buyer_title" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="address" class="form-label">Address</label>
-                                    <input type="text" class="form-control txt" id="buyer_address" readonly>
+                                    <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
@@ -284,7 +286,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-                
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
@@ -310,7 +311,7 @@ include('../../inc/header.php');
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">
-                                            <label for="remarks" class="form-label" style="float:right;">Search:</label>
+                                            <label for="searchInput" class="form-label" style="float:right;">Search:</label>
                                         </td>
                                         <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
@@ -318,6 +319,17 @@ include('../../inc/header.php');
                                     </tr>
                                 </table>
                             </div>
+                            <ul class="nav nav-tabs" id="tableTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="car-list-tab" data-toggle="tab" href="#car-list-table-container" role="tab" aria-controls="car-list-table-container" aria-selected="true">CAR List</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="summary-table-tab" data-toggle="tab" href="#car-summary-container" role="tab" aria-controls="car-summary-container" aria-selected="false">CAR Summary</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="tableTabContent">
+                                <!-- First Tab CAR List Table -->
+                                <div class="tab-pane fade show active" id="car-list-table-container" role="tabpanel" aria-labelledby="car-list-tab">
 
                             <div class="table-container">
                                 <table class="table table-bordered table-striped" id="car-list-table">
@@ -348,9 +360,37 @@ include('../../inc/header.php');
                                 </table>
                             </div>
                         </div>
+                        
+                                <!-- Second Tab CAR Summary Table -->
+                                <div class="tab-pane fade" id="car-summary-container" role="tabpanel" aria-labelledby="summary-table-tab">
+                                    <div class="table-container">
+                                        <table class="table table-bordered table-striped" id="another-table-list">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 25%;">Payment Type</th>
+                                                    <th style="width: 20%;">Count of Payment</th>
+                                                    <th style="width: 20%;">Transaction Date</th>
+                                                    <th style="width: 20%;">Total</th>
+                                                    <th style="width: 10%;">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="car-summary-body">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="4" class="text-right">Total Amount:</th>
+                                                    <th id="totalAmountSummary" class="text-center"></th>
+                                                    <th colspan="3"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
                 <div class="tab-pane fade" id="atap-list" role="tabpanel" aria-labelledby="atap-list-tab">
                     <div class="card mt-3">
                     <div class="container">
@@ -415,7 +455,73 @@ include('../../inc/header.php');
                                     </tfoot>
                                 </table>
                             </div>
-
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="or-list" role="tabpanel" aria-labelledby="or-list-tab">
+                    <div class="card mt-3">
+                        <div class="container">
+                            <h2 class="text-blue h4">OR List</h2>
+                            <hr>
+                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                                <span class="fa fa-edit"></span> Create New OR
+                            </button>
+                            <hr> -->
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <label for="or_accno" class="form-label">Acc #</label>
+                                        <input type="text" class="form-control" id="or_accno" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="or_fullname" class="form-label">Name</label>
+                                        <input type="text" class="form-control" id="or_fullname" readonly>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <label for="or_buyer_loc" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="or_buyer_loc" name="or_buyer_loc" readonly>
+                                    </div>
+                                </div>
+                                <br>
+                                <hr>
+                                <table>
+                                    <tr>
+                                        <td style="width:80%;border:none;">
+                                            <label for="search" class="form-label" style="float:right;">Search:</label>
+                                        </td>
+                                        <td style="width:20%;border:none;">
+                                            <input type="text" id="searchInputOR" onkeyup="filterTableOR()" class="form-control">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-container">
+                                <table class="table table-bordered table-striped" id="or-list-table">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Account No.</th>
+                                            <th>OR No.</th>
+                                            <th>Name</th>
+                                            <th>Total Amount</th>
+                                            <th>Transaction Date</th>
+                                            <!-- <th>Status</th> -->
+                                            <th>Encoder</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="or-list-body">
+                                        <?php include('../other_fees/fetch_or_list.php'); ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" class="text-right">Total Amount:</th>
+                                            <th id="totalORAmount" class="text-center"></th>
+                                            <th colspan="4"></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -433,7 +539,6 @@ include('../../inc/header.php');
                                     <div class="col-12 col-md-4">
                                         <label for="acct_no" class="form-label">Acc #</label>
                                         <input type="text" class="form-control" id="acct_no" readonly>
-                                       
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label for="fullname_pr" class="form-label">Name</label>
@@ -508,10 +613,12 @@ function switchToBuyerDetails() {
     var buyerDetailsTab = document.getElementById('buyer-details-tab');
     var carListTab = document.getElementById('car-list-tab');
     var atapListTab = document.getElementById('atap-list-tab');
+    var orListTab = document.getElementById('or-list-tab');
     var paymentRecordTab = document.getElementById('payment-record-tab');
     var buyerDetailsPane = document.getElementById('buyer-details');
     var carListPane = document.getElementById('car-list');
     var atapListPane = document.getElementById('atap-list');
+    var orListPane = document.getElementById('or-list');
     var paymentRecordPane = document.getElementById('payment-record');
     
     buyerDetailsTab.classList.add('active');
@@ -525,6 +632,9 @@ function switchToBuyerDetails() {
     atapListTab.classList.remove('active');
     atapListTab.setAttribute('aria-selected', 'false');
     atapListPane.classList.remove('show', 'active');
+    orListTab.classList.remove('active');
+    orListTab.setAttribute('aria-selected', 'false');
+    orListPane.classList.remove('show', 'active');
 
     paymentRecordTab.classList.remove('active');
     paymentRecordTab.setAttribute('aria-selected', 'false');
@@ -663,9 +773,11 @@ $(document).ready(function() {
             processData: false,
             method: 'POST',
             dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
+            error: function(xhr, status, error) {
+                console.log(xhr);
+                console.log(status);
+                console.log(error);
+                alert_toast("An error occurred: " + error, 'error');
                 end_loader(); 
             },
             success: function(resp) {
@@ -684,7 +796,6 @@ $(document).ready(function() {
     });
 });
 </script>
-
 <!-- GETTING OF ACCOUNT NO FOR PASSING -->
 <script>
     function updateAccountNo() {
@@ -793,11 +904,66 @@ $(document).ready(function() {
         });
         $('#confirm_modal').modal('show');
     };
+    $(document).on('click', '.view_atap', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+    });
+    $(document).on('click', '.view_atap_spec', function() {
+            var atapId = $(this).data('id');
+            var atapNo = $(this).data('no');
+            loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+        });
+
+        $(document).on('click', '.view_or_spec', function() {
+            var orId = $(this).data('id');
+            loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
+        });
+    $(document).on('click', '.view_summary', function() {
+        var carType = $(this).data('car-type');
+        var accountNo = $('#buyer_acc_no').val();
+
+        if (!accountNo) {
+            carType = 'none';
+        }
+
+        loadModal('CAR Transaction List', 'view_summary.php?car_type=' + encodeURIComponent(carType) + '&account-no=' + accountNo, '#viewModalsummary');
+    });
+    
+    $(document).ready(function() {
+        calculateTotalAmount();
+    });
 });
 
 </script>
+<!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
+<script>
+$(document).ready(function() {
+    $('#summary-table-tab').on('click', function() {
+        const accountNo = $('#buyer_acc_no').val().trim();
 
+        if (accountNo === '') {
+            $('#car-summary-body');
+            $('#totalAmountSummary').text('0.00');
+            return; 
+        }
 
+        $.ajax({
+            url: 'car_summary.php',
+            type: 'GET',
+            data: { buyer_acc_no: accountNo },
+            success: function(data) {
+                $('#car-summary-body').html(data);
+                $('.dropdown-toggle').dropdown();
+            },
+            error: function() {
+                $('#car-summary-body').html('<tr><td colspan="6" class="text-center">Error loading data</td></tr>');
+            }
+        });
+    });
+});
+</script>
+<script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/atap_js/index_atap.js"></script>
 <?php include('../../inc/footer.php'); ?>

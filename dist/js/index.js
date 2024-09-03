@@ -119,8 +119,6 @@ function fillBuyerDetails(data) {
     document.getElementById('or_accno').value = data.c_account_no;
     document.getElementById('or_fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
 
-
-
     document.getElementById('acct_no').value = data.c_account_no;
     document.getElementById('fullname_pr').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
 

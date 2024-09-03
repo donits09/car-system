@@ -330,7 +330,7 @@ include('../../inc/header.php');
                                 <table>
                                     <tr>
                                         <td style="width:80%;border:none;">
-                                            <label for="remarks" class="form-label" style="float:right;">Search:</label>
+                                            <label for="searchInput" class="form-label" style="float:right;">Search:</label>
                                         </td>
                                         <td style="width:20%;border:none;">
                                             <input type="text" id="searchInput" onkeyup="filterTable()" class="form-control">
@@ -338,33 +338,74 @@ include('../../inc/header.php');
                                     </tr>
                                 </table>
                             </div>
-                            <div class="table-container">
-                                <table class="table table-bordered table-striped" id="car-list-table">
-                                    <thead class="table-dark">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Account No.</th>
-                                            <th>CAR No.</th>
-                                            <th>Transaction Type</th>
-                                            <th>Remarks</th>
-                                            <th>Name</th>
-                                            <th>Location</th>
-                                            <th>Amount</th>
-                                            <th>Pay Date</th>
-                                            <th>Encoder</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="car-list-body">
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th colspan="7" class="text-right">Total Amount:</th>
-                                            <th id="totalAmount" class="text-center"></th>
-                                            <th colspan="5"></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                            <ul class="nav nav-tabs" id="tableTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="car-list-tab" data-toggle="tab" href="#car-list-table-container" role="tab" aria-controls="car-list-table-container" aria-selected="true">CAR List</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="summary-table-tab" data-toggle="tab" href="#car-summary-container" role="tab" aria-controls="car-summary-container" aria-selected="false">CAR Summary</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="tableTabContent">
+                                <!-- First Tab CAR List Table -->
+                                <div class="tab-pane fade show active" id="car-list-table-container" role="tabpanel" aria-labelledby="car-list-tab">
+                                    <div class="table-container">
+                                        <table class="table table-bordered table-striped" id="car-list-table">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Account No.</th>
+                                                    <th>CAR No.</th>
+                                                    <th>Transaction Type</th>
+                                                    <th>Remarks</th>
+                                                    <th>Name</th>
+                                                    <th>Location</th>
+                                                    <th>Amount</th>
+                                                    
+                                                    <th>Pay Date</th>
+                                                    <th>Encoder</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="car-list-body">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="7" class="text-right">Total Amount:</th>
+                                                    <th id="totalAmount" class="text-center"></th>
+                                                    <th colspan="5"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <!-- Second Tab CAR Summary Table -->
+                                <div class="tab-pane fade" id="car-summary-container" role="tabpanel" aria-labelledby="summary-table-tab">
+                                    <div class="table-container">
+                                        <table class="table table-bordered table-striped" id="another-table-list">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th style="width: 5%;">No</th>
+                                                    <th style="width: 25%;">Payment Type</th>
+                                                    <th style="width: 20%;">Count of Payment</th>
+                                                    <th style="width: 20%;">Transaction Date</th>
+                                                    <th style="width: 20%;">Total</th>
+                                                    <th style="width: 10%;">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="car-summary-body">
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th colspan="4" class="text-right">Total Amount:</th>
+                                                    <th id="totalAmountSummary" class="text-center"></th>
+                                                    <th colspan="3"></th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -413,7 +454,7 @@ include('../../inc/header.php');
                                             <th>Total Amount</th>
                                             <th>Transaction Date</th>
                                             <th>Status</th>
-                                            <th>Encoder</th>
+                                            <th>Requester</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -437,10 +478,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">OR List</h2>
                             <hr>
-                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button>
-                            <hr>
+                            <hr> -->
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -475,11 +516,11 @@ include('../../inc/header.php');
                                         <tr>
                                             <th>No</th>
                                             <th>Account No.</th>
-                                            <th>ATAP No.</th>
+                                            <th>OR No.</th>
                                             <th>Name</th>
                                             <th>Total Amount</th>
                                             <th>Transaction Date</th>
-                                            <th>Status</th>
+                                            <!-- <th>Status</th> -->
                                             <th>Encoder</th>
                                             <th>Action</th>
                                         </tr>
@@ -499,7 +540,6 @@ include('../../inc/header.php');
                         </div>
                     </div>
                 </div>
-
                 <div class="tab-pane fade" id="payment-record" role="tabpanel" aria-labelledby="payment-record-tab">
                     <div class="card mt-3">
                         <div class="container">
@@ -556,7 +596,7 @@ include('../../inc/header.php');
         </div>
     </div>
 </div>
-</body>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const acctNoInput = document.getElementById('acct_no');
@@ -607,7 +647,6 @@ function switchToBuyerDetails() {
     atapListTab.classList.remove('active');
     atapListTab.setAttribute('aria-selected', 'false');
     atapListPane.classList.remove('show', 'active');
-
     orListTab.classList.remove('active');
     orListTab.setAttribute('aria-selected', 'false');
     orListPane.classList.remove('show', 'active');
@@ -828,11 +867,9 @@ $(document).ready(function() {
 <script>
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        //document.getElementById('accno').value = accountNo;
-        //console.log(accountNo);
-        $('#create_new').data('account-no', accountNo); 
+        console.log(accountNo);
+        $('#create_new_atap').data('account-no', accountNo); 
     }
-  
 </script>
 
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
@@ -879,7 +916,6 @@ $(document).ready(function() {
     document.getElementById("searchName").addEventListener("click", function(event) {
         searchAndCalculateTotal(event, 'last-name');
     });
-
 </script>
 
 <!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
@@ -936,7 +972,6 @@ $(document).ready(function() {
                 loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
             }
         });
-
     
         $('#create_other_new').click(function() {
             loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
@@ -961,11 +996,32 @@ $(document).ready(function() {
             var atapNo = $(this).data('no');
             loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
         });
+        $(document).on('click', '.view_atap_spec', function() {
+            var atapId = $(this).data('id');
+            var atapNo = $(this).data('no');
+            loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+        });
 
+        $(document).on('click', '.view_or_spec', function() {
+            var orId = $(this).data('id');
+            loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
+        });
+
+        $(document).on('click', '.view_summary', function() {
+            var carType = $(this).data('car-type');
+            var accountNo = $('#buyer_acc_no').val();
+
+            if (!accountNo) {
+                carType = 'none';
+            }
+
+            loadModal('CAR Transaction List', 'view_summary.php?car_type=' + encodeURIComponent(carType) + '&account-no=' + accountNo, '#viewModalsummary');
+        });
+    });
     $(document).ready(function() {
         calculateTotalAmount();
     });
-});
+
 </script>
 <script>
 function delete_car(carId, carNo) {
@@ -1011,9 +1067,38 @@ function updateCarList() {
         calculateTotalAmount();
 }
 </script>
+
+<!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
+<script>
+$(document).ready(function() {
+    $('#summary-table-tab').on('click', function() {
+        const accountNo = $('#buyer_acc_no').val().trim();
+
+        if (accountNo === '') {
+            $('#car-summary-body');
+            $('#totalAmountSummary').text('0.00');
+            return; 
+        }
+
+        $.ajax({
+            url: 'car_summary.php',
+            type: 'GET',
+            data: { buyer_acc_no: accountNo },
+            success: function(data) {
+                $('#car-summary-body').html(data);
+                $('.dropdown-toggle').dropdown();
+            },
+            error: function() {
+                $('#car-summary-body').html('<tr><td colspan="6" class="text-center">Error loading data</td></tr>');
+            }
+        });
+    });
+});
+</script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
 <script src="../../dist/js/manage_car.js"></script>
 <?php include('../../inc/footer.php'); ?>
+</body>

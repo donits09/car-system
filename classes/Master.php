@@ -1233,6 +1233,10 @@ Class Master{
 		$approval_status = isset($approval_status) ? (int)$approval_status : 0; 
 		$approver = isset($approver) ? pg_escape_string($approver) : ''; 
 		
+		if ($approval_status == 1){
+			$approver = '';
+		}
+		
 		$data = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks, approval_status, approver";
 		$values = "'$c_account_no', '$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks', '$approval_status', '$approver'";
 		$resp = array();
@@ -1316,6 +1320,10 @@ Class Master{
 		$approval_status = isset($approval_status) ? (int)$approval_status : 0; 
 		$approver = isset($approver) ? pg_escape_string($approver) : ''; 
 	
+		if ($approval_status == 1){
+			$approver = '';
+		}
+		
 		$data = "c_atap_no, c_name, c_phase, c_block, c_lot";
 		$values = "'$c_atap_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 		

@@ -38,7 +38,7 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_phase,
                 b.c_block, 
                 b.c_lot,
-                a.approval_status,
+                a.approval_status
             ORDER BY 
                 a.c_tran_updated DESC";
 

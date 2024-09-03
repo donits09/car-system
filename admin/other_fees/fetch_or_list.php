@@ -56,7 +56,7 @@ if (!empty($account_no)) {
                 </td>
                 <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
-                <td class="text-center"><?php 
+                <!-- <td class="text-center"><?php 
                     if ($row['status'] == 0){
                         echo  '<span class="badge badge-warning">PENDING</span>'; 
                     } else if($row['status'] == 1){
@@ -66,7 +66,7 @@ if (!empty($account_no)) {
                     } else {
                         echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                     } ?>
-                </td>
+                </td> -->
                 <td class="text-center">
                     <?php
                     $c_encoded_by = $row['c_encoded_by'];

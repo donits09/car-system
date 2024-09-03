@@ -260,6 +260,7 @@ function isActive($pages) {
             <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                 <a class="dropdown-item" href="<?php echo base_url ?>supervisor/car/all_car_list.php">Car List</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>supervisor/atap/all_atap_list.php">ATAP List</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/other_fees/all_of_list.php">Other Fees</a>
             </div>
         </li>
         <li class="nav-item dropdown<?php echo isActive(['car_type', 'user', 'bank']) ? ' active' : ''; ?>">
@@ -391,6 +392,8 @@ function isActive($pages) {
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
                         <a class="dropdown-item" href="<?php echo base_url ?>viewer/atap/all_atap_list.php">ATAP List</a>
+                        <!-- <a class="dropdown-item" href="<?php echo base_url ?>viewer/car/all_car_list.php">Car List</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>viewer/other_fees/all_of_list.php">Other Fees</a> -->
                     </div>
                 </li>
                 <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">

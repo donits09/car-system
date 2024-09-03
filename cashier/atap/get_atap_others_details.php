@@ -16,6 +16,7 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_phase,
                 b.c_block, 
                 b.c_lot, 
+                c.c_atap_amount,
                 a.approval_status,
                 SUM(c.c_atap_amount) AS total_amount
             FROM 
@@ -38,12 +39,12 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
                 b.c_phase,
                 b.c_block, 
                 b.c_lot,
+                c.c_atap_amount,
                 a.approval_status
             ORDER BY 
                 a.c_tran_updated DESC";
     $stmt = odbc_prepare($conn, $query);
     odbc_execute($stmt, array($c_atap_no));
-
     if ($result = odbc_fetch_array($stmt)) {
         $data = [
             'c_account_no' => $result['c_account_no'],

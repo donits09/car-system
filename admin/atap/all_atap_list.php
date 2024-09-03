@@ -10,7 +10,6 @@ include('../../inc/header.php');
 ?>
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
-
 <style>
     .btn.btn-flat.btn-default.btn-sm.dropdown-toggle.dropdown-icon {
         margin: 0; 
@@ -560,9 +559,6 @@ include('../../inc/header.php');
         }
     });
 }
-
-</script>
-<script>
 
 </script>
 <script src="../../dist/js/table.js"></script>
