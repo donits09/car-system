@@ -873,6 +873,12 @@ $(document).ready(function() {
 <script>
     function updateAccountNoOR() {
         var accountNo = $('#buyer_acc_no').val();
+        $('#create_new_car').data('account-no', accountNo); 
+    }
+</script>
+<script>
+    function updateAccountNoOR() {
+        var accountNo = $('#buyer_acc_no').val();
         $('#create_new_or').data('account-no', accountNo); 
     }
 </script>

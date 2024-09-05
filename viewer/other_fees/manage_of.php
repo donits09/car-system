@@ -334,7 +334,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../cashier/car/get_buyer_details.php',
+                url: '../../viewer/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -532,7 +532,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
+                url: '../../viewer/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -606,7 +606,7 @@ function updateCarList() {
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: '<?php echo base_url; ?>admin/car/fetch_tran_type.php',
+            url: '<?php echo base_url; ?>viewer/car/fetch_tran_type.php',
             type: 'GET',
             data: { c_atap_no: atapNo },
             dataType: 'json',
