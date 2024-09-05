@@ -480,7 +480,7 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">OR List</h2>
                             <hr>
-                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button> 
                             <hr>
@@ -879,14 +879,12 @@ $(document).ready(function() {
         $('#create_new').data('account-no', accountNo); 
     }
 </script>
-<!-- <script>
-    function updateAccountNo() {
+<script>
+    function updateAccountNoOR() {
         var accountNo = $('#buyer_acc_no').val();
         $('#create_new_or').data('account-no', accountNo); 
     }
-  
-</script> -->
-
+</script>
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
 <script>
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -990,7 +988,7 @@ $(document).ready(function() {
             loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
         });
 
-        $(document).on('click', '.delete_data', function() {
+        $(document).on('click', '.delete_data_car', function() {
             var carId = $(this).data('id');
             var carNo = $(this).data('car-no');
             _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
@@ -1056,7 +1054,7 @@ function delete_car(carId, carNo) {
                     $('body').removeClass('modal-open'); 
                     $('.modal-backdrop').remove(); 
                     updateCarList(); 
-                    $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
+                    $('.delete_data_car[data-id="' + carId + '"]').closest('tr').remove();
                 }, 1000);
             } else if (resp && resp.status === 'failed' && resp.err) {
                 alert_toast("An error occurred: " + resp.err, 'error');

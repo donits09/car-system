@@ -375,7 +375,7 @@ $(document).ready(function() {
         } else {
             $.ajax({
                 type: 'POST',
-                url: 'check_or_no.php',
+                url: '../../admin/other_fees/check_or_no.php',
                 data: { c_or_no: orNo },  
                 dataType: 'json',
                 success: function(response) {
@@ -421,7 +421,7 @@ $(document).ready(function() {
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: 'get_atap_details_of.php',
+            url: '../../admin/other_fees/get_atap_details_of.php',
             data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
