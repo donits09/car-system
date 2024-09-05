@@ -463,10 +463,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">OR List</h2>
                             <hr>
-                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button>
-                            <hr>
+                            <hr> -->
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -891,11 +891,18 @@ $(document).ready(function() {
         loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
 
-    $(document).on('click', '.delete_data', function() {
+    // $(document).on('click', '.delete_data', function() {
+    //     var atapId = $(this).data('id');
+    //     var atapNo = $(this).data('no');
+    //     _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
+    // });
+
+    $(document).on('click', '.delete_data_atap', function() {
         var atapId = $(this).data('id');
         var atapNo = $(this).data('no');
         _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
     });
+
 
     window._conf = function(msg, func, params) {
         $('#confirm_modal .modal-body').html(msg);
@@ -910,15 +917,15 @@ $(document).ready(function() {
         loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
     $(document).on('click', '.view_atap_spec', function() {
-            var atapId = $(this).data('id');
-            var atapNo = $(this).data('no');
-            loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
-        });
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+    });
 
-        $(document).on('click', '.view_or_spec', function() {
-            var orId = $(this).data('id');
-            loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
-        });
+    $(document).on('click', '.view_or_spec', function() {
+        var orId = $(this).data('id');
+        loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
+    });
     $(document).on('click', '.view_summary', function() {
         var carType = $(this).data('car-type');
         var accountNo = $('#buyer_acc_no').val();
