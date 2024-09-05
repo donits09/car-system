@@ -133,7 +133,7 @@ if (!empty($account_no)) {
                             <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                         </a>
                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                        <a class="dropdown-item delete_data_atap <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                        <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
                             <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
                         </a>
 

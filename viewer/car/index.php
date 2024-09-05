@@ -891,18 +891,11 @@ $(document).ready(function() {
         loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
 
-    // $(document).on('click', '.delete_data', function() {
-    //     var atapId = $(this).data('id');
-    //     var atapNo = $(this).data('no');
-    //     _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
-    // });
-
-    $(document).on('click', '.delete_data_atap', function() {
+    $(document).on('click', '.delete_data', function() {
         var atapId = $(this).data('id');
         var atapNo = $(this).data('no');
         _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
     });
-
 
     window._conf = function(msg, func, params) {
         $('#confirm_modal .modal-body').html(msg);
@@ -917,15 +910,15 @@ $(document).ready(function() {
         loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
     $(document).on('click', '.view_atap_spec', function() {
-        var atapId = $(this).data('id');
-        var atapNo = $(this).data('no');
-        loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
-    });
+            var atapId = $(this).data('id');
+            var atapNo = $(this).data('no');
+            loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+        });
 
-    $(document).on('click', '.view_or_spec', function() {
-        var orId = $(this).data('id');
-        loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
-    });
+        $(document).on('click', '.view_or_spec', function() {
+            var orId = $(this).data('id');
+            loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
+        });
     $(document).on('click', '.view_summary', function() {
         var carType = $(this).data('car-type');
         var accountNo = $('#buyer_acc_no').val();
