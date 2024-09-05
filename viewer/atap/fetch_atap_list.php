@@ -2,15 +2,12 @@
 $dsn = "PostgreSQL30";
 $user = "postgres";
 $pass = "admin12345";
-
 $conn = odbc_connect($dsn, $user, $pass);
 if (!$conn) {
     die('Failed to connect to database: ' . odbc_errormsg());
 }
-
 $username = isset($_GET['username']) ? $_GET['username'] : 'Unknown';
 $account_no = isset($_GET['buyer_acc_no']) ? $_GET['buyer_acc_no'] : '';
-
 if (!empty($account_no)) {
     $get_atap = "SELECT 
                 a.id, 
@@ -57,7 +54,6 @@ if (!empty($account_no)) {
     if (odbc_execute($stmt, array($account_no))) {
         $i = 1;
         $totalAmount = 0;
-
         while ($row = odbc_fetch_array($stmt)) {
             $totalAmount += $row['total_amount'];
             ?>
@@ -136,9 +132,7 @@ if (!empty($account_no)) {
                         <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
                             <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
                         </a>
-
                         <?php }; ?>
-
                     </div>
                 </td>
             </tr>
