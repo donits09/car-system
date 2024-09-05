@@ -107,9 +107,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
        
         #c_or_no {
-            float: right;
-            margin-top: 50px;
-            margin-right: -540px;
+            position:absolute;
+            z-index: 10;
+            float: left;
+            margin-top: 30px;
+            margin-left: 590px;
             width: 80px;
             font-size:16px;
         }
@@ -119,8 +121,32 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         
         
         #c_bank{
-            margin-top: 150px;
-            margin-right: 50px;
+            margin-top: 303px;
+            margin-left: 280px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_bank_other{
+            margin-top: 303px;
+            margin-left: 280px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_paydate_main {
+            margin-top: 303px;
+            margin-left: 150px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_paydate_other {
+            margin-top: 303px;
+            margin-left: 150px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -141,6 +167,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_check_main{
+            margin-top:303px;
+            margin-left:10px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_check_other{
             margin-top:303px;
             margin-left:10px;
             width: auto;
@@ -199,10 +233,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_acc_no{
+            position:absolute;
+            z-index: 10;
             text-transform: uppercase;
             float: right;
-            margin-left:555px;
-            margin-top:124px;
+            margin-left:575px;
+            margin-top:104px;
             width: auto;
             text-align: left;
             font-size: 12px !important;
@@ -217,8 +253,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_or_amount_words {
+            position:absolute;
+            z-index: 10;
             float: right;
-            margin-top: 370px;
+            margin-left: 30px;
+            margin-top: 350px;
             width: 420px;
             height: auto;
             line-height: 1.2em;
@@ -229,9 +268,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             padding-left:5px;
         }
         #c_or_amount {
+            position:absolute;
+            z-index: 10;
             float: right;
-            margin-top: 280px;
-            margin-right: -600px;
+            font-size: 12px !important;
+            margin-top: 265px;
+            margin-left: 605px;
             width: 140px;
         }
         #c_or_amount2 {
@@ -251,16 +293,18 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_mop{
-            font-size: 10px !important;
-            margin-top:100px;
-            margin-left:-15px;
+            position:absolute;
+            z-index: 10;
+            font-size: 12px !important;
+            margin-top:140px;
+            margin-left:535px;
         }
         #c_paydate {
             float: left;
             margin-top: 168px;
             width: auto;
             margin-left:200px;
-            text-left: center;
+            text-align: center;
             font-size: 10px !important;
         }
         .dashes{
@@ -336,6 +380,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             
             <input type="text" name="c_bank" id="c_bank" value="<?php echo $row['c_bank']; ?>">
             <input type="text" name="c_check_main" id="c_check_main" value="<?php echo $row['c_check_no']; ?>">
+            <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_or_paydate; ?>">
         <?php } else if ($orDetails) {
             $car_no = $orDetails["c_or_no"];
             $c_name = $orDetails["c_name"];
@@ -361,6 +406,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <textarea name="c_received" id="c_received"><?php echo htmlspecialchars($c_name); ?></textarea>
             <textarea name="c_address" id="c_address">-----------------</textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
+
+            <input type="text" name="c_check_other" id="c_check_other" value="<?php echo $row['c_check_no']; ?>">
+            <input type="text" name="c_bank_other" id="c_bank_other" value="<?php echo $row['c_bank']; ?>">
+            <input type="text" name="c_paydate_other" id="c_paydate_other" value="<?php echo $c_or_paydate; ?>">
         <?php } ?>
 
         <?php
@@ -374,14 +423,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         ?>
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
         <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
-        <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_or_paydate; ?>">
+        <!-- <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_or_paydate; ?>"> --> 
     </div>
-    <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo $c_account_no; ?>">
+        <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo $c_account_no; ?>">
         <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($row['c_or_type']); ?>">
         <input type="text" name="c_or_amount" id="c_or_amount" value="<?php echo number_format($row['c_or_amount'], 2); ?>">
         <textarea name="c_or_amount_words" id="c_or_amount_words"></textarea>
         
-        <!-- <input type="text" name="c_or_no" id="c_or_no" value="<?php echo htmlspecialchars($row['c_or_no']); ?>"> -->
+        <input type="text" name="c_or_no" id="c_or_no" value="<?php echo htmlspecialchars($row['c_or_no']); ?>">
         
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">

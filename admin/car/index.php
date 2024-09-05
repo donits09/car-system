@@ -480,10 +480,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">OR List</h2>
                             <hr>
-                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button> 
-                            <hr> -->
+                            <hr>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -971,7 +971,8 @@ $(document).ready(function() {
         });
 
         $('#create_new_or').click(function() {
-            var accountNo = $(this).data('account-no');
+            /* var accountNo = $(this).data('account-no'); */
+            var accountNo = $('#buyer_acc_no').val();
             loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
         });
 

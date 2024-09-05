@@ -375,8 +375,8 @@ $(document).ready(function() {
         } else {
             $.ajax({
                 type: 'POST',
-                url: 'check_or_no.php',
-                data: { c_or_no: orNo },  
+                url: '../../admin/other_fees/check_or_no.php',
+                data: { c_or_no: orNo },
                 dataType: 'json',
                 success: function(response) {
                     if (response.exists) {
