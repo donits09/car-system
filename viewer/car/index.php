@@ -595,7 +595,7 @@ include('../../inc/header.php');
         function updatePrintLink() {
             const acctNoValue = acctNoInput.value;
             console.log('Account Number Value:', acctNoValue); 
-            printPrLink.href = `<?php echo base_url ?>admin/car/print_payment_record.php?id=${acctNoValue}`;
+            printPrLink.href = `<?php echo base_url ?>viewer/car/print_payment_record.php?id=${acctNoValue}`;
         }
 
         const intervalId = setInterval(() => {
@@ -891,7 +891,7 @@ $(document).ready(function() {
         loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
     });
 
-    $(document).on('click', '.delete_data', function() {
+    $(document).on('click', '.delete_data_atap', function() {
         var atapId = $(this).data('id');
         var atapNo = $(this).data('no');
         _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);

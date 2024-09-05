@@ -304,6 +304,7 @@ function selectBuyer(buyer) {
     document.getElementById('atap_fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
     document.getElementById('accno').value = buyer.c_account_no;
     document.getElementById('atap_accno').value = buyer.c_account_no;
+    document.getElementById('or_accno').value = buyer.c_account_no;
     document.getElementById('or_fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
     
     document.getElementById('acct_no').value = buyer.c_account_no;

@@ -484,10 +484,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">OR List</h2>
                             <hr>
-                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button>
-                            <hr> -->
+                            <hr>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -718,6 +718,25 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const accnoInput = document.getElementById('accno');
+        const createNewBtn = document.getElementById('create_new_atap');
+        const createNewOrBtn = document.getElementById('create_new_or');
+        let initialValue = accnoInput.value; 
+     
+        function checkValueChange() {
+           
+            if (accnoInput.value !== initialValue) {
+                createNewBtn.disabled = false; 
+                createNewOrBtn.disabled = false; 
+                initialValue = accnoInput.value; 
+            }
+        }
+
+        setInterval(checkValueChange, 500); 
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
       
         function disableExportLinks() {
             document.getElementById('export_csv').classList.add('disabled-link');
@@ -750,6 +769,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const createNewBtn = document.getElementById('create_new');
         const exportcsvBtn = document.getElementById('export_csv');
         const exportpdfBtn = document.getElementById('export_pdf');
+        const createNewOrBtn = document.getElementById('create_new_or');
         let initialValue = accnoInput.value; 
      
         function checkValueChange() {
@@ -760,6 +780,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 exportpdfBtn.classList.remove('disabled-link'); 
                 exportcsvBtn.removeAttribute('disabled'); 
                 exportpdfBtn.removeAttribute('disabled'); 
+                createNewOrBtn.disabled = false;
                 initialValue = accnoInput.value; 
             }
         }
@@ -858,7 +879,12 @@ $(document).ready(function() {
         $('#create_new').data('account-no', accountNo); 
     }
 </script>
-
+<script>
+    function updateAccountNoOR() {
+        var accountNo = $('#buyer_acc_no').val();
+        $('#create_new_or').data('account-no', accountNo); 
+    }
+</script>
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
 <script>
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -901,7 +927,7 @@ $(document).ready(function() {
 
 <!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
 <script>
-    $(document).ready(function() {
+   
     function loadModal(title, url, modalId) {
         start_loader();
         $.ajax({
@@ -920,78 +946,78 @@ $(document).ready(function() {
             }
         });
     }
-    $(document).on('click', '.view_data', function() {
-        var accountId = $(this).data('id');
-        loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
-    });
-
-    $('#create_new').click(function() {
-        var accountNo = $(this).data('account-no');
-        loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
-    });
-
-    $(document).on('click', '.edit_data', function() {
-        var accountId = $(this).data('id');
-        var accountNo = $(this).data('account-no');
-    
-        if (!accountNo) {
-            loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
-        } else {
-            loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
-        }
-    });
-
-    $('#create_other_new').click(function() {
-        loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
-    });
-
-    $(document).on('click', '.delete_data', function() {
-        var carId = $(this).data('id');
-        var carNo = $(this).data('car-no');
-        _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
-    });
-
-    window._conf = function(msg, func, params) {
-        $('#confirm_modal .modal-body').html(msg);
-        $('#confirm_modal #confirm').off('click').on('click', function() {
-            func.apply(this, params);
+    $(document).ready(function() {
+        $(document).on('click', '.view_data', function() {
+            var accountId = $(this).data('id');
+            loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
         });
-        $('#confirm_modal').modal('show');
-    };
 
-    $(document).on('click', '.view_atap', function() {
-        var atapId = $(this).data('id');
-        var atapNo = $(this).data('no');
-        loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
-    });
-    $(document).on('click', '.view_atap_spec', function() {
+        $('#create_new').click(function() {
+            var accountNo = $(this).data('account-no');
+            loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
+        });
+        $('#create_new_or').click(function() {
+            var accountNo = $(this).data('account-no');
+            loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
+        });
+        $(document).on('click', '.edit_data', function() {
+            var accountId = $(this).data('id');
+            var accountNo = $(this).data('account-no');
+        
+            if (!accountNo) {
+                loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
+            } else {
+                loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+            }
+        });
+
+        $('#create_other_new').click(function() {
+            loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
+        });
+
+        $(document).on('click', '.delete_data_car', function() {
+            var carId = $(this).data('id');
+            var carNo = $(this).data('car-no');
+            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
+        });
+
+        window._conf = function(msg, func, params) {
+            $('#confirm_modal .modal-body').html(msg);
+            $('#confirm_modal #confirm').off('click').on('click', function() {
+                func.apply(this, params);
+            });
+            $('#confirm_modal').modal('show');
+        };
+
+        $(document).on('click', '.view_atap', function() {
             var atapId = $(this).data('id');
             var atapNo = $(this).data('no');
-            loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+            loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
         });
+        $(document).on('click', '.view_atap_spec', function() {
+                var atapId = $(this).data('id');
+                var atapNo = $(this).data('no');
+                loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
+            });
 
-        $(document).on('click', '.view_or_spec', function() {
-            var orId = $(this).data('id');
-            loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
+            $(document).on('click', '.view_or_spec', function() {
+                var orId = $(this).data('id');
+                loadModal('OR Details', '../other_fees/view_or.php?id=' + orId , '#viewModal');
+            });
+            $(document).on('click', '.view_summary', function() {
+                var carType = $(this).data('car-type');
+                var accountNo = $('#buyer_acc_no').val();
+
+                if (!accountNo) {
+                    carType = 'none';
+                }
+
+                loadModal('CAR Transaction List', 'view_summary.php?car_type=' + encodeURIComponent(carType) + '&account-no=' + accountNo, '#viewModalsummary');
+            });
         });
-
-        $(document).on('click', '.view_summary', function() {
-            var carType = $(this).data('car-type');
-            var accountNo = $('#buyer_acc_no').val();
-
-            if (!accountNo) {
-                carType = 'none';
-            }
-
-            loadModal('CAR Transaction List', 'view_summary.php?car_type=' + encodeURIComponent(carType) + '&account-no=' + accountNo, '#viewModalsummary');
+        $(document).ready(function() {
+            calculateTotalAmount();
         });
-    
-});
-
-$(document).ready(function() {
-    calculateTotalAmount();
-});
-
 </script>
 <script>
 function delete_car(carId, carNo) {
@@ -1015,7 +1041,7 @@ function delete_car(carId, carNo) {
                     $('body').removeClass('modal-open'); 
                     $('.modal-backdrop').remove(); 
                     updateCarList(); 
-                    $('.delete_data[data-id="' + carId + '"]').closest('tr').remove();
+                    $('.delete_data_car[data-id="' + carId + '"]').closest('tr').remove();
                 }, 1000);
             } else if (resp && resp.status === 'failed' && resp.err) {
                 alert_toast("An error occurred: " + resp.err, 'error');
@@ -1065,10 +1091,8 @@ $(document).ready(function() {
     });
 });
 </script>
-
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
-<!-- <script src="../../dist/js/car_list.js"></script> -->
 <script src="../../dist/js/export_scripts.js"></script>
 <script src="../../dist/js/atap_js/index_atap_cshr.js"></script>
 <script src="../../dist/js/manage_car.js"></script>

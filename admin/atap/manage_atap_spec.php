@@ -737,31 +737,7 @@ $(document).ready(function() {
         });
     });
 
-    function fetchBuyerDetails(accountNo) {
-        const buyerNameField = $('#c_name');
-
-        if (accountNo.length > 0) {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
-                data: { account_no: accountNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        buyerNameField.val(response.name);
-                        buyerNameField.removeAttr('required');
-                    } else {
-                        buyerNameField.val('Unknown');
-                        buyerNameField.attr('required', 'required');
-                    }
-                }
-            });
-        } else {
-            buyerNameField.val('');
-            buyerNameField.attr('required', 'required');
-        }
-    }
-
+   
     const accountNo = $('#c_account_no').val();
     fetchBuyerDetails(accountNo);
 

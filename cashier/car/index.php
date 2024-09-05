@@ -126,7 +126,6 @@ include('../../inc/header.php');
                     </div>
                 </form>
             </table>
-
             <!-- By Account # -->
             <form id="account-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('account')">
             <input type="hidden" id="username" class="form-control" value="<?php echo $username ?>">
@@ -361,7 +360,6 @@ include('../../inc/header.php');
                                                     <th>Name</th>
                                                     <th>Location</th>
                                                     <th>Amount</th>
-                                                    
                                                     <th>Pay Date</th>
                                                     <th>Encoder</th>
                                                     <th>Action</th>
@@ -478,10 +476,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">OR List</h2>
                             <hr>
-                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
+                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button>
-                            <hr> -->
+                            <hr>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -596,7 +594,6 @@ include('../../inc/header.php');
         </div>
     </div>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const acctNoInput = document.getElementById('acct_no');
@@ -764,6 +761,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const createNewBtn = document.getElementById('create_new');
         const exportcsvBtn = document.getElementById('export_csv');
         const exportpdfBtn = document.getElementById('export_pdf');
+        const createNewOrBtn = document.getElementById('create_new_or');
         let initialValue = accnoInput.value; 
      
         function checkValueChange() {
@@ -774,6 +772,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 exportpdfBtn.classList.remove('disabled-link'); 
                 exportcsvBtn.removeAttribute('disabled'); 
                 exportpdfBtn.removeAttribute('disabled'); 
+                createNewOrBtn.disabled = false;
                 initialValue = accnoInput.value; 
             }
         }
@@ -871,7 +870,18 @@ $(document).ready(function() {
         $('#create_new_atap').data('account-no', accountNo); 
     }
 </script>
-
+<script>
+    function updateAccountNoOR() {
+        var accountNo = $('#buyer_acc_no').val();
+        $('#create_new_car').data('account-no', accountNo); 
+    }
+</script>
+<script>
+    function updateAccountNoOR() {
+        var accountNo = $('#buyer_acc_no').val();
+        $('#create_new_or').data('account-no', accountNo); 
+    }
+</script>
 <!-- USING OF ACCOUNT NO TO MAKE OTHER FUNCTIONS WORK DYNAMICALLY :))) -->
 <script>
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -943,25 +953,20 @@ $(document).ready(function() {
             var accountId = $(this).data('id');
             loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
         });
-
         $(document).on('click', '.view_atap_spec', function() {
             var atapId = $(this).data('id');
             var atapNo = $(this).data('no');
             loadModal('ATAP Details', '../atap/view_atap_spec.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
         });
 
-
         $('#create_new').click(function() {
             var accountNo = $(this).data('account-no');
             loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
         });
-
         $('#create_new_or').click(function() {
             var accountNo = $(this).data('account-no');
             loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
         });
-
-
         $(document).on('click', '.edit_data', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');

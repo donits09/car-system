@@ -263,59 +263,30 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/manage_car.js"></script>
-
-<!-- <script>
-    function handleModeOfPaymentChange() {
-        var mop = document.getElementById('c_mop').value;
-        document.getElementById('c_bank_online').value = '';
-        document.getElementById('c_ref_no').value = '';
-        document.getElementById('c_bank_check').value = '';
-        document.getElementById('c_check_no').value = '';
-
-        if (mop == '2') {
-            document.getElementById('checkList').style.display = 'block';
-            document.getElementById('onlineBankList').style.display = 'none';
-        } else if (mop == '3') {
-            document.getElementById('onlineBankList').style.display = 'block';
-            document.getElementById('checkList').style.display = 'none';
-        } else {
-            document.getElementById('checkList').style.display = 'none';
-            document.getElementById('onlineBankList').style.display = 'none';
-        }
-    }
-</script> -->
 <script>
 $(document).ready(function() {
     $('#car-form').submit(function(e) {
         e.preventDefault();
-
         const buyerName = $('#buyer_name').val();
         const carNo = $('#c_car_no').val();
         const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
-
         let valid = true;
-
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
         }
-
         if (carAmount <= 0) {
             $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
             valid = false;
         }
-
         if (!buyerName || buyerName === 'Unknown') {
             alert('Name field is required.');
             valid = false;
         }
-
         if (!valid) {
             return;
         }
-
         start_loader();
-
         $.ajax({
             url: "../../classes/Master.php?f=save_car_payment",
             data: new FormData($(this)[0]),
@@ -381,6 +352,7 @@ $(document).ready(function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
+
 
     $('#c_car_no').on('input', function() {
         const carNo = $(this).val();
@@ -500,16 +472,16 @@ $(document).ready(function() {
 
     function clearTxt(){
         const atapNoField = $('#c_atap_no');
-        const buyerNameField = $('#buyer_name');
+        //const buyerNameField = $('#buyer_name');
         const amountField = $('#c_car_amount');
         const statusField = $('#status');
-        const accField = $('#c_account_no');
+        //const accField = $('#c_account_no');
 
         atapNoField.val('');
-        buyerNameField.val('');
+        //buyerNameField.val('');
         amountField.val('');
         statusField.val('');
-        accField.val('');
+        //accField.val('');
     }
 
     function populateForm(data) {

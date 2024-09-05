@@ -2,7 +2,7 @@
 session_start();
 
 require_once('../../inc/check_session.php');
-check_user_group(4);
+check_user_group(2);
 
 include('../../config.php');
 
@@ -334,7 +334,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../viewer/car/get_buyer_details.php',
+                url: '../../cashier/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -362,7 +362,7 @@ $(document).ready(function() {
     });
 
     $('#c_or_no').on('input', function() {
-        const orNo = $(this).val();
+        const orNo = $('#c_or_no').val();
         const orNoError = $('#or_no_error');
         const submitButton = $('#btnsave');
 
@@ -375,7 +375,7 @@ $(document).ready(function() {
         } else {
             $.ajax({
                 type: 'POST',
-                url: 'check_or_no.php',
+                url: '../../cashier/other_fees/check_or_no.php',
                 data: { c_or_no: orNo },  
                 dataType: 'json',
                 success: function(response) {
@@ -421,7 +421,7 @@ $(document).ready(function() {
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: 'get_atap_details_of.php',
+            url: '../../cashier/other_fees/get_atap_details_of.php',
             data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
@@ -439,7 +439,12 @@ $(document).ready(function() {
                             $('#tran_type_container').hide();
                             alert('The selected ATAP was disapproved.');
                             clearTxt();
-                        }else if (response.data.status === '1') {
+                        }else if (response.data.c_account_no !== currentAccountNo) {
+                            $('#car_type_container').show();
+                            $('#tran_type_container').hide();
+                            alert('The account number of the selected ATAP No. does not match.');
+                            clearTxt();
+                        } else if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
@@ -469,24 +474,25 @@ $(document).ready(function() {
                     clearTxt();
                 }
             },
-            error: function() {
+            error: function(xhr, status, errorThrown) {
                 $('#car_type_container').show();
                 $('#tran_type_container').hide();
-                alert('An error occurred while fetching ATAP details.');
+                alert('Error: ' + errorThrown + '\nResponse: ' + xhr.responseText);
                 clearTxt();
             }
         });
     }
 
+
     function clearTxt(){
         const atapNoField = $('#c_atap_no');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
-        const accField = $('#c_account_no');
+        //const accField = $('#c_account_no');
 
         atapNoField.val('');
         amountField.val('');
-        accField.val('');
+        //accField.val('');
         statusField.val('');
     }
 
@@ -532,7 +538,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../viewer/car/get_buyer_details.php',
+                url: '../../cashier/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -606,7 +612,7 @@ function updateCarList() {
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: '<?php echo base_url; ?>viewer/car/fetch_tran_type.php',
+            url: '<?php echo base_url; ?>cashier/car/fetch_tran_type.php',
             type: 'GET',
             data: { c_atap_no: atapNo },
             dataType: 'json',
