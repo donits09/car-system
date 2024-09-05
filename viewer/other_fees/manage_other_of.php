@@ -645,7 +645,7 @@ function openPrintWindow() {
     var queryString = [];
     for (var pair of formData.entries()) {
         queryString.push(encodeURIComponent(pair[0]) + '=' + encodeURIComponent(pair[1]));
-    }
+    }z
     queryString = queryString.join('&');
 
     console.log('Query String:', queryString);
