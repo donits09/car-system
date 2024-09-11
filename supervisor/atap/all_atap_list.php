@@ -25,6 +25,10 @@ include('../../inc/header.php');
     .hidden_fields{
         display:none;
     }
+    .dropdown-menu {
+        top: auto;
+        transform: translate3d(0, 0, 0); 
+    }
     /* .status-pending {
         background-color: orange !important;
     }

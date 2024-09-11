@@ -421,7 +421,7 @@ $(document).ready(function() {
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: '../../cashier/other_fees/get_atap_details_of.php',
+            url: '../../supervisor/other_fees/get_atap_details_of.php',
             data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {

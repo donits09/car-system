@@ -2,7 +2,7 @@
 session_start();
 
 require_once('../../inc/check_session.php');
-check_user_group(3);
+check_user_group(4);
 
 include('../../config.php');
 include('../../inc/navbar.php');    
@@ -17,33 +17,22 @@ include('../../inc/header.php');
         /* color:white !important; */
         font-weight: bold !important;
         font-style: italic;
+
+        
     }
     .btn.btn-flat.btn-default.btn-sm.dropdown-toggle.dropdown-icon {
         margin: 0; 
         padding: 5px 10px; 
         width: auto; 
     }
-    .dropdown-menu {
-    top: auto;
-    transform: translate3d(0, 0, 0); 
-    }
-
 </style>
 <body>
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
         <!-- <div class="pd-20" id="car-btn"> -->
-        <h2 class="text-blue h4">Other Fees - Full List</h2>
+        <h2 class="text-blue h4">Cash Acknowledgement Receipt - Full List</h2>
         <hr>
-            <a id="create_new_of" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New OR
-            </a>
-            <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
-                <span class="fa fa-edit"></span> Create Other OR
-            </a>
-            <div class="pd-20">
-            <hr>
         </div>
             <div class="table-container">
             <table class="table table-bordered table-striped" id="data-table">
@@ -51,7 +40,7 @@ include('../../inc/header.php');
                     <tr>
                         <th>No</th>
                         <th>Account No.</th>
-                        <th>OR No.</th>
+                        <th>CAR No.</th>
                         <th>Transaction Type</th>
                         <th>Remarks</th>
                         <th>Name</th>
@@ -66,13 +55,13 @@ include('../../inc/header.php');
                         <?php
                         $username = $_SESSION['username'];
 
-                        $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
-                    a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
+                        $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.e_status, a.c_remarks
-                        FROM t_or_payment a
-                        LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no WHERE status != 1
+                        FROM t_car_payment a
+                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE status != 1
                         ORDER BY a.c_tran_updated DESC";
-                        $stmt = odbc_prepare($conn, $or_list);
+                        $stmt = odbc_prepare($conn, $car_list);
 
                         $result = odbc_execute($stmt, array($username));
 
@@ -88,8 +77,8 @@ include('../../inc/header.php');
                                     <td class="text-center">
                                         <?php echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); ?>
                                     </td>
-                                    <td class="text-center"><?php echo htmlspecialchars($row['c_or_no']); ?></td>
-                                    <td class="text-center"><?php echo htmlspecialchars($row['c_or_type']); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
                                     <td class="text-center"><?php echo htmlspecialchars($row['c_remarks']); ?></td>
                                     <td class="text-center">
                                         <?php
@@ -168,8 +157,8 @@ include('../../inc/header.php');
                                         }
                                         ?>
                                     </td>
-                                    <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>
-                                    <td class="text-center"><?php echo htmlspecialchars($row['c_or_paydate']); ?></td>
+                                    <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+                                    <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                                     <td class="text-center">
                                         <?php
                                         $c_encoded_by = $row['c_encoded_by'];
@@ -184,39 +173,23 @@ include('../../inc/header.php');
                                         ?>
                                     </td>
                                     <td align="center">
-                                        <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                            Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <div class="dropdown-menu" role="menu">
-                                            <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                                                View
-                                            </a>
-                                            <?php if ($row['c_encoded_by'] == $username){ ?>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                                data-id="<?php echo $row['id']; ?>" 
-                                                data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                                                data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
-                                                data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
-                                                data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
-                                                data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
-                                                data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
-                                                    Edit
-                                                </a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
-                                                    Print
-                                                </a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
-                                                    Cancel
-                                                </a>
-                                            <?php }; ?>
-                                        </div>
-                                    </td>
+                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                        Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
+                                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo htmlspecialchars($row['c_car_no']); ?>" target="_blank">
+                                            <!-- <span class="fas fa-print"></span>  -->Print
+                                        </a>
+                                    </div>
+                                </td>
+
                                 </tr>
-                            <?php
+                        <?php
                             }
                         }
                         ?>
@@ -234,15 +207,14 @@ include('../../inc/header.php');
     </div>
 </div>
 <script src="../../dist/js/table.js"></script>
-<script src="../../dist/js/of_js/all_of_list.js"></script>
+<script src="../../dist/js/all_car_list.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>
 <!-- <script src="../../dist/js/manage_car.js"></script> -->
 <script>
-
 $(document).ready(function() {
     function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        $('#create_new_of').attr('data-account-no', accountNo);
+        $('#create_new').attr('data-account-no', accountNo);
     }
     updateAccountNo();
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {

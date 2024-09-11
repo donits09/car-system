@@ -871,9 +871,9 @@ $(document).ready(function() {
     }
 </script>
 <script>
-    function updateAccountNoOR() {
+    function updateAccountNo() {
         var accountNo = $('#buyer_acc_no').val();
-        $('#create_new_car').data('account-no', accountNo); 
+        $('#create_new').data('account-no', accountNo); 
     }
 </script>
 <script>

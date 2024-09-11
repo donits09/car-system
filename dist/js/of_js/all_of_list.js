@@ -26,7 +26,7 @@
             loadModal('Create New OR', '../other_fees/manage_other_of.php', '#createCarModal');
         });
     
-        $(document).on('click', '.view_data', function() {
+        $(document).on('click', '.view_or', function() {
             var accountId = $(this).data('id');
             loadModal('OR Details', '../other_fees/view_or.php?id=' + accountId, '#viewModal');
         });

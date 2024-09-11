@@ -32,7 +32,10 @@ include('../../inc/header.php');
         padding: 5px 10px; 
         width: auto; 
     }
-
+    .dropdown-menu {
+        top: auto;
+        transform: translate3d(0, 0, 0); 
+    }
     /* .status-pending {
         background-color: orange !important;
     }
