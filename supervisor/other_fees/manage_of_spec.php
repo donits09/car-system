@@ -3,9 +3,7 @@ session_start();
 
 require_once('../../inc/check_session.php');
 check_user_group(2);
-
 include('../../config.php');
-
 $c_account_no = null;
 $c_or_type = '';
 $c_or_amount = 0;
@@ -17,7 +15,6 @@ $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_or_query = "SELECT * FROM t_or_payment WHERE id = ?";
     $accountId = $_GET['id'];
@@ -50,7 +47,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     max-height: 200px; 
     overflow-y: auto;
 }
-
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="or-form" method="post" action="">
