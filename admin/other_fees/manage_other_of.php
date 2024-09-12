@@ -62,7 +62,7 @@
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="other-or-form">
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
                 <label for="c_atap_no">ATAP No.</label>
@@ -74,7 +74,7 @@
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
             <label for="c_or_type">Transaction Type</label>

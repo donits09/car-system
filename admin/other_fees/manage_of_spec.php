@@ -58,7 +58,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
                 <label for="c_atap_no">ATAP No.</label>
@@ -70,7 +70,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
             <label for="c_or_type">Transaction Type</label>
@@ -313,10 +313,10 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createCarModal').modal('hide'); 
-                        $('body').removeClass('modal-open'); 
-                        $('.modal-backdrop').remove(); 
-                        location.reload();
+                        $('#createCarModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        updateORList();
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
@@ -531,6 +531,36 @@ $(document).ready(function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
+
+    function fetchBuyerDetails(accountNo) {
+        const buyerNameField = $('#buyer_name');
+
+        if (accountNo.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/get_buyer_details.php',
+                data: { account_no: accountNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        buyerNameField.val(response.name);
+                        buyerNameField.removeAttr('required');
+                    } else {
+                        buyerNameField.val('Unknown');
+                        buyerNameField.attr('required', 'required');
+                    }
+                },
+                error: function() {
+                    buyerNameField.val('Unknown');
+                    buyerNameField.attr('required', 'required');
+                    alert('An error occurred while fetching buyer details.');
+                }
+            });
+        } else {
+            buyerNameField.val('');
+            buyerNameField.attr('required', 'required');
+        }
+    }
 });
 
 function updateCarList() {
@@ -547,6 +577,26 @@ function updateCarList() {
         .then(data => {
             document.getElementById('car-list-body').innerHTML = data;
             calculateTotalAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
+
+function updateORList() {
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
+
+    fetch(`<?php echo base_url; ?>admin/other_fees/fetch_or_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('or-list-body').innerHTML = data;
+            calculateTotalORAmount(); 
         })
         .catch(error => {
             console.error('Fetch error:', error);

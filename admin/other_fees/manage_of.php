@@ -58,7 +58,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
                 <label for="c_atap_no">ATAP No.</label>
@@ -70,7 +70,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
-    </div>
+    </div> -->
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
             <label for="c_or_type">Transaction Type</label>

@@ -32,10 +32,10 @@ include('../../inc/header.php');
         <h2 class="text-blue h4">Other Fees - Full List</h2>
         <hr>
             <a id="create_new_of" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New OR
+                <span class="fa fa-edit"></span> Create New OR/SI
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
-                <span class="fa fa-edit"></span> Create Other OR
+                <span class="fa fa-edit"></span> Create Other OR/SI
             </a>
             <div class="pd-20">
             <hr>
@@ -184,11 +184,11 @@ include('../../inc/header.php');
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
+                                        <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
                                             <!-- <span class="fa fa-eye text-primary"></span> -->View
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item edit_data" href="javascript:void(0)" 
+                                        <a class="dropdown-item edit_or" href="javascript:void(0)" 
                                         data-id="<?php echo $row['id']; ?>" 
                                         data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
                                         data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
@@ -203,7 +203,7 @@ include('../../inc/header.php');
                                             Print
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
+                                        <a class="dropdown-item delete_or" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
                                             Cancel
                                         </a>
                                     </div>

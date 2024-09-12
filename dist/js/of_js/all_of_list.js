@@ -37,13 +37,13 @@
         //     loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
         // });
     
-        $(document).on('click', '.delete_data', function() {
+        $(document).on('click', '.delete_or', function() {
             var orId = $(this).data('id');
             var orNo = $(this).data('or-no');
             _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);
         });
     
-        $(document).on('click', '.edit_data', function() {
+        $(document).on('click', '.edit_or', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');
         
@@ -77,39 +77,6 @@
             $('#confirm_modal').modal('show');
         };
     });
-    
-
-    function delete_or(orId, orNo) {
-        start_loader();
-        $.ajax({
-            url: "../../classes/Master.php?f=delete_or",
-            method: "POST",
-            data: { orId: orId, orNo: orNo },
-            dataType: "json",
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        $('#confirm_modal').modal('hide'); 
-                        $('body').removeClass('modal-open'); 
-                        $('.modal-backdrop').remove(); 
-                        location.reload();
-                        $('.delete_data[data-id="' + orId + '"]').closest('tr').remove();
-                    }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
-                }
-                end_loader();
-            }
-        });
-    }
 
     function clearAmt(){
         var txtamt = document.getElementById('c_or_amount').value;
