@@ -23,6 +23,11 @@ include('../../inc/header.php');
         padding: 5px 10px; 
         width: auto; 
     }
+    .dropdown-menu {
+    top: auto;
+    transform: translate3d(0, 0, 0); 
+    }
+
 </style>
 <body>
 <div class="container mt-5">
@@ -179,39 +184,39 @@ include('../../inc/header.php');
                                         ?>
                                     </td>
                                     <td align="center">
-                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                        Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                                            <!-- <span class="fa fa-eye text-primary"></span> -->View
-                                        </a>
-                                        <?php if ($row['c_encoded_by'] == $username){ ?>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                            data-id="<?php echo $row['id']; ?>" 
-                                            data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                                            data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
-                                            data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
-                                            data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
-                                            data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
-                                            data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
-                                                Edit
+                                        <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                            Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
+                                                View
                                             </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
-                                                Print
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
-                                                Cancel
-                                            </a>
-                                        <?php }; ?>
+                                            <?php if ($row['c_encoded_by'] == $username){ ?>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item edit_or" href="javascript:void(0)" 
+                                                data-id="<?php echo $row['id']; ?>" 
+                                                data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
+                                                data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
+                                                data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
+                                                data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
+                                                data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
+                                                data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
+                                                    Edit
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
+                                                    Print
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item delete_or" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
+                                                    Cancel
+                                                </a>
+                                            <?php }; ?>
                                         </div>
-                                </td>
+                                    </td>
                                 </tr>
-                        <?php
+                            <?php
                             }
                         }
                         ?>
@@ -286,6 +291,38 @@ $(document).ready(function() {
         calculateTotalAmount();
     });
 });
+// function delete_or(orId, orNo) {
+//     start_loader();
+//     $.ajax({
+//         url: "../../classes/Master.php?f=delete_or",
+//         method: "POST",
+//         data: { orId: orId, orNo: orNo },
+//         dataType: "json",
+//         error: function(err) {
+//             console.log(err);
+//             alert_toast("An error occurred.", 'error');
+//             end_loader();
+//         },
+//         success: function(resp) {
+//             if (resp && resp.status === 'success') {
+//                 alert_toast(resp.msg, 'success');
+//                 setTimeout(function() {
+//                     $('#confirm_modal').modal('hide'); 
+//                     $('body').removeClass('modal-open'); 
+//                     $('.modal-backdrop').remove(); 
+//                     location.reload();
+//                     //updateORList(); 
+//                     $('.delete_or[data-id="' + orId + '"]').closest('tr').remove();
+//                 }, 1000);
+//             } else if (resp && resp.status === 'failed' && resp.err) {
+//                 alert_toast("An error occurred: " + resp.err, 'error');
+//             } else {
+//                 alert_toast("An unexpected error occurred", 'error');
+//             }
+//             end_loader();
+//         }
+//     });
+// }
 </script>
 </div>
 </body>

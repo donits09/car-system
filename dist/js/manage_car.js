@@ -109,6 +109,49 @@ function calculateTotalAmount() {
     }
 }
 
+function calculateTotalORAmount() {
+    var table = document.getElementById("or-list-table");
+    if (!table) {
+        console.log("Table not found.");
+        return;
+    }
+
+    var tbody = table.getElementsByTagName("tbody")[0];
+    if (!tbody) {
+        console.log("Table body not found.");
+        return;
+    }
+
+    var rows = tbody.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") {
+            var amountCell = rows[i].getElementsByTagName("td")[4]; 
+            if (amountCell) {
+                var amountValue = amountCell.textContent.trim().replace(/,/g, '');
+                var parsedValue = parseFloat(amountValue);
+                if (!isNaN(parsedValue)) {
+                    total += parsedValue;
+                } else {
+                    console.log("Invalid number:", amountValue);
+                }
+            } else {
+                console.log(i);
+            }
+        } else {
+            console.log(i);
+        }
+    }
+
+    var totalAmountElement = document.getElementById("totalORAmount");
+    if (totalAmountElement) {
+        totalAmountElement.textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    } else {
+        console.log("Total amount element not found.");
+    }
+}
+
 $(document).ready(function() {
     var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
     if (idValue) {

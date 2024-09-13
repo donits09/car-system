@@ -185,17 +185,19 @@ include('../../inc/header.php');
                     <a class="nav-link active" id="buyer-details-tab" data-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
+                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">OR List</a>
+                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Other Fees (CAR)</a>
                 </li>
+               
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
+                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">Other Fees (OR)</a>
                 </li>
+                
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -289,7 +291,7 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">CAR List</h2>
+                            <h2 class="text-blue h4">Other Fees (CAR)</h2>
                             <hr>
                             <div class="container">
                                 <div class="row">
@@ -321,7 +323,7 @@ include('../../inc/header.php');
                             </div>
                             <ul class="nav nav-tabs" id="tableTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link active" id="car-list-tab" data-toggle="tab" href="#car-list-table-container" role="tab" aria-controls="car-list-table-container" aria-selected="true">CAR List</a>
+                                    <a class="nav-link active" id="car-list-tab" data-toggle="tab" href="#car-list-table-container" role="tab" aria-controls="car-list-table-container" aria-selected="true">Other Fees (CAR)</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a class="nav-link" id="summary-table-tab" data-toggle="tab" href="#car-summary-container" role="tab" aria-controls="car-summary-container" aria-selected="false">CAR Summary</a>
@@ -461,7 +463,7 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="or-list" role="tabpanel" aria-labelledby="or-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">OR List</h2>
+                            <h2 class="text-blue h4">Other Fees (OR)</h2>
                             <hr>
                             <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
@@ -823,6 +825,10 @@ $(document).ready(function() {
         filterTableAtap();
     });
 
+    document.getElementById("searchInputOR").addEventListener("input", function() {
+        filterTableOR();
+    });
+    
     $('#createCarModal').on('hidden.bs.modal', function () {
         $('body').css('padding-right', '0');
     });
@@ -932,9 +938,9 @@ $(document).ready(function() {
     
     $(document).ready(function() {
         calculateTotalAmount();
+        calculateTotalORAmount();
     });
 });
-
 </script>
 <!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
 <script>
@@ -960,6 +966,18 @@ $(document).ready(function() {
                 $('#car-summary-body').html('<tr><td colspan="6" class="text-center">Error loading data</td></tr>');
             }
         });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const orListTab = document.getElementById('or-list-tab');
+
+    orListTab.addEventListener('click', function() {
+    
+        setTimeout(function() {
+            calculateTotalORAmount();
+        }, 100); 
     });
 });
 </script>

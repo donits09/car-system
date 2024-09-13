@@ -62,7 +62,7 @@ include('../../inc/header.php');
                                 <th>Total Amount</th>
                                 <th>Transaction Date</th>
                                 <th>Status</th>
-                                <th>Approval Status</th>
+                                <!-- <th>Approval Status</th> -->
                                 <th>Requester</th>
                                 <th>Action</th>
                             </tr>
@@ -78,7 +78,7 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
-                                a.approval_status,
+                                -- a.approval_status,
                                 a.approver,
                                 b.c_name, 
                                 b.c_phase,
@@ -102,7 +102,7 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
-                                a.approval_status,
+                                -- a.approval_status,
                                 a.approver,
                                 b.c_name, 
                                 b.c_phase,
@@ -225,7 +225,7 @@ include('../../inc/header.php');
                                             echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                                         } ?>
                                     </td>
-                                    <td class="text-center">
+                                    <!-- <td class="text-center">
                                     <?php 
                                         if ($row['approval_status'] == 1) {
                                             echo '<span class="badge badge-success">Doesn\'t need Approval</span>'; 
@@ -239,7 +239,7 @@ include('../../inc/header.php');
                                             echo '<span class="badge badge-secondary">---</span>'; 
                                         } 
                                     ?>
-                                    </td>
+                                    </td> -->
                                     <td class="text-center">
                                         <?php
                                         $c_encoded_by = $row['c_encoded_by'];
@@ -300,7 +300,7 @@ include('../../inc/header.php');
                                 <th>Total Amount</th>
                                 <th>Transaction Date</th>
                                 <th>Status</th>
-                                <th>Approval Status</th>
+                                <!-- <th>Approval Status</th> -->
                                 <th>Requester</th>
                                 <th>Action</th>
                             </tr>
@@ -316,7 +316,7 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
-                                a.approval_status,
+                                -- a.approval_status,
                                 a.approver,
                                 b.c_name, 
                                 b.c_phase,
@@ -338,7 +338,7 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
-                                a.approval_status,
+                                -- a.approval_status,
                                 a.approver,
                                 b.c_name, 
                                 b.c_phase,
@@ -461,7 +461,7 @@ include('../../inc/header.php');
                                             echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                                         } ?>
                                     </td>
-                                    <td class="text-center">
+                                    <!-- <td class="text-center">
                                     <?php 
                                         if ($row['approval_status'] == 1) {
                                             echo '<span class="badge badge-success">Doesn\'t need Approval</span>'; 
@@ -475,7 +475,7 @@ include('../../inc/header.php');
                                             echo '<span class="badge badge-secondary">---</span>'; 
                                         } 
                                     ?>
-                                    </td>
+                                    </td> -->
                                     <td class="text-center">
                                         <?php
                                         $c_encoded_by = $row['c_encoded_by'];
@@ -490,25 +490,27 @@ include('../../inc/header.php');
                                         ?>
                                     </td>
                                     <td align="center">
-                                        <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                            Action
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <div class="dropdown-menu" role="menu">
-                                            <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
-                                                View 
-                                            </a>
-                                            <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                                            <a class="dropdown-item edit_atap <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
-                                                data-acc-no="<?php echo $row['c_account_no']; ?>"
-                                                data-id="<?php echo $row['id']; ?>"
-                                                data-no="<?php echo $row['c_atap_no']; ?>">
-                                                Edit
-                                            </a>
-                                            <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                                            <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
-                                                Cancel
-                                            </a>
+                                        <div class="d-flex justify-content-center">
+                                            <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                Action
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu" role="menu">
+                                                <a class="dropdown-item view_atap" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_atap_no'] ?>">
+                                                    View 
+                                                </a>
+                                                <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                                                <a class="dropdown-item edit_atap <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
+                                                    data-acc-no="<?php echo $row['c_account_no']; ?>"
+                                                    data-id="<?php echo $row['id']; ?>"
+                                                    data-no="<?php echo $row['c_atap_no']; ?>">
+                                                    Edit
+                                                </a>
+                                                <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                                                <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_atap_no']; ?>">
+                                                    Cancel
+                                                </a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>

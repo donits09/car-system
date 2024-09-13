@@ -102,6 +102,26 @@ function updateCarList() {
         });
 }
 
+function updateORList() {
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
+
+    fetch(`or_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('or-list-body').innerHTML = data;
+            calculateTotalORAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
+
 function fillBuyerDetails(data) {
     document.getElementById('create_new').disabled = false;
     document.getElementById('buyer_acc_no').value = data.c_account_no;
@@ -422,6 +442,38 @@ function filterTable() {
     }
     calculateTotalAmount();
 }
+
+function filterTableOR() {
+    var input, filter, table, tbody, tr, td, i, txtValue;
+    input = document.getElementById("searchInputOR");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("or-list-table");
+    tbody = table.getElementsByTagName("tbody")[0]; 
+
+    tr = tbody.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+        tds = tr[i].getElementsByTagName("td");
+        var found = false;
+        for (var j = 0; j < tds.length; j++) {
+            td = tds[j];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (found) {
+            tr[i].style.display = ""; 
+        } else {
+            tr[i].style.display = "none"; 
+        }
+    }
+    calculateTotalORAmount();
+}
+
 function calculateTotalAmount() {
     var table = document.getElementById("car-list-table");
     var tbody = table.getElementsByTagName("tbody")[0];
@@ -430,7 +482,7 @@ function calculateTotalAmount() {
 
     for (var i = 0; i < rows.length; i++) {
         if (rows[i].style.display !== "none") {
-            var amountCell = rows[i].getElementsByTagName("td")[6]; 
+            var amountCell = rows[i].getElementsByTagName("td")[7]; 
             if (amountCell) {
                 var amountValue = amountCell.textContent.trim().replace(',', '');
                 total += parseFloat(amountValue);
@@ -456,4 +508,33 @@ function clearAmt(){
     if(txtamt == '0.00'){
         document.getElementById('c_car_amount').value='';
     }
+}
+
+
+function calculateTotalORAmount() {
+    var table = document.getElementById("or-list-table");
+    var tbody = table.getElementsByTagName("tbody")[0];
+    var rows = tbody.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") {
+            var amountCell = rows[i].getElementsByTagName("td")[4]; 
+            if (amountCell) {
+                var amountValue = amountCell.textContent.trim().replace(',', '');
+                console.log("Raw amount value:", amountValue); 
+                var parsedValue = parseFloat(amountValue);
+                if (!isNaN(parsedValue)) {
+                    total += parsedValue;
+                } else {
+                    console.error("Error parsing amount:", amountValue); 
+                }
+            }
+        }
+    }
+
+    var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    document.getElementById("totalORAmount").textContent = formattedTotal;
+
+    console.log("Total amount:", formattedTotal); 
 }

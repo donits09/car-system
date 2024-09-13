@@ -414,18 +414,19 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        const appStats = $('#approval_status').val();
-                        if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
-                        }else if (response.data.approval_status === '3') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP was disapproved.');
-                            clearTxt();
-                        }else if (response.data.c_account_no !== currentAccountNo) {
+                        // const appStats = $('#approval_status').val();
+                        // if (response.data.approval_status === '0') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP requires approval.');
+                        //     clearTxt();
+                        // }else if (response.data.approval_status === '3') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP was disapproved.');
+                        //     clearTxt();
+                        // }else 
+                        if (response.data.c_account_no !== currentAccountNo) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert('The account number of the selected ATAP No. does not match.');
@@ -580,7 +581,6 @@ function updateCarList() {
         function updateAtapAmount(selectedValue) {
             $('#c_car_amount').val(selectedValue);
         }
-
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }
@@ -596,7 +596,6 @@ function updateCarList() {
             updateAtapVal(atap_val); 
         });
     });
-
 
     function fetchTranType(atapNo) {
         $.ajax({

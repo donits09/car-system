@@ -27,7 +27,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -51,7 +51,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -71,7 +71,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_encoded_by = $result["c_encoded_by"];
         $c_tran_date = $result["c_tran_date"];
         $atap_remarks = $result["atap_remarks"];
-        $current_approval_status = $result["approval_status"];
+        // $current_approval_status = $result["approval_status"];
         $current_approver = $result["approver"];
     }
 
@@ -161,7 +161,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks" required><?php echo htmlspecialchars($atap_remarks) ?></textarea>
     </div>
 
-    <div class="container mt-4" id="approver_cont">
+    <!-- <div class="container mt-4" id="approver_cont">
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
@@ -253,7 +253,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 }
             });
         });
-    </script>
+    </script> -->
     
     <div class="form-group">
         <label for="encoder">Encoded by</label>
@@ -278,7 +278,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
     <div class="form-group">
-        <label for="transaction">Transaction</label>
+    <hr>
+        <!-- <label for="transaction">Transaction</label> -->
         <table class="table table-striped" id="transaction-table">
             <thead>
                 <th>Transaction Name</th>

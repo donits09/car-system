@@ -56,17 +56,6 @@ if (!empty($account_no)) {
                 </td>
                 <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
-                <!-- <td class="text-center"><?php 
-                    if ($row['status'] == 0){
-                        echo  '<span class="badge badge-warning">PENDING</span>'; 
-                    } else if($row['status'] == 1){
-                        echo  '<span class="badge badge-primary">PAID</span>'; 
-                    }else if($row['status'] == 2){
-                        echo  '<span class="badge badge-success">PARTIAL</span>'; 
-                    } else {
-                        echo  '<span class="badge badge-danger">CANCELLED</span>'; 
-                    } ?>
-                </td> -->
                 <td class="text-center">
                     <?php
                     $c_encoded_by = $row['c_encoded_by'];
@@ -98,7 +87,7 @@ if (!empty($account_no)) {
                             <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                         </a>
                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                        <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_or_no']; ?>">
+                        <a class="dropdown-item delete_or <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_or_no']; ?>">
                             <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
                         </a>
                         <?php }; ?>
@@ -157,7 +146,7 @@ if (!empty($account_no)) {
         $('#confirm_modal').modal('show');
     };
 
-    $(document).on('click', '.delete_data', function() {
+    $(document).on('click', '.delete_or', function() {
         var orId = $(this).data('id');
         var orNo = $(this).data('no');
         _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);

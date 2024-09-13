@@ -1,7 +1,6 @@
 <?php 
 session_start();
-// require_once('../../../inc/check_session.php');
-// check_user_group(1);
+
 
 include('../../config.php');
 include('../../inc/header.php');  
@@ -24,7 +23,6 @@ if (odbc_execute($stmt_total, array($carType, $accountNo))) {
 $c_car_total_amount = number_format($total_amount, 2, '.', ',');
 ?>
 
-<!-- <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css"> -->
 <style>
     .export_csv {
         margin-top: 24px;

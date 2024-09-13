@@ -3,9 +3,7 @@ session_start();
 
 require_once('../../inc/check_session.php');
 check_user_group(2);
-
 include('../../config.php');
-
 $c_account_no = null;
 $c_or_type = '';
 $c_or_amount = 0;
@@ -17,7 +15,6 @@ $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_or_query = "SELECT * FROM t_or_payment WHERE id = ?";
     $accountId = $_GET['id'];
@@ -50,7 +47,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     max-height: 200px; 
     overflow-y: auto;
 }
-
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="or-form" method="post" action="">
@@ -316,7 +312,7 @@ $(document).ready(function() {
                         $('#createCarModal').modal('hide'); 
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
-                        location.reload();
+                        updateORList();
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
@@ -421,25 +417,26 @@ $(document).ready(function() {
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: '../../cashier/other_fees/get_atap_details_of.php',
+            url: '../../supervisor/other_fees/get_atap_details_of.php',
             data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        const appStats = $('#approval_status').val();
-                        if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
-                        }else if (response.data.approval_status === '3') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP was disapproved.');
-                            clearTxt();
-                        }else if (response.data.c_account_no !== currentAccountNo) {
+                        // const appStats = $('#approval_status').val();
+                        // if (response.data.approval_status === '0') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP requires approval.');
+                        //     clearTxt();
+                        // }else if (response.data.approval_status === '3') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP was disapproved.');
+                        //     clearTxt();
+                        // }else 
+                        if (response.data.c_account_no !== currentAccountNo) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert('The account number of the selected ATAP No. does not match.');
@@ -538,7 +535,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../cashier/car/get_buyer_details.php',
+                url: '../../supervisor/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -582,6 +579,25 @@ function updateCarList() {
             console.error('Fetch error:', error);
         });
 }
+function updateORList() {
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
+
+    fetch(`<?php echo base_url; ?>admin/other_fees/fetch_or_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('or-list-body').innerHTML = data;
+            calculateTotalORAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
 </script>
 <script>
    $(document).ready(function() {
@@ -612,7 +628,7 @@ function updateCarList() {
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: '<?php echo base_url; ?>cashier/car/fetch_tran_type.php',
+            url: '<?php echo base_url; ?>supervisor/car/fetch_tran_type.php',
             type: 'GET',
             data: { c_atap_no: atapNo },
             dataType: 'json',

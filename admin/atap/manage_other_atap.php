@@ -158,7 +158,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks" required><?php echo htmlspecialchars($atap_remarks) ?></textarea>
         </div>
         
-        <div class="container mt-4" id="approver_cont">
+        <!-- <div class="container mt-4" id="approver_cont">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -250,7 +250,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     }
                 });
             });
-        </script>
+        </script> -->
         <div class="form-group">
             <label for="encoder">Encoded by</label>
             <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo $_SESSION['username'] ?>" readonly>

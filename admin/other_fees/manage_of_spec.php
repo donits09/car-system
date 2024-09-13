@@ -17,7 +17,6 @@ $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_or_query = "SELECT * FROM t_or_payment WHERE id = ?";
     $accountId = $_GET['id'];
@@ -50,7 +49,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     max-height: 200px; 
     overflow-y: auto;
 }
-
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="or-form" method="post" action="">
@@ -313,10 +311,10 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createCarModal').modal('hide'); 
-                        $('body').removeClass('modal-open'); 
-                        $('.modal-backdrop').remove(); 
-                        location.reload();
+                        $('#createCarModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        updateORList();
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
@@ -428,18 +426,19 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        const appStats = $('#approval_status').val();
-                        if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
-                        }else if (response.data.approval_status === '3') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP was disapproved.');
-                            clearTxt();
-                        }else if (response.data.c_account_no !== currentAccountNo) {
+                        // const appStats = $('#approval_status').val();
+                        // if (response.data.approval_status === '0') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP requires approval.');
+                        //     clearTxt();
+                        // }else if (response.data.approval_status === '3') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP was disapproved.');
+                        //     clearTxt();
+                        // }else 
+                        if (response.data.c_account_no !== currentAccountNo) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert('The account number of the selected ATAP No. does not match.');
@@ -531,6 +530,36 @@ $(document).ready(function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
+
+    function fetchBuyerDetails(accountNo) {
+        const buyerNameField = $('#buyer_name');
+
+        if (accountNo.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/get_buyer_details.php',
+                data: { account_no: accountNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        buyerNameField.val(response.name);
+                        buyerNameField.removeAttr('required');
+                    } else {
+                        buyerNameField.val('Unknown');
+                        buyerNameField.attr('required', 'required');
+                    }
+                },
+                error: function() {
+                    buyerNameField.val('Unknown');
+                    buyerNameField.attr('required', 'required');
+                    alert('An error occurred while fetching buyer details.');
+                }
+            });
+        } else {
+            buyerNameField.val('');
+            buyerNameField.attr('required', 'required');
+        }
+    }
 });
 
 function updateCarList() {
@@ -547,6 +576,25 @@ function updateCarList() {
         .then(data => {
             document.getElementById('car-list-body').innerHTML = data;
             calculateTotalAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
+function updateORList() {
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
+
+    fetch(`<?php echo base_url; ?>admin/other_fees/fetch_or_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('or-list-body').innerHTML = data;
+            calculateTotalORAmount(); 
         })
         .catch(error => {
             console.error('Fetch error:', error);
