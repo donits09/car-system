@@ -337,6 +337,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </head>
 <body onload="initializePage()">
     <!-- <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy"> -->
+    <!-- aaaa -->
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">
