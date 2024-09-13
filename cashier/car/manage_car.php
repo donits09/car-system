@@ -35,7 +35,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_bank = $result["c_bank"];
         $c_check_no = $result["c_check_no"];
         $c_remarks = $result["c_remarks"];
-        
     }
 } else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
     $c_account_no = $_GET['c_account_no'];
@@ -206,9 +205,7 @@ function toggleCarType() {
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-
                 <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeofPaymentChange()">
-
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
@@ -482,18 +479,19 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        const appStats = $('#approval_status').val();
-                        if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
-                        }else if (response.data.approval_status === '3') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP was disapproved.');
-                            clearTxt();
-                        }else if (response.data.c_account_no !== currentAccountNo) {
+                        // const appStats = $('#approval_status').val();
+                        // if (response.data.approval_status === '0') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP requires approval.');
+                        //     clearTxt();
+                        // }else if (response.data.approval_status === '3') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP was disapproved.');
+                        //     clearTxt();
+                        // }else 
+                        if (response.data.c_account_no !== currentAccountNo) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert('The account number of the selected ATAP No. does not match.');
@@ -582,7 +580,6 @@ $(document).ready(function() {
 
         $('#c_account_no').trigger('input');
     }
-
 
     $('#c_account_no').on('input', function() {
         const accountNo = $(this).val();

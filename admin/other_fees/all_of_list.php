@@ -23,6 +23,10 @@ include('../../inc/header.php');
         padding: 5px 10px; 
         width: auto; 
     }
+    .dropdown-menu {
+        top: auto;
+        transform: translate3d(0, 0, 0); 
+    }
 </style>
 <body>
 <div class="container mt-5">
@@ -284,6 +288,38 @@ $(document).ready(function() {
         calculateTotalAmount();
     });
 });
+function delete_or(orId, orNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=delete_or",
+        method: "POST",
+        data: { orId: orId, orNo: orNo },
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
+                    location.reload();
+                    //updateORList(); 
+                    $('.delete_or[data-id="' + orId + '"]').closest('tr').remove();
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+            }
+            end_loader();
+        }
+    });
+}
 </script>
 </div>
 </body>
