@@ -138,3 +138,50 @@ if (!empty($account_no)) {
     echo "<script>$('#totalAtapAmount').text('0.00');</script>";
 }
 ?>
+<script>
+    function loadModal(title, url, modalId) {
+        start_loader();
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                $(modalId + ' .modal-body').html(response);
+                $(modalId + ' .modal-title').text(title);
+                $(modalId).modal('show');
+                end_loader();
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert("An error occurred while loading data.");
+                end_loader();
+            }
+        });
+    }
+    
+     $(document).on('click', '.edit_atap_spec', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        var accountNo = $(this).data('acc-no');
+        var modalTitle = 'Edit ATAP Details ';
+        var modalSelector = '#createCarModal';
+        var url;
+    
+        url = '../atap/manage_atap_spec.php?id=' + atapId + '&no=' + atapNo + '&acc-no=' + accountNo;
+        
+        loadModal(modalTitle, url, modalSelector);
+    });
+    
+    window._conf = function(msg, func, params) {
+        $('#confirm_modal .modal-body').html(msg);
+        $('#confirm_modal #confirm').off('click').on('click', function() {
+            func.apply(this, params);
+        });
+        $('#confirm_modal').modal('show');
+    };
+
+    $(document).on('click', '.delete_data', function() {
+        var atapId = $(this).data('id');
+        var atapNo = $(this).data('no');
+        _conf("Are you sure you want to cancel this transaction permanently?", delete_atap, [atapId, atapNo]);
+    });
+</script>
