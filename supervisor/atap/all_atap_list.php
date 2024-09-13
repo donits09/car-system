@@ -25,6 +25,10 @@ include('../../inc/header.php');
     .hidden_fields{
         display:none;
     }
+    .dropdown-menu {
+        top: auto;
+        transform: translate3d(0, 0, 0); 
+    }
     /* .status-pending {
         background-color: orange !important;
     }
@@ -54,7 +58,7 @@ include('../../inc/header.php');
                         <th>Total Amount</th>
                         <th>Transaction Date</th>
                         <th>Status</th>
-                        <th>Approval Status</th>
+                        <!-- <th>Approval Status</th> -->
                         <th>Requester</th>
                         <th>Action</th>
                     </tr>
@@ -69,7 +73,7 @@ include('../../inc/header.php');
                             a.c_tran_updated, 
                             a.atap_remarks, 
                             a.status, 
-                            a.approval_status,
+                            -- a.approval_status,
                             a.approver,
                             b.c_name, 
                             b.c_phase,
@@ -91,7 +95,7 @@ include('../../inc/header.php');
                             a.c_tran_updated, 
                             a.atap_remarks, 
                             a.status, 
-                            a.approval_status,
+                            -- a.approval_status,
                             a.approver,
                             b.c_name, 
                             b.c_phase,
@@ -213,7 +217,7 @@ include('../../inc/header.php');
                                         echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                                     } ?>
                                 </td>
-                                <td class="text-center">
+                                <!-- <td class="text-center">
                                 <?php 
                                     if ($row['approval_status'] == 1) {
                                         echo '<span class="badge badge-success">Doesn\'t need Approval</span>'; 
@@ -227,7 +231,7 @@ include('../../inc/header.php');
                                         echo '<span class="badge badge-secondary">---</span>'; 
                                     } 
                                 ?>
-                                </td>
+                                </td> -->
                                <td class="text-center">
                                     <?php
                                     $c_encoded_by = $row['c_encoded_by'];

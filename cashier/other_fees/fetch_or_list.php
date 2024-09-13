@@ -98,7 +98,7 @@ if (!empty($account_no)) {
                             <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                         </a>
                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                        <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_or_no']; ?>">
+                        <a class="dropdown-item delete_or <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_or_no']; ?>">
                             <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
                         </a>
                         <?php }; ?>
@@ -136,7 +136,9 @@ if (!empty($account_no)) {
         });
     }
     
+
     $(document).on('click', '.edit_of_spec', function() {
+
         var orId = $(this).data('id');
         var orNo = $(this).data('no');
         var accountNo = $(this).data('acc-no');
@@ -157,7 +159,7 @@ if (!empty($account_no)) {
         $('#confirm_modal').modal('show');
     };
 
-    $(document).on('click', '.delete_data', function() {
+    $(document).on('click', '.delete_or', function() {
         var orId = $(this).data('id');
         var orNo = $(this).data('no');
         _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);

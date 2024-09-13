@@ -72,6 +72,11 @@ $(document).on('click', '.view_data', function() {
     loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
 });
 
+$(document).on('click', '.view_or', function() {
+    var accountId = $(this).data('id');
+    loadModal('OR Details', 'view_or.php?id=' + accountId, '#viewModal');
+});
+
 $(document).on('click', '.delete_data', function() {
     var atapId = $(this).data('id');
     var atapNo = $(this).data('no');

@@ -184,12 +184,12 @@ include('../../inc/header.php');
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
+                                        <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
                                             <!-- <span class="fa fa-eye text-primary"></span> -->View
                                         </a>
                                         <?php if ($row['c_encoded_by'] == $username){ ?>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item edit_data" href="javascript:void(0)" 
+                                            <a class="dropdown-item edit_or" href="javascript:void(0)" 
                                             data-id="<?php echo $row['id']; ?>" 
                                             data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
                                             data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
@@ -204,7 +204,7 @@ include('../../inc/header.php');
                                                 Print
                                             </a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
+                                            <a class="dropdown-item delete_or" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
                                                 Cancel
                                             </a>
                                         <?php }; ?>
@@ -286,6 +286,38 @@ $(document).ready(function() {
         calculateTotalAmount();
     });
 });
+function delete_or(orId, orNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=delete_or",
+        method: "POST",
+        data: { orId: orId, orNo: orNo },
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
+                    location.reload();
+                    //updateORList(); 
+                    $('.delete_or[data-id="' + orId + '"]').closest('tr').remove();
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+            }
+            end_loader();
+        }
+    });
+}
 </script>
 </div>
 </body>

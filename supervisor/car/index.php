@@ -206,17 +206,18 @@ include('../../inc/header.php');
                     <a class="nav-link active" id="buyer-details-tab" data-toggle="tab" href="#buyer-details" role="tab" aria-controls="buyer-details" aria-selected="true">Buyer's Details</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">CAR List</a>
+                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="atap-list-tab" data-toggle="tab" href="#atap-list" role="tab" aria-controls="atap-list" aria-selected="false">ATAP List</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">OR List</a>
+                    <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Other Fees (CAR)</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="payment-record-tab" data-toggle="tab" href="#payment-record" role="tab" aria-controls="payment-record" aria-selected="false">Payment Record</a>
+                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">Other Fees (OR)</a>
                 </li>
+
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -305,7 +306,7 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">CAR List</h2>
+                            <h2 class="text-blue h4">Othe Fees (CAR)</h2>
                             <hr>
                             <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New CAR
@@ -482,12 +483,12 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="or-list" role="tabpanel" aria-labelledby="or-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">OR List</h2>
+                            <h2 class="text-blue h4">Other Fees (OR)</h2>
                             <hr>
-                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
+                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button>
-                            <hr>
+                            <hr> -->
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -903,6 +904,10 @@ $(document).ready(function() {
         filterTableAtap();
     });
 
+    document.getElementById("searchInputOR").addEventListener("input", function() {
+        filterTableOR();
+    });
+
     $('#createCarModal').on('hidden.bs.modal', function () {
         $('body').css('padding-right', '0');
     });
@@ -1017,9 +1022,42 @@ $(document).ready(function() {
         });
         $(document).ready(function() {
             calculateTotalAmount();
+            calculateTotalORAmount();
         });
 </script>
 <script>
+function delete_or(orId, orNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=delete_or",
+        method: "POST",
+        data: { orId: orId, orNo: orNo },
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
+                    //location.reload();
+                    updateORList(); 
+                    $('.delete_or[data-id="' + orId + '"]').closest('tr').remove();
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+            }
+            end_loader();
+        }
+    });
+}
 function delete_car(carId, carNo) {
     start_loader();
     $.ajax({
@@ -1062,6 +1100,15 @@ function updateCarList() {
         });
         calculateTotalAmount();
 }
+function updateORList() {
+    const accountNo = document.getElementById('buyer_acc_no').value;
+    fetch(`or_list.php?account_no=${accountNo}`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('or-list-body').innerHTML = data;
+            calculateTotalORAmount(); 
+        });
+}
 </script>
 
 <!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
@@ -1088,6 +1135,18 @@ $(document).ready(function() {
                 $('#car-summary-body').html('<tr><td colspan="6" class="text-center">Error loading data</td></tr>');
             }
         });
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const orListTab = document.getElementById('or-list-tab');
+
+    orListTab.addEventListener('click', function() {
+    
+        setTimeout(function() {
+            calculateTotalORAmount();
+        }, 100); 
     });
 });
 </script>

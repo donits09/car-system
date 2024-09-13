@@ -467,50 +467,50 @@ $(document).ready(function() {
         clearType.val(''); 
     });
 
-    // function fetchAtapDetails(atapNo) {
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: 'get_atap_details_of.php',
-    //         data: { c_atap_no: atapNo },
-    //         dataType: 'json',
-    //         success: function(response) {
-    //             if (response.status === 'success') {
-    //                 if (response.data.status === '1') {
-    //                     $('#car_type_container').show();
-    //                     $('#tran_type_container').hide();
-    //                     alert("This ATAP has already been PAID.");
-    //                     clearTxt();
-    //                 } else if (response.data.status === '3') {
-    //                     $('#car_type_container').show();
-    //                     $('#tran_type_container').hide();
-    //                     alert('This ATAP has already been CANCELLED');
-    //                     clearTxt();
-    //                 } else if ((response.data.status === '0' || response.data.status === '2') && (response.data.c_account_no !== '' && response.data.c_account_no !== null)) {
-    //                     $('#car_type_container').show();
-    //                     $('#tran_type_container').hide();
-    //                     alert('The selected ATAP is a regular account.');
-    //                     clearTxt();
-    //                 }else {
-    //                     populateForm(response.data);
-    //                     fetchTranType(atapNo);
-    //                     $('#car_type_container').hide();
-    //                     $('#tran_type_container').show();
-    //                 }
-    //             } else {
-    //                 $('#car_type_container').show();
-    //                 $('#tran_type_container').hide();
-    //                 alert('No account number found for the given ATAP No.');
-    //                 clearTxt();
-    //             }
-    //         },
-    //         error: function() {
-    //             $('#car_type_container').show();
-    //             $('#tran_type_container').hide();
-    //             alert('An error occurred while fetching ATAP details.');
-    //             clearTxt();
-    //         }
-    //     });
-    // }
+    function fetchAtapDetails(atapNo) {
+        $.ajax({
+            type: 'POST',
+            url: 'get_atap_details_of.php',
+            data: { c_atap_no: atapNo },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success') {
+                    if (response.data.status === '1') {
+                        $('#car_type_container').show();
+                        $('#tran_type_container').hide();
+                        alert("This ATAP has already been PAID.");
+                        clearTxt();
+                    } else if (response.data.status === '3') {
+                        $('#car_type_container').show();
+                        $('#tran_type_container').hide();
+                        alert('This ATAP has already been CANCELLED');
+                        clearTxt();
+                    } else if ((response.data.status === '0' || response.data.status === '2') && (response.data.c_account_no !== '' && response.data.c_account_no !== null)) {
+                        $('#car_type_container').show();
+                        $('#tran_type_container').hide();
+                        alert('The selected ATAP is a regular account.');
+                        clearTxt();
+                    }else {
+                        populateForm(response.data);
+                        fetchTranType(atapNo);
+                        $('#car_type_container').hide();
+                        $('#tran_type_container').show();
+                    }
+                } else {
+                    $('#car_type_container').show();
+                    $('#tran_type_container').hide();
+                    alert('No account number found for the given ATAP No.');
+                    clearTxt();
+                }
+            },
+            error: function() {
+                $('#car_type_container').show();
+                $('#tran_type_container').hide();
+                alert('An error occurred while fetching ATAP details.');
+                clearTxt();
+            }
+        });
+    }
 
     function fetchAtapDetails(atapNo) {
         $.ajax({
@@ -520,18 +520,19 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    const appStats = $('#approval_status').val();
-                    if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
-                    }else if (response.data.approval_status === '3') {
-                        $('#car_type_container').show();
-                        $('#tran_type_container').hide();
-                        alert('The selected ATAP was disapproved.');
-                        clearTxt();
-                    }else if (response.data.status === '1') {
+                    // const appStats = $('#approval_status').val();
+                    // if (response.data.approval_status === '0') {
+                    //         $('#car_type_container').show();
+                    //         $('#tran_type_container').hide();
+                    //         alert('The selected ATAP requires approval.');
+                    //         clearTxt();
+                    // }else if (response.data.approval_status === '3') {
+                    //     $('#car_type_container').show();
+                    //     $('#tran_type_container').hide();
+                    //     alert('The selected ATAP was disapproved.');
+                    //     clearTxt();
+                    // }else 
+                    if (response.data.status === '1') {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert("This ATAP has already been PAID.");

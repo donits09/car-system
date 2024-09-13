@@ -482,6 +482,68 @@ function filterTableAtap() {
     calculateTotalAtapAmount();
 }
 
+
+function filterTableOR() {
+    var input, filter, table, tbody, tr, td, i, txtValue;
+    input = document.getElementById("searchInputOR");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("or-list-table");
+    tbody = table.getElementsByTagName("tbody")[0]; 
+
+    tr = tbody.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+        tds = tr[i].getElementsByTagName("td");
+        var found = false;
+        for (var j = 0; j < tds.length; j++) {
+            td = tds[j];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (found) {
+            tr[i].style.display = ""; 
+        } else {
+            tr[i].style.display = "none"; 
+        }
+    }
+    calculateTotalORAmount();
+}
+
+
+function calculateTotalORAmount() {
+    var table = document.getElementById("or-list-table");
+    var tbody = table.getElementsByTagName("tbody")[0];
+    var rows = tbody.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") {
+            var amountCell = rows[i].getElementsByTagName("td")[4]; 
+            if (amountCell) {
+                var amountValue = amountCell.textContent.trim().replace(',', '');
+                console.log("Raw amount value:", amountValue); 
+                var parsedValue = parseFloat(amountValue);
+                if (!isNaN(parsedValue)) {
+                    total += parsedValue;
+                } else {
+                    console.error("Error parsing amount:", amountValue); 
+                }
+            }
+        }
+    }
+
+    var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    document.getElementById("totalORAmount").textContent = formattedTotal;
+
+    console.log("Total amount:", formattedTotal); 
+}
+
+
 $(document).ready(function() {
     $('#atap-list-tab').on('click', function(e) {
         e.preventDefault(); 

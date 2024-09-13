@@ -200,7 +200,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
 
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="c_approver">Approver</label>
@@ -263,7 +263,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             });
         });
     </script>
-    <br>
+    <br> -->
     <div class="form-group">
         <label for="encoder">Encoded by</label>
         <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo $_SESSION['username'] ?>" readonly>

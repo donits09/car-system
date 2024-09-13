@@ -28,17 +28,8 @@ include('../../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
-        <!-- <div class="pd-20" id="car-btn"> -->
         <h2 class="text-blue h4">Other Fees - Full List</h2>
         <hr>
-            <a id="create_new_of" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New OR
-            </a>
-            <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
-                <span class="fa fa-edit"></span> Create Other OR
-            </a>
-            <div class="pd-20">
-            <hr>
         </div>
             <div class="table-container">
             <table class="table table-bordered table-striped" id="data-table">
@@ -179,37 +170,20 @@ include('../../inc/header.php');
                                         ?>
                                     </td>
                                     <td align="center">
-                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                        Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                                            <!-- <span class="fa fa-eye text-primary"></span> -->View
-                                        </a>
-                                        <?php if ($row['c_encoded_by'] == $username){ ?>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                            data-id="<?php echo $row['id']; ?>" 
-                                            data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                                            data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
-                                            data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
-                                            data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
-                                            data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
-                                            data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
-                                                Edit
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
-                                                Print
-                                            </a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
-                                                Cancel
-                                            </a>
-                                        <?php }; ?>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                                Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right" role="menu">
+                                                <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">View</a>
+                                                <?php if ($row['c_encoded_by'] == $username){ ?>
+                                                    <div class="dropdown-divider"></div>
+                                                    <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">Print</a>
+                                                <?php }; ?>
+                                            </div>
                                         </div>
-                                </td>
+                                    </td>
                                 </tr>
                         <?php
                             }

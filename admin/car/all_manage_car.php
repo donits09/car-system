@@ -301,7 +301,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
-<!-- <script>
+<script>
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;
         document.getElementById('c_bank_online').value = '';
@@ -320,7 +320,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             document.getElementById('onlineBankList').style.display = 'none';
         }
     }
-</script> -->
+</script>
 <script>
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;
@@ -366,18 +366,19 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        const appStats = $('#approval_status').val();
-                        if (response.data.approval_status === '0') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP requires approval.');
-                            clearTxt();
-                        }else if (response.data.approval_status === '3') {
-                            $('#car_type_container').show();
-                            $('#tran_type_container').hide();
-                            alert('The selected ATAP was disapproved.');
-                            clearTxt();
-                        }else if (response.data.status === '1') {
+                        // const appStats = $('#approval_status').val();
+                        // if (response.data.approval_status === '0') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP requires approval.');
+                        //     clearTxt();
+                        // }else if (response.data.approval_status === '3') {
+                        //     $('#car_type_container').show();
+                        //     $('#tran_type_container').hide();
+                        //     alert('The selected ATAP was disapproved.');
+                        //     clearTxt();
+                        // }else 
+                        if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
@@ -474,7 +475,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../cashier/car/get_buyer_details.php',
+                url: '../../admin/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
