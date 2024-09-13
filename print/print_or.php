@@ -100,18 +100,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         
         #c_or_type {
-            float: right;
-            margin-top: 185px;
-            margin-right: -180px;
-            width: 300px;
+            width: 440px;
+            height:auto;
+            text-align: center;
+            font-size: 12px !important;
+            margin-top:185px;
+            position:absolute;
         }
        
         #c_or_no {
             position:absolute;
             z-index: 10;
             float: left;
-            margin-top: 30px;
-            margin-left: 590px;
+            margin-top: -5px;
+            margin-left: 640px;
             width: 80px;
             font-size:16px;
         }
@@ -121,23 +123,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         
         
         #c_bank{
-            margin-top: 303px;
-            margin-left: 280px;
+            margin-top: 320px;
+            margin-left: 275px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
         #c_bank_other{
-            margin-top: 303px;
-            margin-left: 280px;
+            margin-top: 320px;
+            margin-left: 275px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
         #c_paydate_main {
-            margin-top: 303px;
+            margin-top: 320px;
             margin-left: 150px;
             width: auto;
             text-align: center;
@@ -145,7 +147,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_paydate_other {
-            margin-top: 303px;
+            margin-top: 320px;
             margin-left: 150px;
             width: auto;
             text-align: center;
@@ -159,24 +161,24 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_bank_main{
-            margin-top: 302px;
-            margin-left: 325px;
+            margin-top: 320px;
+            margin-left: -30px;
             width: auto;
             text-align: left;
             font-size: 12px !important;
             position:absolute;
         }
         #c_check_main{
-            margin-top:303px;
-            margin-left:10px;
+            margin-top:320px;
+            margin-left:-30px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
         #c_check_other{
-            margin-top:303px;
-            margin-left:10px;
+            margin-top:320px;
+            margin-left:-30px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -204,21 +206,21 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         #c_received {
             text-transform: uppercase!important;
             float: right;
-            margin-right:-10px;
-            margin-top: 85px;
+            margin-right:15px;
+            margin-top: 55px;
             width: 350px;
             padding:0px;
         }
         #c_current_date {
             float: right;
-            margin-top: 90px;
-            margin-right: -200px;
+            margin-top: 60px;
+            margin-right: -270px;
         }
         #c_address {
             text-transform: uppercase;
             float: right;
-            margin-top: 108px;
-            margin-right: -360px;
+            margin-top: -10px;
+            margin-right: 3px;
             width: 360px;
             text-align: left;
         }
@@ -228,8 +230,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             text-align: left;
             font-size: 12px !important;
             float:right;
-            margin-left:555px;
-            margin-top:107px;
+            margin-left:625px;
+            margin-top:80px;
             position:absolute;
         }
         #c_acc_no{
@@ -237,8 +239,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             z-index: 10;
             text-transform: uppercase;
             float: right;
-            margin-left:575px;
-            margin-top:104px;
+            margin-left: 645px;
+            margin-top: 85px;
             width: auto;
             text-align: left;
             font-size: 12px !important;
@@ -257,7 +259,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             z-index: 10;
             float: right;
             margin-left: 30px;
-            margin-top: 350px;
+            margin-top: 380px;
             width: 420px;
             height: auto;
             line-height: 1.2em;
@@ -272,8 +274,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             z-index: 10;
             float: right;
             font-size: 12px !important;
-            margin-top: 265px;
-            margin-left: 605px;
+            margin-top: 280px;
+            margin-left: 660px;
             width: 140px;
         }
         #c_or_amount2 {
@@ -285,9 +287,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         #c_encoded_by {
             text-transform: uppercase!important;
             float: left;
-            margin-top: 393px;
+            margin-top: 430px;
             width: auto;
-            margin-left:550px;
+            margin-left:620px;
             text-align: left;
             font-size: 10px !important;
             position:absolute;
@@ -296,8 +298,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
             z-index: 10;
             font-size: 12px !important;
-            margin-top:140px;
-            margin-left:535px;
+            margin-top:170px;
+            margin-left:590px;
         }
         #c_paydate {
             float: left;
@@ -334,7 +336,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy">
+    <!-- <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy"> -->
+    <!-- aaaa -->
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">

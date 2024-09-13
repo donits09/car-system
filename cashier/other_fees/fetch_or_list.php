@@ -136,7 +136,9 @@ if (!empty($account_no)) {
         });
     }
     
-     $(document).on('click', '.edit_of_spec', function() {
+
+    $(document).on('click', '.edit_of_spec', function() {
+
         var orId = $(this).data('id');
         var orNo = $(this).data('no');
         var accountNo = $(this).data('acc-no');

@@ -964,7 +964,8 @@ $(document).ready(function() {
         });
 
         $('#create_new').click(function() {
-            var accountNo = $(this).data('account-no');
+            /* var accountNo = $(this).data('account-no'); */
+            var accountNo = $('#buyer_acc_no').val();
             loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
         });
         $('#create_new_or').click(function() {
