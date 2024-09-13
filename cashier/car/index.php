@@ -1,13 +1,10 @@
 <?php
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(3);
-
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
-
 ?>
 <?php
     $c_remarks = '';
