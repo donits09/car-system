@@ -84,7 +84,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
+    <!-- <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy"> -->
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">

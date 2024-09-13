@@ -79,14 +79,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
     </div>
     <div class="form-group">
-        <div class="dropdown" id="car_type_container">
+        <div class="dropdown" id="or_type_container">
             <label for="c_or_type">Transaction Type</label>
            
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_or_type" name="c_or_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
             <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                 <?php
-                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
-                $type_result = odbc_exec($conn, $car_type_query);
+                $or_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
+                $type_result = odbc_exec($conn, $or_type_query);
                 while ($row = odbc_fetch_array($type_result)) {
                     echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                 }
@@ -157,15 +157,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <script>
 function toggleCarType() {
     var atapNo = document.getElementById('c_atap_no').value;
-    var carTypeContainer = document.getElementById('car_type_container');
+    var orTypeContainer = document.getElementById('or_type_container');
     var tranTypeContainer =document.getElementById('tran_type_container');
 
     if (atapNo.trim() === '') {
-        carTypeContainer.style.display = 'block';
+        orTypeContainer.style.display = 'block';
         tranTypeContainer.style.display = 'none';
     } else {
         tranTypeContainer.style.display = 'block';
-        carTypeContainer.style.display = 'none';  
+        orTypeContainer.style.display = 'none';  
     }
 }
     </script>
@@ -347,7 +347,7 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createCarModal').modal('hide'); 
+                        $('#createORModal').modal('hide'); 
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
                         updateORList();
@@ -442,7 +442,7 @@ $(document).ready(function() {
         const atapNo = $('#c_atap_no').val();
         var clearType = $('#c_or_type');
         if (atapNo.length > 0) {
-            $('#car_type_container').show();
+            $('#or_type_container').show();
             $('#tran_type_container').hide(); 
             fetchAtapDetails(atapNo);
         } else {
@@ -463,28 +463,28 @@ $(document).ready(function() {
                         const currentAccountNo = $('#c_account_no').val();
                         // const appStats = $('#approval_status').val();
                         // if (response.data.approval_status === '0') {
-                        //     $('#car_type_container').show();
+                        //     $('#or_type_container').show();
                         //     $('#tran_type_container').hide();
                         //     alert('The selected ATAP requires approval.');
                         //     clearTxt();
                         // }else if (response.data.approval_status === '3') {
-                        //     $('#car_type_container').show();
+                        //     $('#or_type_container').show();
                         //     $('#tran_type_container').hide();
                         //     alert('The selected ATAP was disapproved.');
                         //     clearTxt();
                         // }else 
                         if (response.data.c_account_no !== currentAccountNo) {
-                            $('#car_type_container').show();
+                            $('#or_type_container').show();
                             $('#tran_type_container').hide();
                             alert('The account number of the selected ATAP No. does not match.');
                             clearTxt();
                         } else if (response.data.status === '1') {
-                            $('#car_type_container').show();
+                            $('#or_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
                             clearTxt();
                         } else if (response.data.status === '3') {
-                            $('#car_type_container').show();
+                            $('#or_type_container').show();
                             $('#tran_type_container').hide();
                             alert('This ATAP has already been CANCELLED');
                             clearTxt();
@@ -492,24 +492,24 @@ $(document).ready(function() {
                             populateForm(response.data);
                             fetchBuyerDetails(response.data.c_account_no);
                             fetchTranType(atapNo);
-                            $('#car_type_container').hide();
+                            $('#or_type_container').hide();
                             $('#tran_type_container').show();
                         }
                     } else {
-                        $('#car_type_container').show();
+                        $('#or_type_container').show();
                         $('#tran_type_container').hide();
                         alert('No account number found for the given ATAP No.');
                         clearTxt();
                     }
                 } else {
-                    $('#car_type_container').show();
+                    $('#or_type_container').show();
                     $('#tran_type_container').hide();
                     alert('No ATAP details found for the given ATAP No.');
                     clearTxt();
                 }
             },
             error: function() {
-                $('#car_type_container').show();
+                $('#or_type_container').show();
                 $('#tran_type_container').hide();
                 alert('An error occurred while fetching ATAP details.');
                 clearTxt();
@@ -665,7 +665,7 @@ function updateORList() {
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: 'cashier/car/fetch_tran_type.php',
+            url: '<?php echo base_url; ?>cashier/car/fetch_tran_type.php',
             type: 'GET',
             data: { c_atap_no: atapNo },
             dataType: 'json',

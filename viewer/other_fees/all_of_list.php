@@ -177,10 +177,10 @@ include('../../inc/header.php');
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right" role="menu">
                                                 <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">View</a>
-                                                <?php if ($row['c_encoded_by'] == $username){ ?>
+                                                <!-- <?php if ($row['c_encoded_by'] == $username){ ?>
                                                     <div class="dropdown-divider"></div>
                                                     <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">Print</a>
-                                                <?php }; ?>
+                                                <?php }; ?> -->
                                             </div>
                                         </div>
                                     </td>

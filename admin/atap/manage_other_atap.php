@@ -24,7 +24,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -48,7 +48,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -68,7 +68,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_encoded_by = $result["c_encoded_by"];
         $c_tran_date = $result["c_tran_date"];
         $atap_remarks = $result["atap_remarks"];
-        $current_approval_status = $result['approval_status'];
+        // $current_approval_status = $result['approval_status'];
         $current_approver = $result['approver'];
     }
     $get_transaction_types_query = "SELECT * FROM t_atap_items WHERE c_atap_no = ?";

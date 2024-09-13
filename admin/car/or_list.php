@@ -91,7 +91,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             data-encoder="<?php echo $row['c_encoded_by']; ?>">Edit</a>
             <div class="dropdown-divider"></div>
             <div class="card-tools">
-                <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo $row['c_or_no']; ?>" target="_blank">Print</a>
+            <a class="dropdown-item" href="../../print/print_or.php?id=<?php echo $row['c_or_no']; ?>" target="_blank">Print</a>
             </div>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item delete_or" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">Cancel</a>

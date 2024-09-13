@@ -86,7 +86,7 @@ if (!empty($account_no)) {
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
                     <di class="dropdown-menu" role="menu">
-                        <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_or_no'] ?>">
+                        <a class="dropdown-item view_or_spec" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_or_no'] ?>">
                             <!-- <span class="fa fa-eye text-primary"></span> -->View 
                         </a>
                         <?php if ($row['c_encoded_by'] == $username){ ?>

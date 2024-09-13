@@ -26,7 +26,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -50,7 +50,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -68,7 +68,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_tran_date = $result["c_tran_date"];
         $atap_remarks = $result["atap_remarks"];
         $c_name = $result["c_name"];
-        $current_approval_status = $result["approval_status"];
+        // $current_approval_status = $result["approval_status"];
         $current_approver = $result["approver"];
     }
 
