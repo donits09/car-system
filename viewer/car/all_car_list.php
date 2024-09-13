@@ -181,10 +181,10 @@ include('../../inc/header.php');
                                         <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
                                             <!-- <span class="fa fa-eye text-primary"></span> -->View 
                                         </a>
-                                        <div class="dropdown-divider"></div>
+                                        <!-- <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo htmlspecialchars($row['c_car_no']); ?>" target="_blank">
-                                            <!-- <span class="fas fa-print"></span>  -->Print
-                                        </a>
+                                            Print
+                                        </a> -->
                                     </div>
                                 </td>
 

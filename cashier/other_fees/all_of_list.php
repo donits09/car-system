@@ -192,8 +192,9 @@ include('../../inc/header.php');
                                             <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
                                                 View
                                             </a>
+                                            
                                             <?php if ($row['c_encoded_by'] == $username){ ?>
-                                                <div class="dropdown-divider"></div>
+                                                <!-- <div class="dropdown-divider"></div>
                                                 <a class="dropdown-item edit_or" href="javascript:void(0)" 
                                                 data-id="<?php echo $row['id']; ?>" 
                                                 data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
@@ -203,16 +204,17 @@ include('../../inc/header.php');
                                                 data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
                                                 data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
                                                     Edit
-                                                </a>
-                                                <div class="dropdown-divider"></div>
-                                                <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
-                                                    Print
-                                                </a>
-                                                <div class="dropdown-divider"></div>
+                                                </a> -->
+                                                
+                                                <!--
                                                 <a class="dropdown-item delete_or" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
                                                     Cancel
-                                                </a>
+                                                </a> -->
                                             <?php }; ?>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
+                                                Print
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>

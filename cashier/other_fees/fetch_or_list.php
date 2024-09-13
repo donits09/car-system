@@ -85,23 +85,14 @@ if (!empty($account_no)) {
                         Action
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
-                    <di class="dropdown-menu" role="menu">
+                    <div class="dropdown-menu" role="menu">
                         <a class="dropdown-item view_or_spec" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_or_no'] ?>">
-                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
-                        </a>
-                        <?php if ($row['c_encoded_by'] == $username){ ?>
-                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                        <a class="dropdown-item edit_of_spec<?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
-                            data-acc-no="<?php echo $row['c_account_no']; ?>"
-                            data-id="<?php echo $row['id']; ?>"
-                            data-no="<?php echo $row['c_or_no']; ?>">
-                            <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
+                            View
                         </a>
                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                        <a class="dropdown-item delete_or <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_or_no']; ?>">
-                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
-                        </a>
-                        <?php }; ?>
+                        <div class="card-tools">
+                            <a class="dropdown-item" href="../../print/print_or.php?id=<?php echo $row['c_or_no']; ?>" target="_blank">Print</a>
+                        </div>
                     </div>
                 </td>
             </tr>

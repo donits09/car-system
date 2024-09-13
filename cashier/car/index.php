@@ -1,13 +1,10 @@
 <?php
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(3);
-
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
-
 ?>
 <?php
     $c_remarks = '';
@@ -476,10 +473,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">Other Fees (OR)</h2>
                             <hr>
-                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
+                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button>
-                            <hr> -->
+                            <hr>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
