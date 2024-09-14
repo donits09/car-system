@@ -684,23 +684,17 @@ $(document).ready(function() {
 
         if ($(this).data('formSubmitting')) return;
         $(this).data('formSubmitting', true);
-
         const buyerName = $('#c_name').val();
-
         let valid = true;
-
         if (!buyerName || buyerName === 'Unknown') {
             alert('Name field is required.');
             valid = false;
         }
-
         if (!valid) {
             $(this).data('formSubmitting', false);
             return;
         }
-        
         start_loader();
-
         $.ajax({
             url: "../../classes/Master.php?f=save_atap_payment",
             data: new FormData($(this)[0]),
