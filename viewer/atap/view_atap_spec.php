@@ -12,7 +12,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -36,7 +36,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         a.c_tran_updated, 
         a.atap_remarks, 
         a.status, 
-        a.approval_status,
+        -- a.approval_status,
         a.approver,
         b.c_name, 
         b.c_phase,
@@ -168,7 +168,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <?php echo htmlspecialchars($row['atap_remarks']); ?>
                             </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th>Approval Status:</th>
                             <td>
                             <?php 
@@ -202,7 +202,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 }
                                 ?>
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th>Transaction Date:</th>
                             <td><?php

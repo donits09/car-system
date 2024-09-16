@@ -38,72 +38,6 @@ include('../../inc/header.php');
 ?>
 <link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/index.css">
-<style>
-    .table-container {
-        margin-bottom: 20px;
-    }
-
-    .table-container label {
-        margin-right: 10px; 
-    }
-
-    .table-container input[type="text"] {
-        width: 150px;
-        padding: 5px; 
-    }
-    label{
-        color:black;
-    }
-
-    .container {
-    width: 100%;
-    height:auto;
-    }
-    
-    body{
-        width:100%;
-    }
-    body.modal-open {
-        overflow: hidden;
-        padding-right: 0 !important;
-    }
-    #buyer_loc{
-        border:none;
-        background-color: transparent;
-        font-size: 14px;
-        font-style: italic;
-        font-weight: bold;
-        color:black;
-        pointer-events: none;
-    }
-    #b_details{
-        text-align: left;
-        border: none;
-    }
-    .table {
-        width: 100%;
-        margin-bottom: 1rem;
-        color: #212529;
-    }
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
-    .table-dark {
-        color: #fff;
-        background-color: #343a40;
-    }
-    .table-dark th, .table-dark td, .table-dark thead th {
-        border-color: #454d55;
-    }
-    .disabled-link {
-        pointer-events: none; 
-        opacity: 0.5; 
-        cursor: not-allowed; 
-    }
-</style>
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
@@ -173,7 +107,6 @@ include('../../inc/header.php');
                     </div>
                 </div>
             </form>
-
             <!-- By Last Name -->
             <form id="last-name-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('last-name')">
                 <hr>
@@ -1125,11 +1058,8 @@ function updateORList() {
 }
 
 </script>
-
 <!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
 <script>
-
-
 $(document).ready(function() {
     $('#summary-table-tab').on('click', function() {
         const accountNo = $('#buyer_acc_no').val().trim();

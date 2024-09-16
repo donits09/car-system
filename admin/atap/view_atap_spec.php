@@ -168,7 +168,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <?php echo htmlspecialchars($row['atap_remarks']); ?>
                             </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th>Approval Status:</th>
                             <td>
                             <?php 
@@ -185,8 +185,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 } 
                             ?>
                             </td>
-                        </tr>
-                        <tr>
+                        </tr> -->
+                        <!-- <tr>
                             <th>Approver:</th>
                             <td>
                                 <?php
@@ -202,7 +202,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 }
                                 ?>
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th>Transaction Date:</th>
                             <td><?php

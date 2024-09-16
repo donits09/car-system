@@ -1,6 +1,5 @@
 function searchBuyer(type) {
     var formData = new FormData();
-
     if (type === 'account') {
         var acc_no = document.getElementById('acc_no').value;
         formData.append('acc_no', acc_no);
@@ -82,6 +81,8 @@ function clearFormFields() {
     });
 }
 
+
+////////////UPDATING OF CAR LIST ON SPEC WINDOW
 function updateCarList() {
     const username = $('#username').val(); 
     const accountNo = $('#buyer_acc_no').val();
@@ -102,6 +103,8 @@ function updateCarList() {
         });
 }
 
+
+////////////UPDATING OF OR LIST ON SPEC WINDOW
 function updateORList() {
     const username = $('#username').val(); 
     const accountNo = $('#buyer_acc_no').val();
@@ -287,8 +290,6 @@ function showMultipleResults(data, page) {
         modalBody.appendChild(tr);
     });
     
-    
-
     var totalPages = Math.ceil(data.length / rowsPerPage);
     var paginationHtml = '<nav aria-label="Page navigation">' +
                         '<ul class="pagination">';
@@ -412,6 +413,33 @@ function selectBuyer(buyer) {
     calculateTotalAmount();
 }
 
+function calculateTotalORAmount() {
+    var table = document.getElementById("or-list-table");
+    var tbody = table.getElementsByTagName("tbody")[0];
+    var rows = tbody.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") {
+            var amountCell = rows[i].getElementsByTagName("td")[4]; 
+            if (amountCell) {
+                var amountValue = amountCell.textContent.trim().replace(',', '');
+                console.log("Raw amount value:", amountValue); 
+                var parsedValue = parseFloat(amountValue);
+                if (!isNaN(parsedValue)) {
+                    total += parsedValue;
+                } else {
+                    console.error("Error parsing amount:", amountValue); 
+                }
+            }
+        }
+    }
+
+    var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    document.getElementById("totalORAmount").textContent = formattedTotal;
+
+    console.log("Total amount:", formattedTotal); 
+}
 function filterTable() {
     var input, filter, table, tbody, tr, td, i, txtValue;
     input = document.getElementById("searchInput");
@@ -474,6 +502,33 @@ function filterTableOR() {
     calculateTotalORAmount();
 }
 
+function calculateTotalORAmount() {
+    var table = document.getElementById("or-list-table");
+    var tbody = table.getElementsByTagName("tbody")[0];
+    var rows = tbody.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") {
+            var amountCell = rows[i].getElementsByTagName("td")[4]; 
+            if (amountCell) {
+                var amountValue = amountCell.textContent.trim().replace(',', '');
+                console.log("Raw amount value:", amountValue); 
+                var parsedValue = parseFloat(amountValue);
+                if (!isNaN(parsedValue)) {
+                    total += parsedValue;
+                } else {
+                    console.error("Error parsing amount:", amountValue); 
+                }
+            }
+        }
+    }
+
+    var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    document.getElementById("totalORAmount").textContent = formattedTotal;
+
+    console.log("Total amount:", formattedTotal); 
+}
 function calculateTotalAmount() {
     var table = document.getElementById("car-list-table");
     var tbody = table.getElementsByTagName("tbody")[0];
@@ -510,31 +565,3 @@ function clearAmt(){
     }
 }
 
-
-function calculateTotalORAmount() {
-    var table = document.getElementById("or-list-table");
-    var tbody = table.getElementsByTagName("tbody")[0];
-    var rows = tbody.getElementsByTagName("tr");
-    var total = 0;
-
-    for (var i = 0; i < rows.length; i++) {
-        if (rows[i].style.display !== "none") {
-            var amountCell = rows[i].getElementsByTagName("td")[4]; 
-            if (amountCell) {
-                var amountValue = amountCell.textContent.trim().replace(',', '');
-                console.log("Raw amount value:", amountValue); 
-                var parsedValue = parseFloat(amountValue);
-                if (!isNaN(parsedValue)) {
-                    total += parsedValue;
-                } else {
-                    console.error("Error parsing amount:", amountValue); 
-                }
-            }
-        }
-    }
-
-    var formattedTotal = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-    document.getElementById("totalORAmount").textContent = formattedTotal;
-
-    console.log("Total amount:", formattedTotal); 
-}

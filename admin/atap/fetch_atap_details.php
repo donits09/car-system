@@ -1,13 +1,10 @@
 <?php
-
 require_once('../../config.php'); 
-
 if (isset($_POST['id'])) {
     $atapId = $_POST['id'];
     $query = "SELECT * FROM t_atap WHERE id = ?";
     $stmt = odbc_prepare($conn, $query);
     odbc_execute($stmt, array($atapId));
-
     if ($row = odbc_fetch_array($stmt)) {
         echo '<div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit ATAP</h5>
