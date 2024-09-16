@@ -16,7 +16,6 @@ include('../../inc/header.php');
         padding: 5px 10px; 
         width: auto; 
     }
-
     .green-row {
         background-color: #cbd2d9 !important;
         font-weight: bold !important;
@@ -523,7 +522,6 @@ include('../../inc/header.php');
                         </tbody>
                     </table>
                 </div>
-               
             <?php endif; ?>
             <?php include ('../modals/main_modals.php'); ?>
         </div>
@@ -561,7 +559,6 @@ include('../../inc/header.php');
         }
     });
 }
-
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_atap_list.js"></script>
