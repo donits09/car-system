@@ -12,6 +12,7 @@ $c_bank_check = $_GET['c_bank_check'] ?? '';
 $c_bank_online = $_GET['c_bank_online'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
 $c_ref_no = $_GET['c_ref_no'] ?? '';
+$c_remarks = $_GET['c_remarks'] ?? '';
 
 $c_bank = '';
 $c_check = '';
@@ -261,6 +262,12 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             margin-top: 70px;
             font-size: 12px;
         }      
+        #c_remarks{
+            margin-left: 180px;
+            width: 250px;
+            text-align: center;
+            font-size: 12px !important;
+        }
     </style>
 </head>
 <body onload="convertCarAmountToWords()" id="previewCarContent">
@@ -311,6 +318,7 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
         <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($c_loc); ?>">
 
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
+        <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
         <input type="text" name="c_paydate_prev" id="c_paydate_prev" value="<?php echo htmlspecialchars($c_car_paydate); ?>">
         <input type="text" name="c_bank" id="c_bank" value="<?php echo htmlspecialchars($c_bank); ?>">
         <input type="text" name="c_check" id="c_check" value="<?php echo htmlspecialchars($c_check); ?>">
