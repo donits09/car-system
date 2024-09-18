@@ -279,7 +279,7 @@ include('../../inc/header.php');
                                             (<span class="note">NOTE:</span> The Enter key is enabled only on the last line)
                                         </span> -->
                                     </label>
-                                    <textarea class="form-control txt" rows="10" cols="50" id="buyer_remarks" name="buyer_remarks" readonly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+                                    <textarea class="form-control txt" rows="25" cols="50" id="buyer_remarks" name="buyer_remarks" readonly><?php echo htmlspecialchars($c_remarks) ?></textarea>
                                 </div>
                                 <!-- <div class="col-md-12">
                                     <button type="submit" class="btn btn-primary">Submit</button>

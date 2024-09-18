@@ -603,7 +603,35 @@ $(document).ready(function() {
         checkRemoveButton();
         initializeDropdown(); 
     });
-
+    
+    // $('#add-row').on('click', function() {
+    //     let rowCount = $('#transaction-table tbody tr').length;
+    //     if (rowCount < 4) {
+    //         let newRow = `<tr>
+    //             <td>
+    //                 <div class="dropdown">
+    //                     <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" name="c_car_type" placeholder="Type or select an option" autocomplete="off">
+    //                     <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
+    //                         ${dropdownOptions}
+    //                     </div>
+    //                     <input type="hidden" name="transaction_type[]">
+    //                     <input type="hidden" name="payment_status[]">
+    //                 </div>
+    //             </td>
+    //             <td>
+    //                 <span class="payment-status-text"></span>
+    //             </td>
+    //             <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
+    //             <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+    //         </tr>`;
+    //         $('#transaction-table tbody').append(newRow);
+    //         initializeDropdown();
+    //         calculateTotal();
+    //         checkRemoveButton();
+    //     } else {
+    //         alert('You can only add up to 4 rows.');
+    //     }
+    // });
 
     function initializeDropdown() {
         $(document).on('click', '.dropdown-menu a', function(event) {

@@ -86,39 +86,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $c_atap_no = $_GET['c_atap_no'];
 }
 ?>
-<style>
-.bold-text {
-    padding: 5px;
-    font-size: 11px;
-    font-style: italic;
-}
-.transaction-type {
-    text-align: center;
-}
-
-.transaction-amount, .total-amount {
-    text-align: right;
-}
-
-.total-amount {
-    text-align: right;
-}
-#add-row{
-    border-radius: 0px;
-}
-.remove-row{
-    border-radius: 0px;
-    text-align: center;
-}
-#btnsave{
-    width: 100% !important;
-}
-#approver_cont{
-    background-color: whitesmoke;
-    padding:10px;
-}
-</style>
-<link rel="stylesheet" href="../../dist/css/manage_atap.css">
+<link rel="stylesheet" href="<?php base_url; ?>dist/css/atap.css">
 <form id="atap-form" method="post" action="">
     <input type="hidden" name="id" value="<?php echo isset($atapId) ? $atapId : '' ?>">
     <input type="hidden" id="c_atap_no" name="c_atap_no" value="<?php echo isset($c_atap_no) ? $c_atap_no : '' ?>">

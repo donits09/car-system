@@ -301,7 +301,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 ?>
                                 </td>
                                 <td align="center">
-                                    <?php if ($pstatus != 'C') { ?>
+                                    <?php if ($pstatus == 'ST') { ?>
                                         <?php
                                             $get_main_atap_stats = "SELECT status FROM t_atap WHERE c_atap_no = '$atapNo'";
                                             $results = odbc_exec($conn, $get_main_atap_stats);
