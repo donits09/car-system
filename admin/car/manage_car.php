@@ -161,9 +161,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <div class="row">
             <div class="col-md-6">
                 <label for="amount">Amount</label>
-                <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
+                <input type="text" class="form-control" id="c_car_amount" name="c_car_amount"
+                    value="<?php echo number_format(htmlspecialchars($c_car_amount), 2); ?>"
+                    oninput="validateNumberInputAmt(event)"
+                    onblur="formatToTwoDecimalPlaces(event)"
+                    onclick="clearAmt()" required>
                 <div id="car_amt_error"></div>
             </div>
+
+            <script>
+            function formatToTwoDecimalPlaces(event) {
+                let value = parseFloat(event.target.value);
+                if (!isNaN(value)) {
+                    event.target.value = value.toFixed(2);
+                }
+            }
+            </script>
+
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
                 <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
@@ -414,18 +428,6 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        // const appStats = $('#approval_status').val();
-                        // if (response.data.approval_status === '0') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP requires approval.');
-                        //     clearTxt();
-                        // }else if (response.data.approval_status === '3') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP was disapproved.');
-                        //     clearTxt();
-                        // }else 
                         if (response.data.c_account_no !== currentAccountNo) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();

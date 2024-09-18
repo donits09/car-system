@@ -301,7 +301,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 ?>
                                 </td>
                                 <!-- <td align="center">
-                                    <?php if ($pstatus != 'C') { ?>
+                                    <?php if ($pstatus == 'ST') { ?>
                                         <input type="checkbox" class="atap-status" data-id="<?php echo $itemId; ?>" data-no="<?php echo $atapNo; ?>" <?php echo ($row_items['atap_status'] == 1) ? 'checked' : ''; ?>>
                                         <input type="hidden" class="hidden-item-id" id="atapId" value="<?php echo $itemId; ?>" readonly>
                                         <input type="hidden" class="hidden-atap-status" id="status" value="<?php echo ($row_items['atap_status'] == 1) ? '1' : '0'; ?>" readonly>
