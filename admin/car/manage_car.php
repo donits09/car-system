@@ -323,12 +323,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <script>
                 $(document).ready(function() {
                     $('.dropdown-menu a').click(function(event) {
-                        //event.preventDefault();
                         var $dropdown = $(this).closest('.dropdown');
                         var $button = $dropdown.find('.dropdown-toggle');
-
-                       // var $hiddenInput = $dropdown.find('input[type="hidden"]');
-
                         var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
 
                         var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
@@ -358,9 +354,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </script>
              <tfoot>
                 <tr>
-
-                    <!-- <th colspan="1" style="text-align:right;"> <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:</th> -->
-
                     <th colspan="1" style="text-align:right;">
                         <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:
                     </th>
@@ -380,6 +373,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <thead>
                     <tr>
                         <th>Select</th>
+                        <th>ID</th>
                         <th>Transaction Type</th>
                         <th>Amount</th>
                     </tr>
@@ -389,11 +383,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </table>
         </div>
     </div>
-
-
-    
-    <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
-    <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
+    <input type="text" class="form-control" id="atap_id" name="atap_id" readonly>
+    <input type="text" class="form-control" id="atap_val" name="atap_val" readonly>
+    <input type="text" class="form-control" name="atap_total" readonly>
 
     <hr>
     <div class="form-group">
@@ -604,7 +596,6 @@ $(document).ready(function() {
     function initializeDropdown() {
         $(document).on('click', '.dropdown-menu a', function(event) {
             //event.preventDefault();
-            
             var $dropdown = $(this).closest('.dropdown');
             var $input = $dropdown.find('input[name="c_car_type"]');
             var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
@@ -682,59 +673,76 @@ $(document).ready(function() {
     });
 
     $('#car-form').submit(function(e) {
-        e.preventDefault();
-        const buyerName = $('#buyer_name').val();
-        const carNo = $('#c_car_no').val();
-        const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
-        let valid = true;
-        if (carNo.length < 6) {
-            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
-            valid = false;
-        }
-        if (carAmount <= 0) {
-            $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
-            valid = false;
-        }
-        if (!buyerName || buyerName === 'Unknown') {
-            alert('Name field is required.');
-            valid = false;
-        }
-        if (!valid) {
-            return;
-        }
-        start_loader();
-        $.ajax({
-            url: "../../classes/Master.php?f=save_car_payment",
-            data: new FormData($(this)[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                console.log(resp); 
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        $('#createCarModal').modal('hide'); 
-                        $('body').removeClass('modal-open'); 
-                        $('.modal-backdrop').remove(); 
-                        updateCarList();
-                    }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
-                }
-                end_loader();
+    e.preventDefault();
+    
+    const buyerName = $('#buyer_name').val();
+    const carNo = $('#c_car_no').val();
+    const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
+    let valid = true;
+
+    if (carNo.length < 6) {
+        $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+        valid = false;
+    } else {
+        $('#car_no_error').text('').removeClass('bold-text').css('color', '');
+    }
+
+    if (carAmount <= 0) {
+        $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+        valid = false;
+    } else {
+        $('#car_amt_error').text('').removeClass('bold-text').css('color', '');
+    }
+
+    if (!buyerName || buyerName === 'Unknown') {
+        alert('Name field is required.');
+        valid = false;
+    }
+
+    if ($('.tran_type_checkbox:checked').length === 0) {
+        alert('At least one transaction type must be selected.');
+        valid = false;
+    }
+
+    if (!valid) {
+        return;
+    }
+
+    start_loader();
+
+    $.ajax({
+        url: "../../classes/Master.php?f=save_car_payment",
+        data: new FormData($(this)[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+        dataType: 'json',
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            console.log(resp); 
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#createCarModal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
+                    updateCarList();
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+                alert_toast("An error occurred: " + resp.err, 'error');
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
             }
-        });
+            end_loader();
+        }
     });
+});
+
 
     function fetchBuyerDetails(accountNo) {
         const buyerNameField = $('#buyer_name');
@@ -993,7 +1001,7 @@ function updateCarList() {
             updateAtapVal(atap_val); 
         });
     });
-
+    
     function fetchTranType(atapNo) {
         $.ajax({
             url: 'fetch_tran_type.php',
@@ -1005,47 +1013,70 @@ function updateCarList() {
                 var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_car_amount'); 
                 var $atapVal = $('#atap_val');
+                var $totalAtap = $('input[name="total_atap"]'); // Total ATAP textbox
                 $tableBody.empty(); 
 
                 if (response.length > 0) {
                     $('#tran_type_container').show();
                     $.each(response, function(index, option) {
                         var row = $('<tr>');
+
                         var checkbox = $('<input>', {
                             type: 'checkbox',
                             value: option.value,
-                            'data-amount': option.amount,
+                            'data-amount': option.amount, 
                             'data-atap_val': option.text,
                             class: 'tran_type_checkbox'
                         });
                         $('<td>').append(checkbox).appendTo(row);
-                        
+                        $('<td>').text(option.value).appendTo(row);
                         $('<td>').text(option.text).appendTo(row);
                         $('<td>').text(option.amount).appendTo(row);
+
                         $tableBody.append(row);
                     });
 
-                    $atapId.val(response[0].value);
-                    $atapAmount.val(response[0].amount);
-                    $atapVal.val(response[0].text);
+                    function calculateTotal() {
+                        let totalSum = 0; 
+                        let selectedVals = [];
+                        let selectedAmounts = [];
+
+                        $('.tran_type_checkbox:checked').each(function() {
+                            totalSum += parseFloat($(this).data('amount')); 
+                            selectedVals.push($(this).data('atap_val'));
+                            selectedAmounts.push($(this).data('amount'));
+                        });
+
+                        $atapAmount.val(selectedAmounts.join(', ')); // Set amounts in c_car_amount
+                        $atapVal.val(selectedVals.join(', ')); // Set transaction types
+                        $totalAtap.val(totalSum.toFixed(2)); // Display total amount in total_atap
+
+                        if (selectedVals.length === 0) {
+                            $atapId.val('');
+                            $atapVal.val('');
+                            $atapAmount.val('');
+                            $totalAtap.val('0.00'); // Reset total amount if none are selected
+                        } else {
+                            var checkedIds = [];
+                            $('.tran_type_checkbox:checked').each(function() {
+                                checkedIds.push($(this).val());
+                            });
+                            $atapId.val(checkedIds.join(','));
+                        }
+                    }
+
+                    calculateTotal(); 
 
                     $('.tran_type_checkbox').on('change', function() {
-                        if (this.checked) {
-                            var selectedValue = $(this).val();
-                            var selectedAmount = $(this).data('amount');
-                            var selectedText = $(this).data('atap_val');
-
-                            $atapId.val(selectedValue);
-                            $atapAmount.val(selectedAmount);
-                            $atapVal.val(selectedText);
-                        }
+                        calculateTotal(); 
                     });
 
                 } else {
                     $('#tran_type_container').hide();
                     $atapId.val(''); 
                     $atapAmount.val(''); 
-                    $atapVal.val('');
+                    $atapVal.val(''); 
+                    $totalAtap.val('0.00'); // Reset total amount if no data
                 }
             },
             error: function(xhr, status, error) {
@@ -1054,9 +1085,11 @@ function updateCarList() {
                 $('#atap_id').val(''); 
                 $('#c_car_amount').val(''); 
                 $('#atap_val').val(''); 
+                $('input[name="total_atap"]').val('0.00'); // Reset total amount on error
             }
         });
     }
+
 </script>
 <script>
     function openPrintWindow() {
