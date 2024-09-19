@@ -1052,8 +1052,8 @@ Class Master{
 	function save_car_type() {
 		extract($_POST);
 	
-		$data = "c_payment_type,status,payment_status";
-		$values = "'$c_payment_type','0', '$payment_status'";
+		$data = "c_payment_type,status,payment_status,groupings";
+		$values = "'$c_payment_type','0','$payment_status','$groupings'";
 		$resp = array();
 	
 		if (empty($id)) {
@@ -1092,7 +1092,8 @@ Class Master{
 			$update = "UPDATE t_car_type SET 
 						c_payment_type = '$c_payment_type',
 						status = '$status',
-						payment_status = '$payment_status'
+						payment_status = '$payment_status',
+						groupings = '$groupings'
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	

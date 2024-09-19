@@ -30,13 +30,14 @@ include('../../../inc/header.php');
                         <th>#</th>
                         <th>Transaction Name</th>
                         <th>Type</th>
+                        <th>Groupings</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody id="car-type-body">
                 <?php
-                    $get_car_types = "SELECT id, c_payment_type, payment_status, status FROM t_car_type ORDER BY c_payment_type ASC";
+                    $get_car_types = "SELECT id, c_payment_type, payment_status, groupings, status FROM t_car_type ORDER BY id DESC";
                     $stmt = odbc_prepare($conn, $get_car_types);
                     if (odbc_execute($stmt)) {
                         $i = 1; 
@@ -61,6 +62,13 @@ include('../../../inc/header.php');
                                             echo htmlspecialchars($payment_status);
                                         }
                                     ?>
+                                </td>
+                                <td class="text-center">
+                                <?php 
+                                    $groupings = trim($row['groupings']);
+                                    $output = ($groupings == '0') ? 'Group' : 'SOLO';
+                                    echo htmlspecialchars($output, ENT_QUOTES, 'UTF-8');
+                                ?>
                                 </td>
                                 <td class="text-center"><?php echo $row['status'] == 0 ? 'Active' : 'Inactive'; ?></td>
                                 <td align="center">

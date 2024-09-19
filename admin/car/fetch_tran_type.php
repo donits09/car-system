@@ -13,13 +13,12 @@ if (isset($_GET['c_atap_no'])) {
     while ($row = odbc_fetch_array($stmt)) {
         $tran_type_id = $row['id'];
         $tran_type = htmlspecialchars($row['c_tran_type'], ENT_QUOTES, 'UTF-8');
-
-        $tran_amount = number_format($row['c_atap_amount'], 2, '.', '');
+        $tran_amount = $row['c_atap_amount'];
 
         $options[] = array(
             'value' => $tran_type_id,
             'text' => $tran_type, 
-            'amount' => $tran_amount, 
+            'amount' => $tran_amount,
         );
     }
 
