@@ -375,8 +375,22 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
-        
+        <div id="tran_type_table_container">
+            <table class="table table-bordered" id="tran_type_table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Transaction Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
+
+
     
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
@@ -883,9 +897,7 @@ $(document).ready(function() {
         } else {
             statusField.val('PENDING');
         }
-
         const formattedAmount = parseFloat(data.c_car_amount).toFixed(2);
-
         buyerNameField.val(data.c_name).addClass('glow-effect');
         amountField.val(formattedAmount).addClass('glow-effect');
         accField.val(data.c_account_no).addClass('glow-effect');
@@ -989,36 +1001,46 @@ function updateCarList() {
             data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
-                var $select = $('#c_tran_type');
-                var $textbox = $('#c_tran_type_single');
+                var $tableBody = $('#tran_type_table tbody');
                 var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_car_amount'); 
-                var $atapVal = $('#atap_val'); 
-                $select.empty();
-                
+                var $atapVal = $('#atap_val');
+                $tableBody.empty(); 
+
                 if (response.length > 0) {
                     $('#tran_type_container').show();
-                    if (response.length === 1) {
-                        $textbox.val(response[0].text).show();
-                        $('#tran_type_dropdown').hide();
-                        $atapId.val(response[0].value); 
-                        $atapAmount.val(response[0].amount); 
-                        $atapVal.val(response[0].text);
-                    } else {
-                        $textbox.hide();
-                        $('#tran_type_dropdown').show();
-                        $.each(response, function(index, option) {
-                            $select.append($('<option>', {
-                                value: option.value,
-                                text: option.text,
-                                'data-amount': option.amount,
-                                'data-atap_val': option.text
-                            }));
+                    $.each(response, function(index, option) {
+                        var row = $('<tr>');
+                        var checkbox = $('<input>', {
+                            type: 'checkbox',
+                            value: option.value,
+                            'data-amount': option.amount,
+                            'data-atap_val': option.text,
+                            class: 'tran_type_checkbox'
                         });
-                        $atapId.val(response[0].value);
-                        $atapAmount.val(response[0].amount);
-                        $atapVal.val(response[0].text);
-                    }
+                        $('<td>').append(checkbox).appendTo(row);
+                        
+                        $('<td>').text(option.text).appendTo(row);
+                        $('<td>').text(option.amount).appendTo(row);
+                        $tableBody.append(row);
+                    });
+
+                    $atapId.val(response[0].value);
+                    $atapAmount.val(response[0].amount);
+                    $atapVal.val(response[0].text);
+
+                    $('.tran_type_checkbox').on('change', function() {
+                        if (this.checked) {
+                            var selectedValue = $(this).val();
+                            var selectedAmount = $(this).data('amount');
+                            var selectedText = $(this).data('atap_val');
+
+                            $atapId.val(selectedValue);
+                            $atapAmount.val(selectedAmount);
+                            $atapVal.val(selectedText);
+                        }
+                    });
+
                 } else {
                     $('#tran_type_container').hide();
                     $atapId.val(''); 
