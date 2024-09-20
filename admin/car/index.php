@@ -891,9 +891,10 @@ $(document).ready(function() {
     }
     $(document).ready(function() {
         $(document).on('click', '.view_data', function() {
-            var accountId = $(this).data('id');
-            loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
+            var carNo = $(this).data('car-no');  // Fetch the car number (c_car_no)
+            loadModal('Car Details', 'view_car.php?car_no=' + carNo, '#viewModal');  // Pass c_car_no to view_car.php
         });
+
 
         $('#create_new_atap').click(function() {
             var accountNo = $('#buyer_acc_no').val();

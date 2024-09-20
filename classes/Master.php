@@ -655,23 +655,20 @@ Class Master{
 	function save_car_payment() {
 		extract($_POST);
 		$conn = $this->conn;
+
+		$c_car_amounts = array_filter(array_map('trim', explode(',', $_POST['c_car_amount'])));
 	
-		// Split the comma-separated amount values into an array
-		$c_car_amounts = array_filter(array_map('trim', explode(',', str_replace(',', '', $_POST['c_car_amount']))));
-		
 		$atap_ids = array_filter(array_map('trim', explode(',', $_POST['atap_id'])));
 		$c_tran_types = array_filter(array_map('trim', explode(',', $_POST['atap_val'])));
-	
-		// Ensure the count of amounts matches the count of ATAP IDs
-		if (count($atap_ids) !== count($c_car_amounts)) {
+
+		if (count($atap_ids) !== count($c_car_amounts) || count($atap_ids) !== count($c_tran_types)) {
 			echo json_encode([
 				'status' => 'failed',
-				'err' => 'Mismatch between ATAP IDs and amounts'
+				'err' => 'Mismatch between ATAP IDs, amounts, and transaction types'
 			]);
 			return;
 		}
-	
-		// Handling payment method
+
 		if ($c_check_no == '' || $c_check_no == null) {
 			$c_check_no = $c_ref_no;
 		}
@@ -683,8 +680,7 @@ Class Master{
 		} elseif ($c_mop == 3) {
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
 		}
-	
-		// Retrieve the maximum ID for the new record
+
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -697,13 +693,10 @@ Class Master{
 		}
 	
 		$resp = array();
-	
-		// Loop through ATAP IDs and their respective amounts
 		foreach ($atap_ids as $index => $atap_id) {
 			$c_tran_type = isset($c_tran_types[$index]) ? $c_tran_types[$index] : '';
-			$c_car_amount = isset($c_car_amounts[$index]) ? $c_car_amounts[$index] : 0; // Match the amount with the respective ATAP ID
+			$c_car_amount = isset($c_car_amounts[$index]) ? str_replace(',', '', $c_car_amounts[$index]) : 0; // Remove any commas from the amount and ensure it's numeric
 	
-			// Prepare SQL insert data
 			$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks";
 			$values = "'$maxId','$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', $c_car_amount, '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank','$c_check_no','$c_remarks'";
 	
@@ -760,7 +753,6 @@ Class Master{
 	
 				$maxId++;
 			} else {
-				// Update existing car payment record
 				$update = "UPDATE t_car_payment SET 
 							c_car_type = '$c_tran_type',
 							c_car_no = '$c_car_no',
@@ -800,9 +792,6 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
-	
-		
-	
 	
 	function save_other_car_payment() {
 		extract($_POST);
