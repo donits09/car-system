@@ -85,7 +85,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             }
             ?>
         </td>
-        <!-- Sum of c_car_amount for merged rows -->
+
         <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
         <td class="text-center"><?php echo $row['c_car_paydate']; ?></td>
         <td class="text-center">
@@ -109,7 +109,7 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                 View
             </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item edit_data" href="javascript:void(0)"
+                <!-- <a class="dropdown-item edit_data" href="javascript:void(0)"
                    data-id="<?php echo $row['id']; ?>"
                    data-account-no="<?php echo $row['c_account_no']; ?>"
                    data-payment-type="<?php echo $row['c_car_type']; ?>"
@@ -118,14 +118,17 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                    data-pay-date="<?php echo $row['c_car_paydate']; ?>"
                    data-encoder="<?php echo $row['c_encoded_by']; ?>">
                     Edit
+                </a> -->
+                <a class="dropdown-item edit_data" href="javascript:void(0)" data-car-no="<?php echo $row['c_car_no']; ?>">
+                    Edit <?php echo $row['c_car_no']; ?>
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
                     Print
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
-                    Cancel
+                <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>" data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
+                    Cancel <?php echo $row['c_car_no']; ?>
                 </a>
             </div>
         </td>

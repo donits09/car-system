@@ -242,8 +242,8 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             position:absolute;
         }
         #c_check{
-            margin-top:210px;
-            margin-left:80px;
+            margin-top:160px;
+            margin-left:-160px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -263,10 +263,13 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             font-size: 12px;
         }      
         #c_remarks{
-            margin-left: 180px;
-            width: 250px;
+            width: 440px;
+            height:auto;
             text-align: center;
             font-size: 12px !important;
+            margin-top:225px;
+            position:absolute;
+            margin-left:-100px;
         }
     </style>
 </head>

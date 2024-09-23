@@ -383,9 +383,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </table>
         </div>
     </div>
-    <input type="text" class="form-control" id="atap_id" name="atap_id" readonly>
+    <input type="text" class="form-control" id="atap_id" name="atap_id" style="display:none;" readonly>
     <input type="text" class="form-control" id="atap_val" name="atap_val" readonly>
-    <input type="text" class="form-control" name="atap_total" readonly>
+    <input type="text" class="form-control" name="atap_total" style="display:none;" readonly>
 
     <hr>
     <div class="form-group">
@@ -1013,7 +1013,7 @@ function updateCarList() {
                 var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_car_amount'); 
                 var $atapVal = $('#atap_val');
-                var $totalAtap = $('input[name="total_atap"]'); // Total ATAP textbox
+                var $totalAtap = $('input[name="total_atap"]'); 
                 $tableBody.empty(); 
 
                 if (response.length > 0) {
@@ -1047,15 +1047,15 @@ function updateCarList() {
                             selectedAmounts.push($(this).data('amount'));
                         });
 
-                        $atapAmount.val(selectedAmounts.join(', ')); // Set amounts in c_car_amount
-                        $atapVal.val(selectedVals.join(', ')); // Set transaction types
-                        $totalAtap.val(totalSum.toFixed(2)); // Display total amount in total_atap
+                        $atapAmount.val(selectedAmounts.join(', '));
+                        $atapVal.val(selectedVals.join(', ')); 
+                        $totalAtap.val(totalSum.toFixed(2));
 
                         if (selectedVals.length === 0) {
                             $atapId.val('');
                             $atapVal.val('');
                             $atapAmount.val('');
-                            $totalAtap.val('0.00'); // Reset total amount if none are selected
+                            $totalAtap.val('0.00');
                         } else {
                             var checkedIds = [];
                             $('.tran_type_checkbox:checked').each(function() {
@@ -1076,7 +1076,7 @@ function updateCarList() {
                     $atapId.val(''); 
                     $atapAmount.val(''); 
                     $atapVal.val(''); 
-                    $totalAtap.val('0.00'); // Reset total amount if no data
+                    $totalAtap.val('0.00');
                 }
             },
             error: function(xhr, status, error) {
@@ -1085,7 +1085,7 @@ function updateCarList() {
                 $('#atap_id').val(''); 
                 $('#c_car_amount').val(''); 
                 $('#atap_val').val(''); 
-                $('input[name="total_atap"]').val('0.00'); // Reset total amount on error
+                $('input[name="total_atap"]').val('0.00');
             }
         });
     }

@@ -890,12 +890,6 @@ $(document).ready(function() {
         });
     }
     $(document).ready(function() {
-        $(document).on('click', '.view_data', function() {
-            var carNo = $(this).data('car-no');  // Fetch the car number (c_car_no)
-            loadModal('Car Details', 'view_car.php?car_no=' + carNo, '#viewModal');  // Pass c_car_no to view_car.php
-        });
-
-
         $('#create_new_atap').click(function() {
             var accountNo = $('#buyer_acc_no').val();
             loadModal('Create New ATAP', '../atap/manage_atap_spec.php?c_account_no=' + accountNo, '#createCarModal');
@@ -916,12 +910,19 @@ $(document).ready(function() {
         $(document).on('click', '.edit_data', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');
-        
+            var carNo = $(this).data('car-no'); 
+
             if (!accountNo) {
-                loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
+                // loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
+                loadModal('Edit Car Details', 'edit_car_spec.php?car_no=' + carNo, '#createCarModal');
             } else {
-                loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
+                loadModal('Edit Car Details', 'edit_car_spec.php?car_no=' + carNo, '#createCarModal');
             }
+        });
+
+        $(document).on('click', '.view_data', function() {
+            var carNo = $(this).data('car-no'); 
+            loadModal('Car Details', 'view_car.php?car_no=' + carNo, '#viewModal'); 
         });
 
         $('#create_other_new').click(function() {
@@ -929,9 +930,9 @@ $(document).ready(function() {
         });
 
         $(document).on('click', '.delete_data_car', function() {
-            var carId = $(this).data('id');
             var carNo = $(this).data('car-no');
-            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
+            var atapNo = $(this).data('atap-no'); 
+            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
         });
 
         window._conf = function(msg, func, params) {
@@ -1006,31 +1007,37 @@ function delete_or(orId, orNo) {
         }
     });
 }
-function delete_car(carId, carNo) {
+
+function delete_car(carNo, atapNo) {
     start_loader();
     $.ajax({
         url: "../../classes/Master.php?f=delete_car",
         method: "POST",
-        data: { carId: carId, carNo: carNo },
+        data: { carNo: carNo, atapNo: atapNo },
         dataType: "json",
         error: function(err) {
             console.log(err);
-            alert_toast("An error occurred.", 'error');
+            alert_toast("An error occurred while making the request.", 'error');
             end_loader();
         },
         success: function(resp) {
             if (resp && resp.status === 'success') {
                 alert_toast(resp.msg, 'success');
                 setTimeout(function() {
-                    //location.reload();
                     $('#confirm_modal').modal('hide'); 
                     $('body').removeClass('modal-open'); 
                     $('.modal-backdrop').remove(); 
-                    updateCarList(); 
-                    $('.delete_data_car[data-id="' + carId + '"]').closest('tr').remove();
+                    updateCarList();
+                    $('.delete_data_car[data-car-no="' + carNo + '"]').closest('tr').remove();
                 }, 1000);
-            } else if (resp && resp.status === 'failed' && resp.err) {
-                alert_toast("An error occurred: " + resp.err, 'error');
+            } else if (resp && resp.status === 'failed') {
+                if (resp.err) {
+                    // Display the main error message from the server
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    // Fallback message if no specific error was returned
+                    alert_toast("An error occurred: " + resp.msg, 'error');
+                }
             } else {
                 alert_toast("An unexpected error occurred", 'error');
             }
@@ -1038,6 +1045,7 @@ function delete_car(carId, carNo) {
         }
     });
 }
+
 function updateCarList() {
     const accountNo = document.getElementById('buyer_acc_no').value;
     fetch(`car_list.php?account_no=${accountNo}`)
