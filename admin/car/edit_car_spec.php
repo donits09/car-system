@@ -26,6 +26,7 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
     if (!empty($carData)) {
         $firstEntry = $carData[0];
 ?>
+<form id="car-form" method="post" action="">
 <div class="container-fluid">
     <div class="callout callout-primary">
         <table class="table table-bordered" style="text-align:left;">
@@ -33,122 +34,14 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                 <tr>
                     <th style="width: 30%;">Account No.:</th>
                     <td>
-                        <input type="text" name="c_account_no" value="<?php echo !empty($firstEntry['c_account_no']) ? htmlspecialchars($firstEntry['c_account_no']) : ''; ?>" class="form-control">
+                        <input type="text" name="c_account_no" id="c_account_no" value="<?php echo !empty($firstEntry['c_account_no']) ? htmlspecialchars($firstEntry['c_account_no']) : ''; ?>" class="form-control">
                     </td>
                 </tr>
                 <tr>
                     <th>Car No.:</th>
-                    <td><input type="text" name="c_car_no" value="<?php echo htmlspecialchars($firstEntry['c_car_no']); ?>" class="form-control"></td>
-                </tr>
-                <tr>
-                    <th>Payment Type & Amount Breakdown:</th>
                     <td>
-                        <table class="table table-sm" id="transaction-table">
-                            <thead>
-                                <tr>
-                                    <th>Transaction Name</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (isset($carData) && !empty($carData)) : ?>
-                                    <?php foreach ($carData as $car) : ?>
-                                        <?php
-                                            $carTypes = explode(',', $car['c_car_type']);
-                                            $carAmounts = explode(',', $car['c_car_amount']);
-                                        ?>
-                                        <?php foreach ($carTypes as $index => $type) : ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="dropdown">
-                                                        <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" value="<?php echo htmlspecialchars(trim($type)); ?>">
-                                                        <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
-                                                            <?php
-                                                            $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-                                                            $type_result = odbc_exec($conn, $car_type_query);
-                                                            while ($row = odbc_fetch_array($type_result)) {
-                                                                echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
-                                                            }
-                                                            ?>
-                                                        </div>
-                                                        <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type); ?>">
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span class="payment-status">
-                                                        <?php
-                                                        $c_payment = $type;
-                                                        $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
-                                                        $results = odbc_exec($conn, $get_pstatus_qry);
-
-                                                        if ($p_status = odbc_fetch_array($results)) {
-                                                            $pstatus = trim($p_status["payment_status"]);
-                                                            $statusText = '';
-
-                                                            switch ($pstatus) {
-                                                                case 'C':
-                                                                    $statusText = '<span class="badge badge-secondary">CAR</span>';
-                                                                    break;
-                                                                case 'ST':
-                                                                    $statusText = '<span class="badge badge-secondary">Special</span>';
-                                                                    break;
-                                                                case 'O':
-                                                                    $statusText = '<span class="badge badge-secondary">OR</span>';
-                                                                    break;
-                                                                default:
-                                                                    $statusText = '<span class="badge badge-secondary">Other</span>';
-                                                                    break;
-                                                            }
-
-                                                            echo $statusText;
-                                                        }
-                                                        ?>
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="car_amount[]" class="form-control transaction-amount" step="0.01" value="<?php echo number_format((float)$carAmounts[$index], 2, '.', ''); ?>" required>
-                                                </td>
-                                                <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php endforeach; ?>
-                                <?php else : ?>
-                                    <tr>
-                                        <td>
-                                            <div class="dropdown">
-                                                <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" placeholder="Type or select an option" autocomplete="off">
-                                                <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
-                                                    <?php
-                                                    $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-                                                    $type_result = odbc_exec($conn, $car_type_query);
-                                                    while ($row = odbc_fetch_array($type_result)) {
-                                                        echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
-                                                    }
-                                                    ?>
-                                                </div>
-                                                <input type="hidden" name="transaction_type[]">
-                                                <input type="hidden" name="payment_status[]">
-                                            </div>
-                                        </td>
-                                        <td><span class="payment-status-text"></span></td>
-                                        <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01"></td>
-                                        <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th colspan="1" style="text-align:right;">
-                                        <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:
-                                    </th>
-                                    <th></th>
-                                    <th id="total-amount" class="total-amount">0.00</th>
-                                    <th></th>
-                                </tr>
-                            </tfoot>
-                        </table>
+                        <input type="text" name="c_car_no_prev" id="c_car_no_prev" value="<?php echo htmlspecialchars($firstEntry['c_car_no']); ?>" class="form-control" style="background-color:red;">
+                        <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($firstEntry['c_car_no']); ?>" class="form-control">
                     </td>
                 </tr>
                 <tr>
@@ -209,49 +102,80 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                     </td>
                 </tr>
                 <tr>
-                    <th>Mode of Payment:</th>
+                    <th>Amount</th>
+                    <td><input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($firstEntry['c_car_amount']), 2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
+                    <div id="car_amt_error"></div>
+                    </td>
+                    <th>Mode of Payment</th>
                     <td>
-                        <select name="c_mop" class="form-control">
+                        <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeofPaymentChange()">
                             <option value="1" <?php echo ($firstEntry['c_mop'] == 1) ? 'selected' : ''; ?>>Cash</option>
                             <option value="2" <?php echo ($firstEntry['c_mop'] == 2) ? 'selected' : ''; ?>>Check</option>
                             <option value="3" <?php echo ($firstEntry['c_mop'] == 3) ? 'selected' : ''; ?>>Online</option>
                         </select>
                     </td>
                 </tr>
-                <?php if ($firstEntry['c_mop'] == 2 || $firstEntry['c_mop'] == 3): ?>
                 <tr>
-                    <th>Issuance Bank:</th>
-                    <td><input type="text" name="c_bank" value="<?php echo htmlspecialchars($firstEntry['c_bank']); ?>" class="form-control"></td>
+                    <div class="form-group" id="checkList" style="display: <?php echo ($firstEntry['c_mop'] == 2) ? 'block' : 'none'; ?>;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="c_bank_check">Check Bank</label>
+                                <div class="dropdown">
+                                    <select class="form-control" id="c_bank_check" name="c_bank_check" required>
+                                        <?php
+                                        $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY id ASC";
+                                        $type_result = odbc_exec($conn, $check_type_query);
+                                        while ($row = odbc_fetch_array($type_result)) {
+                                            $selected = (isset($firstEntry['c_bank']) && $firstEntry['c_bank'] == $row['c_bank_type']) ? 'selected' : '';
+                                            echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="c_check_no">Check No</label>
+                                <input type="text" class="form-control" id="c_check_no" name="c_check_no" value="<?php echo htmlspecialchars($firstEntry['c_check_no']); ?>">
+                            </div>
+                        </div>
+                    </div>
                 </tr>
                 <tr>
-                    <th><?php echo $firstEntry['c_mop'] == 2 ? 'Check No' : 'Reference No'; ?>:</th>
-                    <td><input type="text" name="c_check_no" value="<?php echo htmlspecialchars($firstEntry['c_check_no']); ?>" class="form-control"></td>
+                    <div class="form-group" id="onlineBankList" style="display: <?php echo ($firstEntry['c_mop'] == 3) ? 'block' : 'none'; ?>;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="c_bank_online">Online Bank</label>
+                                <div class="dropdown">
+                                    <select class="form-control" id="c_bank_online" name="c_bank_online" required>
+                                        <?php
+                                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY id ASC";
+                                        $type_result = odbc_exec($conn, $online_bank_query);
+                                        while ($row = odbc_fetch_array($type_result)) {
+                                            $selected = (isset($firstEntry['c_bank']) && $firstEntry['c_bank'] == $row['c_bank_type']) ? 'selected' : '';
+                                            echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="c_ref_no">Ref No</label>
+                                <input type="text" class="form-control" id="c_ref_no" name="c_ref_no" value="<?php echo htmlspecialchars($firstEntry['c_check_no']); ?>">
+                            </div>
+                        </div>
+                    </div>
                 </tr>
-                <?php endif; ?>
                 <tr>
                     <th>Transaction Date:</th>
-                    <td><input type="date" name="c_tran_date" value="<?php echo htmlspecialchars((new DateTime($firstEntry['c_tran_date']))->format('Y-m-d')); ?>" class="form-control"></td>
+                    <td><input type="date" name="c_tran_date" id="c_tran_date" value="<?php echo htmlspecialchars((new DateTime($firstEntry['c_tran_date']))->format('Y-m-d')); ?>" class="form-control"></td>
                 </tr>
                 <tr>
                     <th>Remarks:</th>
-                    <td><input type="text" name="c_remarks" value="<?php echo htmlspecialchars($firstEntry['c_remarks']); ?>" class="form-control" style="max-width: 200px;"></td>
+                    <td><input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($firstEntry['c_remarks']); ?>" class="form-control" style="max-width: 200px;"></td>
                 </tr>
                 <tr>
                     <th>Pay Date:</th>
-                    <td><input type="date" name="c_car_paydate" value="<?php echo htmlspecialchars($firstEntry['c_car_paydate']); ?>" class="form-control"></td>
-                </tr>
-                <tr>
-                    <th>Encoded by:</th>
-                    <?php
-                        $c_encoded_by =  $firstEntry['c_encoded_by']; 
-                        $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
-                        $results = odbc_exec($conn, $get_encoder_details_qry);
-
-                        if ($encoder = odbc_fetch_array($results)) {
-                            $realname = $encoder["c_realname"];
-                        }
-                    ?>
-                    <td><?php echo $realname; ?></td>
+                    <td><input type="date" name="c_car_paydate" id="c_car_paydate" value="<?php echo htmlspecialchars($firstEntry['c_car_paydate']); ?>" class="form-control"></td>
                 </tr>
             </tbody>
         </table>
@@ -263,97 +187,57 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
     }
 }
 ?>
+<button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+</form>
 <script>
-$(document).ready(function() {
-    const dropdownOptions = `<?php
-    $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
-    $type_result = odbc_exec($conn, $car_type_query);
-    while ($row = odbc_fetch_array($type_result)) {
-        echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
-    }
-    ?>`;
+$('#car-form').submit(function(e) {
+    e.preventDefault(); 
+    start_loader();
+    $('#car-form button[type="submit"]').attr('disabled', true);
 
-    function initializeDropdown() {
-        $(document).on('click', '.dropdown-menu a', function() {
-            const $dropdown = $(this).closest('.dropdown');
-            const $input = $dropdown.find('input[name="c_car_type"]');
-            const $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
-            const $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
-            const $statusText = $dropdown.closest('tr').find('.payment-status-text');
-            const paymentStatus = $(this).data('status');
-            $input.val($(this).data('value'));
-            $hiddenInput.val($(this).data('value'));
-            $hiddenStatusInput.val(paymentStatus);
+    $.ajax({
+        url: "save_car_mod.php", 
+        data: new FormData($(this)[0]), 
+        cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+        dataType: 'json', 
+        error: function(err) {
+            console.log(err); 
+            alert_toast("An error occurred. Please try again.", 'error');
+            end_loader(); 
+            $('#car-form button[type="submit"]').attr('disabled', false);
+        },
+        success: function(resp) {
+            console.log(resp); 
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#createCarModal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
 
-            const statusText = {
-                'C': '<span class="badge badge-secondary">CAR</span>',
-                'ST': '<span class="badge badge-secondary">Special</span>',
-                'O': '<span class="badge badge-secondary">OR</span>',
-                '': '<span class="badge badge-secondary">Other</span>'
-            }[paymentStatus.trim()] || '<span class="badge badge-secondary">Other</span>';
-            $statusText.html(statusText);
-
-            $dropdown.find('.dropdown-item').removeClass('active');
-            $(this).addClass('active');
-            $dropdown.find('.dropdown-menu').hide();
-        });
-
-        $(document).on('input', '.dropdown input[name="c_car_type"]', function () {
-            const input = $(this).val().toLowerCase();
-            const $menu = $(this).siblings('.dropdown-menu');
-            $menu.find('.dropdown-item').each(function () {
-                $(this).toggle($(this).text().toLowerCase().startsWith(input));
-            });
-            $menu.toggle($menu.find('.dropdown-item:visible').length > 0);
-        });
-
-        $(document).on('focus click', '.dropdown input[name="c_car_type"]', function () {
-            $(this).siblings('.dropdown-menu').show();
-        });
-    }
-
-    $('#add-row').on('click', function() {
-        $('#transaction-table tbody').append(`
-            <tr>
-                <td>
-                    <div class="dropdown">
-                        <input type="text" class="form-control c_car_type" name="c_car_type[]" placeholder="Type or select an option" autocomplete="off">
-                        <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
-                            ${dropdownOptions}
-                        </div>
-                        <input type="hidden" name="transaction_type[]">
-                        <input type="hidden" name="payment_status[]">
-                    </div>
-                </td>
-                <td><span class="payment-status-text"></span></td>
-                <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-            </tr>`);
-        initializeDropdown();  
-        calculateTotal();
-        checkRemoveButton();
+                    if (typeof updateCarList === 'function') {
+                        updateCarList(); 
+                    }
+                }, 1000);
+            } else if (resp && resp.status === 'failed') {
+                alert_toast("Error: " + resp.err, 'error');
+            } else {
+                alert_toast("An unexpected error occurred.", 'error');
+            }
+            end_loader(); 
+            $('#car-form button[type="submit"]').attr('disabled', false); 
+        }
     });
-
-    $(document).on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-        initializeDropdown();
-        calculateTotal();
-        checkRemoveButton();
-    });
-
-    function checkRemoveButton() {
-        $('#transaction-table .remove-row').prop('disabled', $('#transaction-table tbody tr').length <= 1);
-    }
-
-    function calculateTotal() {
-        let total = 0;
-        $('.transaction-amount').each(function() {
-            const amount = parseFloat($(this).val());
-            if (!isNaN(amount)) total += amount;
-        });
-        $('#total-amount').text(total.toFixed(2));
-    }
-
-    initializeDropdown(); 
 });
+</script>
+<script>
+    function handleModeofPaymentChange() {
+        var mop = document.getElementById('c_mop').value;
+        document.getElementById('checkList').style.display = (mop == 2) ? 'block' : 'none';
+        document.getElementById('onlineBankList').style.display = (mop == 3) ? 'block' : 'none';
+    }
+    handleModeofPaymentChange();
 </script>

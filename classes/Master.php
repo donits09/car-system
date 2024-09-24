@@ -718,8 +718,6 @@ Class Master{
 						$update = true;
 					}
 					
-					
-					
 					if ($update) {
 						$resp['status'] = 'success';
 						$resp['msg'] = "New car payment successfully saved.";
@@ -775,7 +773,6 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
-	
 	function save_other_car_payment() {
 		extract($_POST);
 		$conn = $this->conn;
