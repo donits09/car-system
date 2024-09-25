@@ -302,6 +302,13 @@ function toggleCarType() {
 </form>
 <script src="../../dist/js/manage_car_cshr.js"></script>
 <script>
+    function clearAmt(){
+        var txtamt = document.getElementById('c_car_amount').value;
+
+        if(txtamt == '0.00'){
+            document.getElementById('c_car_amount').value='';
+        }
+    }
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;
         document.getElementById('c_bank_online').value = '';

@@ -1213,7 +1213,7 @@ Class Master{
 	function save_atap_payment() {
 		extract($_POST);
 		$conn = $this->conn;
-	
+
 		$get_max_query = "SELECT MAX(c_atap_no) AS max_atap_no FROM t_atap";
 		$results = odbc_exec($conn, $get_max_query);
 		if ($row = odbc_fetch_array($results)) {
@@ -1229,13 +1229,27 @@ Class Master{
 		$c_encoded_by = addslashes($c_encoded_by);
 		$c_tran_date = addslashes($c_tran_date);
 		$atap_remarks = pg_escape_string($atap_remarks);
-		$approval_status = isset($approval_status) ? (int)$approval_status : 0; 
-		$approver = isset($approver) ? pg_escape_string($approver) : ''; 
-		
-		if ($approval_status == 1){
+		$approval_status = isset($approval_status) ? (int)$approval_status : 0;
+		$approver = isset($approver) ? pg_escape_string($approver) : '';
+	
+		if ($approval_status == 1) {
 			$approver = '';
 		}
-		
+	
+		foreach ($transaction_type as $key => $tran_type) {
+			$tran_type = pg_escape_string($tran_type);
+			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
+			$check_type_result = odbc_exec($conn, $check_type_query);
+			$type_exists = odbc_fetch_array($check_type_result)['count'];
+	
+			if ($type_exists == 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "CAR type not exist.";
+				echo json_encode($resp);
+				return; 
+			}
+		}
+	
 		$data = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks, approval_status, approver";
 		$values = "'$c_account_no', '$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks', '$approval_status', '$approver'";
 		$resp = array();
@@ -1247,10 +1261,11 @@ Class Master{
 			if ($save_atap) {
 				$atap_id = odbc_exec($conn, "SELECT LASTVAL() AS id");
 				$atap_id = odbc_result($atap_id, 'id');
-	
+
 				foreach ($transaction_type as $key => $tran_type) {
 					$tran_type = pg_escape_string($tran_type);
 					$atap_amount = addslashes($transaction_amount[$key]);
+	
 					$insert_item = "INSERT INTO t_atap_items (c_atap_no, c_tran_type, c_atap_amount) VALUES ('$c_atap_no', '$tran_type', '$atap_amount')";
 					odbc_exec($conn, $insert_item);
 				}
@@ -1262,6 +1277,7 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($conn);
 			}
+	
 		} else {
 			$update_atap = "UPDATE t_atap SET 
 							c_tran_updated = '$c_tran_date',
@@ -1274,10 +1290,11 @@ Class Master{
 			if ($save_atap) {
 				$delete_items = "DELETE FROM t_atap_items WHERE c_atap_no = '$prev_c_atap_no'";
 				odbc_exec($conn, $delete_items);
-	
+
 				foreach ($transaction_type as $key => $tran_type) {
 					$tran_type = addslashes($tran_type);
 					$atap_amount = addslashes($transaction_amount[$key]);
+	
 					$insert_item = "INSERT INTO t_atap_items (c_atap_no, c_tran_type, c_atap_amount) VALUES ('$prev_c_atap_no', '$tran_type', '$atap_amount')";
 					odbc_exec($conn, $insert_item);
 				}
@@ -1293,6 +1310,7 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
+	
 	
 	function save_other_atap_payment() {
 		extract($_POST);
@@ -1323,6 +1341,20 @@ Class Master{
 			$approver = '';
 		}
 		
+		foreach ($transaction_type as $key => $tran_type) {
+			$tran_type = pg_escape_string($tran_type);
+			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
+			$check_type_result = odbc_exec($conn, $check_type_query);
+			$type_exists = odbc_fetch_array($check_type_result)['count'];
+	
+			if ($type_exists == 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "CAR type not exist.";
+				echo json_encode($resp);
+				return; 
+			}
+		}
+	
 		$data = "c_atap_no, c_name, c_phase, c_block, c_lot";
 		$values = "'$c_atap_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 		
