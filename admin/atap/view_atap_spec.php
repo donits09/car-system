@@ -17,7 +17,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         b.c_name, 
         b.c_phase,
         b.c_block, 
-        b.c_lot, 
+        b.c_lot,
+        c.atap_status,
         SUM(c.c_atap_amount) AS total_amount
     FROM 
         t_atap a
@@ -41,7 +42,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         b.c_name, 
         b.c_phase,
         b.c_block, 
-        b.c_lot";
+        b.c_lot, 
+        c.atap_status";
+
     $stmt = odbc_prepare($conn, $get_atap);
     odbc_execute($stmt, array($atapId));
     $row = odbc_fetch_array($stmt);

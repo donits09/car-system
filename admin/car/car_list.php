@@ -119,16 +119,16 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                    data-encoder="<?php echo $row['c_encoded_by']; ?>">
                     Edit
                 </a> -->
-                <a class="dropdown-item edit_data" href="javascript:void(0)" data-car-no="<?php echo $row['c_car_no']; ?>">
+                <!-- <a class="dropdown-item edit_data" href="javascript:void(0)" data-car-no="<?php echo $row['c_car_no']; ?>">
                     Edit <?php echo $row['c_car_no']; ?>
-                </a>
-                <div class="dropdown-divider"></div>
+                </a> -->
+                <!-- <div class="dropdown-divider"></div> -->
                 <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
                     Print
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>" data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
-                    Cancel <?php echo $row['c_car_no']; ?>
+                    Cancel
                 </a>
             </div>
         </td>

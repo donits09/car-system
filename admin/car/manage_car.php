@@ -57,6 +57,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <?php
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
+    <table style="border:solid black 1px;">
+        <tr>
+            <td>Test</td>
+            <td>Test1</td>
+        </tr>
+    </table>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
         <div class="col-sm-8">
