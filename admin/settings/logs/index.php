@@ -42,12 +42,12 @@ include('../../../inc/header.php');
                         <div class="col-md-3">
                             <label for="start_date">Start Date:</label>
                             <input type="text" id="start_date" name="start_date" class="form-control datepicker" 
-                                value="<?php echo date('m/d/Y'); ?>">
+                                value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d'); ?>">
                         </div>
                         <div class="col-md-3">
                             <label for="end_date">End Date:</label>
                             <input type="text" id="end_date" name="end_date" class="form-control datepicker" 
-                                value="<?php echo date('m/d/Y'); ?>">
+                                value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d'); ?>">
                         </div>
                         <div class="col-md-1 align-self-end">
                             <button type="submit" class="btn btn-primary" id="btn-filter">
@@ -73,22 +73,22 @@ include('../../../inc/header.php');
                     </thead>
                     <tbody>
                         <?php 
-                        $i = 1;
-                        $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
-                        $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
-                        
-                        $car_list = "SELECT * FROM t_car_logs";
-                        
-                        if ($start_date && $end_date) {
-                            $car_list .= " WHERE c_date BETWEEN '$start_date' AND '$end_date'";
-                        } else {
-                            $current_date = date('Y-m-d');
-                            $car_list .= " WHERE c_date = '$current_date'";
-                        }
+                            $i = 1;
+                            $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+                            $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+                            
+                            $car_list = "SELECT * FROM t_car_logs";
+                            
+                            if ($start_date && $end_date) {
+                                $car_list .= " WHERE c_date BETWEEN '$start_date' AND '$end_date'";
+                            } else {
+                                $current_date = date('Y-m-d');
+                                $car_list .= " WHERE c_date = '$current_date'";
+                            }
 
-                        $car_list .= " ORDER BY c_date, c_time DESC";
-                        $car_result = odbc_exec($conn, $car_list);
-                        while ($row = odbc_fetch_array($car_result)): 
+                            $car_list .= " ORDER BY c_date, c_time DESC";
+                            $car_result = odbc_exec($conn, $car_list);
+                            while ($row = odbc_fetch_array($car_result)): 
                         ?>
                         <tr>
                             <td class="text-center"><?php echo $i++; ?></td>

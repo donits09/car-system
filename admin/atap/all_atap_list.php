@@ -8,6 +8,8 @@ include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
 ?>
+<link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
+<script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
 <style>
@@ -49,6 +51,28 @@ include('../../inc/header.php');
                 <span class="fa fa-edit"></span> Create Other ATAP
             </a>
             <hr>
+            <div class="pd-20">
+                <form method="get" action="">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="start_date">Start Date:</label>
+                            <input type="text" id="start_date" name="start_date" class="form-control datepicker" 
+                                value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d'); ?>">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="end_date">End Date:</label>
+                            <input type="text" id="end_date" name="end_date" class="form-control datepicker" 
+                                value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d'); ?>">
+                        </div>
+                        <div class="col-md-1 align-self-end">
+                            <button type="submit" class="btn btn-primary" id="btn-filter">
+                                <span class="fa fa-filter"></span> Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <br>
+            </div>
             <?php if (!empty($atap_no)) : ?>
                 <div class="table-container">
                     <table class="table table-bordered table-striped specific-atap-table" id="data-table">
@@ -68,50 +92,61 @@ include('../../inc/header.php');
                             </tr>
                         </thead>
                         <tbody>
-                        <?php
-                        $get_specific_atap = "SELECT 
-                                a.id, 
-                                a.c_account_no, 
-                                a.c_atap_no, 
-                                a.c_encoded_by,
-                                a.c_tran_date, 
-                                a.c_tran_updated, 
-                                a.atap_remarks, 
-                                a.status, 
-                                -- a.approval_status,
-                                a.approver,
-                                b.c_name, 
-                                b.c_phase,
-                                b.c_block, 
-                                b.c_lot, 
-                                SUM(c.c_atap_amount) AS total_amount
-                            FROM 
-                                t_atap a
-                            LEFT JOIN 
-                                t_other_atap b ON a.c_atap_no = b.c_atap_no 
-                            LEFT JOIN 
-                                t_atap_items c ON a.c_atap_no = c.c_atap_no
-                            WHERE 
-                                a.c_atap_no = ?
-                            GROUP BY 
-                                a.id, 
-                                a.c_account_no, 
-                                a.c_atap_no, 
-                                a.c_encoded_by,
-                                a.c_tran_date, 
-                                a.c_tran_updated, 
-                                a.atap_remarks, 
-                                a.status, 
-                                -- a.approval_status,
-                                a.approver,
-                                b.c_name, 
-                                b.c_phase,
-                                b.c_block, 
-                                b.c_lot
-                            ORDER BY 
-                                a.c_tran_updated DESC";
+                            <?php
 
-                        $stmt = odbc_prepare($conn, $get_specific_atap);
+                            /* filtered ng start and end */
+                            $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+                            $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+
+                            $get_specific_atap = "SELECT 
+                                    a.id, 
+                                    a.c_account_no, 
+                                    a.c_atap_no, 
+                                    a.c_encoded_by,
+                                    a.c_tran_date, 
+                                    a.c_tran_updated, 
+                                    a.atap_remarks, 
+                                    a.status, 
+                                    a.approver,
+                                    b.c_name, 
+                                    b.c_phase,
+                                    b.c_block, 
+                                    b.c_lot, 
+                                    SUM(c.c_atap_amount) AS total_amount
+                                FROM 
+                                    t_atap a
+                                LEFT JOIN 
+                                    t_other_atap b ON a.c_atap_no = b.c_atap_no 
+                                LEFT JOIN 
+                                    t_atap_items c ON a.c_atap_no = c.c_atap_no
+                                WHERE 
+                                    a.c_atap_no = ?";
+
+                            /* adding ng where sa c_tran_date */
+                            if ($start_date && $end_date) {
+                                $get_specific_atap .= " AND CAST(a.c_tran_date AS date) BETWEEN '$start_date' AND '$end_date'";
+                            } else {
+                                $current_date = date('Y-m-d');
+                                $get_specific_atap .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
+                            }
+
+                            $get_specific_atap .= " GROUP BY 
+                                    a.id, 
+                                    a.c_account_no, 
+                                    a.c_atap_no, 
+                                    a.c_encoded_by,
+                                    a.c_tran_date, 
+                                    a.c_tran_updated, 
+                                    a.atap_remarks, 
+                                    a.status, 
+                                    a.approver,
+                                    b.c_name, 
+                                    b.c_phase,
+                                    b.c_block, 
+                                    b.c_lot
+                                ORDER BY a.c_tran_updated DESC";
+
+                            $stmt = odbc_prepare($conn, $get_specific_atap);
                         if (odbc_execute($stmt, array($atap_no))) {
                             $i = 1; 
                             while ($row = odbc_fetch_array($stmt)) {
@@ -307,6 +342,10 @@ include('../../inc/header.php');
                         </thead>
                         <tbody>
                         <?php
+
+                        $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+                        $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+
                         $get_all_atap = "SELECT 
                                 a.id, 
                                 a.c_account_no, 
@@ -316,7 +355,6 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
-                                -- a.approval_status,
                                 a.approver,
                                 b.c_name, 
                                 b.c_phase,
@@ -329,7 +367,16 @@ include('../../inc/header.php');
                                 t_other_atap b ON a.c_atap_no = b.c_atap_no 
                             LEFT JOIN 
                                 t_atap_items c ON a.c_atap_no = c.c_atap_no
-                            GROUP BY 
+                            WHERE 1 = 1"; // Placeholder lang dahil need ng where condition
+
+                        if ($start_date && $end_date) {
+                            $get_all_atap .= " AND CAST(a.c_tran_date AS date) BETWEEN '$start_date' AND '$end_date'";
+                        } else {
+                            $current_date = date('Y-m-d');
+                            $get_all_atap .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
+                        }
+
+                        $get_all_atap .= " GROUP BY 
                                 a.id, 
                                 a.c_account_no, 
                                 a.c_atap_no, 
@@ -338,14 +385,12 @@ include('../../inc/header.php');
                                 a.c_tran_updated, 
                                 a.atap_remarks, 
                                 a.status, 
-                                -- a.approval_status,
                                 a.approver,
                                 b.c_name, 
                                 b.c_phase,
                                 b.c_block, 
                                 b.c_lot
-                            ORDER BY 
-                                a.c_tran_updated DESC";
+                            ORDER BY a.c_tran_updated DESC";
 
                         $stmt = odbc_prepare($conn, $get_all_atap);
                         if (odbc_execute($stmt)) {
@@ -562,6 +607,20 @@ include('../../inc/header.php');
     });
 }
 
+</script>
+<script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('#myTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_atap_list.js"></script>

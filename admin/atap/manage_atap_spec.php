@@ -678,6 +678,12 @@ $(document).ready(function() {
 
     initializeDropdown();
 
+    /* Avoid Enter */
+    $('#atap-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
 
     $('#atap-form').submit(function(e) {
         e.preventDefault();
@@ -923,98 +929,104 @@ $(document).ready(function() {
     calculateTotal();
 });
 
-
-$('#atap-form').submit(function(e) {
-    e.preventDefault();
-
-    if ($(this).data('formSubmitting')) return;
-    $(this).data('formSubmitting', true);
-
-    const buyerName = $('#c_name').val();
-
-    let valid = true;
-
-    if (!buyerName || buyerName === 'Unknown') {
-        alert('Name field is required.');
-        valid = false;
-    }
-
-    if (!valid) {
-        $(this).data('formSubmitting', false);
-        return;
-    }
-    
-    start_loader();
-
-    $.ajax({
-        url: "../../classes/Master.php?f=save_atap_payment",
-        data: new FormData($(this)[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        dataType: 'json',
-        error: function(err) {
-            console.log(err);
-            alert_toast("An error occurred.", 'error');
-            end_loader();
-        },
-        success: function(resp) {
-            console.log(resp);
-            if (resp && resp.status === 'success') {
-                alert_toast(resp.msg, 'success');
-                setTimeout(function() {
-                    $('#createCarModal').modal('hide');
-                    $('body').removeClass('modal-open');
-                    $('.modal-backdrop').remove();
-                    updateAtapList();
-                }, 1000);
-            } else if (resp && resp.status === 'failed' && resp.err) {
-                alert_toast("An error occurred: " + resp.err, 'error');
-            } else {
-                alert_toast("An unexpected error occurred", 'error');
-            }
-            end_loader();
-        },
-        complete: function() {
-            $('#atap-form').data('formSubmitting', false);
+    /* Avoid Enter */
+    $('#atap-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
         }
     });
-});
 
-function fetchBuyerDetails(accountNo) {
-    const buyerNameField = $('#c_name');
+    $('#atap-form').submit(function(e) {
+        e.preventDefault();
 
-    if (accountNo.length > 0) {
+        if ($(this).data('formSubmitting')) return;
+        $(this).data('formSubmitting', true);
+
+        const buyerName = $('#c_name').val();
+
+        let valid = true;
+
+        if (!buyerName || buyerName === 'Unknown') {
+            alert('Name field is required.');
+            valid = false;
+        }
+
+        if (!valid) {
+            $(this).data('formSubmitting', false);
+            return;
+        }
+        
+        start_loader();
+
         $.ajax({
-            type: 'POST',
-            url: '../../admin/car/get_buyer_details.php',
-            data: { account_no: accountNo },
+            url: "../../classes/Master.php?f=save_atap_payment",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
             dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    buyerNameField.val(response.name);
-                    buyerNameField.removeAttr('required');
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                console.log(resp);
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        $('#createCarModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        updateAtapList();
+                    }, 1000);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
                 } else {
-                    buyerNameField.val('Unknown');
-                    buyerNameField.attr('required', 'required');
+                    alert_toast("An unexpected error occurred", 'error');
                 }
+                end_loader();
+            },
+            complete: function() {
+                $('#atap-form').data('formSubmitting', false);
             }
         });
-    } else {
-        buyerNameField.val('');
-        buyerNameField.attr('required', 'required');
-    }
-}
-
-const accountNo = $('#c_account_no').val();
-fetchBuyerDetails(accountNo);
-
-    $('#c_account_no').on('input', function() {
-        const accountNo = $(this).val();
-        fetchBuyerDetails(accountNo);
     });
-});
+
+    function fetchBuyerDetails(accountNo) {
+        const buyerNameField = $('#c_name');
+
+        if (accountNo.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/get_buyer_details.php',
+                data: { account_no: accountNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        buyerNameField.val(response.name);
+                        buyerNameField.removeAttr('required');
+                    } else {
+                        buyerNameField.val('Unknown');
+                        buyerNameField.attr('required', 'required');
+                    }
+                }
+            });
+        } else {
+            buyerNameField.val('');
+            buyerNameField.attr('required', 'required');
+        }
+    }
+
+    const accountNo = $('#c_account_no').val();
+    fetchBuyerDetails(accountNo);
+
+        $('#c_account_no').on('input', function() {
+            const accountNo = $(this).val();
+            fetchBuyerDetails(accountNo);
+        });
+    });
 $(document).ready(function() {
     calculateTotal();
 });

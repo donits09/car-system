@@ -95,10 +95,12 @@ function format_value($value) {
         }
         
         #c_or_type {
-            float: right;
-            margin-top: 185px;
-            margin-right: -180px;
-            width: 300px;
+            width: 440px;
+            height:auto;
+            text-align: center;
+            font-size: 12px !important;
+            margin-top:185px;
+            position:absolute;
         }
        
         #c_or_no {
@@ -206,7 +208,7 @@ function format_value($value) {
             height:auto;
             text-align: center;
             font-size: 12px !important;
-            margin-top:175px;
+            margin-top:230px;
             position:absolute;
         }
         #c_or_amount_words {
@@ -319,6 +321,8 @@ function format_value($value) {
             <textarea name="c_address" id="c_address">--------------</textarea>
             <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($c_loc); ?>">
             <input type="text" name="c_acc_no" id="c_acc_no" value="--------------">
+
+            <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($c_or_type); ?>">
            
             <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
             <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">

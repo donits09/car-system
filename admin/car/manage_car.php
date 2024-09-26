@@ -265,6 +265,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <script src="../../dist/js/manage_car.js"></script>
 <script>
 $(document).ready(function() {
+
+    /* Avoid Enter */
+    $('#car-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
+
     $('#car-form').submit(function(e) {
         e.preventDefault();
         const buyerName = $('#buyer_name').val();

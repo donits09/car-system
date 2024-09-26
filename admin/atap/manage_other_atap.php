@@ -690,6 +690,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             calculateTotal();
         });
 
+        /* Avoid Enter */
+        $('#atap-form').on('keydown', function(event) {
+            if (event.key === "Enter" || event.keyCode === 13) {
+                event.preventDefault();
+            }
+        });
+
         $('#atap-form').submit(function(e) {
             e.preventDefault();
 

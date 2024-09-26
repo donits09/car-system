@@ -54,12 +54,14 @@ $current_date = date('Y-m-d');
                         <th>No</th>
                         <th>Account No.</th>
                         <th>CAR No.</th>
-                        <th>Payment Type</th>
+                        <th>Transaction Type</th>
                         <th>Name</th>
                         <th>Location</th>
-                        <th>Amount</th>
-                        <th>MoP</th>
+                        <th>Cash/Online</th>
+                        <th>Check</th>
                         <th>Bank</th>
+                        <th>Total</th>
+                        <th>MoP</th>
                         <th>Status</th>
                         <th>Transaction Date</th>
                         <th>Pay Date</th>
@@ -72,7 +74,7 @@ $current_date = date('Y-m-d');
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.status
                         FROM t_car_payment a
-                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_tran_date ASC";
+                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_car_no ASC";
                     $stmt = odbc_prepare($conn, $car_list);
                     
                     if ($stmt && odbc_execute($stmt)) {
@@ -166,9 +168,30 @@ $current_date = date('Y-m-d');
                                 </td>
                                 <td class="text-center">
                                     <?php 
-                                    $amount = $row['status'] == 1 ? 0 : $row['c_car_amount'];
+                                    $cash = $row['c_mop'] == 1 ? $row['c_car_amount'] : 0;
+                                    $online = $row['c_mop'] == 3 ? $row['c_car_amount'] : 0;
+
+                                    $cashOnline = $cash + $online;
+                                    echo number_format($cashOnline, 2); 
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    $amount = $row['c_mop'] == 2 ? $row['c_car_amount'] : 0;
                                     echo number_format($amount, 2); 
                                     ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['c_bank'] == '') {
+                                        echo "-";
+                                    }else {
+                                        echo htmlspecialchars($row['c_bank']);
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo number_format($row['c_car_amount'], 2); ?>
                                 </td>
                                 <td class="text-center">
                                     <?php 
@@ -180,15 +203,6 @@ $current_date = date('Y-m-d');
                                         echo "Online";
                                     } else {
                                         echo "-";
-                                    }
-                                    ?>
-                                </td>
-                                <td class="text-center">
-                                    <?php 
-                                    if ($row['c_bank'] == '') {
-                                        echo "-";
-                                    }else {
-                                        echo htmlspecialchars($row['c_bank']);
                                     }
                                     ?>
                                 </td>
@@ -313,6 +327,9 @@ $current_date = date('Y-m-d');
         let csv = [];
 
         for (let row of rows) {
+            if (row.style.display === 'none') {
+                continue;
+            }
             let cols = row.querySelectorAll('th, td');
             let rowData = [];
             for (let col of cols) {
@@ -321,7 +338,6 @@ $current_date = date('Y-m-d');
             csv.push(rowData.join(','));
         }
 
-        console.log('CSV Content:', csv.join('\n'));
         return csv.join('\n');
     }
 

@@ -1,9 +1,5 @@
 <?php 
 session_start();
-/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
-    require_once('../logout.php');
-    exit();
-} */
 
 require_once('../../inc/check_session.php');
 check_user_group(2);
@@ -23,8 +19,6 @@ $current_date = date('Y-m-d');
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url ?>dist/header_files/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="<?php echo base_url ?>dist/header_files/js/jquery.dataTables.js"></script>
 </head>
 <body>
 <div class="container mt-5">
@@ -63,9 +57,11 @@ $current_date = date('Y-m-d');
                         <th>Transaction Type</th>
                         <th>Name</th>
                         <th>Location</th>
-                        <th>Amount</th>
-                        <th>MoP</th>
+                        <th>Cash/Online</th>
+                        <th>Check</th>
                         <th>Bank</th>
+                        <th>Total</th>
+                        <th>MoP</th>
                         <th>Status</th>
                         <th>Transaction Date</th>
                         <th>Pay Date</th>
@@ -75,10 +71,10 @@ $current_date = date('Y-m-d');
                 <tbody id="car-type-body">
                     <?php
                     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.status
                         FROM t_car_payment a
-                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_tran_date ASC";
+                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no ORDER BY a.c_car_no ASC";
                     $stmt = odbc_prepare($conn, $car_list);
                     
                     if ($stmt && odbc_execute($stmt)) {
@@ -170,7 +166,33 @@ $current_date = date('Y-m-d');
                                 }
                                 ?>
                                 </td>
-                                <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+                                <td class="text-center">
+                                    <?php 
+                                    $cash = $row['c_mop'] == 1 ? $row['c_car_amount'] : 0;
+                                    $online = $row['c_mop'] == 3 ? $row['c_car_amount'] : 0;
+
+                                    $cashOnline = $cash + $online;
+                                    echo number_format($cashOnline, 2); 
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    $amount = $row['c_mop'] == 2 ? $row['c_car_amount'] : 0;
+                                    echo number_format($amount, 2); 
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['c_bank'] == '') {
+                                        echo "-";
+                                    }else {
+                                        echo htmlspecialchars($row['c_bank']);
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo number_format($row['c_car_amount'], 2); ?>
+                                </td>
                                 <td class="text-center">
                                     <?php 
                                     if ($row['c_mop'] == 1) {
@@ -181,15 +203,6 @@ $current_date = date('Y-m-d');
                                         echo "Online";
                                     } else {
                                         echo "-";
-                                    }
-                                    ?>
-                                </td>
-                                <td class="text-center">
-                                    <?php 
-                                    if ($row['c_bank'] == '') {
-                                        echo "-";
-                                    }else {
-                                        echo htmlspecialchars($row['c_bank']);
                                     }
                                     ?>
                                 </td>
@@ -240,10 +253,6 @@ $current_date = date('Y-m-d');
 <script src="../../dist/js/table.js"></script>
 <!-- <script src="../../dist/js/car_reports.js"></script> -->
  <script>
-    $(document).ready( function () {
-        $('#car-table').DataTable();
-    } );
-
     $(document).ready(function(){
     $('.datepicker').datepicker({
         dateFormat: 'mm/dd/yy',
@@ -313,7 +322,7 @@ $current_date = date('Y-m-d');
         downloadCSV(csv, filename);
     });
 
-    function convertToCSV(table) {
+    /* function convertToCSV(table) {
         let rows = table.querySelectorAll('tr');
         let csv = [];
 
@@ -327,6 +336,25 @@ $current_date = date('Y-m-d');
         }
 
         console.log('CSV Content:', csv.join('\n'));
+        return csv.join('\n');
+    } */
+
+    function convertToCSV(table) {
+        let rows = table.querySelectorAll('tr');
+        let csv = [];
+
+        for (let row of rows) {
+            if (row.style.display === 'none') {
+                continue;
+            }
+            let cols = row.querySelectorAll('th, td');
+            let rowData = [];
+            for (let col of cols) {
+                rowData.push('"' + col.innerText.replace(/"/g, '""') + '"');
+            }
+            csv.push(rowData.join(','));
+        }
+
         return csv.join('\n');
     }
 
