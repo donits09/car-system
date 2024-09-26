@@ -221,7 +221,7 @@ function toggleCarType() {
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
-                        $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY id ASC";
+                        $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $check_type_query);
                         while ($row = odbc_fetch_array($type_result)) {
                             $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
@@ -245,7 +245,7 @@ function toggleCarType() {
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
-                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY id ASC";
+                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);
                         while ($row = odbc_fetch_array($type_result)) {
                             $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
@@ -302,6 +302,13 @@ function toggleCarType() {
 </form>
 <script src="../../dist/js/manage_car_cshr.js"></script>
 <script>
+    function clearAmt(){
+        var txtamt = document.getElementById('c_car_amount').value;
+
+        if(txtamt == '0.00'){
+            document.getElementById('c_car_amount').value='';
+        }
+    }
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;
         document.getElementById('c_bank_online').value = '';

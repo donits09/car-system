@@ -5,6 +5,7 @@
     $c_payment_type = '';
     $status = '';
     $payment_status = '';
+    $groupings = '';
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_type_query = "SELECT * FROM t_car_type WHERE id = ?";
@@ -16,6 +17,7 @@
             $id = $result["id"];
             $c_payment_type = $result["c_payment_type"];
             $status = $result["status"];
+            $groupings = $result["groupings"];
             $payment_status = trim($result["payment_status"]);
         }
     } 
@@ -34,7 +36,7 @@
     <div class="form-group">
         <label for="transaction_type">Transaction Type</label>
         <select class="form-control" id="payment_status" name="payment_status" required>
-            <option value="" <?php echo ($payment_status == '') ? 'selected' : ''; ?>></option>
+            <option value="" <?php echo ($payment_status == '') ? 'selected' : ''; ?> disabled>Please select an option</option>
             <option value="C" <?php echo ($payment_status == 'C') ? 'selected' : ''; ?>>CAR</option>
             <option value="O" <?php echo ($payment_status == 'O') ? 'selected' : ''; ?>>OR</option>
             <option value="ST" <?php echo ($payment_status == 'ST') ? 'selected' : ''; ?>>SPECIAL TYPE</option>
@@ -45,6 +47,13 @@
         <select class="form-control" id="status" name="status" required>
             <option value="0" <?php echo ($status == '0') ? 'selected' : ''; ?>>Active</option>
             <option value="1" <?php echo ($status == '1') ? 'selected' : ''; ?>>Inactive</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="status">Groupings</label>
+        <select class="form-control" id="groupings" name="groupings" required>
+            <option value="0" <?php echo ($groupings== '0') ? 'selected' : ''; ?>>Group</option>
+            <option value="1" <?php echo ($groupings == '1') ? 'selected' : ''; ?>>Solo</option>
         </select>
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>

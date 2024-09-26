@@ -1,95 +1,74 @@
 <?php
 session_start();
-?>
-<?php
 include('../../config.php');
 $account_no = $_GET['buyer_acc_no'];
 $car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_tran_updated DESC";
 
 $stmt = odbc_prepare($conn, $car_list);
-$hasRows = false;
+$car_data = []; 
+
 if ($stmt && odbc_execute($stmt, array($account_no))) {
     while ($row = odbc_fetch_array($stmt)) {
-        if (!empty($row['c_account_no'])) {
-            $hasRows = true;
-            break; 
+        $car_no = $row['c_car_no'];
+
+        if (isset($car_data[$car_no])) {
+            $car_data[$car_no]['c_car_type'] .= ', ' . $row['c_car_type'];
+            $car_data[$car_no]['c_car_amount'] += $row['c_car_amount']; 
+        } else {
+            $car_data[$car_no] = $row;
         }
     }
-    if ($hasRows) {
-        odbc_execute($stmt, array($account_no));
-        $i = 1;
-        while ($row = odbc_fetch_array($stmt)): 
-            $row_class = $row['e_status'] == 1 ? 'green-row' : '';
-        ?>
-<link rel="stylesheet" href="../../dist/css/manage_car.css">
-<tr class="<?php echo $row_class; ?>">
-    <td class="text-center"><?php echo $i++; ?></td>
-    <td class="text-center"><?php echo $row['c_account_no']; ?></td>
-    <td class="text-center"><?php echo $row['c_car_no']; ?></td>
-    <td class="text-center"><?php echo $row['c_car_type']; ?></td>
-    <td class="text-center"><?php echo $row['c_remarks']; ?></td>
-    <td class="text-center">
-        <?php
-            $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
+}
+?>
 
-            if (!empty($c_buyer_acc)) {
-                $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
-                $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
-                
-                if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
-                    $buyer_details = odbc_fetch_array($buyer_stmt);
-                    
-                    if ($buyer_details) {
-                        echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
+<link rel="stylesheet" href="../../dist/css/manage_car.css">
+<?php if (!empty($car_data)): ?>
+    <?php
+    $i = 1;
+    foreach ($car_data as $row):
+        $row_class = $row['e_status'] == 1 ? 'green-row' : '';
+    ?>
+    <tr class="<?php echo $row_class; ?>">
+        <td class="text-center"><?php echo $i++; ?></td>
+        <td class="text-center"><?php echo $row['c_account_no']; ?></td>
+        <td class="text-center"><?php echo $row['c_car_no']; ?></td>
+        <td class="text-center"><?php echo $row['c_car_type']; ?></td>
+        <td class="text-center"><?php echo $row['c_remarks']; ?></td>
+        <td class="text-center">
+            <?php
+                $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
+                if (!empty($c_buyer_acc)) {
+                    $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
+                    $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
+                    if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
+                        $buyer_details = odbc_fetch_array($buyer_stmt);
+                        if ($buyer_details) {
+                            echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
+                        } else {
+                            echo "-";
+                        }
                     } else {
                         echo "-";
                     }
                 } else {
-                    echo "-";
+                    echo htmlspecialchars($row['c_name']);
                 }
-            } else {
-                echo htmlspecialchars($row['c_name']);
-            }
             ?>
-    </td>
-    <td>
-    <?php
-        $c_account_no = $row['c_account_no'];
+        </td>
+        <td>
+            <?php
+            $c_account_no = $row['c_account_no'];
+            try {
+                if (!empty($c_account_no)) {
+                    $c_phase = substr($c_account_no, 0, 3);
+                    $c_block = ltrim(substr($c_account_no, 3, 3), '0');
+                    $c_lot = substr($c_account_no, 6, 2);
 
-        try {
-            if (!empty($c_account_no)) {
-                $c_phase = substr($c_account_no, 0, 3);
-                $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
-                $c_lot = substr($c_account_no, 6, 2);
-
-                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
-
-                if (odbc_execute($phase_stmt, array($c_phase))) {
-                    $phase_details = odbc_fetch_array($phase_stmt);
-
-                    if ($phase_details) {
-                        echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
-                    } else {
-                        echo "-----";
-                    }
-                } else {
-                    echo "-----";
-                }
-            } else {
-                $c_phase = $row['c_phase'];
-                $c_block = $row['c_block'];
-                $c_lot = $row['c_lot'];
-
-                if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
-                    echo "-------------";
-                } else {
                     $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
                     $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
 
                     if (odbc_execute($phase_stmt, array($c_phase))) {
                         $phase_details = odbc_fetch_array($phase_stmt);
-
                         if ($phase_details) {
                             echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
                         } else {
@@ -98,61 +77,61 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                     } else {
                         echo "-----";
                     }
+                } else {
+                    echo "-------------";
                 }
+            } catch (Exception $e) {
+                echo "-----";
             }
-        } catch (Exception $e) {
-            echo "-----";
-        }
-    ?>
-    </td>
-    <td class="text-center"><?php echo number_format($row['c_car_amount'],2); ?></td>
-    </td>
-    <td class="text-center"><?php echo $row['c_car_paydate']; ?></td>
-    <?php
-        $c_encoded_by = $row['c_encoded_by'];
-        $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
-        $results = odbc_exec($conn, $get_encoder_details_qry);
+            ?>
+        </td>
 
-        if ($encoder = odbc_fetch_array($results)) {
-            $realname = $encoder["c_realname"];
-        }
-    ?>
-    <td class="text-center"><?php echo $realname; ?></td>
-    <td align="center">
-        <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-            Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
-            <span class="sr-only">Toggle Dropdown</span>
-        </button>
-        <div class="dropdown-menu" role="menu">
-            <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                <!-- <span class="fa fa-eye text-primary"></span> -->View 
+        <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+        <td class="text-center"><?php echo $row['c_car_paydate']; ?></td>
+        <td class="text-center">
+            <?php
+                $c_encoded_by = $row['c_encoded_by'];
+                $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
+                $results = odbc_exec($conn, $get_encoder_details_qry);
+                if ($encoder = odbc_fetch_array($results)) {
+                    $realname = $encoder["c_realname"];
+                }
+            ?>
+            <?php echo $realname; ?>
+        </td>
+        <td align="center">
+            <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <div class="dropdown-menu" role="menu">
+            <a class="dropdown-item view_data" href="javascript:void(0)" data-car-no="<?php echo $row['c_car_no'] ?>">
+                View
             </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item edit_data" href="javascript:void(0)" 
-            data-id="<?php echo $row['id']; ?>" 
-            data-account-no="<?php echo $row['c_account_no']; ?>" 
-            data-payment-type="<?php echo $row['c_car_type']; ?>" 
-            data-amount="<?php echo $row['c_car_amount']; ?>" 
-            data-car-no="<?php echo $row['c_car_no']; ?>" 
-            data-pay-date="<?php echo $row['c_car_paydate']; ?>" 
-            data-encoder="<?php echo $row['c_encoded_by']; ?>">
-                <!-- <span class="fa fa-edit text-info"></span>  -->Edit
-            </a>
-            <div class="dropdown-divider"></div>
-            <div class="card-tools">
+                <div class="dropdown-divider"></div>
+                <!-- <a class="dropdown-item edit_data" href="javascript:void(0)"
+                   data-id="<?php echo $row['id']; ?>"
+                   data-account-no="<?php echo $row['c_account_no']; ?>"
+                   data-payment-type="<?php echo $row['c_car_type']; ?>"
+                   data-amount="<?php echo $row['c_car_amount']; ?>"
+                   data-car-no="<?php echo $row['c_car_no']; ?>"
+                   data-pay-date="<?php echo $row['c_car_paydate']; ?>"
+                   data-encoder="<?php echo $row['c_encoded_by']; ?>">
+                    Edit
+                </a> -->
+                <!-- <a class="dropdown-item edit_data" href="javascript:void(0)" data-car-no="<?php echo $row['c_car_no']; ?>">
+                    Edit <?php echo $row['c_car_no']; ?>
+                </a> -->
+                <!-- <div class="dropdown-divider"></div> -->
                 <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
-                    <!-- <span class="fas fa-print"></span>  -->Print
+                    Print
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>" data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
+                    Cancel
                 </a>
             </div>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
-                <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
-            </a>
-        </div>
-    </td>
-</tr>
-<?php 
-        endwhile; 
-    }
-}
-?>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+<?php endif; ?>

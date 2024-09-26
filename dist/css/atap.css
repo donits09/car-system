@@ -6,11 +6,9 @@
 .transaction-type {
     text-align: center;
 }
-
 .transaction-amount, .total-amount {
     text-align: right;
 }
-
 .total-amount {
     text-align: right;
 }

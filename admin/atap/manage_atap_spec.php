@@ -139,100 +139,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </label>
         <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks" required><?php echo htmlspecialchars($atap_remarks) ?></textarea>
     </div>
-    
-    <!-- <div class="container mt-4" id="approver_cont">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <table style="border-collapse: collapse;">
-                        <tr>
-                            <td>
-                                <label class="form-check-label">Approval Type:</label><br>
-                            </td>
-                            <td>
-                                <div class="form-check">
-                                    <input type="radio" id="with_approval" name="approval_status" value="0" class="form-check-input"
-                                        <?php if (isset($current_approval_status) && $current_approval_status == 0) echo 'checked'; ?> onclick="toggleApproverSelect()">
-                                    <label for="with_approval" class="form-check-label">With Approval</label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-check">
-                                    <input type="radio" id="without_approval" name="approval_status" value="1" class="form-check-input"
-                                        <?php if (isset($current_approval_status) && $current_approval_status == 1) echo 'checked'; ?> onclick="toggleApproverSelect()">
-                                    <label for="without_approval" class="form-check-label">Without Approval</label>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <hr>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="c_approver">Approver</label>
-                    <select id="c_approver" name="approver" class="form-control">
-                        <option value="" disabled selected>--------------------</option>
-                        <?php
-                        $app_query = "
-                            SELECT a.code, b.c_realname
-                            FROM t_approvers_list a
-                            INNER JOIN t_car_users b ON a.code = b.c_employee_code::INTEGER
-                            WHERE a.status = '1'
-                            ORDER BY a.id ASC
-                        ";
-                        $type_result = odbc_exec($conn, $app_query);
-                        while ($row = odbc_fetch_array($type_result)) {
-                            $code = htmlspecialchars($row['code'], ENT_QUOTES, 'UTF-8');
-                            $realname = htmlspecialchars($row['c_realname'], ENT_QUOTES, 'UTF-8');
-                            $selected = ($code == $current_approver) ? 'selected' : '';
-                            echo "<option value='$code' $selected>$realname</option>";
-                        }
-                        ?>
-                    </select>
-
-                    <input type="text" id="c_approver_text" class="form-control" disabled style="display: none;" placeholder="No Approval Required">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function toggleApproverSelect() {
-            var approverSelect = document.getElementById('c_approver');
-            var approverText = document.getElementById('c_approver_text');
-            var withApproval = document.getElementById('with_approval').checked;
-            
-            if (withApproval) {
-                approverSelect.style.display = 'block';
-                approverSelect.required = true;
-                approverText.style.display = 'none';
-            } else {
-                approverSelect.value = ""; 
-                approverSelect.style.display = 'none';
-                approverSelect.required = false;
-                approverText.style.display = 'block';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            toggleApproverSelect();
-            var form = document.querySelector('form'); 
-            form.addEventListener('submit', function(event) {
-                var approverSelect = document.getElementById('c_approver');
-                var withApproval = document.getElementById('with_approval').checked;
-
-                if (withApproval && approverSelect.value === "") {
-                    event.preventDefault(); 
-                    alert('Please select an approver.');
-                    approverSelect.focus();
-                }
-            });
-        });
-    </script> -->
     <br>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
@@ -256,15 +162,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
+    <hr>
     <div class="form-group">
+        <hr>
         <table class="table table-striped" id="transaction-table">
             <thead>
-                <tr>
-                    <th>Transaction Name</th>
+                <th>Transaction Name</th>
                     <th>Type</th>
                     <th>Amount</th>
                     <th>Action</th>
-                 </tr>
             </thead>
             <tbody>
                 <?php if (isset($transaction_types) && !empty($transaction_types)) : ?>
@@ -275,7 +181,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
                                     <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                                         <?php
-                                        $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                                        $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
                                         $type_result = odbc_exec($conn, $car_type_query);
                                         while ($row = odbc_fetch_array($type_result)) {
                                             echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
@@ -286,10 +192,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 </div>
                                 <script>
                                 $(document).ready(function () {
-                                    $('.c_car_type').on('input', function () {
+                                 
+                                    $(document).on('input', '.c_car_type', function () {
                                         var input = $(this).val().toLowerCase();
                                         var comboBoxMenu = $(this).siblings('.comboBoxMenu');
                                         var hasVisibleOptions = false;
+
                                         comboBoxMenu.find('.dropdown-item').each(function () {
                                             if ($(this).text().toLowerCase().startsWith(input)) {
                                                 $(this).show();
@@ -304,15 +212,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                         } else {
                                             comboBoxMenu.hide();
                                         }
+
+                                        $(this).closest('.dropdown').find('input[name="transaction_type[]"]').val($(this).val());
                                     });
 
-                                    $('.comboBoxMenu').on('click', '.dropdown-item', function () {
+                                    $(document).on('click', '.comboBoxMenu .dropdown-item', function () {
                                         var selectedText = $(this).data('value');
-                                        $(this).closest('.dropdown').find('.c_car_type').val(selectedText);
+                                        var paymentStatus = $(this).data('status');
+                                        var dropdown = $(this).closest('.dropdown');
+                                        
+                                        dropdown.find('.c_car_type').val(selectedText);
+                                        dropdown.find('input[name="transaction_type[]"]').val(selectedText);
+                                        dropdown.find('input[name="payment_status[]"]').val(paymentStatus);
+                                        
                                         $(this).closest('.comboBoxMenu').hide();
                                     });
 
-                                    $('.c_car_type').on('focus click', function () {
+                                    $(document).on('focus click', '.c_car_type', function () {
                                         $(this).siblings('.comboBoxMenu').show();
                                     });
 
@@ -365,65 +281,70 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     <tr>
                         <td>
                             <div class="dropdown">
-                                <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
+                                <input type="text" class="form-control c_car_type" oninput="syncTransactionType(this)" name="c_car_type[]" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
                                 <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                                     <?php
-                                    $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+                                    $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
                                     $type_result = odbc_exec($conn, $car_type_query);
                                     while ($row = odbc_fetch_array($type_result)) {
                                         echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                                     }
                                     ?>
                                 </div>
-                                <input type="hidden" name="transaction_type[]">
+                                <input type="hidden" name="transaction_type[]" class="transaction-type-input">
                                 <input type="hidden" name="payment_status[]">
                             </div>
-                            <script>
-                                $(document).ready(function () {
-                                    $('.c_car_type').on('input', function () {
-                                        var input = $(this).val().toLowerCase();
-                                        var comboBoxMenu = $(this).siblings('.comboBoxMenu');
-                                        var hasVisibleOptions = false;
-                                        comboBoxMenu.find('.dropdown-item').each(function () {
-                                            if ($(this).text().toLowerCase().startsWith(input)) {
-                                                $(this).show();
-                                                hasVisibleOptions = true;
-                                            } else {
-                                                $(this).hide();
-                                            }
-                                        });
-
-                                        if (hasVisibleOptions) {
-                                            comboBoxMenu.show();
-                                        } else {
-                                            comboBoxMenu.hide();
-                                        }
-                                    });
-
-                                    $('.comboBoxMenu').on('click', '.dropdown-item', function () {
-                                        var selectedText = $(this).data('value');
-                                        $(this).closest('.dropdown').find('.c_car_type').val(selectedText);
-                                        $(this).closest('.comboBoxMenu').hide();
-                                    });
-
-                                    $('.c_car_type').on('focus click', function () {
-                                        $(this).siblings('.comboBoxMenu').show();
-                                    });
-
-                                    $(document).on('click', function (e) {
-                                        if (!$(e.target).closest('.dropdown').length) {
-                                            $('.comboBoxMenu').hide();
-                                        }
-                                    });
-                                });
-                            </script>
                         </td>
                         <td>
                             <span class="payment-status-text"></span>
                         </td>
-                        <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01"></td>
+                        <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
                         <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                     </tr>
+
+                    <script>
+                        $(document).ready(function () {
+                            $('.c_car_type').on('input', function () {
+                                var input = $(this).val().toLowerCase();
+                                var comboBoxMenu = $(this).siblings('.comboBoxMenu');
+                                var hasVisibleOptions = false;
+                                comboBoxMenu.find('.dropdown-item').each(function () {
+                                    if ($(this).text().toLowerCase().startsWith(input)) {
+                                        $(this).show();
+                                        hasVisibleOptions = true;
+                                    } else {
+                                        $(this).hide();
+                                    }
+                                });
+
+                                if (hasVisibleOptions) {
+                                    comboBoxMenu.show();
+                                } else {
+                                    comboBoxMenu.hide();
+                                }
+                            });
+                            $('.comboBoxMenu').on('click', '.dropdown-item', function () {
+                                var selectedText = $(this).data('value');
+                                $(this).closest('.dropdown').find('.c_car_type').val(selectedText);
+                                $(this).closest('.comboBoxMenu').hide();
+                                syncTransactionType($(this).closest('.dropdown').find('.c_car_type')[0]);
+                            });
+
+                            $('.c_car_type').on('focus click', function () {
+                                $(this).siblings('.comboBoxMenu').show();
+                            });
+
+                            $(document).on('click', function (e) {
+                                if (!$(e.target).closest('.dropdown').length) {
+                                    $('.comboBoxMenu').hide();
+                                }
+                            });
+                        });
+                        function syncTransactionType(inputElement) {
+                            var carType = $(inputElement).val();
+                            $(inputElement).closest('.dropdown').find('.transaction-type-input').val(carType);
+                        }
+                    </script>
                 <?php endif; ?>
             </tbody>
             <script>
@@ -470,8 +391,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 document.querySelectorAll('.dropdown-item').forEach(function(item) {
                     item.addEventListener('click', function(e) {
 
-                        //e.preventDefault();
-
                         var dropdownButton = this.closest('.dropdown').querySelector('.dropdown-toggle');
                         dropdownButton.textContent = this.textContent;
 
@@ -498,7 +417,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 statusText = '<span class="badge badge-secondary">Other</span>';
                                 break;
                         }
-
                         paymentStatusSpan.innerHTML = statusText;
                     });
                 });
@@ -539,7 +457,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     });
                 });
             </script>
-             <tfoot>
+            <tfoot>
                 <tr>
 
                     <!-- <th colspan="1" style="text-align:right;"> <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:</th> -->
@@ -568,7 +486,6 @@ $(document).ready(function() {
         $('#total-amount').text(formatNumber(total.toFixed(2)));
     }
 
-
     function formatNumber(number) {
         return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
@@ -578,7 +495,6 @@ $(document).ready(function() {
         let rowCount = $('#transaction-table tbody tr').length;
         $('#transaction-table .remove-row').prop('disabled', rowCount <= 1);
     }
-
 
     $('#add-row').on('click', function() {
         let newRow = `<tr>
@@ -808,7 +724,7 @@ $(document).ready(function() {
 <script>
     var dropdownOptions = `
         <?php
-        $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY id ASC";
+        $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
         $type_result = odbc_exec($conn, $car_type_query);
         while ($row = odbc_fetch_array($type_result)) {
             echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
@@ -966,11 +882,83 @@ $(document).ready(function() {
 
         const buyerName = $('#c_name').val();
 
-        let valid = true;
+    if (!buyerName || buyerName === 'Unknown') {
+        alert('Name field is required.');
+        valid = false;
+    }
+    $('input[name="c_car_type"]').each(function () {
+        const carType = $(this).val().toLowerCase();
+        const dropdownMenu = $(this).siblings('.dropdown-menu');
+        let isMatchFound = false;
 
-        if (!buyerName || buyerName === 'Unknown') {
-            alert('Name field is required.');
+        dropdownMenu.find('.dropdown-item').each(function () {
+            if ($(this).data('value').toLowerCase() === carType) {
+                isMatchFound = true;
+                return false; 
+            }
+        });
+
+        if (!isMatchFound) {
+            alert_toast("CAR type not exist.", 'error');
             valid = false;
+            $(this).addClass('is-invalid'); 
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    $('input[name="transaction_amount[]"]').each(function() {
+        const amount = parseFloat($(this).val());
+        if (isNaN(amount) || amount <= 0) {
+            alert_toast("Amount must be greater than zero.", 'error');
+            valid = false;
+            $(this).addClass('is-invalid');
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    if (!valid) {
+        $(this).data('formSubmitting', false);
+        return;
+    }
+    
+    start_loader();
+
+    $.ajax({
+        url: "../../classes/Master.php?f=save_atap_payment",
+        data: new FormData($(this)[0]),
+        cache: false,
+        contentType: false,
+        processData: false,
+        method: 'POST',
+        dataType: 'json',
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            console.log(resp);
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#createCarModal').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                    updateAtapList();
+                }, 1000);
+            } else if (resp && resp.status === 'failed' && resp.err) {
+            } else if (resp && resp.status === 'not_found') {
+                alert_toast("CAR type not exist.", 'error');
+            } else {
+                alert_toast("CAR type not exist.", 'error');
+            }
+            end_loader();
+        },
+        complete: function() {
+            $('#atap-form').data('formSubmitting', false);
+
         }
 
         if (!valid) {
