@@ -140,7 +140,7 @@ Class Master{
 				if ($result) {
 					$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
 
-					$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_atap_no = ?";
+					$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?";
 					$stmt2 = odbc_prepare($this->conn, $sql2);
 	
 					if ($stmt2) {
