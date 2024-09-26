@@ -358,6 +358,13 @@
 </script> -->
 <script>
 $(document).ready(function() {
+    
+    $('#other-or-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
+
     $('#other-or-form').on('submit', function(e) {
         e.preventDefault(); 
         var orNo = $('#c_or_no').val();

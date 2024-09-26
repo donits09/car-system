@@ -635,47 +635,52 @@ $(document).ready(function() {
     });
 
     $('#add-row').on('click', function() {
-            let newRow = `<tr>
-                <td>
-                    <div class="dropdown">
-                        <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" name="c_car_type" placeholder="Type or select an option" autocomplete="off">
-                        <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
-                            ${dropdownOptions}
-                        </div>
-                        <input type="hidden" name="transaction_type[]">
-                        <input type="hidden" name="payment_status[]">
+        let newRow = `<tr>
+            <td>
+                <div class="dropdown">
+                    <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" name="c_car_type" placeholder="Type or select an option" autocomplete="off">
+                    <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
+                        ${dropdownOptions}
                     </div>
-                </td>
-                <td>
-                    <span class="payment-status-text"></span>
-                </td>
-                <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
-            $('#transaction-table tbody').append(newRow);
-            initializeDropdown();
-            calculateTotal();
-            checkRemoveButton();
-        });
-});
-       
+                    <input type="hidden" name="transaction_type[]">
+                    <input type="hidden" name="payment_status[]">
+                </div>
+            </td>
+            <td>
+                <span class="payment-status-text"></span>
+            </td>
+            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
+            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+        </tr>`;
+        $('#transaction-table tbody').append(newRow);
+        initializeDropdown();
+        calculateTotal();
+        checkRemoveButton();
+    });
 
-$('#transaction-table').on('input', '.transaction-amount', function() {
+    $('#transaction-table').on('input', '.transaction-amount', function() {
+        calculateTotal();
+    });
+
+    checkRemoveButton();
     calculateTotal();
-});
 
-checkRemoveButton();
-calculateTotal();
+    /* Avoid Enter */
+    $('#atap-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
 
-$('#atap-form').submit(function(e) {
-    e.preventDefault();
+    $('#atap-form').submit(function(e) {
+        e.preventDefault();
 
-    if ($(this).data('formSubmitting')) return;
-    $(this).data('formSubmitting', true);
+        if ($(this).data('formSubmitting')) return;
+        $(this).data('formSubmitting', true);
 
-    const buyerName = $('#c_name').val();
+        const buyerName = $('#c_name').val();
 
-    let valid = true;
+        let valid = true;
 
     if (!buyerName || buyerName === 'Unknown') {
         alert('Name field is required.');
@@ -754,16 +759,54 @@ $('#atap-form').submit(function(e) {
         },
         complete: function() {
             $('#atap-form').data('formSubmitting', false);
+
         }
+        
+        start_loader();
+
+        $.ajax({
+            url: "../../classes/Master.php?f=save_atap_payment",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                console.log(resp);
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        $('#createCarModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        location.reload();
+                    }, 1000);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    alert_toast("An unexpected error occurred", 'error');
+                }
+                end_loader();
+            },
+            complete: function() {
+                $('#atap-form').data('formSubmitting', false);
+            }
+        });
     });
-});
 
-const accountNo = $('#c_account_no').val();
-fetchBuyerDetails(accountNo);
+    const accountNo = $('#c_account_no').val();
+    fetchBuyerDetails(accountNo);
 
-    $('#c_account_no').on('input', function() {
-        const accountNo = $(this).val();
-        fetchBuyerDetails(accountNo);
+        $('#c_account_no').on('input', function() {
+            const accountNo = $(this).val();
+            fetchBuyerDetails(accountNo);
+        });
     });
 });
 

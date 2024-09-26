@@ -265,6 +265,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <script src="../../dist/js/of_js/manage_or.js"></script>
 <script>
 $(document).ready(function() {
+    $('#or-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
+
     $('#or-form').submit(function(e) {
         e.preventDefault();
 

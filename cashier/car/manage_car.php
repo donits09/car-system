@@ -330,6 +330,14 @@ function toggleCarType() {
 </script>
 <script>
 $(document).ready(function() {
+
+    /* Avoid Enter */
+    $('#car-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
+
     $('#car-form').submit(function(e) {
         e.preventDefault();
 

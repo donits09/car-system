@@ -540,6 +540,32 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $type_result = odbc_exec($conn, $car_type_query);
         while ($row = odbc_fetch_array($type_result)) {
             echo "<a class='dropdown-item $selected' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-status='" . htmlspecialchars($row['payment_status'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+// $(document).ready(function() {
+
+//     /* Avoid Enter */
+//     $('#car-form').on('keydown', function(event) {
+//         if (event.key === "Enter" || event.keyCode === 13) {
+//             event.preventDefault();
+//         }
+//     });
+
+//     $('#car-form').submit(function(e) {
+//         e.preventDefault();
+//         const buyerName = $('#buyer_name').val();
+//         const carNo = $('#c_car_no').val();
+//         const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
+//         let valid = true;
+//         if (carNo.length < 6) {
+//             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+//             valid = false;
+//         }
+//         if (carAmount <= 0) {
+//             $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+//             valid = false;
+//         }
+//         if (!buyerName || buyerName === 'Unknown') {
+//             alert('Name field is required.');
+//             valid = false;
         }
         ?>
     `;
