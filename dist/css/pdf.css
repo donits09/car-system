@@ -10,12 +10,17 @@ h2, h5, h3, p {
     margin: 2px 0; 
     padding: 0; 
 }
+p { 
+    margin: 2px 0; 
+    padding: 0; 
+    font-size: 10px;
+}
 .encoded_by {
-    font-size: 9px;
+    font-size: 10px;
     text-align: right;
 }
 .pdf-font {
-    font-size: 9px;
+    font-size: 10px;
 }
 table { 
     width: 100%; 
@@ -49,10 +54,10 @@ header .info-box {
 }
 header .b-info {
     font-weight: bold;
-    font-size: 9px;
+    font-size: 10px;
 }
 header p {
-    font-size: 9px;
+    font-size: 10px;
 }
 footer {
     position: fixed;

@@ -61,10 +61,13 @@ $current_date = date('Y-m-d');
                         <th>No</th>
                         <th>Account No.</th>
                         <th>CAR No.</th>
-                        <th>Payment Type</th>
+                        <th>Transaction Type</th>
                         <th>Name</th>
                         <th>Location</th>
-                        <th>Amount</th>
+                        <th>Cash/Online</th>
+                        <th>Check</th>
+                        <th>Bank</th>
+                        <th>Total</th>
                         <th>MoP</th>
                         <th>Status</th>
                         <th>Transaction Date</th>
@@ -77,12 +80,12 @@ $current_date = date('Y-m-d');
                     $username = $_SESSION['username'];
 
                     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type, a.c_car_paydate, a.c_car_amount,
-                                        a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop,
+                                        a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, c_bank,
                                         b.c_name, b.c_phase, b.c_block, b.c_lot, a.status
                                     FROM t_car_payment a
                                     LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
                                     WHERE a.c_encoded_by = ?
-                                    ORDER BY a.c_tran_date ASC";
+                                    ORDER BY a.c_car_no ASC";
                     $stmt = odbc_prepare($conn, $car_list);
 
                     $result = odbc_execute($stmt, array($username));
@@ -173,13 +176,41 @@ $current_date = date('Y-m-d');
                                 }
                                 ?>
                             </td>
-                            <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+                            <td class="text-center">
+                                <?php 
+                                $cash = $row['c_mop'] == 1 ? $row['c_car_amount'] : 0;
+                                $online = $row['c_mop'] == 3 ? $row['c_car_amount'] : 0;
+
+                                $cashOnline = $cash + $online;
+                                echo number_format($cashOnline, 2); 
+                                ?>
+                            </td>
+                            <td class="text-center">
+                                <?php 
+                                $amount = $row['c_mop'] == 2 ? $row['c_car_amount'] : 0;
+                                echo number_format($amount, 2); 
+                                ?>
+                            </td>
+                            <td class="text-center">
+                                <?php 
+                                if ($row['c_bank'] == '') {
+                                    echo "-";
+                                }else {
+                                    echo htmlspecialchars($row['c_bank']);
+                                }
+                                ?>
+                            </td>
+                            <td class="text-center">
+                                <?php echo number_format($row['c_car_amount'], 2); ?>
+                            </td>
                             <td class="text-center">
                                 <?php
                                 if ($row['c_mop'] == 1) {
                                     echo "Cash";
                                 } elseif ($row['c_mop'] == 2) {
                                     echo "Check";
+                                } elseif ($row['c_mop'] == 3) {
+                                    echo "Online";
                                 } else {
                                     echo "-";
                                 }
@@ -229,9 +260,9 @@ $current_date = date('Y-m-d');
 <script src="../../dist/js/table.js"></script>
 <!-- <script src="../../dist/js/car_reports.js"></script> -->
  <script>
-    $(document).ready( function () {
+    /* $(document).ready( function () {
         $('#car-table').DataTable();
-    } );
+    } ); */
     
     $(document).ready(function(){
     $('.datepicker').datepicker({
@@ -307,6 +338,9 @@ $current_date = date('Y-m-d');
         let csv = [];
 
         for (let row of rows) {
+            if (row.style.display === 'none') {
+                continue;
+            }
             let cols = row.querySelectorAll('th, td');
             let rowData = [];
             for (let col of cols) {
@@ -315,7 +349,6 @@ $current_date = date('Y-m-d');
             csv.push(rowData.join(','));
         }
 
-        console.log('CSV Content:', csv.join('\n'));
         return csv.join('\n');
     }
 

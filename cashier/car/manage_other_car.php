@@ -394,6 +394,14 @@
 </script> -->
 <script>
 $(document).ready(function() {
+
+    /* Avoid Enter */
+    $('#other-car-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
+
     $('#other-car-form').on('submit', function(e) {
         e.preventDefault(); 
         var carNo = $('#c_car_no').val();

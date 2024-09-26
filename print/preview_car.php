@@ -328,7 +328,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         var cPayDateField = document.getElementById('c_paydate');
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
-        if (cMopValue == '1') {
+        if (cMopValue == '1' || cMopValue == '3') { // Binago ko to yung online payment daw same sa cash nakapwesto. -denden
             dynamicMarginDiv.style.marginTop = '190px';
             cPayDateField.style.display = 'none';
             cBankCheck.style.display = 'none';

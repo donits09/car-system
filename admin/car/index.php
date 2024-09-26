@@ -294,7 +294,7 @@ include('../../inc/header.php');
                                                     <th>Name</th>
                                                     <th>Location</th>
                                                     <th>Amount</th>
-                                                    <th>Pay Date</th>
+                                                    <th>Transaction Date</th>
                                                     <th>Encoder</th>
                                                     <th>Action</th>
                                                 </tr>

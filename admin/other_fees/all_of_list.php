@@ -9,6 +9,8 @@ include('../../inc/navbar.php');
 include('../../inc/header.php');     
 ?>
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
+<script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
 <style>
@@ -44,7 +46,29 @@ include('../../inc/header.php');
             <div class="pd-20">
             <hr>
         </div>
-            <div class="table-container">
+        <div class="pd-20">
+            <form method="get" action="">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="start_date">Start Date:</label>
+                        <input type="text" id="start_date" name="start_date" class="form-control datepicker" 
+                            value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d'); ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date">End Date:</label>
+                        <input type="text" id="end_date" name="end_date" class="form-control datepicker" 
+                            value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d'); ?>">
+                    </div>
+                    <div class="col-md-1 align-self-end">
+                        <button type="submit" class="btn btn-primary" id="btn-filter">
+                            <span class="fa fa-filter"></span> Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <br>
+        </div>
+        <div class="table-container">
             <table class="table table-bordered table-striped" id="data-table">
                 <thead>
                     <tr>
@@ -56,7 +80,7 @@ include('../../inc/header.php');
                         <th>Name</th>
                         <th>Location</th>
                         <th>Amount</th>
-                        <th>Pay Date</th>
+                        <th>Transaction Date</th>
                         <th>Encoder</th>
                         <th>Action</th>
                     </tr>
@@ -64,13 +88,25 @@ include('../../inc/header.php');
                 <tbody id="car-type-body">
                         <?php
                         $username = $_SESSION['username'];
+                        $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+                        $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
                         $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
-                    a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.e_status, a.c_remarks
-                        FROM t_or_payment a
-                        LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no WHERE status != 1
-                        ORDER BY a.c_tran_updated DESC";
+                                    a.c_or_paydate, a.c_or_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank, 
+                                    b.c_name, b.c_phase, b.c_block, b.c_lot, a.e_status, a.c_remarks
+                                    FROM t_or_payment a
+                                    LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no
+                                    WHERE a.status != 1";
+
+                        if ($start_date && $end_date) {
+                            $or_list .= " AND CAST(a.c_tran_date AS date) BETWEEN '$start_date' AND '$end_date'";
+                        } else {
+                            $current_date = date('Y-m-d');
+                            $or_list .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
+                        }
+
+                        $or_list .= " ORDER BY a.c_tran_updated DESC";
+                        /* echo $or_list; */
                         $stmt = odbc_prepare($conn, $or_list);
 
                         $result = odbc_execute($stmt, array($username));
@@ -320,6 +356,20 @@ function delete_or(orId, orNo) {
         }
     });
 }
+</script>
+<script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('#myTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
 </script>
 </div>
 </body>

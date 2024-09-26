@@ -209,6 +209,16 @@ function delete_car(carId, carNo) {
 }
 
 $(document).ready(function() {
+
+    /* inilipat ko yung function sa all_manage_car.php (ayaw kasi gumana nung prevent "Enter" gulo gulo na tuloy hahaha) -dhendhen*/
+
+    /* Avoid Enter */
+    $('#car-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
+
     $('#car-form').submit(function(e) {
         e.preventDefault();
 

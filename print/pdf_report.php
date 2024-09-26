@@ -24,7 +24,7 @@ if ($startDate == $endDate) {
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
                  WHERE a.c_tran_date::text ILIKE ? AND a.c_encoded_by = ? 
-                 ORDER BY a.c_tran_date ASC";
+                 ORDER BY a.c_car_no ASC"; /* inilipat yung order by sa c_or_no (cashier) */
     $stmt = odbc_prepare($conn, $car_list);
     $executeParams = ["%$startDate%", $c_encoded_by];
 } else {
@@ -34,7 +34,7 @@ if ($startDate == $endDate) {
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
                  WHERE DATE(a.c_tran_date) BETWEEN ? AND ? AND a.c_encoded_by = ?
-                 ORDER BY a.c_tran_date ASC";
+                 ORDER BY a.c_car_no ASC"; /* inilipat yung order by sa c_or_no (cashier) */
     $stmt = odbc_prepare($conn, $car_list);
     $executeParams = [$startDate, $endDate, $c_encoded_by];
 }
@@ -120,21 +120,21 @@ $html .= '
                 <th>CAR No.</th>
                 <th>Buyer Name</th>
                 <th>Account No.</th>
-                <th>Payment Type</th>
+                <th>Transaction Type</th>
                 <th>Location</th>
-                <th>Cash</th>
+                <th>Cash/Online</th>
                 <th>Check</th>
-                <th>Online</th>
                 <th>Bank</th>
+                <th>Total</th>
                 <th>Status</th>
                 <th>Payment Date</th>
             </tr>
         </thead>
         <tbody>';
 
-$l_cash = 0;
+$l_cashonline = 0;
 $l_check = 0;
-$l_online = 0;
+$l_total = 0;
 
 if (empty($carData)) {
     $html .= '
@@ -147,9 +147,9 @@ if (empty($carData)) {
         $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $l_cash += $cashAmount;
+        $l_cashonline += $cashAmount + $onlineAmount;
         $l_check += $checkAmount;
-        $l_online += $onlineAmount;
+        $l_total += $cashAmount + $onlineAmount + $checkAmount;
 
         $html .= '
         <tr>
@@ -184,8 +184,8 @@ if (empty($carData)) {
         $c_account_no = $row['c_account_no'];
         if (!empty($c_account_no)) {
             $c_phase = substr($c_account_no, 0, 3);
-            $c_block = substr($c_account_no, 2, 2);
-            $c_lot = substr($c_account_no, 4, 2);
+            $c_block = substr($c_account_no, 3, 3);
+            $c_lot = substr($c_account_no, 6, 2);
 
             $get_acronym_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
             $project_stmt = odbc_prepare($conn, $get_acronym_qry);
@@ -207,10 +207,13 @@ if (empty($carData)) {
         }
 
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_acronym) . " " .htmlspecialchars($c_block) . " " . htmlspecialchars($c_lot) . '</td>';
-        $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>';
+        /* $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>'; */
+        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount, 2) . '</td>'; // SUM NG CASH AT ONLINE (pinabago ni boss jude)
         $html .= '<td class="pdf-font">' . number_format($checkAmount, 2) . '</td>';
-        $html .= '<td class="pdf-font">' . number_format($onlineAmount, 2) . '</td>';
+        /* $html .= '<td class="pdf-font">' . number_format($onlineAmount, 2) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_bank'] == '' ? '-' : $row['c_bank']) . '</td>';
+        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $checkAmount, 2) . '</td>';
+
         /* $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>
@@ -221,15 +224,11 @@ if (empty($carData)) {
     <tfoot>
         <tr>
             <td class="pdf-font" colspan="6" style="text-align: right;"></td>
-            <td class="pdf-font">' . number_format($l_cash, 2) . '</td>
+            <td class="pdf-font">' . number_format($l_cashonline, 2) . '</td>
             <td class="pdf-font">' . number_format($l_check, 2) . '</td>
-            <td class="pdf-font">' . number_format($l_online, 2) . '</td>
-            <td class="pdf-font" colspan="3"></td>
-        </tr>
-        <tr>
-            <td class="pdf-font" colspan="6" style="text-align: right;">Final Total:</td>
-            <td class="pdf-font" colspan="3">' . number_format($l_cash + $l_check + $l_online, 2) . '</td>
-            <td class="pdf-font" colspan="3"></td>
+            <td class="pdf-font" colspan="1"></td>
+            <td class="pdf-font">' . number_format($l_total, 2) . '</td>
+            <td class="pdf-font" colspan="2"></td>
         </tr>
     </tfoot>';
 }

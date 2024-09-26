@@ -109,10 +109,12 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         
         #c_or_type {
-            float: right;
-            margin-top: 185px;
-            margin-right: -180px;
-            width: 300px;
+            width: 440px;
+            height:auto;
+            text-align: center;
+            font-size: 12px !important;
+            margin-top:185px;
+            position:absolute;
         }
        
         #c_or_no {
@@ -222,7 +224,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             height:auto;
             text-align: center;
             font-size: 12px !important;
-            margin-top:175px;
+            margin-top:230px;
             position:absolute;
         }
         #c_or_amount_words {
@@ -343,6 +345,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
             <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo htmlspecialchars($c_account_no); ?>">
+
+            <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($c_or_type); ?>">
            
             <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
             <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
