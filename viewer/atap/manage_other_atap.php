@@ -697,6 +697,17 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 }
             });
 
+            $('input[name="transaction_amount[]"]').each(function() {
+                const amount = parseFloat($(this).val());
+                if (isNaN(amount) || amount <= 0) {
+                    alert_toast("Amount must be greater than zero.", 'error');
+                    valid = false;
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            
             if (!valid) {
                 $(this).data('formSubmitting', false);
                 return;
