@@ -327,11 +327,9 @@ $(document).ready(function() {
             alert('Name field is required.');
             valid = false;
         }
-
         if (!valid) {
             return;
         }
-
         start_loader();
 
         $.ajax({

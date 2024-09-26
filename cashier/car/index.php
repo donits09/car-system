@@ -282,7 +282,7 @@ include('../../inc/header.php');
                                             (<span class="note">NOTE:</span> The Enter key is enabled only on the last line)
                                         </span> -->
                                     </label>
-                                    <textarea class="form-control txt" rows="10" cols="50" id="buyer_remarks" name="buyer_remarks" readonly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+                                    <textarea class="form-control txt" rows="25" cols="50" id="buyer_remarks" name="buyer_remarks" readonly><?php echo htmlspecialchars($c_remarks) ?></textarea>
                                 </div>
                                 <!-- <div class="col-md-12">
                                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -473,10 +473,10 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">Other Fees (OR)</h2>
                             <hr>
-                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
+                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
                                 <span class="fa fa-edit"></span> Create New OR
                             </button>
-                            <hr>
+                            <hr> -->
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">

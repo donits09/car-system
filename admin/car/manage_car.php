@@ -78,7 +78,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
             <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                 <?php
-                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
+                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status != 'O' ORDER BY c_payment_type ASC";
                 $type_result = odbc_exec($conn, $car_type_query);
                 while ($row = odbc_fetch_array($type_result)) {
                     echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
@@ -161,9 +161,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <div class="row">
             <div class="col-md-6">
                 <label for="amount">Amount</label>
-                <input type="text" class="form-control" id="c_car_amount" name="c_car_amount" value="<?php echo number_format(htmlspecialchars($c_car_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
+                <input type="text" class="form-control" id="c_car_amount" name="c_car_amount"
+                    value="<?php echo number_format(htmlspecialchars($c_car_amount), 2); ?>"
+                    oninput="validateNumberInputAmt(event)"
+                    onblur="formatToTwoDecimalPlaces(event)"
+                    onclick="clearAmt()" required>
                 <div id="car_amt_error"></div>
             </div>
+
+            <script>
+            function formatToTwoDecimalPlaces(event) {
+                let value = parseFloat(event.target.value);
+                if (!isNaN(value)) {
+                    event.target.value = value.toFixed(2);
+                }
+            }
+            </script>
+
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
                 <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
@@ -422,18 +436,6 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        // const appStats = $('#approval_status').val();
-                        // if (response.data.approval_status === '0') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP requires approval.');
-                        //     clearTxt();
-                        // }else if (response.data.approval_status === '3') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP was disapproved.');
-                        //     clearTxt();
-                        // }else 
                         if (response.data.c_account_no !== currentAccountNo) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
