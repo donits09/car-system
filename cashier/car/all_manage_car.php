@@ -233,7 +233,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
