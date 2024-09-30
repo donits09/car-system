@@ -630,19 +630,7 @@ Class Master{
 		$atap_ids = array_filter(array_map('trim', explode(',', $_POST['atap_id'])));
 		$c_tran_types = array_filter(array_map('trim', explode(',', $_POST['atap_val'])));
 	
-		foreach ($transaction_type as $key => $tran_type) {
-			$tran_type = pg_escape_string($tran_type);
-			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
-			$check_type_result = odbc_exec($conn, $check_type_query);
-			$type_exists = odbc_fetch_array($check_type_result)['count'];
-	
-			if ($type_exists == 0) {
-				$resp['status'] = 'failed';
-				$resp['msg'] = "CAR type not exist.";
-				echo json_encode($resp);
-				return; 
-			}
-		}
+		
 		if (empty($c_check_no)) {
 			$c_check_no = $c_ref_no;
 		}
