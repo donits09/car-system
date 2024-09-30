@@ -756,7 +756,7 @@ $(document).ready(function() {
         dataType: 'json',
         error: function(err) {
             console.log(err);
-            //alert_toast("An error occurred.", 'error');
+            alert_toast("An error occurred.", 'error');
             end_loader();
         },
         success: function(resp) {
@@ -770,7 +770,7 @@ $(document).ready(function() {
                     updateCarList();
                 }, 1000);
             } else if (resp && resp.status === 'failed' && resp.err) {
-                //alert_toast("An error occurred: " + resp.err, 'error');
+                alert_toast("An error occurred: " + resp.err, 'error');
             } else {
                 alert_toast("An unexpected error occurred", 'error');
             }

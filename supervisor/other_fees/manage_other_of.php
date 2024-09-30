@@ -401,7 +401,13 @@ $(document).ready(function() {
                         $('.modal-backdrop').remove();
                         location.reload();
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
+                } else if (resp && resp.status === 'failed') {
+                    if (resp.msg === "OR type does not exist.") {
+                        alert_toast("OR type does not exist.", 'error');
+                    } else if (resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    }
+                }else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
                 } else {
                     alert_toast("An unexpected error occurred", 'error');

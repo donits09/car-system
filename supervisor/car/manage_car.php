@@ -394,10 +394,14 @@ $(document).ready(function() {
                         $('#createCarModal').modal('hide'); 
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
-                        updateCarList();
+                        updateCarList(); 
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed') {
+                    if (resp.msg === "CAR type does not exist.") {
+                        alert_toast("Car type does not exist.", 'error');
+                    } else if (resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    }
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
