@@ -85,7 +85,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
             <label for="c_car_type">Transaction Type</label>
-           
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
             <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                 <?php
@@ -138,12 +137,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <script>
         $(document).ready(function() {
-      
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }
-
- 
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
             //e.preventDefault();
             var selectedValue = $(this).data('value');
@@ -156,9 +152,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         var initialSelectedValue = $('#c_car_type').val();
         updateAtapVal(initialSelectedValue);
     });
-
     </script>
-
     <script>
     function toggleCarType() {
         var atapNo = document.getElementById('c_atap_no').value;
@@ -348,18 +342,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        // const appStats = $('#approval_status').val();
-                        // if (response.data.approval_status === '0') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP requires approval.');
-                        //     clearTxt();
-                        // }else if (response.data.approval_status === '3') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP was disapproved.');
-                        //     clearTxt();
-                        // }else 
                         if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();

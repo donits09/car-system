@@ -624,20 +624,25 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 	
-		odbc_autocommit($this->conn, false);  // Start transaction
+		odbc_autocommit($this->conn, false); 
 	
 		$c_car_amounts = array_filter(array_map('trim', explode(',', $_POST['c_car_amount'])));
 		$atap_ids = array_filter(array_map('trim', explode(',', $_POST['atap_id'])));
 		$c_tran_types = array_filter(array_map('trim', explode(',', $_POST['atap_val'])));
 	
-		if (count($atap_ids) !== count($c_car_amounts) || count($atap_ids) !== count($c_tran_types)) {
-			echo json_encode([
-				'status' => 'failed',
-				'err' => 'Mismatch between ATAP IDs, amounts, and transaction types'
-			]);
-			return;
-		}
+		foreach ($transaction_type as $key => $tran_type) {
+			$tran_type = pg_escape_string($tran_type);
+			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
+			$check_type_result = odbc_exec($conn, $check_type_query);
+			$type_exists = odbc_fetch_array($check_type_result)['count'];
 	
+			if ($type_exists == 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "CAR type not exist.";
+				echo json_encode($resp);
+				return; 
+			}
+		}
 		if (empty($c_check_no)) {
 			$c_check_no = $c_ref_no;
 		}
@@ -705,14 +710,12 @@ Class Master{
 				}
 			}
 	
-			// More code for updating existing records (as in your original code)
-	
 			if ($update && $save) {
-				odbc_commit($this->conn);  // Commit transaction
+				odbc_commit($this->conn);  
 				$resp['status'] = 'success';
 				$resp['msg'] = "New car payment successfully saved.";
 			} else {
-				odbc_rollback($this->conn);  // Rollback transaction
+				odbc_rollback($this->conn);  
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($this->conn);
 			}

@@ -306,7 +306,7 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="car-list" role="tabpanel" aria-labelledby="car-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">Othe Fees (CAR)</h2>
+                            <h2 class="text-blue h4">Other Fees (CAR)</h2>
                             <hr>
                             <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New CAR
@@ -603,6 +603,7 @@ include('../../inc/header.php');
         </div>
     </div>
 </div>
+</body>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const acctNoInput = document.getElementById('acct_no');
@@ -981,10 +982,11 @@ $(document).ready(function() {
         });
 
         $(document).on('click', '.delete_data_car', function() {
-            var carId = $(this).data('id');
             var carNo = $(this).data('car-no');
-            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carId, carNo]);
+            var atapNo = $(this).data('atap-no'); 
+            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
         });
+
 
         window._conf = function(msg, func, params) {
             $('#confirm_modal .modal-body').html(msg);
@@ -1058,31 +1060,36 @@ function delete_or(orId, orNo) {
         }
     });
 }
-function delete_car(carId, carNo) {
+function delete_car(carNo, atapNo) {
     start_loader();
     $.ajax({
         url: "../../classes/Master.php?f=delete_car",
         method: "POST",
-        data: { carId: carId, carNo: carNo },
+        data: { carNo: carNo, atapNo: atapNo },
         dataType: "json",
         error: function(err) {
             console.log(err);
-            alert_toast("An error occurred.", 'error');
+            alert_toast("An error occurred while making the request.", 'error');
             end_loader();
         },
         success: function(resp) {
             if (resp && resp.status === 'success') {
                 alert_toast(resp.msg, 'success');
                 setTimeout(function() {
-                    //location.reload();
                     $('#confirm_modal').modal('hide'); 
                     $('body').removeClass('modal-open'); 
                     $('.modal-backdrop').remove(); 
-                    updateCarList(); 
-                    $('.delete_data_car[data-id="' + carId + '"]').closest('tr').remove();
+                    updateCarList();
+                    $('.delete_data_car[data-car-no="' + carNo + '"]').closest('tr').remove();
                 }, 1000);
-            } else if (resp && resp.status === 'failed' && resp.err) {
-                alert_toast("An error occurred: " + resp.err, 'error');
+            } else if (resp && resp.status === 'failed') {
+                if (resp.err) {
+                    // Display the main error message from the server
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    // Fallback message if no specific error was returned
+                    alert_toast("An error occurred: " + resp.msg, 'error');
+                }
             } else {
                 alert_toast("An unexpected error occurred", 'error');
             }
