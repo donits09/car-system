@@ -20,21 +20,25 @@ $l_css_path = file_get_contents($l_css);
 if ($startDate == $endDate) {
     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                         a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
-                        b.c_name, b.c_phase, b.c_block, b.c_lot
+                        b.c_name, b.c_phase, b.c_block, b.c_lot, c.c_position
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
+                 LEFT JOIN t_car_users c ON a.c_encoded_by = c.c_employee_code /* c_position (Cashier 2) */
                  WHERE a.c_tran_date::text ILIKE ?
-                 ORDER BY a.c_car_no ASC"; /* inilipat yung order by sa c_or_no (cashier) */
+                 AND c.c_position != 'Cashier 2'
+                 ORDER BY a.c_car_no ASC";
     $stmt = odbc_prepare($conn, $car_list);
     $executeParams = ["%$startDate%", $c_encoded_by];
 } else {
     $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                         a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
-                        b.c_name, b.c_phase, b.c_block, b.c_lot
+                        b.c_name, b.c_phase, b.c_block, b.c_lot, c.c_position
                  FROM t_car_payment a
                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
+                 LEFT JOIN t_car_users c ON a.c_encoded_by = c.c_employee_code /* c_position (Cashier 2) */
                  WHERE DATE(a.c_tran_date) BETWEEN ? AND ?
-                 ORDER BY a.c_car_no ASC"; /* inilipat yung order by sa c_or_no (cashier) */
+                 AND c.c_position != 'Cashier 2'
+                 ORDER BY a.c_car_no ASC"; 
     $stmt = odbc_prepare($conn, $car_list);
     $executeParams = [$startDate, $endDate, $c_encoded_by];
 }

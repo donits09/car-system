@@ -574,11 +574,11 @@ $(document).ready(function() {
             $hiddenInput.val($(this).data('value'));
             $hiddenStatusInput.val(paymentStatus);
 
-            if (paymentStatus.trim() === 'C') {
+            if (paymentStatus.trim() == 'C') {
                 $statusText.html('<span class="badge badge-secondary">CAR</span>');
-            } else if (paymentStatus.trim() === 'ST') {
+            } else if (paymentStatus.trim() == 'ST') {
                 $statusText.html('<span class="badge badge-secondary">Special</span>');
-            } else if (paymentStatus.trim() === 'O') {
+            } else if (paymentStatus.trim() == 'O') {
                 $statusText.html('<span class="badge badge-secondary">OR</span>');
             } else {
                 $statusText.html('<span class="badge badge-secondary">Other</span>');
@@ -722,45 +722,6 @@ $(document).ready(function() {
         $(this).data('formSubmitting', false);
         return;
     }
-    
-    start_loader();
-
-    $.ajax({
-        url: "../../classes/Master.php?f=save_atap_payment",
-        data: new FormData($(this)[0]),
-        cache: false,
-        contentType: false,
-        processData: false,
-        method: 'POST',
-        dataType: 'json',
-        error: function(err) {
-            console.log(err);
-            alert_toast("An error occurred.", 'error');
-            end_loader();
-        },
-        success: function(resp) {
-            console.log(resp);
-            if (resp && resp.status === 'success') {
-                alert_toast(resp.msg, 'success');
-                setTimeout(function() {
-                    $('#createCarModal').modal('hide');
-                    $('body').removeClass('modal-open');
-                    $('.modal-backdrop').remove();
-                    location.reload();
-                }, 1000);
-            } else if (resp && resp.status === 'failed' && resp.err) {
-                alert_toast("An error occurred: " + resp.err, 'error');
-            } else if (resp && resp.status === 'not_found') {
-                alert_toast("CAR type not exist.", 'error');
-            } else {
-                alert_toast("CAR type not exist.", 'error');
-            }
-            end_loader();
-        },
-        complete: function() {
-            $('#atap-form').data('formSubmitting', false);
-
-        }
         
         start_loader();
 

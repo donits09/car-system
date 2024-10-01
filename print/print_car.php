@@ -81,10 +81,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             text-align: center;
             font-size: 10px !important;
         }
+        #c_car_no {
+            float: right;
+            margin-top: 55px;
+            margin-right: -360px;
+            width: 80px;
+        }
     </style>
 </head>
 <body onload="initializePage()">
-    <!-- <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy"> -->
+    <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">
@@ -95,7 +101,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
         <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
         
-        <!-- <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>"> -->
+        <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>">
         
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
@@ -166,9 +172,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 }
             }
         ?>
+            <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>">
             <textarea name="c_received" id="c_received"><?php echo htmlspecialchars($c_name); ?></textarea>
             <textarea name="c_address" id="c_address">-----------------</textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
+            <input type="text" name="c_bank" id="c_bank" value="<?php echo $row['c_bank']; ?>">
+            <input type="text" name="c_check_main" id="c_check_main" value="<?php echo $row['c_check_no']; ?>">
         <?php } ?>
 
         <?php
