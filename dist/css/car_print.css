@@ -62,12 +62,12 @@ textarea{
     white-space: pre-wrap;
     word-wrap: break-word;
 }
-#c_car_no {
+/* #c_car_no {
     float: right;
     margin-top: 60px;
     margin-right: -410px;
     width: 80px;
-}
+} */
 #c_received {
     text-transform: uppercase;
     float: right;

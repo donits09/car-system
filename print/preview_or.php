@@ -15,10 +15,11 @@ $c_ref_no = $_GET['c_ref_no'] ?? '';
 $c_remarks = $_GET['c_remarks'] ?? '';
 
 $c_bank = '';
+$c_bank_2 = '';
 $c_check = '';
 
 if ($c_bank_check == '' || $c_bank_check == null){
-    $c_bank = $c_bank_online;
+    $c_bank_2 = $c_bank_online;
 }else{
     $c_bank = $c_bank_check;
 }
@@ -145,6 +146,14 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_bank_main{
             margin-top: 302px;
+            margin-left: 325px;
+            width: auto;
+            text-align: left;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_bank_main_2{
+            margin-top: 330px;
             margin-left: 325px;
             width: auto;
             text-align: left;
@@ -349,6 +358,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($c_or_type); ?>">
            
             <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
+            <input type="text" name="c_bank_main_2" id="c_bank_main_2" value="<?php echo htmlspecialchars($c_bank_2); ?>">
+
             <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
 
            
@@ -402,14 +413,14 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         var cPayDateField = document.getElementById('c_paydate');
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
-        if (cMopValue == '1') {
-            dynamicMarginDiv.style.marginTop = '190px';
+        if (cMopValue == '1' || cMopValue == '3') {
+            dynamicMarginDiv.style.marginTop = '180px';
             cPayDateField.style.display = 'none';
-            cBankCheck.style.display = 'none';
-            cCheckNo.style.display = 'none';
+            cBankCheck.style.display = 'block';
+            cCheckNo.style.display = 'block';
         } else {
             dynamicMarginDiv.style.marginTop = '205px';
-            dynamicMarginDiv.style.marginRight = '-205px';
+            /* dynamicMarginDiv.style.marginRight = '-205px'; */
             cPayDateField.style.display = 'block';
             cBankCheck.style.display = 'block';
             cCheckNo.style.display = 'block';

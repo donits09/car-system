@@ -83,7 +83,6 @@ $html = '
 <style>
     ' . $l_css_path . '
 
-    /* Pang Break ng pages huhubels shaket!!!! */
     .page-break { 
         page-break-before: always; 
     }
