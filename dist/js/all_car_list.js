@@ -221,34 +221,45 @@ $(document).ready(function() {
 
     $('#car-form').submit(function(e) {
         e.preventDefault();
-
+    
         const buyerName = $('#buyer_name').val();
         const carNo = $('#c_car_no').val();
         const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
-
+    
         let valid = true;
+        let atapVal = $('#c_tran_type_single').val(); 
+        if (!atapVal) {
+            atapVal = $('#atap_val').val(); 
+        }else{
+            atapVal = $('#c_car_type').val(); 
+        }
 
+        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+            alert('The selected transaction type is Special.');
+            valid = false;
+        }
+        
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
         }
-
+    
         if (carAmount <= 0) {
             $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
             valid = false;
         }
-
+    
         if (!buyerName || buyerName === 'Unknown') {
             alert('Name field is required.');
             valid = false;
         }
-
+    
         if (!valid) {
             return;
         }
-
+    
         start_loader();
-
+    
         $.ajax({
             url: "../../classes/Master.php?f=save_car_payment",
             data: new FormData($(this)[0]),
@@ -271,9 +282,13 @@ $(document).ready(function() {
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
                         location.reload();
-                    }, 500);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                    }, 1000);
+                } else if (resp && resp.status === 'failed') {
+                    if (resp.msg === "CAR type does not exist.") {
+                        alert_toast("Car type does not exist.", 'error');
+                    } else if (resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    }
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
@@ -281,6 +296,7 @@ $(document).ready(function() {
             }
         });
     });
+    
 
     function fetchBuyerDetails(accountNo) {
         const buyerNameField = $('#buyer_name');

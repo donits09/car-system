@@ -57,12 +57,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <?php
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
-    <table style="border:solid black 1px;">
+    <!-- <table style="border:solid black 1px;">
         <tr>
             <td>Test</td>
             <td>Test1</td>
         </tr>
-    </table>
+    </table> -->
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
         <div class="col-sm-8">
@@ -79,7 +79,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
-            <label for="c_car_type">Transaction Type</label>
             <table class="table table-striped" id="transaction-table">
             <thead>
                 <tr>
@@ -389,7 +388,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </table>
         </div>
     </div>
-    <input type="text" class="form-control" id="atap_id" name="atap_id" style="display:none;" readonly>
+    <input type="text" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="text" class="form-control" id="atap_val" name="atap_val" readonly>
     <input type="text" class="form-control" name="atap_total" style="display:none;" readonly>
 
@@ -572,6 +571,36 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </script>
 <script>
 $(document).ready(function() {
+    $('form').on('submit', function(event) {
+        var isValid = true;
+        var errorMessage = '';
+
+        $('#transaction-table tbody tr').each(function() {
+            var carTypeInput = $(this).find('.c_car_type').val();
+            var selectedDropdownItem = $(this).find('input[name="transaction_type[]"]').val();
+
+            if (!carTypeInput || carTypeInput.trim() === '') {
+                isValid = false;
+                errorMessage = 'Please fill in the car type field in all rows.';
+                return false; 
+            }
+
+            if (!selectedDropdownItem || selectedDropdownItem.trim() === '') {
+                isValid = false;
+                errorMessage = 'Please select an option from the dropdown for all rows.';
+                return false; 
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault();
+            alert(errorMessage);
+        }
+    });
+});
+</script>
+<script>
+$(document).ready(function() {
     function calculateTotal() {
         let total = 0;
         $('.transaction-amount').each(function() {
@@ -731,10 +760,11 @@ $(document).ready(function() {
         valid = false;
     }
 
-    if ($('.tran_type_checkbox:checked').length === 0) {
+    if ($('#tran_type_container').is(':visible') && $('.tran_type_checkbox:checked').length === 0) {
         alert('At least one transaction type must be selected.');
         valid = false;
     }
+
 
     if (!valid) {
         return;

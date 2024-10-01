@@ -1007,7 +1007,6 @@ function delete_or(orId, orNo) {
         }
     });
 }
-
 function delete_car(carNo, atapNo) {
     start_loader();
     $.ajax({
@@ -1045,7 +1044,6 @@ function delete_car(carNo, atapNo) {
         }
     });
 }
-
 function updateCarList() {
     const accountNo = document.getElementById('buyer_acc_no').value;
     fetch(`car_list.php?account_no=${accountNo}`)
@@ -1065,7 +1063,6 @@ function updateORList() {
             calculateTotalORAmount(); 
         });
 }
-
 </script>
 <!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
 <script>

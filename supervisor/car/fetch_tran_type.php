@@ -6,6 +6,21 @@ if (isset($_GET['c_atap_no'])) {
     $c_atap_no = $_GET['c_atap_no'];
 
     $get_atap_query = "SELECT id, c_tran_type, c_atap_amount FROM t_atap_items WHERE c_atap_no = ? and atap_status = 0";
+    // $get_atap_query = "SELECT 
+    // a.id, 
+    // a.c_tran_type, 
+    // a.c_atap_amount, 
+    // b.payment_status 
+    // FROM 
+    //     t_atap_items a 
+    // INNER JOIN 
+    //     t_car_type b 
+    // ON 
+    //     a.c_tran_type = b.c_payment_type
+    // WHERE 
+    //     a.c_atap_no = ? 
+    //     AND a.atap_status = 0
+    //     AND b.payment_status != 'ST';";
     $stmt = odbc_prepare($conn, $get_atap_query);
     odbc_execute($stmt, array($c_atap_no));
 

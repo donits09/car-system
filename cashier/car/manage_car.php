@@ -79,7 +79,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
-        <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
+        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
@@ -347,6 +347,18 @@ $(document).ready(function() {
 
         let valid = true;
 
+        let atapVal = $('#c_tran_type_single').val(); 
+        if (!atapVal) {
+            atapVal = $('#atap_val').val(); 
+        }else{
+            atapVal = $('#c_car_type').val(); 
+        }
+
+        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+            alert('The selected transaction type is Special.');
+            valid = false;
+        }
+
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
@@ -381,6 +393,27 @@ $(document).ready(function() {
                 alert_toast("An error occurred.", 'error');
                 end_loader();
             },
+            // success: function(resp) {
+            //     console.log(resp); 
+            //     if (resp && resp.status === 'success') {
+            //         alert_toast(resp.msg, 'success');
+            //         setTimeout(function() {
+            //             $('#createCarModal').modal('hide'); 
+            //             $('body').removeClass('modal-open'); 
+            //             $('.modal-backdrop').remove(); 
+            //             updateCarList(); 
+            //         }, 1000);
+            //     } else if (resp && resp.status === 'failed') {
+            //         if (resp.msg === "CAR type does not exist.") {
+            //             alert_toast("Car type does not exist.", 'error');
+            //         } else if (resp.err) {
+            //             alert_toast("An error occurred: " + resp.err, 'error');
+            //         }
+            //     } else {
+            //         alert_toast("An unexpected error occurred", 'error');
+            //     }
+            //     end_loader();
+            // }
             success: function(resp) {
                 console.log(resp); 
                 if (resp && resp.status === 'success') {
@@ -389,10 +422,10 @@ $(document).ready(function() {
                         $('#createCarModal').modal('hide'); 
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
-                        updateCarList();
+                        updateCarList(); 
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    alert_toast(resp.msg, 'error'); 
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
@@ -664,7 +697,6 @@ function updateCarList() {
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }
-
 
         $('#c_tran_type').change(function() {
             var selectedOption = $(this).find(':selected');

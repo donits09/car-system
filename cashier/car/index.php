@@ -39,11 +39,9 @@ include('../../inc/header.php');
     .table-container {
         margin-bottom: 20px;
     }
-
     .table-container label {
         margin-right: 10px; 
     }
-
     .table-container input[type="text"] {
         width: 150px;
         padding: 5px; 
@@ -51,12 +49,10 @@ include('../../inc/header.php');
     label{
         color:black;
     }
-
     .container {
-    width: 100%;
-    height:auto;
+        width: 100%;
+        height:auto;
     }
-    
     body{
         width:100%;
     }
