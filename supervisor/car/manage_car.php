@@ -371,8 +371,6 @@ $(document).ready(function() {
 
         const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
 
-      
-
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
