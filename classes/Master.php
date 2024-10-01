@@ -473,8 +473,6 @@ Class Master{
 		$c_or_amount = str_replace(',', '', $c_or_amount);
 		$atap_id = $_POST['atap_id'];
 		$c_tran_type = $_POST['atap_val'];
-		$c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
-		$c_tran_type_main = isset($_POST['c_tran_type']) ? $_POST['c_tran_type'] : ''; 
 
 		if ($c_mop == 1) {
 			$c_bank = "";
@@ -484,13 +482,14 @@ Class Master{
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
 		}
 	
+		$c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
+		$c_tran_type_main = isset($_POST['c_tran_type']) ? $_POST['c_tran_type'] : ''; 
+
 		$transaction_types = array($c_tran_type_or, $c_tran_type_main);
 		$transaction_types = array_filter($transaction_types); 
 
-	
 		if (!empty($c_tran_type_main)) {
 		} else {
-			
 			foreach ($transaction_types as $tran_type) {
 				$tran_type = trim(pg_escape_string($tran_type)); 
 
@@ -508,13 +507,14 @@ Class Master{
 
 				if ($type_exists == 0) {
 					$resp['status'] = 'failed';
-					$resp['msg'] = "Transaction type '$tran_type' does not exist.";
+					//$resp['msg'] = "Transaction type '$tran_type' does not exist.";
+					$resp['msg'] = "CAR type does not exist.";
 					echo json_encode($resp); 
 					return;
 				}
 			}
 		}
-		
+
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -745,13 +745,13 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
-
+	
 		$atap_id = $_POST['atap_id'];
-		$c_tran_type = isset($_POST['c_car_type']) ? $_POST['c_car_type'] : ''; 
-		
+	
 		if ($c_check_no == '' || $c_check_no == null) {
 			$c_check_no = $c_ref_no;
 		}
+	
 		if ($c_mop == 1) {
 			$c_bank = "";
 		} elseif ($c_mop == 2) {
@@ -759,22 +759,39 @@ Class Master{
 		} elseif ($c_mop == 3) {
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
 		}
-
-		$transaction_type = isset($_POST['transaction_type']) ? $_POST['transaction_type'] : array($c_tran_type);
-		$transaction_type = is_array($transaction_type) ? $transaction_type : explode(',', $transaction_type);
-
-		foreach ($transaction_type as $key => $tran_type) {
-			$tran_type = pg_escape_string($tran_type);
-			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
+	
+		if (!empty($_POST['c_tran_type_single'])) {
+			$c_tran_type = $_POST['c_tran_type_single'];
+		} elseif (!empty($_POST['c_tran_type'])) {
+			$c_tran_type = $_POST['atap_val'];
+		} elseif (!empty($_POST['c_car_type'])) {
+			$c_tran_type = $_POST['c_car_type'];
+	
+			$tran_type = trim(pg_escape_string($c_tran_type));
+	
+			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
 			$check_type_result = odbc_exec($conn, $check_type_query);
+	
+			if (!$check_type_result) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Error executing query.";
+				echo json_encode($resp);
+				return;
+			}
+	
 			$type_exists = odbc_fetch_array($check_type_result)['count'];
-
+	
 			if ($type_exists == 0) {
 				$resp['status'] = 'failed';
 				$resp['msg'] = "CAR type does not exist.";
 				echo json_encode($resp);
 				return;
 			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Transaction type or car type is required.";
+			echo json_encode($resp);
+			return;
 		}
 	
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
@@ -875,15 +892,13 @@ Class Master{
 	
 		echo json_encode($resp);
 	}
-	
+		
 	function save_other_car_payment() {
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
 		$atap_id = $_POST['atap_id'];
-		$c_tran_type = $_POST['atap_val'];
-		$c_tran_type_other = isset($_POST['c_car_type']) ? $_POST['c_car_type'] : ''; 
-
+		
 		if ($c_check_no == '' || $c_check_no == null){
 			$c_check_no = $c_ref_no;
 		}
@@ -897,33 +912,39 @@ Class Master{
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
 		}
 
-		$transaction_type = isset($_POST['transaction_type']) ? $_POST['transaction_type'] : array($c_tran_type_other);
-		$transaction_type = is_array($transaction_type) ? $transaction_type : explode(',', $transaction_type);
-
-		foreach ($transaction_type as $key => $tran_type) {
-			$tran_type = pg_escape_string($tran_type);
-			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
+		if (!empty($_POST['c_tran_type_single'])) {
+			$c_tran_type = $_POST['c_tran_type_single'];
+		} elseif (!empty($_POST['c_tran_type'])) {
+			$c_tran_type = $_POST['atap_val'];
+		} elseif (!empty($_POST['c_car_type'])) {
+			$c_tran_type = $_POST['c_car_type'];
+	
+			$tran_type = trim(pg_escape_string($c_tran_type));
+	
+			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
 			$check_type_result = odbc_exec($conn, $check_type_query);
+	
+			if (!$check_type_result) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Error executing query.";
+				echo json_encode($resp);
+				return;
+			}
+	
 			$type_exists = odbc_fetch_array($check_type_result)['count'];
-
+	
 			if ($type_exists == 0) {
 				$resp['status'] = 'failed';
 				$resp['msg'] = "CAR type does not exist.";
 				echo json_encode($resp);
 				return;
 			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Transaction type or car type is required.";
+			echo json_encode($resp);
+			return;
 		}
-
-		// $car_type_check = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_car_type'";
-		// $check_result = odbc_exec($this->conn, $car_type_check);
-	
-		// if (odbc_num_rows($check_result) == 0) {
-		// 	$insert_car_type = "INSERT INTO t_car_type (c_payment_type, status) VALUES ('$c_car_type', 0)";
-		// 	$insert_result = odbc_exec($this->conn, $insert_car_type);
-		// 	if (!$insert_result) {
-		// 		error_log("Failed to insert new car type: " . odbc_errormsg($this->conn));
-		// 	}
-		// }
 	
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
@@ -1037,7 +1058,6 @@ Class Master{
 		$c_or_amount = str_replace(',', '', $c_or_amount);
 		$atap_id = $_POST['atap_id'];
 		$c_tran_type = $_POST['atap_val'];
-		$c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
 		
 		if ($c_check_no == '' || $c_check_no == null){
 			$c_check_no = $c_ref_no;
@@ -1052,20 +1072,36 @@ Class Master{
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
 		}
 
-		$transaction_type = isset($_POST['transaction_type']) ? $_POST['transaction_type'] : array($c_tran_type_or);
-		$transaction_type = is_array($transaction_type) ? $transaction_type : explode(',', $transaction_type);
+		$c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
+		$c_tran_type_main = isset($_POST['c_tran_type']) ? $_POST['c_tran_type'] : ''; 
 
-		foreach ($transaction_type as $key => $tran_type) {
-			$tran_type = pg_escape_string($tran_type);
-			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
-			$check_type_result = odbc_exec($conn, $check_type_query);
-			$type_exists = odbc_fetch_array($check_type_result)['count'];
+		$transaction_types = array($c_tran_type_or, $c_tran_type_main);
+		$transaction_types = array_filter($transaction_types); 
 
-			if ($type_exists == 0) {
-				$resp['status'] = 'failed';
-				$resp['msg'] = "OR type does not exist.";
-				echo json_encode($resp);
-				return;
+		if (!empty($c_tran_type_main)) {
+		} else {
+			foreach ($transaction_types as $tran_type) {
+				$tran_type = trim(pg_escape_string($tran_type)); 
+
+				$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
+				$check_type_result = odbc_exec($conn, $check_type_query);
+
+				if (!$check_type_result) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = "Error executing query.";
+					echo json_encode($resp);
+					return;
+				}
+
+				$type_exists = odbc_fetch_array($check_type_result)['count'];
+
+				if ($type_exists == 0) {
+					$resp['status'] = 'failed';
+					//$resp['msg'] = "Transaction type '$tran_type' does not exist.";
+					$resp['msg'] = "CAR type does not exist.";
+					echo json_encode($resp); 
+					return;
+				}
 			}
 		}
 	

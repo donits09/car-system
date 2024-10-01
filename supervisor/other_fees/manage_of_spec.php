@@ -270,6 +270,18 @@ $(document).ready(function() {
 
         let valid = true;
 
+        let atapVal = $('#c_tran_type_single').val(); 
+        if (!atapVal) {
+            atapVal = $('#atap_val').val(); 
+        }else{
+            atapVal = $('#c_or_type').val(); 
+        }
+
+        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+            alert('The selected transaction type is Special.');
+            valid = false;
+        }
+
         if (orNo.length < 6) {
             $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;

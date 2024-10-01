@@ -363,6 +363,19 @@ $(document).ready(function() {
         var orNo = $('#c_or_no').val();
         const carAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
         let valid = true;
+
+        let atapVal = $('#c_tran_type_single').val(); 
+        if (!atapVal) {
+            atapVal = $('#atap_val').val(); 
+        }else{
+            atapVal = $('#c_or_type').val(); 
+        }
+
+        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+            alert('The selected transaction type is Special.');
+            valid = false;
+        }
+
         if (orNo.length < 6) {
             $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
@@ -391,24 +404,41 @@ $(document).ready(function() {
                 alert_toast("An error occurred.", 'error');
                 end_loader();
             },
+            // success: function(resp) {
+            //     console.log(resp);
+            //     if (resp && resp.status === 'success') {
+            //         alert_toast(resp.msg, 'success');
+            //         setTimeout(function() {
+            //             $('#createCarModal').modal('hide');
+            //             $('body').removeClass('modal-open');
+            //             $('.modal-backdrop').remove();
+            //             location.reload();
+            //         }, 1000);
+            //     } else if (resp && resp.status === 'failed') {
+            //         if (resp.msg === "OR type does not exist.") {
+            //             alert_toast("OR type does not exist.", 'error');
+            //         } else if (resp.err) {
+            //             alert_toast("An error occurred: " + resp.err, 'error');
+            //         }
+            //     }else if (resp && resp.status === 'failed' && resp.err) {
+            //         alert_toast("An error occurred: " + resp.err, 'error');
+            //     } else {
+            //         alert_toast("An unexpected error occurred", 'error');
+            //     }
+            //     end_loader();
+            // }
             success: function(resp) {
-                console.log(resp);
+                console.log(resp); 
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createCarModal').modal('hide');
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
+                        $('#createCarModal').modal('hide'); 
+                        $('body').removeClass('modal-open'); 
+                        $('.modal-backdrop').remove(); 
                         location.reload();
                     }, 1000);
-                } else if (resp && resp.status === 'failed') {
-                    if (resp.msg === "OR type does not exist.") {
-                        alert_toast("OR type does not exist.", 'error');
-                    } else if (resp.err) {
-                        alert_toast("An error occurred: " + resp.err, 'error');
-                    }
-                }else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    alert_toast(resp.msg, 'error'); 
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }

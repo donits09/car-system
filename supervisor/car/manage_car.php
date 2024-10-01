@@ -80,7 +80,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
-        <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
+        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
@@ -175,7 +175,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
-
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
@@ -348,9 +347,23 @@ $(document).ready(function() {
 
         const buyerName = $('#buyer_name').val();
         const carNo = $('#c_car_no').val();
+        let valid = true;
+
+        let atapVal = $('#c_tran_type_single').val(); 
+        if (!atapVal) {
+            atapVal = $('#atap_val').val(); 
+        }else{
+            atapVal = $('#c_car_type').val(); 
+        }
+
+        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+            alert('The selected transaction type is Special.');
+            valid = false;
+        }
+
         const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
 
-        let valid = true;
+      
 
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
@@ -504,18 +517,6 @@ $(document).ready(function() {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        // const appStats = $('#approval_status').val();
-                        // if (response.data.approval_status === '0') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP requires approval.');
-                        //     clearTxt();
-                        // }else if (response.data.approval_status === '3') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP was disapproved.');
-                        //     clearTxt();
-                        // }else 
                         if (response.data.c_account_no !== currentAccountNo) {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
@@ -537,6 +538,7 @@ $(document).ready(function() {
                             fetchTranType(atapNo);
                             $('#car_type_container').hide();
                             $('#tran_type_container').show();
+                            //alert('Maybe the transaction types are special.');
                         }
                     } else {
                         $('#car_type_container').show();
