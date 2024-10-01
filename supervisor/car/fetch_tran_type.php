@@ -20,7 +20,7 @@ if (isset($_GET['c_atap_no'])) {
     // WHERE 
     //     a.c_atap_no = ? 
     //     AND a.atap_status = 0
-    //     AND b.payment_status != 'ST';";
+    //     AND b.payment_status = 'C';";
     $stmt = odbc_prepare($conn, $get_atap_query);
     odbc_execute($stmt, array($c_atap_no));
 

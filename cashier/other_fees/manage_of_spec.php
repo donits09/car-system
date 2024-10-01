@@ -86,7 +86,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                 <?php
 
-                $or_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
+                $or_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'O' ORDER BY c_payment_type ASC";
                 $type_result = odbc_exec($conn, $or_type_query);
 
 //                 $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'O' ORDER BY c_payment_type ASC";
