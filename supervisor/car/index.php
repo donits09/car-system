@@ -983,7 +983,8 @@ $(document).ready(function() {
 
         $(document).on('click', '.delete_data_car', function() {
             var carNo = $(this).data('car-no');
-            var atapNo = $(this).data('atap-no'); 
+            var atapNo = $(this).data('atap-no');
+            console.log("Car No: " + carNo + ", ATAP No: " + atapNo);
             _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
         });
 
