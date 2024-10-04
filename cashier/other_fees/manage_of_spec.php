@@ -60,20 +60,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
-                <label for="c_atap_no">ATAP No.</label>
-                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
+                <label for="c_atap_no_or">ATAP No.</label>
+                <input type="number" class="form-control" id="c_atap_no_or" name="c_atap_no_or">
             </div>
         </div>
         <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
+            <a id="get_atap_or" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarTypeOR()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
     </div>
     <div class="form-group" id="tran_type_container" style="display: none;">
-        <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+        <label for="c_tran_type_or">Transaction Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
-            <select class="form-control" id="c_tran_type" name="c_tran_type">
+            <select class="form-control" id="c_tran_type_or" name="c_tran_type_or">
             </select>
         </div>
         <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
@@ -160,8 +160,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </script>
 
 <script>
-function toggleCarType() {
-    var atapNo = document.getElementById('c_atap_no').value;
+function toggleCarTypeOR() {
+    var atapNo = document.getElementById('c_atap_no_or').value;
     var orTypeContainer = document.getElementById('or_type_container');
     var tranTypeContainer =document.getElementById('tran_type_container');
 
@@ -301,7 +301,7 @@ function toggleCarType() {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-<script src="../../dist/js/of_js/manage_or.js"></script>
+<!-- <script src="../../dist/js/of_js/manage_or.js"></script> -->
 <script>
 $(document).ready(function() {
     $('#or-form').submit(function(e) {
@@ -365,6 +365,7 @@ $(document).ready(function() {
                         $('#createOrModal').modal('hide'); 
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
+                        $('#or-form')[0].reset();
                         updateORList();
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
@@ -376,6 +377,9 @@ $(document).ready(function() {
             }
         });
     });
+
+  
+
 
     function fetchBuyerDetails(accountNo) {
         const buyerNameField = $('#buyer_name');
@@ -453,8 +457,8 @@ $(document).ready(function() {
 </script>
 <script>
 $(document).ready(function() {
-    $('#get_atap').on('click', function() {
-        const atapNo = $('#c_atap_no').val();
+    $('#get_atap_or').on('click', function() {
+        const atapNo = $('#c_atap_no_or').val();
         var clearType = $('#c_or_type');
         if (atapNo.length > 0) {
             $('#or_type_container').show();
@@ -470,7 +474,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             url: '../../cashier/other_fees/get_atap_details_of.php',
-            data: { c_atap_no: atapNo },
+            data: { c_atap_no_or: atapNo },
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
@@ -534,7 +538,7 @@ $(document).ready(function() {
 
 
     function clearTxt(){
-        const atapNoField = $('#c_atap_no');
+        const atapNoField = $('#c_atap_no_or');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
         //const accField = $('#c_account_no');
@@ -665,7 +669,7 @@ function updateORList() {
             $('#atap_val').val(selectedValue);
         }
 
-        $('#c_tran_type').change(function() {
+        $('#c_tran_type_or').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();
             var amount = selectedOption.data('amount'); 
@@ -680,12 +684,12 @@ function updateORList() {
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: '<?php echo base_url; ?>cashier/car/fetch_tran_type.php',
+            url: '<?php echo base_url; ?>cashier/other_fees/fetch_tran_type.php',
             type: 'GET',
-            data: { c_atap_no: atapNo },
+            data: { c_atap_no_or: atapNo },
             dataType: 'json',
             success: function(response) {
-                var $select = $('#c_tran_type');
+                var $select = $('#c_tran_type_or');
                 var $textbox = $('#c_tran_type_single');
                 var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_or_amount'); 
