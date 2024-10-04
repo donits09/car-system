@@ -137,7 +137,7 @@
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
-        <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
+        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>

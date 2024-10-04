@@ -9,6 +9,8 @@ include('../../inc/navbar.php');
 include('../../inc/header.php');     
 ?>
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
+<script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
 <style>
@@ -53,6 +55,29 @@ include('../../inc/header.php');
                 <span class="fa fa-edit"></span> Create Other ATAP
             </a>
             <hr>
+        
+            <div class="pd-20">
+            <form method="get" action="">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="start_date">Start Date:</label>
+                        <input type="text" id="start_date" name="start_date" class="form-control datepicker" 
+                            value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d'); ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date">End Date:</label>
+                        <input type="text" id="end_date" name="end_date" class="form-control datepicker" 
+                            value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d'); ?>">
+                    </div>
+                    <div class="col-md-1 align-self-end">
+                        <button type="submit" class="btn btn-primary" id="btn-filter">
+                            <span class="fa fa-filter"></span> Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <br>
+        </div>
         <div class="table-container">
             <table class="table table-bordered table-striped" id="data-table">
                 <thead>
@@ -70,6 +95,9 @@ include('../../inc/header.php');
                     </tr>
                 </thead>
                 <?php
+
+$start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+$end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 $get_atap = "SELECT 
         a.id, 
         a.c_account_no, 
@@ -91,7 +119,16 @@ $get_atap = "SELECT
         t_other_atap b ON a.c_atap_no = b.c_atap_no 
     LEFT JOIN 
         t_atap_items c ON a.c_atap_no = c.c_atap_no
-    GROUP BY 
+    WHERE 1 = 1";
+
+    if ($start_date && $end_date) {
+        $get_atap .= " AND CAST(a.c_tran_date AS date) BETWEEN '$start_date' AND '$end_date'";
+    } else {
+        $current_date = date('Y-m-d');
+        $get_atap .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
+    }
+
+    $get_atap .= " GROUP BY 
         a.id, 
         a.c_account_no, 
         a.c_atap_no, 
@@ -309,6 +346,20 @@ if (odbc_execute($stmt)) {
     });
 }
 
+</script>
+<script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('#myTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/all_atap_list.js"></script>
