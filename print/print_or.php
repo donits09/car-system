@@ -38,9 +38,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $row = $result;
         $c_account_no = $row['c_account_no'];
         $c_or_paydate = $row['c_or_paydate'];
+        $c_check_no = $row['c_check_no'];
+        $c_bank = $row['c_bank'];
+        $c_mop = $row['c_mop'];
         $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         $orDetails = fetchORDetails($conn, $row['c_or_no']);
         $c_remarks = $row['c_remarks'];
+
+        if ($c_mop == 2){
+            $c_or_paydate_1 = $c_or_paydate;
+            $c_check_1 = $c_check_no;
+            $c_bank_1 = $c_bank;
+        } elseif ($c_mop == 3){
+            $c_or_paydate_2 = $c_or_paydate;
+            $c_check_2 = $c_check_no;
+            $c_bank_2 = $c_bank;
+        }
+
         ?>
 <!DOCTYPE html>
 <html>
@@ -122,8 +136,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         
         
         
-        #c_bank{
+        #c_bank_main_1{
             margin-top: 320px;
+            margin-left: 275px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_bank_main_2{
+            margin-top: 330px;
             margin-left: 275px;
             width: auto;
             text-align: center;
@@ -138,8 +160,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 12px !important;
             position:absolute;
         }
-        #c_paydate_main {
+        #c_paydate_main_1 {
             margin-top: 320px;
+            margin-left: 150px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_paydate_main_2 {
+            margin-top: 330px;
             margin-left: 150px;
             width: auto;
             text-align: center;
@@ -168,9 +198,33 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 12px !important;
             position:absolute;
         }
-        #c_check_main{
+        #c_check_main_1{
             margin-top:320px;
             margin-left:-30px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_check_main_2{
+            margin-top:330px;
+            margin-left:-30px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_check{
+            margin-top:320px;
+            margin-left:-65px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_ref{
+            margin-top:330px;
+            margin-left:-65px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -336,7 +390,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <!-- <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy"> -->
+    <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy">
     <div class="container">
         <div class="box_middle">
             <input type="text" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">
@@ -378,10 +432,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <textarea name="c_received" id="c_received"><?php echo $fullName; ?></textarea>
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
-            
-            <input type="text" name="c_bank" id="c_bank" value="<?php echo $row['c_bank']; ?>">
-            <input type="text" name="c_check_main" id="c_check_main" value="<?php echo $row['c_check_no']; ?>">
-            <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_or_paydate; ?>">
+
+            <?php if ($c_mop == 2): ?>
+                <!-- Para sa Check Payment -->
+                <input type="text" name="sign_check" id="sign_check" value="✓">
+                <input type="text" name="c_bank_main_1" id="c_bank_main_1" value="<?php echo htmlspecialchars($c_bank_1); ?>">
+                <input type="text" name="c_check_main_1" id="c_check_main_1" value="<?php echo htmlspecialchars($c_check_1); ?>">
+                <input type="text" name="c_paydate_main_1" id="c_paydate_main_1" value="<?php echo htmlspecialchars($c_or_paydate_1); ?>">
+            <?php endif; ?>
+
+            <?php if ($c_mop == 3): ?>
+                <!-- Para sa Online Payment -->
+                <input type="text" name="sign_ref" id="sign_ref" value="✓">
+                <input type="text" name="c_bank_main_2" id="c_bank_main_2" value="<?php echo htmlspecialchars($c_bank_2); ?>">
+                <input type="text" name="c_check_main_2" id="c_check_main_2" value="<?php echo htmlspecialchars($c_check_2); ?>">
+                <input type="text" name="c_paydate_main_2" id="c_paydate_main_2" value="<?php echo htmlspecialchars($c_or_paydate_2); ?>">
+            <?php endif; ?>
+
         <?php } else if ($orDetails) {
             $car_no = $orDetails["c_or_no"];
             $c_name = $orDetails["c_name"];
@@ -408,9 +475,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <textarea name="c_address" id="c_address">-----------------</textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
 
-            <input type="text" name="c_check_other" id="c_check_other" value="<?php echo $row['c_check_no']; ?>">
-            <input type="text" name="c_bank_other" id="c_bank_other" value="<?php echo $row['c_bank']; ?>">
-            <input type="text" name="c_paydate_other" id="c_paydate_other" value="<?php echo $c_or_paydate; ?>">
+            <?php if ($c_mop == 2): ?>
+                <input type="text" name="sign_check" id="sign_check" value="✓">
+                <input type="text" name="c_bank_main_1" id="c_bank_main_1" value="<?php echo htmlspecialchars($c_bank_1); ?>">
+                <input type="text" name="c_check_main_1" id="c_check_main_1" value="<?php echo htmlspecialchars($c_check_1); ?>">
+                <input type="text" name="c_paydate_main_1" id="c_paydate_main_1" value="<?php echo htmlspecialchars($c_or_paydate_1); ?>">
+            <?php endif; ?>
+
+            <?php if ($c_mop == 3): ?>
+                <input type="text" name="sign_ref" id="sign_ref" value="✓">
+                <input type="text" name="c_bank_main_2" id="c_bank_main_2" value="<?php echo htmlspecialchars($c_bank_2); ?>">
+                <input type="text" name="c_check_main_2" id="c_check_main_2" value="<?php echo htmlspecialchars($c_check_2); ?>">
+                <input type="text" name="c_paydate_main_2" id="c_paydate_main_2" value="<?php echo htmlspecialchars($c_or_paydate_2); ?>">
+            <?php endif; ?>
+
         <?php } ?>
 
         <?php
