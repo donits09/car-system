@@ -17,6 +17,7 @@ $c_remarks = $_GET['c_remarks'] ?? '';
 $c_bank = '';
 $c_bank_2 = '';
 $c_check = '';
+$c_check_main2 = $c_check_main;
 
 if ($c_bank_check == '' || $c_bank_check == null){
     $c_bank_2 = $c_bank_online;
@@ -126,10 +127,6 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             font-size:16px;
         }
         
-        
-        
-        
-        
         #c_bank{
             margin-top: 150px;
             margin-right: 50px;
@@ -153,7 +150,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_bank_main_2{
-            margin-top: 330px;
+            margin-top: 315px;
             margin-left: 325px;
             width: auto;
             text-align: left;
@@ -167,6 +164,16 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             text-align: center;
             font-size: 12px !important;
             position:absolute;
+            /* background-color: pink; */
+        }
+        #c_check_main2{
+            margin-top:305px;
+            margin-left:10px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+            /* background-color: red; */
         }
         .btn-container {
             display: flex;
@@ -183,10 +190,6 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             margin-top:300px;
             position:absolute;
         }
-        
-
-
-
         #c_received {
             text-transform: uppercase!important;
             float: right;
@@ -409,22 +412,23 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
     <script>
         var cMopValue = document.getElementById('c_mop_value').value;
         var cBankCheck = document.getElementById('c_bank_main').value;
+        var cBankCheck2 = document.getElementById('c_bank_main_2').value;
         var cCheckNo = document.getElementById('c_check_main').value;
         var cPayDateField = document.getElementById('c_paydate');
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
-        if (cMopValue == '1' || cMopValue == '3') {
+        if (cMopValue == '1' || cMopValue == '2') {
             dynamicMarginDiv.style.marginTop = '180px';
             cPayDateField.style.display = 'none';
             cBankCheck.style.display = 'block';
             cCheckNo.style.display = 'block';
         } else {
-            dynamicMarginDiv.style.marginTop = '205px';
-            /* dynamicMarginDiv.style.marginRight = '-205px'; */
+            cPayDateField.style.marginTop = '180px';
             cPayDateField.style.display = 'block';
-            cBankCheck.style.display = 'block';
+            cBankCheck2.style.display = 'block';
             cCheckNo.style.display = 'block';
         }
+
     </script>
     <script>
         function initializePage() {

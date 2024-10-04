@@ -175,6 +175,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
+    
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
