@@ -76,7 +76,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <select class="form-control" id="c_tran_type_or" name="c_tran_type_or">
             </select>
         </div>
-        <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
+        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
     <div class="form-group">
         <div class="dropdown" id="or_type_container">

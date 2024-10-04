@@ -131,7 +131,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
-        <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
+        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
     
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
@@ -614,7 +614,7 @@ function updateCarList() {
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: '<?php echo base_url; ?>cashier/car/fetch_tran_type.php',
+            url: '<?php echo base_url; ?>cashier/other_fees/fetch_tran_type.php',
             type: 'GET',
             data: { c_atap_no: atapNo },
             dataType: 'json',
