@@ -127,10 +127,9 @@ Class Master{
 	
 		echo json_encode($resp);
 	}	
-
 	function delete_car($carNo, $atapNo) {
 		$resp = array();
-		if (isset($carNo) && isset($atapNo)) {
+		if (!empty($carNo) && !empty($atapNo)) {
 			$sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?";
 			$stmt = odbc_prepare($this->conn, $sql);
 	
@@ -140,13 +139,14 @@ Class Master{
 				if ($result) {
 					$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
 	
-					$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?"; 
+					$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?";
 					$stmt2 = odbc_prepare($this->conn, $sql2);
 	
 					if ($stmt2) {
-						$result2 = @odbc_execute($stmt2, array($carNo)); 
+						$result2 = @odbc_execute($stmt2, array($carNo));
 	
 						if ($result2) {
+							// Fetch current car numbers associated with this ATAP
 							$sqlGetCarNo = "SELECT c_car_no FROM t_atap WHERE c_atap_no = ?";
 							$stmtGetCarNo = odbc_prepare($this->conn, $sqlGetCarNo);
 	
@@ -158,9 +158,7 @@ Class Master{
 									$currentCarNo = $row['c_car_no'];
 	
 									if ($currentCarNo) {
-										$carNoArray = explode(',', $currentCarNo);
-	
-										$carNoArray = array_filter($carNoArray, function($car) use ($carNo) {
+										$carNoArray = array_filter(explode(',', $currentCarNo), function($car) use ($carNo) {
 											return $car != $carNo;
 										});
 	
@@ -176,7 +174,7 @@ Class Master{
 											$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($atapNo));
 										}
 	
-										if (isset($resultUpdateAtap) && $resultUpdateAtap) {
+										if ($resultUpdateAtap) {
 											$resp['status'] = 'success';
 											$resp['msg'] = "Car and ATAP status successfully updated.";
 										} else {
@@ -219,6 +217,8 @@ Class Master{
 		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
+	
+
 	
 	function delete_atap($atapId, $atapNo) {
 		$resp = array();
@@ -804,8 +804,8 @@ Class Master{
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
 	
-		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks";
-		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks'";
+		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
+		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '$c_atap_no'";
 	
 		$resp = array();
 	
@@ -816,7 +816,7 @@ Class Master{
 	
 			if ($save) {
 				if (!empty($atap_id)) {
-					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1 WHERE id = '$atap_id'";
+					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1, c_car_no ='$c_car_no' WHERE id = '$atap_id'";
 					$update_tran_type_result = odbc_exec($this->conn, $update_tran_type);
 					if (!$update_tran_type_result) {
 						$resp['status'] = 'failed';
@@ -831,17 +831,36 @@ Class Master{
 					if ($check_items_result) {
 						$row = odbc_fetch_array($check_items_result);
 						$count_items = $row['count_items'];
-	
-						if ($count_items > 0) {
-							$update_atap = "UPDATE t_atap SET status = 2 WHERE c_atap_no = '$c_atap_no'";
+						
+						// Get the current value of c_car_no from t_atap
+						$current_car_no_query = "SELECT c_car_no FROM t_atap WHERE c_atap_no = '$c_atap_no'";
+						$current_car_no_result = odbc_exec($this->conn, $current_car_no_query);
+					
+						if ($current_car_no_result) {
+							$row_car = odbc_fetch_array($current_car_no_result);
+							$current_car_no = $row_car['c_car_no'];
+					
+							// Check if the new c_car_no is unique
+							$car_no_array = explode(',', $current_car_no); // Split existing c_car_no values
+							if (!in_array($c_car_no, $car_no_array)) { // If new c_car_no is not already in the array
+								$new_car_no = $current_car_no ? $current_car_no . ',' . $c_car_no : $c_car_no; // Append new value
+					
+								if ($count_items > 0) {
+									$update_atap = "UPDATE t_atap SET status = 2, c_car_no = '$new_car_no' WHERE c_atap_no = '$c_atap_no'";
+								} else {
+									$update_atap = "UPDATE t_atap SET status = 1, c_car_no = '$new_car_no' WHERE c_atap_no = '$c_atap_no'";
+								}
+								$update = odbc_exec($this->conn, $update_atap);
+							} else {
+								$update = true; 
+							}
 						} else {
-							$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
+							$update = false;
 						}
-	
-						$update = odbc_exec($this->conn, $update_atap);
 					} else {
 						$update = false;
 					}
+					
 				} else {
 					$update = true;
 				}
