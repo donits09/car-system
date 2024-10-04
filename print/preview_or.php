@@ -17,6 +17,9 @@ $c_remarks = $_GET['c_remarks'] ?? '';
 $c_bank = '';
 $c_bank_2 = '';
 $c_check = '';
+$c_ref = '';
+$c_or_paydate_1 = '';
+$c_or_paydate_2 = '';
 
 if ($c_bank_check == '' || $c_bank_check == null){
     $c_bank_2 = $c_bank_online;
@@ -25,10 +28,17 @@ if ($c_bank_check == '' || $c_bank_check == null){
 }
 
 if ($c_check_no == '' || $c_check_no == null){
-    $c_check = $c_ref_no;
+    $c_ref = $c_ref_no;
 }else{
     $c_check = $c_check_no;
 }
+
+if ($c_mop == 3) {
+    $c_or_paydate_2 = $c_or_paydate;
+} elseif ($c_mop == 2) {
+    $c_or_paydate_1 = $c_or_paydate;
+}
+
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
         return false;
@@ -153,7 +163,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_bank_main_2{
-            margin-top: 330px;
+            margin-top: 318px;
             margin-left: 325px;
             width: auto;
             text-align: left;
@@ -163,6 +173,30 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         #c_check_main{
             margin-top:303px;
             margin-left:10px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_check{
+            margin-top:303px;
+            margin-left:-65px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_ref_main{
+            margin-top:318px;
+            margin-left:15px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_ref{
+            margin-top:318px;
+            margin-left:-65px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -275,9 +309,17 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             margin-top:100px;
             margin-left:-15px;
         }
-        #c_paydate {
+        #c_paydate_check {
             float: left;
             margin-top: 168px;
+            width: auto;
+            margin-left:200px;
+            text-left: center;
+            font-size: 10px !important;
+        }
+        #c_paydate_online {
+            float: left;
+            margin-top: 2px;
             width: auto;
             margin-left:200px;
             text-left: center;
@@ -360,7 +402,14 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
             <input type="text" name="c_bank_main_2" id="c_bank_main_2" value="<?php echo htmlspecialchars($c_bank_2); ?>">
 
+            <?php if ($c_mop == 2): ?>
+                <input type="text" name="sign_check" id="sign_check" value="✓">
+            <?php elseif ($c_mop == 3): ?>
+                <input type="text" name="sign_ref" id="sign_ref" value="✓">
+            <?php endif; ?>
+                
             <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
+            <input type="text" name="c_ref_main" id="c_ref_main" value="<?php echo htmlspecialchars($c_ref); ?>">
 
            
         <?php } ?>
@@ -379,7 +428,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
                 $realname = htmlspecialchars($encoder["c_realname"]);
             }
         ?>
-        <input type="text" name="c_paydate" id="c_paydate" value="<?php echo htmlspecialchars($c_or_paydate); ?>">
+        <input type="text" name="c_paydate_check" id="c_paydate_check" value="<?php echo htmlspecialchars($c_or_paydate_1); ?>">
+        <input type="text" name="c_paydate_online" id="c_paydate_online" value="<?php echo htmlspecialchars($c_or_paydate_2); ?>">
 
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
 
@@ -406,7 +456,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
     <!-- <div class="btn-container">
         <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button> 
     </div> -->
-    <script>
+    <!-- <script>
         var cMopValue = document.getElementById('c_mop_value').value;
         var cBankCheck = document.getElementById('c_bank_main').value;
         var cCheckNo = document.getElementById('c_check_main').value;
@@ -419,13 +469,13 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             cBankCheck.style.display = 'block';
             cCheckNo.style.display = 'block';
         } else {
-            dynamicMarginDiv.style.marginTop = '205px';
-            /* dynamicMarginDiv.style.marginRight = '-205px'; */
+            dynamicMarginDiv.style.marginTop = '500px';
+            dynamicMarginDiv.style.marginRight = '-205px';
             cPayDateField.style.display = 'block';
             cBankCheck.style.display = 'block';
             cCheckNo.style.display = 'block';
         }
-    </script>
+    </script> -->
     <script>
         function initializePage() {
             adjustTextArea('c_received');

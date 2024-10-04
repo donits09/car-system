@@ -198,7 +198,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         var cPayDateField = document.getElementById('c_paydate');
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
-        if (cMopValue == '1') {
+        if (cMopValue == '1' || cMopValue == '3') {
             dynamicMarginDiv.style.marginTop = '195px';
             cPayDateField.style.display = 'none';
         } else {
