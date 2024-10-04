@@ -127,11 +127,9 @@ Class Master{
 	
 		echo json_encode($resp);
 	}	
-
 	function delete_car($carNo, $atapNo) {
 		$resp = array();
 		if (!empty($carNo) && !empty($atapNo)) {
-			// Cancel the car payment
 			$sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?";
 			$stmt = odbc_prepare($this->conn, $sql);
 	
@@ -141,7 +139,6 @@ Class Master{
 				if ($result) {
 					$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
 	
-					// Update ATAP item status
 					$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?";
 					$stmt2 = odbc_prepare($this->conn, $sql2);
 	
