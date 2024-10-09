@@ -4,8 +4,8 @@ include('../../config.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
-    $c_atap_no = $_POST['c_atap_no'];
+if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
+    $c_atap_no = $_POST['c_atap_no_or'];
     $query = "SELECT 
                 a.id, 
                 a.c_account_no, 

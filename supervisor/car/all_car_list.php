@@ -91,7 +91,7 @@ include('../../inc/header.php');
                         $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
                         $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
 
-                        $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
+                        $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type, a.c_atap_no,
                                     a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, 
                                     a.c_tran_updated, a.c_mop, a.c_bank, b.c_name, b.c_phase,
                                     b.c_block, b.c_lot, a.e_status, a.c_remarks
@@ -245,8 +245,8 @@ include('../../inc/header.php');
                                             <!-- <span class="fa fa-edit text-info"></span>  -->Edit
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-car-no="<?php echo htmlspecialchars($row['c_car_no']); ?>">
-                                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
+                                        <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>" data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
+                                            Cancel <?php echo $row['c_atap_no']; ?>
                                         </a>
                                         <?php } ?>
                                     </div>
@@ -340,6 +340,49 @@ $(document).ready(function() {
             $(this).tab('show');
         });
     });
+</script>
+<script>
+    $(document).on('click', '.delete_data_car', function() {
+            var carNo = $(this).data('car-no');
+            var atapNo = $(this).data('atap-no');
+            console.log("Car No: " + carNo + ", ATAP No: " + atapNo);
+            _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
+        });
+        function delete_car(carNo, atapNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=delete_car",
+        method: "POST",
+        data: { carNo: carNo, atapNo: atapNo },
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred while making the request.", 'error');
+            end_loader();
+        },
+        success: function(resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function() {
+                    $('#confirm_modal').modal('hide'); 
+                    $('body').removeClass('modal-open'); 
+                    $('.modal-backdrop').remove(); 
+                    location.reload();
+                    $('.delete_data_car[data-car-no="' + carNo + '"]').closest('tr').remove();
+                }, 1000);
+            } else if (resp && resp.status === 'failed') {
+                if (resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    alert_toast("An error occurred: " + resp.msg, 'error');
+                }
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+            }
+            end_loader();
+        }
+    });
+}
 </script>
 </div>
 </body>

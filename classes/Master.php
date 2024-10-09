@@ -471,9 +471,14 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
-		$atap_id = $_POST['atap_id'];
-		$c_tran_type = $_POST['atap_val'];
+		
+		$atap_id = $_POST['c_atap_no_or'];
+		$atap_val = $_POST['atap_id_or'];
 
+		if ($c_check_no == '' || $c_check_no == null) {
+			$c_check_no = $c_ref_no;
+		}
+	
 		if ($c_mop == 1) {
 			$c_bank = "";
 		} elseif ($c_mop == 2) {
@@ -481,38 +486,39 @@ Class Master{
 		} elseif ($c_mop == 3) {
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
 		}
+
+		if (!empty($_POST['c_tran_type_single_or'])) {
+			$c_tran_type = $_POST['c_tran_type_single_or'];
+		} elseif (!empty($_POST['c_tran_type_or'])) {
+			$c_tran_type = $_POST['atap_val_or'];
+		} elseif (!empty($_POST['c_or_type'])) {
+			$c_tran_type = $_POST['c_or_type'];
 	
-		$c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
-		$c_tran_type_main = isset($_POST['c_tran_type']) ? $_POST['c_tran_type'] : ''; 
-
-		$transaction_types = array($c_tran_type_or, $c_tran_type_main);
-		$transaction_types = array_filter($transaction_types); 
-
-		if (!empty($c_tran_type_main)) {
-		} else {
-			foreach ($transaction_types as $tran_type) {
-				$tran_type = trim(pg_escape_string($tran_type)); 
-
-				$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
-				$check_type_result = odbc_exec($conn, $check_type_query);
-
-				if (!$check_type_result) {
-					$resp['status'] = 'failed';
-					$resp['msg'] = "Error executing query.";
-					echo json_encode($resp);
-					return;
-				}
-
-				$type_exists = odbc_fetch_array($check_type_result)['count'];
-
-				if ($type_exists == 0) {
-					$resp['status'] = 'failed';
-					//$resp['msg'] = "Transaction type '$tran_type' does not exist.";
-					$resp['msg'] = "CAR type does not exist.";
-					echo json_encode($resp); 
-					return;
-				}
+			$tran_type = trim(pg_escape_string($c_tran_type));
+	
+			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
+			$check_type_result = odbc_exec($conn, $check_type_query);
+	
+			if (!$check_type_result) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Error executing query.";
+				echo json_encode($resp);
+				return;
 			}
+	
+			$type_exists = odbc_fetch_array($check_type_result)['count'];
+	
+			if ($type_exists == 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "OR type does not exist.";
+				echo json_encode($resp);
+				return;
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Transaction type or OR type is required.";
+			echo json_encode($resp);
+			return;
 		}
 
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";
@@ -526,8 +532,8 @@ Class Master{
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
 
-		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop,c_bank,c_check_no,c_remarks";
-		$values = "'$maxId','$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank','$c_check_no','$c_remarks'";
+		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop,c_bank,c_check_no,c_remarks, c_atap_no";
+		$values = "'$maxId','$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank','$c_check_no','$c_remarks', '$atap_id'";
 	
 		$resp = array();
 	
@@ -538,7 +544,7 @@ Class Master{
 	
 			if ($save) {
 				if (!empty($atap_id)) {
-					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1 WHERE id = '$atap_id'";
+					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1, c_car_no ='$c_or_no' WHERE id = '$atap_val'";
 					$update_tran_type_result = odbc_exec($this->conn, $update_tran_type);
 					if (!$update_tran_type_result) {
 						$resp['status'] = 'failed';
@@ -546,33 +552,48 @@ Class Master{
 					}
 				}
 
-				if (!empty($c_atap_no)) {
-					$check_items = "SELECT COUNT(*) AS count_items FROM t_atap_items WHERE c_atap_no = '$c_atap_no' AND atap_status = 0";
+				if (!empty($atap_id)) {
+					$check_items = "SELECT COUNT(*) AS count_items FROM t_atap_items WHERE c_atap_no = '$atap_id' AND atap_status = 0";
 					$check_items_result = odbc_exec($this->conn, $check_items);
-				
+	
 					if ($check_items_result) {
 						$row = odbc_fetch_array($check_items_result);
 						$count_items = $row['count_items'];
-				
-						if ($count_items > 0) {
-							$update_atap = "UPDATE t_atap SET status = 2 WHERE c_atap_no = '$c_atap_no'";
+			
+						$current_or_no_query = "SELECT c_car_no FROM t_atap WHERE c_atap_no = '$atap_id'";
+						$current_or_no_result = odbc_exec($this->conn, $current_or_no_query);
+					
+						if ($current_or_no_result) {
+							$row_car = odbc_fetch_array($current_or_no_result);
+							$current_or_no = $row_car['c_car_no'];
+					
+							$or_no_array = explode(',', $current_or_no); 
+							if (!in_array($c_or_no, $or_no_array)) { 
+								$new_or_no = $current_or_no ? $current_or_no . ',' . $c_or_no : $c_or_no;
+					
+								if ($count_items > 0) {
+									$update_atap = "UPDATE t_atap SET status = 2, c_car_no = '$new_or_no' WHERE c_atap_no = '$atap_id'";
+								} else {
+									$update_atap = "UPDATE t_atap SET status = 1, c_car_no = '$new_or_no' WHERE c_atap_no = '$atap_id'";
+								}
+								$update = odbc_exec($this->conn, $update_atap);
+							} else {
+								$update = true; 
+							}
 						} else {
-						
-							$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
+							$update = false;
 						}
-				
-						$update = odbc_exec($this->conn, $update_atap);
 					} else {
 						$update = false;
 					}
+					
 				} else {
 					$update = true;
 				}
-				
 	
 				if ($update) {
 					$resp['status'] = 'success';
-					$resp['msg'] = "New OR payment successfully saved.";
+					$resp['msg'] = "New or payment successfully saved.";
 				} else {
 					$resp['status'] = 'failed';
 					$resp['err'] = odbc_errormsg($this->conn);
@@ -796,6 +817,7 @@ Class Master{
 	
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
+
 		if ($maxIdResult) {
 			$row = odbc_fetch_array($maxIdResult);
 			$maxId = $row['max_id'] + 1;
@@ -831,8 +853,7 @@ Class Master{
 					if ($check_items_result) {
 						$row = odbc_fetch_array($check_items_result);
 						$count_items = $row['count_items'];
-						
-						// Get the current value of c_car_no from t_atap
+			
 						$current_car_no_query = "SELECT c_car_no FROM t_atap WHERE c_atap_no = '$c_atap_no'";
 						$current_car_no_result = odbc_exec($this->conn, $current_car_no_query);
 					
@@ -840,10 +861,9 @@ Class Master{
 							$row_car = odbc_fetch_array($current_car_no_result);
 							$current_car_no = $row_car['c_car_no'];
 					
-							// Check if the new c_car_no is unique
-							$car_no_array = explode(',', $current_car_no); // Split existing c_car_no values
-							if (!in_array($c_car_no, $car_no_array)) { // If new c_car_no is not already in the array
-								$new_car_no = $current_car_no ? $current_car_no . ',' . $c_car_no : $c_car_no; // Append new value
+							$car_no_array = explode(',', $current_car_no); 
+							if (!in_array($c_car_no, $car_no_array)) { 
+								$new_car_no = $current_car_no ? $current_car_no . ',' . $c_car_no : $c_car_no;
 					
 								if ($count_items > 0) {
 									$update_atap = "UPDATE t_atap SET status = 2, c_car_no = '$new_car_no' WHERE c_atap_no = '$c_atap_no'";
@@ -980,8 +1000,8 @@ Class Master{
 		$values = "'$maxId', '$c_car_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 
 		$c_account_no = '';
-		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks";
-		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks'";
+		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
+		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '$c_atap_no'";
 	
 		$resp = array();
 	
@@ -994,7 +1014,7 @@ Class Master{
 	
 			if ($save && $save1) {
 				if (!empty($atap_id)) {
-					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1 WHERE id = '$atap_id'";
+					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1, c_car_no ='$c_car_no' WHERE id = '$atap_id'";
 					$update_tran_type_result = odbc_exec($this->conn, $update_tran_type);
 					if (!$update_tran_type_result) {
 						$resp['status'] = 'failed';
@@ -1008,18 +1028,36 @@ Class Master{
 					if ($check_items_result) {
 						$row = odbc_fetch_array($check_items_result);
 						$count_items = $row['count_items'];
+
+						$current_car_no_query = "SELECT c_car_no FROM t_atap WHERE c_atap_no = '$c_atap_no'";
+						$current_car_no_result = odbc_exec($this->conn, $current_car_no_query);
 				
-						if ($count_items > 0) {
-							$update_atap = "UPDATE t_atap SET status = 2 WHERE c_atap_no = '$c_atap_no'";
-						} else {
+						if ($current_car_no_result) {
+							$row_car = odbc_fetch_array($current_car_no_result);
+							$current_car_no = $row_car['c_car_no'];
+					
+							$car_no_array = explode(',', $current_car_no); 
+							if (!in_array($c_car_no, $car_no_array)) { 
+								$new_car_no = $current_car_no ? $current_car_no . ',' . $c_car_no : $c_car_no;
+
+								if ($count_items > 0) {
+									$update_atap = "UPDATE t_atap SET status = 2, c_car_no = '$new_car_no' WHERE c_atap_no = '$c_atap_no'";
+								} else {
+								
+									$update_atap = "UPDATE t_atap SET status = 1, c_car_no = '$new_car_no' WHERE c_atap_no = '$c_atap_no'";
+								}
 						
-							$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
+								$update = odbc_exec($this->conn, $update_atap);
+							} else {
+								$update = false;
+							}
+						} else {
+							$update = true;
 						}
-				
-						$update = odbc_exec($this->conn, $update_atap);
 					} else {
 						$update = false;
 					}
+					
 				} else {
 					$update = true;
 				}
@@ -1075,9 +1113,13 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
-		$atap_id = $_POST['atap_id'];
-		$c_tran_type = $_POST['atap_val'];
+		// $atap_id = $_POST['atap_id_or'];
+		// $c_tran_type = $_POST['atap_val'];
 		
+		$atap_id = $_POST['c_atap_no_or'];
+		$atap_val = $_POST['atap_id_or'];
+
+
 		if ($c_check_no == '' || $c_check_no == null){
 			$c_check_no = $c_ref_no;
 		}
@@ -1091,38 +1133,72 @@ Class Master{
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
 		}
 
-		$c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
-		$c_tran_type_main = isset($_POST['c_tran_type']) ? $_POST['c_tran_type'] : ''; 
+		if (!empty($_POST['c_tran_type_single_or'])) {
+			$c_tran_type = $_POST['c_tran_type_single_or'];
+		} elseif (!empty($_POST['c_tran_type_or'])) {
+			$c_tran_type = $_POST['atap_val_or'];
+		} elseif (!empty($_POST['c_or_type'])) {
+			$c_tran_type = $_POST['c_or_type'];
 
-		$transaction_types = array($c_tran_type_or, $c_tran_type_main);
-		$transaction_types = array_filter($transaction_types); 
-
-		if (!empty($c_tran_type_main)) {
-		} else {
-			foreach ($transaction_types as $tran_type) {
-				$tran_type = trim(pg_escape_string($tran_type)); 
-
-				$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
-				$check_type_result = odbc_exec($conn, $check_type_query);
-
-				if (!$check_type_result) {
-					$resp['status'] = 'failed';
-					$resp['msg'] = "Error executing query.";
-					echo json_encode($resp);
-					return;
-				}
-
-				$type_exists = odbc_fetch_array($check_type_result)['count'];
-
-				if ($type_exists == 0) {
-					$resp['status'] = 'failed';
-					//$resp['msg'] = "Transaction type '$tran_type' does not exist.";
-					$resp['msg'] = "CAR type does not exist.";
-					echo json_encode($resp); 
-					return;
-				}
+			$tran_type = trim(pg_escape_string($c_tran_type));
+	
+			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
+			$check_type_result = odbc_exec($conn, $check_type_query);
+	
+			if (!$check_type_result) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Error executing query.";
+				echo json_encode($resp);
+				return;
 			}
+	
+			$type_exists = odbc_fetch_array($check_type_result)['count'];
+	
+			if ($type_exists == 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "OR type does not exist.";
+				echo json_encode($resp);
+				return;
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Transaction type or car type is required.";
+			echo json_encode($resp);
+			return;
 		}
+
+		// $c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
+		// $c_tran_type_main = isset($_POST['c_tran_type']) ? $_POST['c_tran_type'] : ''; 
+
+		// $transaction_types = array($c_tran_type_or, $c_tran_type_main);
+		// $transaction_types = array_filter($transaction_types); 
+
+		// if (!empty($c_tran_type_main)) {
+		// } else {
+		// 	foreach ($transaction_types as $tran_type) {
+		// 		$tran_type = trim(pg_escape_string($tran_type)); 
+
+		// 		$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
+		// 		$check_type_result = odbc_exec($conn, $check_type_query);
+
+		// 		if (!$check_type_result) {
+		// 			$resp['status'] = 'failed';
+		// 			$resp['msg'] = "Error executing query.";
+		// 			echo json_encode($resp);
+		// 			return;
+		// 		}
+
+		// 		$type_exists = odbc_fetch_array($check_type_result)['count'];
+
+		// 		if ($type_exists == 0) {
+		// 			$resp['status'] = 'failed';
+		// 			//$resp['msg'] = "Transaction type '$tran_type' does not exist.";
+		// 			$resp['msg'] = "CAR type does not exist.";
+		// 			echo json_encode($resp); 
+		// 			return;
+		// 		}
+		// 	}
+		// }
 	
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
@@ -1139,8 +1215,8 @@ Class Master{
 		$values = "'$maxId', '$c_or_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 
 		$c_account_no = '';
-		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks";
-		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks'";
+		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
+		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '$atap_id'";
 	
 		$resp = array();
 	
@@ -1153,36 +1229,73 @@ Class Master{
 	
 			if ($save && $save1) {
 				if (!empty($atap_id)) {
-					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1 WHERE id = '$atap_id'";
+					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1, c_car_no ='$c_or_no' WHERE id = '$atap_val'";
 					$update_tran_type_result = odbc_exec($this->conn, $update_tran_type);
 					if (!$update_tran_type_result) {
 						$resp['status'] = 'failed';
 						$resp['err'] = odbc_errormsg($this->conn);
 					}
 				}
-				if (!empty($c_atap_no)) {
-					$check_items = "SELECT COUNT(*) AS count_items FROM t_atap_items WHERE c_atap_no = '$c_atap_no' AND atap_status = 0";
-					$check_items_result = odbc_exec($this->conn, $check_items);
+				// if (!empty($c_atap_no)) {
+				// 	$check_items = "SELECT COUNT(*) AS count_items FROM t_atap_items WHERE c_atap_no = '$c_atap_no' AND atap_status = 0";
+				// 	$check_items_result = odbc_exec($this->conn, $check_items);
 				
+				// 	if ($check_items_result) {
+				// 		$row = odbc_fetch_array($check_items_result);
+				// 		$count_items = $row['count_items'];
+				
+				// 		if ($count_items > 0) {
+				// 			$update_atap = "UPDATE t_atap SET status = 2 WHERE c_atap_no = '$c_atap_no'";
+				// 		} else {
+						
+				// 			$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
+				// 		}
+				
+				// 		$update = odbc_exec($this->conn, $update_atap);
+				// 	} else {
+				// 		$update = false;
+				// 	}
+				// } else {
+				// 	$update = true;
+				// }
+				if (!empty($atap_id)) {
+					$check_items = "SELECT COUNT(*) AS count_items FROM t_atap_items WHERE c_atap_no = '$atap_id' AND atap_status = 0";
+					$check_items_result = odbc_exec($this->conn, $check_items);
+	
 					if ($check_items_result) {
 						$row = odbc_fetch_array($check_items_result);
 						$count_items = $row['count_items'];
-				
-						if ($count_items > 0) {
-							$update_atap = "UPDATE t_atap SET status = 2 WHERE c_atap_no = '$c_atap_no'";
+			
+						$current_or_no_query = "SELECT c_car_no FROM t_atap WHERE c_atap_no = '$atap_id'";
+						$current_or_no_result = odbc_exec($this->conn, $current_or_no_query);
+					
+						if ($current_or_no_result) {
+							$row_car = odbc_fetch_array($current_or_no_result);
+							$current_or_no = $row_car['c_car_no'];
+					
+							$or_no_array = explode(',', $current_or_no); 
+							if (!in_array($c_or_no, $or_no_array)) { 
+								$new_or_no = $current_or_no ? $current_or_no . ',' . $c_or_no : $c_or_no;
+					
+								if ($count_items > 0) {
+									$update_atap = "UPDATE t_atap SET status = 2, c_car_no = '$new_or_no' WHERE c_atap_no = '$atap_id'";
+								} else {
+									$update_atap = "UPDATE t_atap SET status = 1, c_car_no = '$new_or_no' WHERE c_atap_no = '$atap_id'";
+								}
+								$update = odbc_exec($this->conn, $update_atap);
+							} else {
+								$update = true; 
+							}
 						} else {
-						
-							$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
+							$update = false;
 						}
-				
-						$update = odbc_exec($this->conn, $update_atap);
 					} else {
 						$update = false;
 					}
+					
 				} else {
 					$update = true;
 				}
-				
 				if ($update) {
 					$this->car_logs('OR Management', "ADDED - OR#$c_or_no");
 					$resp['status'] = 'success';
