@@ -357,6 +357,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             fetchTranType(atapNo);
                             $('#car_type_container').hide();
                             $('#tran_type_container').show();
+                            if ($('#car_type_container').is(':hidden')) {
+                                alert('No CAR transactions remaining for this ATAP #.');
+                            }
                         }
                     } else {
                         $('#car_type_container').show();

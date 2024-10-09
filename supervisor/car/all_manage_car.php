@@ -371,18 +371,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        // const appStats = $('#approval_status').val();
-                        // if (response.data.approval_status === '0') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP requires approval.');
-                        //     clearTxt();
-                        // }else if (response.data.approval_status === '3') {
-                        //     $('#car_type_container').show();
-                        //     $('#tran_type_container').hide();
-                        //     alert('The selected ATAP was disapproved.');
-                        //     clearTxt();
-                        // }else 
                         if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
@@ -399,6 +387,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             fetchTranType(atapNo);
                             $('#car_type_container').hide();
                             $('#tran_type_container').show();
+                            if ($('#car_type_container').is(':hidden')) {
+                                alert('No CAR transactions remaining for this ATAP #.');
+                            }
                         }
                     } else {
                         $('#car_type_container').show();

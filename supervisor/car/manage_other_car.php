@@ -531,18 +531,6 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    // const appStats = $('#approval_status').val();
-                    // if (response.data.approval_status === '0') {
-                    //     $('#car_type_container').show();
-                    //     $('#tran_type_container').hide();
-                    //     alert('The selected ATAP requires approval.');
-                    //     clearTxt();
-                    // }else if (response.data.approval_status === '3') {
-                    //     $('#car_type_container').show();
-                    //     $('#tran_type_container').hide();
-                    //     alert('The selected ATAP was disapproved.');
-                    //     clearTxt();
-                    // }else 
                     if (response.data.status === '1') {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
@@ -563,6 +551,9 @@ $(document).ready(function() {
                         fetchTranType(atapNo);
                         $('#car_type_container').hide();
                         $('#tran_type_container').show();
+                        if ($('#car_type_container').is(':hidden')) {
+                            alert('No CAR transactions remaining for this ATAP #.');
+                        }
                     }
                 } else {
                     $('#car_type_container').show();

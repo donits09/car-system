@@ -65,18 +65,18 @@
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
-                <label for="c_atap_no">ATAP No.</label>
-                <input type="text" class="form-control" id="c_atap_no" name="c_atap_no">
+                <label for="c_atap_no_or">ATAP No.</label>
+                <input type="number" class="form-control" id="c_atap_no_or" name="c_atap_no_or">
             </div>
         </div>
         <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
+            <a id="get_atap_or" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
     </div>
     <div class="form-group">
-        <div class="dropdown" id="car_type_container">
+        <div class="dropdown" id="or_type_container">
             <label for="c_or_type">Transaction Type</label>
            
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_or_type" name="c_or_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
@@ -132,15 +132,15 @@
 
    
     <div class="form-group" id="tran_type_container" style="display: none;">
-        <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+        <label for="c_tran_type_or">Transaction Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
-            <select class="form-control" id="c_tran_type" name="c_tran_type">
+            <select class="form-control" id="c_tran_type_or" name="c_tran_type_or">
             </select>
         </div>
-        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
+        <input type="text" class="form-control" id="c_tran_type_single_or" name="c_tran_type_single_or" style="display: none;" readonly>
     </div>
-    <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
-    <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
+    <input type="hidden" class="form-control" id="atap_id_or" name="atap_id_or" readonly>
+    <input type="hidden" class="form-control" id="atap_val_or" name="atap_val_or" readonly>
 
     <hr>
     <div class="form-group">
@@ -234,7 +234,7 @@
             <div class="col-md-6">
                 <label for="amount">Amount</label>
                 <input type="text" class="form-control" id="c_or_amount" name="c_or_amount" value="<?php echo number_format(htmlspecialchars($c_or_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
-                <div id="car_amt_error"></div>
+                <div id="or_amt_error"></div>
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
@@ -367,13 +367,15 @@ $(document).ready(function() {
 
     $('#other-or-form').on('submit', function(e) {
         e.preventDefault(); 
-        var orNo = $('#c_or_no').val();
-        const carAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
+        const orNo = $('#c_or_no').val();
+        const orAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
+
         let valid = true;
 
-        let atapVal = $('#c_tran_type_single').val(); 
+
+        let atapVal = $('#c_tran_type_single_or').val(); 
         if (!atapVal) {
-            atapVal = $('#atap_val').val(); 
+            atapVal = $('#atap_val_or').val(); 
         }else{
             atapVal = $('#c_or_type').val(); 
         }
@@ -388,8 +390,8 @@ $(document).ready(function() {
             valid = false;
         }
 
-        if (carAmount <= 0) {
-            $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+        if (orAmount <= 0) {
+            $('#or_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
             valid = false;
         }
 
@@ -411,29 +413,7 @@ $(document).ready(function() {
                 alert_toast("An error occurred.", 'error');
                 end_loader();
             },
-            // success: function(resp) {
-            //     console.log(resp);
-            //     if (resp && resp.status === 'success') {
-            //         alert_toast(resp.msg, 'success');
-            //         setTimeout(function() {
-            //             $('#createCarModal').modal('hide');
-            //             $('body').removeClass('modal-open');
-            //             $('.modal-backdrop').remove();
-            //             location.reload();
-            //         }, 1000);
-            //     } else if (resp && resp.status === 'failed') {
-            //         if (resp.msg === "OR type does not exist.") {
-            //             alert_toast("OR type does not exist.", 'error');
-            //         } else if (resp.err) {
-            //             alert_toast("An error occurred: " + resp.err, 'error');
-            //         }
-            //     }else if (resp && resp.status === 'failed' && resp.err) {
-            //         alert_toast("An error occurred: " + resp.err, 'error');
-            //     } else {
-            //         alert_toast("An unexpected error occurred", 'error');
-            //     }
-            //     end_loader();
-            // }
+
             success: function(resp) {
                 console.log(resp); 
                 if (resp && resp.status === 'success') {
@@ -455,16 +435,16 @@ $(document).ready(function() {
     });
 
     $('#c_or_no').on('input', function() {
-        const orNo = $(this).val();
+        const orNo = $('#c_or_no').val();
         const orNoError = $('#or_no_error');
         const submitButton = $('#btnsave');
 
         if (orNo.length < 6) {
-            $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
-            $('#other-or-form button[type="submit"]').attr('disabled', true);
+            orNoError.text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            submitButton.attr('disabled', true);
         } else if (orNo.length > 6) {
-            $('#or_no_error').text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
-            $('#other-or-form button[type="submit"]').attr('disabled', false);
+            orNoError.text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
+            submitButton.attr('disabled', true);
         } else {
             $.ajax({
                 type: 'POST',
@@ -497,12 +477,12 @@ $(document).ready(function() {
 </script>
 <script>
 $(document).ready(function() {
-    $('#get_atap').on('click', function() {
-        const atapNo = $('#c_atap_no').val();
+    $('#get_atap_or').on('click', function() {
+        const atapNo = $('#c_atap_no_or').val();
         var clearType = $('#c_or_type');
         if (atapNo.length > 0) {
-            $('#car_type_container').show();
-            $('#tran_type_container').hide(); 
+            $('#or_type_container').show();
+            $('#tran_type_container_or').hide(); 
             fetchAtapDetails(atapNo);
         } else {
             alert('Please enter an ATAP No. first.');
@@ -513,55 +493,47 @@ $(document).ready(function() {
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: 'get_atap_others_details_of.php',
-            data: { c_atap_no: atapNo },
+            url: '../../supervisor/other_fees/get_atap_others_details_of.php',
+            data: { c_atap_no_or: atapNo },
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    // const appStats = $('#approval_status').val();
-                    // if (response.data.approval_status === '0') {
-                    //         $('#car_type_container').show();
-                    //         $('#tran_type_container').hide();
-                    //         alert('The selected ATAP requires approval.');
-                    //         clearTxt();
-                    // }else if (response.data.approval_status === '3') {
-                    //     $('#car_type_container').show();
-                    //     $('#tran_type_container').hide();
-                    //     alert('The selected ATAP was disapproved.');
-                    //     clearTxt();
-                    // }else 
+
                     if (response.data.status === '1') {
-                        $('#car_type_container').show();
-                        $('#tran_type_container').hide();
+                        $('#or_type_container').show();
+                        $('#tran_type_container_or').hide();
                         alert("This ATAP has already been PAID.");
                         clearTxt();
                     } else if (response.data.status === '3') {
-                        $('#car_type_container').show();
-                        $('#tran_type_container').hide();
+                        $('#or_type_container').show();
+                        $('#tran_type_container_or').hide();
                         alert('This ATAP has already been CANCELLED');
                         clearTxt();
                     } else if ((response.data.status === '0' || response.data.status === '2') && (response.data.c_account_no !== '' && response.data.c_account_no !== null)) {
-                        $('#car_type_container').show();
-                        $('#tran_type_container').hide();
+                        $('#or_type_container').show();
+                        $('#tran_type_container_or').hide();
                         alert('The selected ATAP is a regular account.');
                         clearTxt();
                     }else {
                         populateForm(response.data);
                         //fetchBuyerDetails(response.data.c_account_no);
                         fetchTranType(atapNo);
-                        $('#car_type_container').hide();
-                        $('#tran_type_container').show();
+                        $('#or_type_container').hide();
+                        $('#tran_type_container_or').show();
+                        if ($('#or_type_container').is(':hidden')) {
+                            alert('No OR transactions remaining for this ATAP #.');
+                        }
                     }
                 } else {
-                    $('#car_type_container').show();
-                    $('#tran_type_container').hide();
+                    $('#or_type_container').show();
+                    $('#tran_type_container_or').hide();
                     alert('No ATAP details found for the given ATAP No.');
                     clearTxt();
                 }
             },
             error: function() {
-                $('#car_type_container').show();
-                $('#tran_type_container').hide();
+                $('#or_type_container').show();
+                $('#tran_type_container_or').hide();
                 alert('An error occurred while fetching ATAP details.');
                 clearTxt();
             }
@@ -569,7 +541,7 @@ $(document).ready(function() {
     }
 
     function clearTxt(){
-        $('#c_atap_no').val('');
+        $('#c_atap_no_or').val('');
         $('#c_name').val('').removeClass('glow-effect');
         $('#c_phase').val('').removeClass('glow-effect');
         $('#c_block').val('').removeClass('glow-effect');
@@ -599,7 +571,7 @@ $(document).ready(function() {
 <script>
    $(document).ready(function() {
         function updateAtapId(selectedValue) {
-            $('#atap_id').val(selectedValue);
+            $('#atap_id_or').val(selectedValue);
         }
 
         function updateAtapAmount(selectedValue) {
@@ -607,38 +579,38 @@ $(document).ready(function() {
         }
 
         function updateAtapVal(selectedValue) {
-            $('#atap_val').val(selectedValue);
+            $('#atap_val_or').val(selectedValue);
         }
 
-        $('#c_tran_type').change(function() {
+        $('#c_tran_type_or').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();
             var amount = selectedOption.data('amount'); 
-            var atap_val = selectedOption.text(); 
+            var atap_val_or = selectedOption.text(); 
 
             updateAtapId(selectedValue);
             updateAtapAmount(amount);
-            updateAtapVal(atap_val); 
+            updateAtapVal(atap_val_or); 
         });
     });
 
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: 'fetch_tran_type.php',
+            url: '<?php echo base_url; ?>supervisor/other_fees/fetch_tran_type.php',
             type: 'GET',
-            data: { c_atap_no: atapNo },
+            data: { c_atap_no_or: atapNo },
             dataType: 'json',
             success: function(response) {
-                var $select = $('#c_tran_type');
-                var $textbox = $('#c_tran_type_single');
-                var $atapId = $('#atap_id'); 
+                var $select = $('#c_tran_type_or');
+                var $textbox = $('#c_tran_type_single_or');
+                var $atapId = $('#atap_id_or'); 
                 var $atapAmount = $('#c_or_amount'); 
-                var $atapVal = $('#atap_val'); 
+                var $atapVal = $('#atap_val_or'); 
                 $select.empty();
                 
                 if (response.length > 0) {
-                    $('#tran_type_container').show();
+                    $('#tran_type_container_or').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
                         $('#tran_type_dropdown').hide();
@@ -661,7 +633,7 @@ $(document).ready(function() {
                         $atapVal.val(response[0].text);
                     }
                 } else {
-                    $('#tran_type_container').hide();
+                    $('#tran_type_container_or').hide();
                     $atapId.val(''); 
                     $atapAmount.val(''); 
                     $atapVal.val('');
@@ -672,7 +644,7 @@ $(document).ready(function() {
                 $('#tran_type_container').hide();
                 $('#atap_id').val(''); 
                 $('#c_or_amount').val(''); 
-                $('#atap_val').val(''); 
+                $('#atap_val_or').val(''); 
             }
         });
     }
@@ -706,7 +678,7 @@ function openPrintWindow() {
     $(document).ready(function() {
       
         function updateAtapVal(selectedValue) {
-            $('#atap_val').val(selectedValue);
+            $('#atap_val_or').val(selectedValue);
         }
  
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
@@ -725,9 +697,9 @@ function openPrintWindow() {
     </script>
     <script>
         function toggleCarType() {
-            var atapNo = document.getElementById('c_atap_no').value;
-            var carTypeContainer = document.getElementById('car_type_container');
-            var tranTypeContainer =document.getElementById('tran_type_container');
+            var atapNo = document.getElementById('c_atap_no_or').value;
+            var carTypeContainer = document.getElementById('or_type_container');
+            var tranTypeContainer =document.getElementById('tran_type_container_or');
 
             if (atapNo.trim() === '') {
                 carTypeContainer.style.display = 'block';

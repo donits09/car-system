@@ -60,7 +60,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
-    
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
@@ -76,7 +75,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
+        <div id="tran_type_dropdown_or" class="dropdown" style="width:100%;">
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
@@ -416,7 +415,7 @@ $(document).ready(function() {
                         $('.modal-backdrop').remove(); 
                         updateCarList(); 
                     }, 1000);
-                } else if (resp && resp.status === 'failed') {
+                } else if (resp && resp.status === 'failed' && resp.msg) {
                     if (resp.msg === "CAR type does not exist.") {
                         alert_toast("Car type does not exist.", 'error');
                     } else if (resp.err) {
@@ -545,7 +544,9 @@ $(document).ready(function() {
                             fetchTranType(atapNo);
                             $('#car_type_container').hide();
                             $('#tran_type_container').show();
-                            //alert('Maybe the transaction types are special.');
+                            if ($('#car_type_container').is(':hidden')) {
+                                alert('No CAR transactions remaining for this ATAP #.');
+                            }
                         }
                     } else {
                         $('#car_type_container').show();
@@ -714,13 +715,13 @@ function updateCarList() {
                     $('#tran_type_container').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
-                        $('#tran_type_dropdown').hide();
+                        $('#tran_type_dropdown_or').hide();
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
                     } else {
                         $textbox.hide();
-                        $('#tran_type_dropdown').show();
+                        $('#tran_type_dropdown_or').show();
                         $.each(response, function(index, option) {
                             $select.append($('<option>', {
                                 value: option.value,
