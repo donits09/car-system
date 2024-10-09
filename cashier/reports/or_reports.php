@@ -1,9 +1,5 @@
 <?php 
 session_start();
-/* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 3) {
-    require_once('../logout.php');
-    exit();
-} */
 
 require_once('../../inc/check_session.php');
 check_user_group(3);
@@ -23,9 +19,6 @@ $current_date = date('Y-m-d');
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo base_url ?>dist/header_files/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="<?php echo base_url ?>dist/header_files/js/jquery.dataTables.js"></script>
-
 </head>
 <body>
 <div class="container mt-5">
@@ -34,7 +27,7 @@ $current_date = date('Y-m-d');
             <div id="header">ASIAN LAND STRATEGIES CORPORATION</div>
             <div id="subheader">DAILY COLLECTION & DEPOSIT REPORT</div>
             <div id="current_date"><?php echo date("Y-m-d"); ?></div>
-            <div id="subheader">CAR</div>
+            <div id="subheader">OR</div>
         </div>
         <hr>
         <div class="sub_container">
@@ -58,10 +51,10 @@ $current_date = date('Y-m-d');
         <div class="table-container">
             <table class="table table-bordered table-striped" id="car-table">
                 <thead>
-                    <tr>
+                <tr>
                         <th>No</th>
                         <th>Account No.</th>
-                        <th>CAR No.</th>
+                        <th>OR No.</th>
                         <th>Transaction Type</th>
                         <th>Name</th>
                         <th>Location</th>
@@ -80,58 +73,58 @@ $current_date = date('Y-m-d');
                     <?php
                     $username = $_SESSION['username'];
 
-                    $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type, a.c_car_paydate, a.c_car_amount,
-                                        a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, c_bank,
-                                        b.c_name, b.c_phase, b.c_block, b.c_lot, a.status
-                                    FROM t_car_payment a
-                                    LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                                    WHERE a.c_encoded_by = ?
-                                    ORDER BY a.c_car_no ASC";
-                    $stmt = odbc_prepare($conn, $car_list);
-
-                    $result = odbc_execute($stmt, array($username));
-
-                    $i = 1;
-                    while ($row = odbc_fetch_array($stmt)) {
+                    $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
+                    a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, c_bank, b.c_name, b.c_phase,
+                    b.c_block, b.c_lot, a.status
+                        FROM t_or_payment a
+                        LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no 
+                        WHERE a.c_encoded_by = ? ORDER BY a.c_or_no ASC";
+                    $stmt = odbc_prepare($conn, $or_list);
+                    
+                    if ($stmt && odbc_execute($stmt, array($username))) {
+                        $i = 1;
+                        while ($row = odbc_fetch_array($stmt)): 
                     ?>
-                        <tr>
-                            <td class="text-center"><?php echo $i++; ?></td>
-                            <td class="text-center">
-                                <?php echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); ?>
-                            </td>
-                            <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
-                            <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
-                            <td class="text-center">
+                            <tr>
+                                <td class="text-center"><?php echo $i++; ?></td>
+                                <td class="text-center">
+                                    <?php 
+                                        echo htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '----------'); 
+                                    ?>
+                                </td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['c_or_no']); ?></td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['c_or_type']); ?></td>
+                                <td class="text-center">
                                 <?php
-                                $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
+                                    $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
 
-                                if (!empty($c_buyer_acc)) {
-                                    $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
-                                    $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
-
-                                    if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
-                                        $buyer_details = odbc_fetch_array($buyer_stmt);
-
-                                        if ($buyer_details) {
-                                            echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
+                                    if (!empty($c_buyer_acc)) {
+                                        $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
+                                        $buyer_stmt = odbc_prepare($conn, $get_buyer_details_qry);
+                                        
+                                        if (odbc_execute($buyer_stmt, array($c_buyer_acc))) {
+                                            $buyer_details = odbc_fetch_array($buyer_stmt);
+                                            
+                                            if ($buyer_details) {
+                                                echo htmlspecialchars($buyer_details["c_b1_first_name"] . ' ' . $buyer_details["c_b1_last_name"]);
+                                            } else {
+                                                echo "-";
+                                            }
                                         } else {
                                             echo "-";
                                         }
                                     } else {
-                                        echo "-";
+                                        echo htmlspecialchars($row['c_name']);
                                     }
-                                } else {
-                                    echo htmlspecialchars($row['c_name']);
-                                }
-                                ?>
-                            </td>
-                            <td>
+                                    ?>
+                                </td>
+                                <td>
                                 <?php
                                 $c_account_no = $row['c_account_no'];
                                 try {
                                     if (!empty($c_account_no)) {
                                         $c_phase = substr($c_account_no, 0, 3);
-                                        $c_block = ltrim(substr($c_account_no, 3, 3), '0');
+                                        $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
                                         $c_lot = substr($c_account_no, 6, 2);
 
                                         $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
@@ -176,80 +169,83 @@ $current_date = date('Y-m-d');
                                     echo "-----";
                                 }
                                 ?>
-                            </td>
-                            <td class="text-center">
-                                <?php 
-                                $cash = $row['c_mop'] == 1 ? $row['c_car_amount'] : 0;
-                                $online = $row['c_mop'] == 3 ? $row['c_car_amount'] : 0;
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    $cash = $row['c_mop'] == 1 ? $row['c_or_amount'] : 0;
+                                    $online = $row['c_mop'] == 3 ? $row['c_or_amount'] : 0;
 
-                                $cashOnline = $cash + $online;
-                                echo number_format($cashOnline, 2); 
-                                ?>
-                            </td>
-                            <td class="text-center">
-                                <?php 
-                                $amount = $row['c_mop'] == 2 ? $row['c_car_amount'] : 0;
-                                echo number_format($amount, 2); 
-                                ?>
-                            </td>
-                            <td class="text-center">
-                                <?php 
-                                if ($row['c_bank'] == '') {
-                                    echo "-";
-                                }else {
-                                    echo htmlspecialchars($row['c_bank']);
-                                }
-                                ?>
-                            </td>
-                            <td class="text-center">
-                                <?php echo number_format($row['c_car_amount'], 2); ?>
-                            </td>
-                            <td class="text-center">
-                                <?php
-                                if ($row['c_mop'] == 1) {
-                                    echo "Cash";
-                                } elseif ($row['c_mop'] == 2) {
-                                    echo "Check";
-                                } elseif ($row['c_mop'] == 3) {
-                                    echo "Online";
-                                } else {
-                                    echo "-";
-                                }
-                                ?>
-                            </td>
-                            <td class="text-center">
-                                <?php 
-                                if ($row['status'] == 0) {
-                                    echo "-----";
-                                } elseif ($row['status'] == 1) {
-                                    echo "CANCELLED";
-                                } else {
-                                    echo "-";
-                                }
-                                ?>
-                            </td>
-                            <td class="text-center tran-date">
-                                <?php
-                                $dateTime = new DateTime($row['c_tran_date']);
-                                echo htmlspecialchars($dateTime->format('Y-m-d'));
-                                ?>
-                            </td>
-                            <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
-                            <td class="text-center">
-                                <?php
-                                $c_encoded_by = $row['c_encoded_by'];
-                                $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
-                                $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
-
-                                if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
-                                    echo htmlspecialchars($encoder["c_realname"]);
-                                } else {
-                                    echo "-";
-                                }
-                                ?>
-                            </td>
-                        </tr>
+                                    $cashOnline = $cash + $online;
+                                    echo number_format($cashOnline, 2); 
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    $amount = $row['c_mop'] == 2 ? $row['c_or_amount'] : 0;
+                                    echo number_format($amount, 2); 
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['c_bank'] == '') {
+                                        echo "-";
+                                    }else {
+                                        echo htmlspecialchars($row['c_bank']);
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo number_format($row['c_or_amount'], 2); ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['c_mop'] == 1) {
+                                        echo "Cash";
+                                    } elseif ($row['c_mop'] == 2) {
+                                        echo "Check";
+                                    } elseif ($row['c_mop'] == 3) {
+                                        echo "Online";
+                                    } else {
+                                        echo "-";
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php 
+                                    if ($row['status'] == 0) {
+                                        echo "-----";
+                                    } elseif ($row['status'] == 1) {
+                                        echo "CANCELLED";
+                                    } else {
+                                        echo "-";
+                                    }
+                                    ?>
+                                </td>
+                                <td class="text-center tran-date">
+                                    <?php
+                                    $dateTime = new DateTime($row['c_tran_date']);
+                                    echo htmlspecialchars($dateTime->format('Y-m-d')); 
+                                    ?>
+                                </td>
+                                <td class="text-center"><?php echo htmlspecialchars($row['c_or_paydate']); ?></td>
+                                <td class="text-center">
+                                    <?php
+                                    $c_encoded_by = $row['c_encoded_by'];
+                                    $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
+                                    $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+                                    
+                                    if (odbc_execute($encoder_stmt, array($c_encoded_by)) && $encoder = odbc_fetch_array($encoder_stmt)) {
+                                        echo htmlspecialchars($encoder["c_realname"]);
+                                    } else {
+                                        echo "-";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
                     <?php 
+                        endwhile;
+                    } else {
+                        echo "<tr><td colspan='8' class='text-center'>No data available or error executing query.</td></tr>";
                     }
                     ?>
                 </tbody>
@@ -261,10 +257,6 @@ $current_date = date('Y-m-d');
 <script src="../../dist/js/table.js"></script>
 <!-- <script src="../../dist/js/car_reports.js"></script> -->
  <script>
-    /* $(document).ready( function () {
-        $('#car-table').DataTable();
-    } ); */
-    
     $(document).ready(function(){
     $('.datepicker').datepicker({
         dateFormat: 'mm/dd/yy',
@@ -374,7 +366,7 @@ $current_date = date('Y-m-d');
         startDate = formatToISO(startDate);
         endDate = formatToISO(endDate);
 
-        var url = '../../print/pdf_report.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+        var url = '../../print/pdf_report_or.php?start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
         window.open(url, '_blank');
     });
 

@@ -27,6 +27,7 @@ $current_date = date('Y-m-d');
             <div id="header">ASIAN LAND STRATEGIES CORPORATION</div>
             <div id="subheader">DAILY COLLECTION & DEPOSIT REPORT</div>
             <div id="current_date"><?php echo date("Y-m-d"); ?></div>
+            <div id="subheader">CAR</div>
         </div>
         <hr>
         <div class="sub_container">

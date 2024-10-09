@@ -222,6 +222,7 @@ function isActive($pages) {
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
                     <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/car_reports.php">CAR Reports</a>
+                    <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/or_reports.php">OR Reports</a>
                     <a class="dropdown-item" href="<?php echo base_url ?>admin/reports/summary_car_reports.php">Summary of Reports</a>
                 </div>
                 </li>
@@ -287,7 +288,8 @@ function isActive($pages) {
             Reports
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
-                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/reports/car_reports.php">Car Reports</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/reports/car_reports.php">CAR Reports</a>
+                <a class="dropdown-item" href="<?php echo base_url ?>supervisor/reports/or_reports.php">OR Reports</a>
                 <a class="dropdown-item" href="<?php echo base_url ?>supervisor/reports/summary_car_reports.php">Summary of Reports</a>
             </div>
         </li>
@@ -352,7 +354,8 @@ function isActive($pages) {
                       Reports
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownReports">
-                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/reports/car_reports.php">Car Reports</a>
+                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/reports/car_reports.php">CAR Reports</a>
+                      <a class="dropdown-item" href="<?php echo base_url ?>cashier/reports/or_reports.php">OR Reports</a>
                   </div>
               </li>
               <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">
