@@ -1931,22 +1931,24 @@ Class Master{
 		if (!empty($c_password)) {
 			$hashed_password = password_hash($c_password, PASSWORD_BCRYPT);
 			$update_fields[] = "c_password = '$hashed_password'";
-	
-			session_start();
-			session_unset();
-			session_destroy();
-	
-			$resp['logout'] = true;
 		}
-	
+
 		$update_query = "UPDATE t_car_users SET " . implode(", ", $update_fields) . " WHERE id = '$id'";
 		$save = odbc_exec($this->conn, $update_query);
 	
 		if ($save) {
+			$c_employee_code = $c_employee_code;
+			$c_realname = $c_realname;
+			
 			$this->car_logs('My Account', "UPDATE - $c_employee_code - $c_realname - CHANGED PASSWORD");
+			
+			session_unset();
+			session_destroy();
+		
 			$resp['status'] = 'success';
 			$resp['msg'] = "User successfully updated.";
-		} else {
+			$resp['logout'] = true;
+		}else {
 			$resp['status'] = 'failed';
 			$resp['err'] = odbc_errormsg($this->conn);
 		}

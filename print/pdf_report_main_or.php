@@ -18,35 +18,35 @@ $l_css = '../dist/css/pdf.css';
 $l_css_path = file_get_contents($l_css);
 
 if ($startDate == $endDate) {
-    $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
+    $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
+                        a.c_or_paydate, a.c_or_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
                         b.c_name, b.c_phase, b.c_block, b.c_lot, c.c_position
-                 FROM t_car_payment a
-                 LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
+                 FROM t_or_payment a
+                 LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no
                  LEFT JOIN t_car_users c ON a.c_encoded_by = c.c_employee_code /* c_position (Cashier 2) */
                  WHERE a.c_tran_date::text ILIKE ?
                  /* AND c.c_position != 'Cashier 2' */ /* hide muna daw kasi manual collect nalang ni ms arlene */
-                 ORDER BY a.c_car_no ASC";
-    $stmt = odbc_prepare($conn, $car_list);
+                 ORDER BY a.c_or_no ASC";
+    $stmt = odbc_prepare($conn, $or_list);
     $executeParams = ["%$startDate%", $c_encoded_by];
 } else {
-    $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
+    $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
+                        a.c_or_paydate, a.c_or_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
                         b.c_name, b.c_phase, b.c_block, b.c_lot, c.c_position
-                 FROM t_car_payment a
-                 LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
+                 FROM t_or_payment a
+                 LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no
                  LEFT JOIN t_car_users c ON a.c_encoded_by = c.c_employee_code /* c_position (Cashier 2) */
                  WHERE DATE(a.c_tran_date) BETWEEN ? AND ?
                  /* AND c.c_position != 'Cashier 2' */ /* hide muna daw kasi manual collect nalang ni ms arlene */
-                 ORDER BY a.c_car_no ASC"; 
-    $stmt = odbc_prepare($conn, $car_list);
+                 ORDER BY a.c_or_no ASC"; 
+    $stmt = odbc_prepare($conn, $or_list);
     $executeParams = [$startDate, $endDate, $c_encoded_by];
 }
 
-$carData = [];
+$orData = [];
 if ($stmt && odbc_execute($stmt, $executeParams)) {
     while ($row = odbc_fetch_array($stmt)) {
-        $carData[] = $row;
+        $orData[] = $row;
     }
 }
 
@@ -62,10 +62,10 @@ if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetc
 
 
 /* Para sa banks shutaenabells kayong lahat! */
-$l_bank_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
-                        LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
+$l_bank_query = "SELECT c_bank, SUM(c_or_amount) AS total_amount FROM t_or_payment 
+                        LEFT JOIN t_other_or_payment ON t_or_payment.c_or_no = t_other_or_payment.c_or_no
                         WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' GROUP BY c_bank 
-                        HAVING SUM(c_car_amount) > 0
+                        HAVING SUM(c_or_amount) > 0
                         ORDER BY c_bank; ";
 
 $bank_stmt = odbc_prepare($conn, $l_bank_query);
@@ -95,7 +95,6 @@ $html .= '
 <body>
     <header>
         <h2>ASIAN LAND STRATEGIES CORPORATION</h2>
-        <h3>CASH ACKNOWLEDGEMENT RECEIPT</h3>
         <h5>DAILY COLLECTION & DEPOSIT REPORT</h5>';
 
         $l_start = date('F j, Y', strtotime($startDate));
@@ -120,7 +119,7 @@ $html .= '
         <thead>
             <tr>
                 <th>No.</th>
-                <th>CAR No.</th>
+                <th>OR No.</th>
                 <th>Buyer Name</th>
                 <th>Account No.</th>
                 <th>Transaction Type</th>
@@ -140,17 +139,17 @@ $totalCash = 0;
 $totalCheck = 0;
 $totalOnline = 0;
 
-if (empty($carData)) {
+if (empty($orData)) {
     $html .= '
             <tr>
                 <td class="pdf-font" colspan="13" style="text-align: center;">No records found.</td>
             </tr>';
 } else {
     $counter = 1;
-    foreach ($carData as $row) {
-        $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
+    foreach ($orData as $row) {
+        $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_or_amount'] : 0;
+        $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_or_amount'] : 0;
+        $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_or_amount'] : 0;
         $totalCashOnline += $cashAmount + $onlineAmount;
         $totalCheck += $checkAmount;
         $totalOfall += $cashAmount + $onlineAmount + $checkAmount;
@@ -158,7 +157,7 @@ if (empty($carData)) {
         $html .= '
         <tr>
             <td class="pdf-font">' . $counter++ . '</td>
-            <td class="pdf-font">' . htmlspecialchars($row['c_car_no']) . '</td>
+            <td class="pdf-font">' . htmlspecialchars($row['c_or_no']) . '</td>
             <td class="pdf-font">';
 
         $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
@@ -183,7 +182,7 @@ if (empty($carData)) {
 
         $html .= '<td class="pdf-font">' . htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '-----------') . '</td>';
 
-        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_type']) . '</td>';
+        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_or_type']) . '</td>';
 
         $c_account_no = $row['c_account_no'];
         if (!empty($c_account_no)) {
@@ -233,7 +232,7 @@ if (empty($carData)) {
 
         /* $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>';
-        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>';
+        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_or_paydate']) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_realname) . '</td>
         </tr>';
     }
@@ -318,7 +317,7 @@ $dompdf->setPaper('legal', 'landscape');
 $dompdf->render();
 
 header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="daily_collection_report_main.pdf"');
+header('Content-Disposition: inline; filename="daily_collection_report_OR.pdf"');
 echo $dompdf->output();
 ?>
 

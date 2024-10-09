@@ -18,35 +18,31 @@ $l_css = '../dist/css/pdf.css';
 $l_css_path = file_get_contents($l_css);
 
 if ($startDate == $endDate) {
-    $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
-                        b.c_name, b.c_phase, b.c_block, b.c_lot, c.c_position
-                 FROM t_car_payment a
-                 LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                 LEFT JOIN t_car_users c ON a.c_encoded_by = c.c_employee_code /* c_position (Cashier 2) */
-                 WHERE a.c_tran_date::text ILIKE ?
-                 /* AND c.c_position != 'Cashier 2' */ /* hide muna daw kasi manual collect nalang ni ms arlene */
-                 ORDER BY a.c_car_no ASC";
-    $stmt = odbc_prepare($conn, $car_list);
+    $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
+                        a.c_or_paydate, a.c_or_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
+                        b.c_name, b.c_phase, b.c_block, b.c_lot
+                 FROM t_or_payment a
+                 LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no
+                 WHERE a.c_tran_date::text ILIKE ? AND a.c_encoded_by = ? 
+                 ORDER BY a.c_or_no ASC"; /* inilipat yung order by sa c_or_no (cashier) */
+    $stmt = odbc_prepare($conn, $or_list);
     $executeParams = ["%$startDate%", $c_encoded_by];
 } else {
-    $car_list = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
-                        b.c_name, b.c_phase, b.c_block, b.c_lot, c.c_position
-                 FROM t_car_payment a
-                 LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                 LEFT JOIN t_car_users c ON a.c_encoded_by = c.c_employee_code /* c_position (Cashier 2) */
-                 WHERE DATE(a.c_tran_date) BETWEEN ? AND ?
-                 /* AND c.c_position != 'Cashier 2' */ /* hide muna daw kasi manual collect nalang ni ms arlene */
-                 ORDER BY a.c_car_no ASC"; 
-    $stmt = odbc_prepare($conn, $car_list);
+    $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
+                        a.c_or_paydate, a.c_or_amount, a.c_encoded_by, a.status, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
+                        b.c_name, b.c_phase, b.c_block, b.c_lot
+                 FROM t_or_payment a
+                 LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no
+                 WHERE DATE(a.c_tran_date) BETWEEN ? AND ? AND a.c_encoded_by = ?
+                 ORDER BY a.c_or_no ASC"; /* inilipat yung order by sa c_or_no (cashier) */
+    $stmt = odbc_prepare($conn, $or_list);
     $executeParams = [$startDate, $endDate, $c_encoded_by];
 }
 
-$carData = [];
+$orData = [];
 if ($stmt && odbc_execute($stmt, $executeParams)) {
     while ($row = odbc_fetch_array($stmt)) {
-        $carData[] = $row;
+        $orData[] = $row;
     }
 }
 
@@ -62,14 +58,15 @@ if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetc
 
 
 /* Para sa banks shutaenabells kayong lahat! */
-$l_bank_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
-                        LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
-                        WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' GROUP BY c_bank 
-                        HAVING SUM(c_car_amount) > 0
-                        ORDER BY c_bank; ";
+$l_bank_query = "SELECT c_bank, SUM(c_or_amount) AS total_amount FROM t_or_payment 
+                        LEFT JOIN t_other_or_payment ON t_or_payment.c_or_no = t_other_or_payment.c_or_no
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_encoded_by = ? 
+                        GROUP BY c_bank 
+                        HAVING SUM(c_or_amount) > 0
+                        ORDER BY c_bank;";
 
 $bank_stmt = odbc_prepare($conn, $l_bank_query);
-$bank_executeParams = [$startDate, $endDate];
+$bank_executeParams = [$startDate, $endDate, $c_encoded_by];
 $l_bank_list = [];
 if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
     while ($bank_row = odbc_fetch_array($bank_stmt)) {
@@ -82,11 +79,10 @@ $options = new Options();
 $options->set('defaultFont', 'Courier');
 $dompdf = new Dompdf($options);
 
-$html .= '
+$html = '
 <style>
     ' . $l_css_path . '
 
-    /* Pang Break ng pages huhubels shaket!!!! */
     .page-break { 
         page-break-before: always; 
     }
@@ -95,7 +91,6 @@ $html .= '
 <body>
     <header>
         <h2>ASIAN LAND STRATEGIES CORPORATION</h2>
-        <h3>CASH ACKNOWLEDGEMENT RECEIPT</h3>
         <h5>DAILY COLLECTION & DEPOSIT REPORT</h5>';
 
         $l_start = date('F j, Y', strtotime($startDate));
@@ -120,7 +115,7 @@ $html .= '
         <thead>
             <tr>
                 <th>No.</th>
-                <th>CAR No.</th>
+                <th>OR No.</th>
                 <th>Buyer Name</th>
                 <th>Account No.</th>
                 <th>Transaction Type</th>
@@ -131,34 +126,33 @@ $html .= '
                 <th>Total</th>
                 <th>Status</th>
                 <th>Payment Date</th>
-                <th>Encoded By</th>
             </tr>
         </thead>
         <tbody>';
 
-$totalCash = 0;
-$totalCheck = 0;
-$totalOnline = 0;
+$l_cashonline = 0;
+$l_check = 0;
+$l_total = 0;
 
-if (empty($carData)) {
+if (empty($orData)) {
     $html .= '
             <tr>
-                <td class="pdf-font" colspan="13" style="text-align: center;">No records found.</td>
+                <td class="pdf-font" colspan="12" style="text-align: center;">No records found.</td>
             </tr>';
 } else {
     $counter = 1;
-    foreach ($carData as $row) {
-        $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $totalCashOnline += $cashAmount + $onlineAmount;
-        $totalCheck += $checkAmount;
-        $totalOfall += $cashAmount + $onlineAmount + $checkAmount;
+    foreach ($orData as $row) {
+        $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_or_amount'] : 0;
+        $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_or_amount'] : 0;
+        $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_or_amount'] : 0;
+        $l_cashonline += $cashAmount + $onlineAmount;
+        $l_check += $checkAmount;
+        $l_total += $cashAmount + $onlineAmount + $checkAmount;
 
         $html .= '
         <tr>
             <td class="pdf-font">' . $counter++ . '</td>
-            <td class="pdf-font">' . htmlspecialchars($row['c_car_no']) . '</td>
+            <td class="pdf-font">' . htmlspecialchars($row['c_or_no']) . '</td>
             <td class="pdf-font">';
 
         $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
@@ -183,7 +177,7 @@ if (empty($carData)) {
 
         $html .= '<td class="pdf-font">' . htmlspecialchars(!empty($row['c_account_no']) ? $row['c_account_no'] : '-----------') . '</td>';
 
-        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_type']) . '</td>';
+        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_or_type']) . '</td>';
 
         $c_account_no = $row['c_account_no'];
         if (!empty($c_account_no)) {
@@ -198,10 +192,10 @@ if (empty($carData)) {
                 if ($project_details) {
                     $c_acronym = $project_details["c_acronym"];
                 } else {
-                    $c_acronym = "";
+                    $c_acronym = "-----";
                 }
             } else {
-                $c_acronym = "";
+                $c_acronym = "-----";
             }
         } else {
             $c_phase = '-----';
@@ -210,47 +204,34 @@ if (empty($carData)) {
             $c_acronym = "-----";
         }
 
-        $c_encoded_by = $row['c_encoded_by'];
-        $c_realname = "";
-
-        if (!empty($c_encoded_by)) {
-            $get_user_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
-            $user_stmt = odbc_prepare($conn, $get_user_qry);
-            if (odbc_execute($user_stmt, array($c_encoded_by))) {
-                $user_details = odbc_fetch_array($user_stmt);
-                if ($user_details) {
-                    $c_realname = $user_details['c_realname'];
-                }
-            }
-        }
-
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_acronym) . " " .htmlspecialchars($c_block) . " " . htmlspecialchars($c_lot) . '</td>';
         /* $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>'; */
         $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount, 2) . '</td>'; // SUM NG CASH AT ONLINE (pinabago ni boss jude)
         $html .= '<td class="pdf-font">' . number_format($checkAmount, 2) . '</td>';
+        /* $html .= '<td class="pdf-font">' . number_format($onlineAmount, 2) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_bank'] == '' ? '-' : $row['c_bank']) . '</td>';
         $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $checkAmount, 2) . '</td>';
 
         /* $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>';
-        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>';
-        $html .= '<td class="pdf-font">' . htmlspecialchars($c_realname) . '</td>
+        $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_or_paydate']) . '</td>
         </tr>';
     }
 
     $html .= '
-        <tfoot>
-            <tr>
-                <td class="pdf-font" colspan="6" style="text-align: right;"></td>
-                <td class="pdf-font">' . number_format($totalCashOnline, 2) . '</td>
-                <td class="pdf-font">' . number_format($totalCheck, 2) . '</td>
-                <td class="pdf-font" colspan="1"></td>
-                <td class="pdf-font" >' . number_format($totalOfall, 2) . '</td>
-                <td class="pdf-font" colspan="3"></td>
-            </tr>
-        </tfoot>';
+    <tfoot>
+        <tr>
+            <td class="pdf-font" colspan="6" style="text-align: right;"></td>
+            <td class="pdf-font">' . number_format($l_cashonline, 2) . '</td>
+            <td class="pdf-font">' . number_format($l_check, 2) . '</td>
+            <td class="pdf-font" colspan="1"></td>
+            <td class="pdf-font">' . number_format($l_total, 2) . '</td>
+            <td class="pdf-font" colspan="2"></td>
+        </tr>
+    </tfoot>';
+}
 
-    $html .= '
+$html .= '
         </tbody>
     </table>';
 
@@ -300,17 +281,16 @@ if (empty($carData)) {
                 </tbody>
             </table>
         </div>';
-    }  
+    }
 
 $html .= '</p>
     </div>
 </body>
 </html>';
-}
 
-/* $options = new Options();
+$options = new Options();
 $options->set('defaultFont', 'Courier');
-$dompdf = new Dompdf($options); */
+$dompdf = new Dompdf($options);
 $dompdf->loadHtml($html);
 
 $dompdf->setPaper('legal', 'landscape');
@@ -318,7 +298,7 @@ $dompdf->setPaper('legal', 'landscape');
 $dompdf->render();
 
 header('Content-Type: application/pdf');
-header('Content-Disposition: inline; filename="daily_collection_report_main.pdf"');
+header('Content-Disposition: inline; filename="daily_collection_report.pdf"');
 echo $dompdf->output();
 ?>
 

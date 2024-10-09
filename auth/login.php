@@ -39,13 +39,36 @@ check_session();
     display: block;
     margin: 0 auto;
 }
+
+.input-icon {
+    position: relative;
+}
+
+.input-icon i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #888;
+}
+
+.input-icon input {
+    padding-right: 35px;
+}
+/* body {
+    background-image: url('<?php echo base_url; ?>images/asianland.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+} */
 </style>
 <body>
     <div class="header">
         <h1>Welcome!</h1>
         <!-- <p>Log in to continue</p> -->
     </div>
-    <div class="container login_padding">
+    <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <div class="card card-container p-2">
@@ -57,10 +80,16 @@ check_session();
                         <?php endif; ?>
                         <form action="" method="POST">
                             <div class="form-group pt-3">
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Employee ID" required>
+                                <div class="input-icon">
+                                    <i class="fas fa-user"></i>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Employee ID" required>
+                                </div>
                             </div>
                             <div class="form-group pt-2">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="*************" required>
+                                <div class="input-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="*************" required>
+                                </div>
                             </div>
                             <div class="form-group pt-2">
                                 <button type="submit" class="btn btn-primary btn-block">Login</button>
