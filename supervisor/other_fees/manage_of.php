@@ -387,7 +387,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../supervisor/car/get_buyer_details.php',
+                url: '../../supervisor/other_fees/get_buyer_details_of.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -460,7 +460,6 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#get_atap_or').on('click', function() {
         const atapNo = $('#c_atap_no_or').val();
-        var clearType = $('#c_or_type');
         if (atapNo.length > 0) {
             $('#or_type_container').show();
             $('#tran_type_container_or').hide(); 
@@ -468,13 +467,14 @@ $(document).ready(function() {
         } else {
             alert('Please enter an ATAP No. first.');
         }
-        clearType.val(''); 
+        $('#c_or_type').val('');
     });
+
 
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: '../../supervisor/other_fees/get_atap_details_of.php',
+            url: '<?php echo base_url; ?>supervisor/other_fees/get_atap_details_of.php',
             data: { c_atap_no_or: atapNo },
             dataType: 'json',
             success: function(response) {
