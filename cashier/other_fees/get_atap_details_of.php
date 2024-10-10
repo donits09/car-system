@@ -4,8 +4,8 @@ include('../../config.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
-    $c_atap_no_or = $_POST['c_atap_no_or'];
+if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
+    $c_atap_no = $_POST['c_atap_no'];
     $query = "SELECT 
                 a.id, 
                 a.c_account_no, 
@@ -19,8 +19,7 @@ if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
                 b.c_phase,
                 b.c_block, 
                 b.c_lot,
-                c.c_atap_amount,
-                a.approval_status
+                c.c_atap_amount
             FROM 
                 t_atap a
             LEFT JOIN 
@@ -41,8 +40,7 @@ if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
                 b.c_phase,
                 b.c_block, 
                 b.c_lot,
-                c.c_atap_amount,
-                a.approval_status
+                c.c_atap_amount
             ORDER BY 
                 a.c_tran_updated DESC";
     
@@ -53,7 +51,7 @@ if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
         exit;
     }
     
-    $executed = odbc_execute($stmt, array($c_atap_no_or));
+    $executed = odbc_execute($stmt, array($c_atap_no));
     
     if (!$executed) {
         echo json_encode(['status' => 'error', 'message' => 'SQL execution failed: ' . odbc_errormsg()]);
@@ -67,8 +65,7 @@ if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
             'c_phase' => $result['c_phase'],
             'c_block' => $result['c_block'],
             'c_lot' => $result['c_lot'],
-            'status' => $result['status'],
-            'approval_status' => $result['approval_status']
+            'status' => $result['status']
         ];
         echo json_encode(['status' => 'success', 'data' => $data, 'message' => 'ATAP details found']);
     } else {
