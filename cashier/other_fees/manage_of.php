@@ -2,8 +2,10 @@
 session_start();
 
 require_once('../../inc/check_session.php');
-check_user_group(3);
+check_user_group(1);
+
 include('../../config.php');
+
 $c_account_no = null;
 $c_or_type = '';
 $c_or_amount = 0;
@@ -15,6 +17,7 @@ $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
+
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_or_query = "SELECT * FROM t_or_payment WHERE id = ?";
     $accountId = $_GET['id'];
@@ -47,6 +50,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     max-height: 200px; 
     overflow-y: auto;
 }
+
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="or-form" method="post" action="">
@@ -57,37 +61,25 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="row">
         <div class="col-sm-8">
             <div class="form-group">
-                <label for="c_atap_no_or">ATAP No.</label>
-                <input type="number" class="form-control" id="c_atap_no_or" name="c_atap_no_or">
+                <label for="c_atap_no">ATAP No.</label>
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
             </div>
         </div>
         <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap_or" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarTypeOR()">
+            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
     </div>
-    <div class="form-group" id="tran_type_container_or" style="display: none;">
-        <label for="c_tran_type_or">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
-            <select class="form-control" id="c_tran_type_or" name="c_tran_type_or">
-            </select>
-        </div>
-        <input type="text" class="form-control" id="c_tran_type_single_or" name="c_tran_type_single_or" style="display: none;" readonly>
-    </div>
     <div class="form-group">
-        <div class="dropdown" id="or_type_container">
+        <div class="dropdown" id="car_type_container">
             <label for="c_or_type">Transaction Type</label>
            
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_or_type" name="c_or_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
             <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                 <?php
-                $or_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'O' ORDER BY c_payment_type ASC";
-                $type_result = odbc_exec($conn, $or_type_query);
-
-//                 $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'O' ORDER BY c_payment_type ASC";
-//                 $type_result = odbc_exec($conn, $car_type_query);
-
+                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
+                $type_result = odbc_exec($conn, $car_type_query);
                 while ($row = odbc_fetch_array($type_result)) {
                     echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                 }
@@ -133,42 +125,18 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             });
         });
     </script>
-    <script>
-        $(document).ready(function() {
-      
-        function updateAtapVal(selectedValue) {
-            $('#atap_val_or').val(selectedValue);
-        }
-        $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            //e.preventDefault();
-            var selectedValue = $(this).data('value');
-            updateAtapVal(selectedValue);
+    <div class="form-group" id="tran_type_container" style="display: none;">
+        <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
+            <select class="form-control" id="c_tran_type" name="c_tran_type">
+            </select>
+        </div>
+        <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
+    </div>
+    
+    <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
+    <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
 
-            $('#dropdownMenuButton').text(selectedValue);
-            $('#c_or_type').val(selectedValue); 
-        });
-
-        var initialSelectedValue = $('#c_or_type').val();
-        updateAtapVal(initialSelectedValue);
-    });
-    </script>
-    <script>
-    function toggleCarTypeOR() {
-        var atapNo = document.getElementById('c_atap_no_or').value;
-        var orTypeContainer = document.getElementById('or_type_container');
-        var tranTypeContainer =document.getElementById('tran_type_container_or');
-
-        if (atapNo.trim() === '') {
-            orTypeContainer.style.display = 'block';
-            tranTypeContainer.style.display = 'none';
-        } else {
-            tranTypeContainer.style.display = 'block';
-            orTypeContainer.style.display = 'none';  
-        }
-    }
-    </script>
-    <input type="hidden" class="form-control" id="atap_id_or" name="atap_id_or" readonly>
-    <input type="hidden" class="form-control" id="atap_val_or" name="atap_val_or" readonly>
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
@@ -181,7 +149,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" class="form-control" id="buyer_name_or" name="buyer_name_or" oninput="validateAlphaNumericInput(event)" readonly>
+        <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
     </div>
     <div class="form-group">
         <label for="remarks" class="form-label">
@@ -214,7 +182,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
-                        $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY c_bank_type ASC";
+                        $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY id ASC";
                         $type_result = odbc_exec($conn, $check_type_query);
                         while ($row = odbc_fetch_array($type_result)) {
                             $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
@@ -238,7 +206,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
-                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
+                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY id ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);
                         while ($row = odbc_fetch_array($type_result)) {
                             $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
@@ -282,6 +250,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
     </div>
 
+
     <div class="form-group hidden_fields">
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
@@ -296,31 +265,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <script src="../../dist/js/of_js/manage_or.js"></script>
 <script>
 $(document).ready(function() {
-    $('#or-form').on('keydown', function(event) {
-        if (event.key === "Enter" || event.keyCode === 13) {
-            event.preventDefault();
-        }
-    });
     $('#or-form').submit(function(e) {
         e.preventDefault();
 
-        const buyerName = $('#buyer_name_or').val();
+        const buyerName = $('#buyer_name').val();
         const orNo = $('#c_or_no').val();
         const orAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
 
         let valid = true;
-
-        let atapVal = $('#c_tran_type_single_or').val(); 
-        if (!atapVal) {
-            atapVal = $('#atap_val_or').val(); 
-        }else{
-            atapVal = $('#c_or_type').val(); 
-        }
-
-        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
-            alert('The selected transaction type is Special.');
-            valid = false;
-        }
 
         if (orNo.length < 6) {
             $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
@@ -336,9 +288,11 @@ $(document).ready(function() {
             alert('Name field is required.');
             valid = false;
         }
+
         if (!valid) {
             return;
         }
+
         start_loader();
 
         $.ajax({
@@ -364,8 +318,8 @@ $(document).ready(function() {
                         $('.modal-backdrop').remove(); 
                         location.reload();
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.msg) {
-                    alert_toast(resp.msg, 'error'); 
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
@@ -375,12 +329,12 @@ $(document).ready(function() {
     });
 
     function fetchBuyerDetails(accountNo) {
-        const buyerNameField = $('#buyer_name_or');
+        const buyerNameField = $('#buyer_name');
 
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../cashier/car/get_buyer_details.php',
+                url: '../../admin/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -408,7 +362,7 @@ $(document).ready(function() {
     });
 
     $('#c_or_no').on('input', function() {
-        const orNo = $('#c_or_no').val();
+        const orNo = $(this).val();
         const orNoError = $('#or_no_error');
         const submitButton = $('#btnsave');
 
@@ -441,6 +395,7 @@ $(document).ready(function() {
         }
     });
 
+
     $('#or-form').on('submit', function(e) {
         if ($('#or_no_error').text().includes('must be 6 digits')) {
             e.preventDefault();
@@ -450,12 +405,12 @@ $(document).ready(function() {
 </script>
 <script>
 $(document).ready(function() {
-    $('#get_atap_or').on('click', function() {
-        const atapNo = $('#c_atap_no_or').val();
+    $('#get_atap').on('click', function() {
+        const atapNo = $('#c_atap_no').val();
         var clearType = $('#c_or_type');
         if (atapNo.length > 0) {
-            $('#or_type_container').show();
-            $('#tran_type_container_or').hide(); 
+            $('#car_type_container').show();
+            $('#tran_type_container').hide(); 
             fetchAtapDetails(atapNo);
         } else {
             alert('Please enter an ATAP No. first.');
@@ -466,49 +421,46 @@ $(document).ready(function() {
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: '../../cashier/other_fees/get_atap_details_of.php',
-            data: { c_atap_no_or: atapNo },
+            url: 'get_atap_details_of.php',
+            data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
                         if (response.data.status === '1') {
-                            $('#or_type_container').show();
-                            $('#tran_type_container_or').hide();
+                            $('#car_type_container').show();
+                            $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
                             clearTxt();
                         } else if (response.data.status === '3') {
-                            $('#or_type_container').show();
-                            $('#tran_type_container_or').hide();
+                            $('#car_type_container').show();
+                            $('#tran_type_container').hide();
                             alert('This ATAP has already been CANCELLED');
                             clearTxt();
                         } else {
                             populateForm(response.data);
                             fetchBuyerDetails(response.data.c_account_no);
                             fetchTranType(atapNo);
-                            $('#or_type_container').hide();
-                            $('#tran_type_container_or').show();
-                            if ($('#or_type_container').is(':hidden')) {
-                                alert('No OR transactions remaining for this ATAP #.');
-                            }
+                            $('#car_type_container').hide();
+                            $('#tran_type_container').show();
                         }
                     } else {
-                        $('#or_type_container').show();
-                        $('#tran_type_container_or').hide();
+                        $('#car_type_container').show();
+                        $('#tran_type_container').hide();
                         alert('No account number found for the given ATAP No.');
                         clearTxt();
                     }
                 } else {
-                    $('#or_type_container').show();
-                    $('#tran_type_container_or').hide();
+                    $('#car_type_container').show();
+                    $('#tran_type_container').hide();
                     alert('No ATAP details found for the given ATAP No.');
                     clearTxt();
                 }
             },
             error: function() {
-                $('#or_type_container').show();
-                $('#tran_type_container_or').hide();
+                $('#car_type_container').show();
+                $('#tran_type_container').hide();
                 alert('An error occurred while fetching ATAP details.');
                 clearTxt();
             }
@@ -516,19 +468,17 @@ $(document).ready(function() {
     }
 
     function clearTxt(){
-        const atapNoField = $('#c_atap_no_or');
+        const atapNoField = $('#c_atap_no');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
-        const accField = $('#c_account_no');
 
         atapNoField.val('');
         amountField.val('');
-        accField.val('');
         statusField.val('');
     }
 
     function populateForm(data) {
-        const buyerNameField = $('#buyer_name_or');
+        const buyerNameField = $('#buyer_name');
         const amountField = $('#c_or_amount');
         const accField = $('#c_account_no');
         const statusField = $('#status');
@@ -564,12 +514,12 @@ $(document).ready(function() {
     });
 
     function fetchBuyerDetails(accountNo) {
-        const buyerNameField = $('#buyer_name_or');
+        const buyerNameField = $('#buyer_name');
 
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../cashier/car/get_buyer_details.php',
+                url: '../../admin/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -617,7 +567,7 @@ function updateCarList() {
 <script>
    $(document).ready(function() {
         function updateAtapId(selectedValue) {
-            $('#atap_id_or').val(selectedValue);
+            $('#atap_id').val(selectedValue);
         }
 
         function updateAtapAmount(selectedValue) {
@@ -625,38 +575,38 @@ function updateCarList() {
         }
 
         function updateAtapVal(selectedValue) {
-            $('#atap_val_or').val(selectedValue);
+            $('#atap_val').val(selectedValue);
         }
 
-        $('#c_tran_type_or').change(function() {
+        $('#c_tran_type').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();
             var amount = selectedOption.data('amount'); 
-            var atap_val_or = selectedOption.text(); 
+            var atap_val = selectedOption.text(); 
 
             updateAtapId(selectedValue);
             updateAtapAmount(amount);
-            updateAtapVal(atap_val_or); 
+            updateAtapVal(atap_val); 
         });
     });
 
 
     function fetchTranType(atapNo) {
         $.ajax({
-            url: '<?php echo base_url; ?>cashier/other_fees/fetch_tran_type.php',
+            url: '<?php echo base_url; ?>admin/car/fetch_tran_type.php',
             type: 'GET',
-            data: { c_atap_no_or: atapNo },
+            data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
-                var $select = $('#c_tran_type_or');
-                var $textbox = $('#c_tran_type_single_or');
-                var $atapId = $('#atap_id_or'); 
+                var $select = $('#c_tran_type');
+                var $textbox = $('#c_tran_type_single');
+                var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_or_amount'); 
-                var $atapVal = $('#atap_val_or'); 
+                var $atapVal = $('#atap_val'); 
                 $select.empty();
                 
                 if (response.length > 0) {
-                    $('#tran_type_container_or').show();
+                    $('#tran_type_container').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
                         $('#tran_type_dropdown').hide();
@@ -679,7 +629,7 @@ function updateCarList() {
                         $atapVal.val(response[0].text);
                     }
                 } else {
-                    $('#tran_type_container_or').hide();
+                    $('#tran_type_container').hide();
                     $atapId.val(''); 
                     $atapAmount.val(''); 
                     $atapVal.val('');
@@ -687,10 +637,10 @@ function updateCarList() {
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching data:', error);
-                $('#tran_type_container_or').hide();
-                $('#atap_id_or').val(''); 
+                $('#tran_type_container').hide();
+                $('#atap_id').val(''); 
                 $('#c_or_amount').val(''); 
-                $('#atap_val_or').val(''); 
+                $('#atap_val').val(''); 
             }
         });
     }
@@ -713,6 +663,7 @@ function updateCarList() {
         console.log('Query String:', queryString);
 
         var printUrl = '../../print/preview_or.php?' + queryString;
+
         var iframe = document.getElementById('previewORIframe');
         iframe.src = printUrl;
 
@@ -723,7 +674,7 @@ function updateCarList() {
     $(document).ready(function() {
       
         function updateAtapVal(selectedValue) {
-            $('#atap_val_or').val(selectedValue);
+            $('#atap_val').val(selectedValue);
         }
  
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
@@ -738,12 +689,14 @@ function updateCarList() {
         var initialSelectedValue = $('#c_or_type').val();
         updateAtapVal(initialSelectedValue);
     });
+
     </script>
+
     <script>
     function toggleCarType() {
         var atapNo = document.getElementById('c_atap_no').value;
-        var carTypeContainer = document.getElementById('or_type_container');
-        var tranTypeContainer =document.getElementById('tran_type_container_or');
+        var carTypeContainer = document.getElementById('car_type_container');
+        var tranTypeContainer =document.getElementById('tran_type_container');
 
         if (atapNo.trim() === '') {
             carTypeContainer.style.display = 'block';
