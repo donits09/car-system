@@ -630,7 +630,6 @@ $(document).ready(function() {
         function updateAtapVal(selectedValue) {
             $('#atap_val_or').val(selectedValue);
         }
-
         $('#c_tran_type_or').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();
@@ -642,8 +641,6 @@ $(document).ready(function() {
             updateAtapVal(atap_val_or); 
         });
     });
-
-
     function fetchTranType(atapNo) {
         $.ajax({
             url: '<?php echo base_url; ?>cashier/other_fees/fetch_tran_type.php',
@@ -705,7 +702,6 @@ function openPrintWindow() {
         console.error('Form not found!');
         return;
     }
-
     var formData = new FormData(form);
     var queryString = [];
     for (var pair of formData.entries()) {
@@ -721,11 +717,9 @@ function openPrintWindow() {
 
     $('#previewORModal').modal('show');
 }
-
 </script>
 <script>
     $(document).ready(function() {
-      
         function updateAtapVal(selectedValue) {
             $('#atap_val_or').val(selectedValue);
         }
