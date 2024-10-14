@@ -30,10 +30,10 @@ function validateAlphaNumericInput(event) {
 }
 
 $(document).ready(function () {
-    $('#c_car_type').on('input', function () {
+    $('#c_or_type').on('input', function () {
         var input = $(this).val().toLowerCase();
         var hasVisibleOptions = false;
-        $('#comboBoxMenu .dropdown-item').each(function () {
+        $('#comboBoxMenu_or .dropdown-item').each(function () {
             if ($(this).text().toLowerCase().startsWith(input)) {
                 $(this).show();
                 hasVisibleOptions = true;
@@ -43,25 +43,25 @@ $(document).ready(function () {
         });
 
         if (hasVisibleOptions) {
-            $('#comboBoxMenu').show();
+            $('#comboBoxMenu_or').show();
         } else {
-            $('#comboBoxMenu').hide();
+            $('#comboBoxMenu_or').hide();
         }
     });
 
-    $('#comboBoxMenu').on('click', '.dropdown-item', function () {
+    $('#comboBoxMenu_or').on('click', '.dropdown-item', function () {
         var selectedText = $(this).data('value');
-        $('#c_car_type').val(selectedText);
-        $('#comboBoxMenu').hide();
+        $('#c_or_type').val(selectedText);
+        $('#comboBoxMenu_or').hide();
     });
 
-    $('#c_car_type').on('click', function () {
-        $('#comboBoxMenu').show();
+    $('#c_or_type').on('click', function () {
+        $('#comboBoxMenu_or').show();
     });
 
     $(document).on('click', function (e) {
         if (!$(e.target).closest('.dropdown').length) {
-            $('#comboBoxMenu').hide();
+            $('#comboBoxMenu_or').hide();
         }
     });
 });
@@ -110,9 +110,9 @@ function calculateTotalAmount() {
 }
 
 $(document).ready(function() {
-    var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
+    var idValue = "<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
     if (idValue) {
-        $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');
+        $('#comboBoxMenu_or').find('a[data-value="' + idValue + '"]').addClass('active');
     }
 });
 
