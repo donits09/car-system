@@ -296,7 +296,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </form>
 <script src="<?php echo base_url; ?>/dist/js/of_js/manage_or.js"></script>
 <script>
-    
 function clearAmt(){
     var txtamt = document.getElementById('c_or_amount').value;
 
