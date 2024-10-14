@@ -738,7 +738,6 @@ function openPrintWindow() {
             $('#dropdownMenuButton').text(selectedValue);
             $('#c_or_type').val(selectedValue); 
         });
-
         var initialSelectedValue = $('#c_or_type').val();
         updateAtapVal(initialSelectedValue);
     });
