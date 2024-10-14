@@ -162,4 +162,5 @@ if (!empty($account_no)) {
         var orNo = $(this).data('no');
         _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);
     });
+
 </script>

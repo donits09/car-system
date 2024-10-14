@@ -4,8 +4,12 @@ include('../../config.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
-    $c_atap_no = $_POST['c_atap_no'];
+if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
+    $c_atap_no = $_POST['c_atap_no_or'];
+
+// if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
+//     $c_atap_no = $_POST['c_atap_no'];
+
     $query = "SELECT 
                 a.id, 
                 a.c_account_no, 
@@ -60,7 +64,7 @@ if (isset($_POST['c_atap_no']) && !empty($_POST['c_atap_no'])) {
     
     if ($result = odbc_fetch_array($stmt)) {
         $data = [
-            'c_account_no' => $result['c_account_no'],
+            'c_account_no_or' => $result['c_account_no'],
             'c_or_amount' => $result['c_atap_amount'], 
             'c_phase' => $result['c_phase'],
             'c_block' => $result['c_block'],

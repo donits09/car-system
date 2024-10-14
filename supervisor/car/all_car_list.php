@@ -246,7 +246,7 @@ include('../../inc/header.php');
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>" data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
-                                            Cancel <?php echo $row['c_atap_no']; ?>
+                                            Cancel
                                         </a>
                                         <?php } ?>
                                     </div>
@@ -348,7 +348,7 @@ $(document).ready(function() {
             console.log("Car No: " + carNo + ", ATAP No: " + atapNo);
             _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
         });
-        function delete_car(carNo, atapNo) {
+    function delete_car(carNo, atapNo) {
     start_loader();
     $.ajax({
         url: "../../classes/Master.php?f=delete_car",

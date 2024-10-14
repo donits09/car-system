@@ -31,18 +31,16 @@
             loadModal('OR Details', '../other_fees/view_or.php?id=' + accountId, '#viewModal');
         });
     
-        // $(document).on('click', '.view_atap', function() {
-        //     var atapId = $(this).data('id');
-        //     var atapNo = $(this).data('no');
-        //     loadModal('ATAP Details', '../atap/view_atap.php?id=' + atapId + '&no=' + atapNo, '#viewModal');
-        // });
-    
         $(document).on('click', '.delete_or', function() {
             var orId = $(this).data('id');
             var orNo = $(this).data('or-no');
-            _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);
+            var atapNo = $(this).data('atap-no');
+            
+            if (confirm("Are you sure you want to cancel this OR?")) {
+                delete_or(orId, orNo, atapNo);
+            }
         });
-    
+        
         $(document).on('click', '.edit_or', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');
@@ -53,21 +51,6 @@
                 loadModal('Edit OR Details', '../other_fees/manage_of.php?id=' + accountId, '#createCarModal');
             }
         });
-    
-        // $(document).on('click', '.edit_atap_spec', function() {
-        //     var atapId = $(this).data('id');
-        //     var atapNo = $(this).data('no');
-        //     var accountNo = $(this).data('acc-no');
-        //     var modalTitle = 'Edit ATAP Details ';
-        //     var modalSelector = '#createCarModal';
-        //     var url;
-        
-        //     url = '../atap/manage_atap.php?id=' + atapId + '&no=' + atapNo + '&acc-no=' + accountNo;
-            
-        //     loadModal(modalTitle, url, modalSelector);
-        // });
-        
-        
     
         window._conf = function(msg, func, params) {
             $('#confirm_modal .modal-body').html(msg);

@@ -6,7 +6,10 @@ check_user_group(1);
 
 include('../../config.php');
 
-$c_account_no = null;
+$c_account_no_or = null;
+
+// $c_account_no = null;
+
 $c_or_type = '';
 $c_or_amount = 0;
 $c_or_no = '';
@@ -25,7 +28,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     odbc_execute($stmt, array($accountId));
 
     if ($result = odbc_fetch_array($stmt)) {
-        $c_account_no = $result["c_account_no"];
+        $c_account_no_or = $result["c_account_no"];
         $c_or_type = $result["c_or_type"];
         $c_or_amount = $result["c_or_amount"];
         $c_or_no = $result["c_or_no"];
@@ -37,7 +40,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_remarks = $result["c_remarks"];
     }
 } else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
-    $c_account_no = $_GET['c_account_no'];
+    $c_account_no_or = $_GET['c_account_no'];
 }
 ?>
 <style>
@@ -55,7 +58,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="or-form" method="post" action="">
     <?php
-    $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
+    $readonly = isset($c_account_no_or) && !empty($c_account_no_or) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
@@ -140,7 +143,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
+        <input type="text" class="form-control" id="c_account_no_or" name="c_account_no_or" value="<?php echo htmlspecialchars($c_account_no_or) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
     </div>
     <div class="form-group">
         <label for="or_no">OR No.</label>
@@ -353,10 +356,10 @@ $(document).ready(function() {
         }
     }
 
-    const accountNo = $('#c_account_no').val();
+    const accountNo = $('#c_account_no_or').val();
     fetchBuyerDetails(accountNo);
 
-    $('#c_account_no').on('input', function() {
+    $('#c_account_no_or').on('input', function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
@@ -404,6 +407,13 @@ $(document).ready(function() {
 });
 </script>
 <script>
+function clearAmt(){
+    var txtamt = document.getElementById('c_or_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_or_amount').value='';
+    }
+}
 $(document).ready(function() {
     $('#get_atap').on('click', function() {
         const atapNo = $('#c_atap_no').val();
@@ -426,8 +436,8 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    if (response.data && response.data.c_account_no) {
-                        const currentAccountNo = $('#c_account_no').val();
+                    if (response.data && response.data.c_account_no_or) {
+                        const currentAccountNo = $('#c_account_no_or').val();
                         if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
@@ -440,10 +450,34 @@ $(document).ready(function() {
                             clearTxt();
                         } else {
                             populateForm(response.data);
-                            fetchBuyerDetails(response.data.c_account_no);
+                            fetchBuyerDetails(response.data.c_account_no_or);
                             fetchTranType(atapNo);
-                            $('#car_type_container').hide();
-                            $('#tran_type_container').show();
+
+                            $('#or_type_container').hide();
+                            $('#tran_type_container_or').css({
+                                display: 'block',
+                                visibility: 'visible',
+                                opacity: 1
+                            }).show();
+
+                            setTimeout(function() {
+                                if ($('#tran_type_container_or').height() === 0 || $('#tran_type_container_or').width() === 0) {
+                                    //console.log('test');
+                                }
+
+                                if ($('#tran_type_container_or').is(':hidden') && $('#or_type_container').is(':hidden')) {
+                                    alert('No OR transactions remaining for this ATAP #.');
+                                    clearTxtNoOr();
+                                    $('#btnsave').prop('disabled', true);
+                                }
+
+                                // console.log('or_type_container hidden:', $('#or_type_container').is(':hidden'));
+                                // console.log('tran_type_container_or hidden:', $('#tran_type_container_or').is(':hidden'));
+                            }, 100); 
+
+//                             $('#car_type_container').hide();
+//                             $('#tran_type_container').show();
+
                         }
                     } else {
                         $('#car_type_container').show();
@@ -467,10 +501,19 @@ $(document).ready(function() {
         });
     }
 
+    function clearTxtNoOr(){
+       const buyerNameField = $('#buyer_name_or');
+       const accField = $('#c_account_no_or');
+
+        buyerNameField.val('');
+        accField.val('');
+    }
+
     function clearTxt(){
         const atapNoField = $('#c_atap_no');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
+        const accField = $('#c_account_no_or');
 
         atapNoField.val('');
         amountField.val('');
@@ -480,7 +523,7 @@ $(document).ready(function() {
     function populateForm(data) {
         const buyerNameField = $('#buyer_name');
         const amountField = $('#c_or_amount');
-        const accField = $('#c_account_no');
+        const accField = $('#c_account_no_or');
         const statusField = $('#status');
 
         if (data.status === '1') {
@@ -495,7 +538,7 @@ $(document).ready(function() {
 
         buyerNameField.val(data.c_name).addClass('glow-effect');
         amountField.val(formattedAmount).addClass('glow-effect');
-        accField.val(data.c_account_no).addClass('glow-effect');
+        accField.val(data.c_account_no_or).addClass('glow-effect');
         statusField.addClass('glow-effect');
 
         setTimeout(function() {
@@ -504,11 +547,10 @@ $(document).ready(function() {
             accField.removeClass('glow-effect');
             statusField.removeClass('glow-effect');
         }, 1000);
-
-        $('#c_account_no').trigger('input');
+        $('#c_account_no_or').trigger('input');
     }
 
-    $('#c_account_no').on('input', function() {
+    $('#c_account_no_or').on('input', function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
