@@ -23,7 +23,7 @@ if (isset($_GET['c_atap_no_or'])) {
         $options[] = array(
             'value' => $tran_type_id,
             'text' => $tran_type, 
-            'amount' => $tran_amount,
+            'amount' => $tran_amount, 
         );
     }
 

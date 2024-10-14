@@ -1066,7 +1066,7 @@ function delete_or(orId, orNo) {
     $.ajax({
         url: "../../classes/Master.php?f=delete_or",
         method: "POST",
-        data: { orId: orId, orNo: orNo }, 
+        data: { orId: orId, orNo: orNo },
         dataType: "json",
         error: function(err) {
             console.log(err);
@@ -1080,8 +1080,9 @@ function delete_or(orId, orNo) {
                     $('#confirm_modal').modal('hide'); 
                     $('body').removeClass('modal-open'); 
                     $('.modal-backdrop').remove(); 
+                    //location.reload();
                     updateORList(); 
-                    $('.delete_or[data-id="' + orId + '"]').closest('tr').remove();  
+                    $('.delete_or[data-id="' + orId + '"]').closest('tr').remove();
                 }, 1000);
             } else if (resp && resp.status === 'failed' && resp.err) {
                 alert_toast("An error occurred: " + resp.err, 'error');
