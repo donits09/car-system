@@ -1,15 +1,15 @@
 <?php
 include('../config.php');
 
-$c_account_no = $_GET['c_account_no'] ?? '';
+$c_account_no_or = $_GET['c_account_no_or'] ?? '';
 $c_or_no = $_GET['c_or_no'] ?? '';
 $c_or_type = $_GET['atap_val'] ?? '';
 $c_or_amount = $_GET['c_or_amount'] ?? '';
 $c_or_paydate = $_GET['c_or_paydate'] ?? '';
 $c_encoded_by = $_GET['c_encoded_by'] ?? '';
-$c_mop_or = $_GET['c_mop'] ?? '';
-$c_bank_check = $_GET['c_bank_check'] ?? '';
-$c_bank_online = $_GET['c_bank_online'] ?? '';
+$c_mop_or = $_GET['c_mop_or'] ?? '';
+$$c_bank_check_or = $_GET['$c_bank_check_or'] ?? '';
+$c_bank_online_or = $_GET['c_bank_online_or'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
 $c_ref_no = $_GET['c_ref_no'] ?? '';
 $c_remarks = $_GET['c_remarks'] ?? '';
@@ -21,10 +21,10 @@ $c_ref = '';
 $c_or_paydate_1 = '';
 $c_or_paydate_2 = '';
 
-if ($c_bank_check == '' || $c_bank_check == null){
-    $c_bank_2 = $c_bank_online;
+if ($c_bank_check_or == '' || $c_bank_check_or == null){
+    $c_bank_2 = $c_bank_online_or;
 }else{
-    $c_bank = $c_bank_check;
+    $c_bank = $c_bank_check_or;
 }
 
 if ($c_check_no == '' || $c_check_no == null){
@@ -59,7 +59,7 @@ function format_value($value) {
         return number_format((float)str_replace(',', '', $value), 2);
     }
 }
-$buyerDetails = fetchBuyerDetails($conn, $c_account_no);
+$buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
 
 ?>
 <!DOCTYPE html>
@@ -245,6 +245,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_loc{
             text-transform: uppercase;
+            background-color: red;
             width: auto;
             text-align: left;
             font-size: 12px !important;
@@ -367,11 +368,11 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             $address = $buyerDetails["c_address"];
             $prov = $buyerDetails["c_city_prov"];
             $zip = $buyerDetails["c_zip_code"];
-            $c_account_no = $buyerDetails["c_account_no"];
+            $c_account_no_or = $buyerDetails["c_account_no"];
 
-            $c_phase = substr($c_account_no, 0, 3);
-            $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
-            $c_lot = substr($c_account_no, 6, 2);
+            $c_phase = substr($c_account_no_or, 0, 3);
+            $c_block = ltrim(substr($c_account_no_or, 3, 3), '0'); 
+            $c_lot = substr($c_account_no_or, 6, 2);
 
             if (strpos($fname, 'Spouses ') === 0) {
                 $fname = substr($fname, strlen('Spouses '));
@@ -396,7 +397,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <textarea name="c_received" id="c_received"><?php echo $fullName; ?></textarea>
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
-            <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo htmlspecialchars($c_account_no); ?>">
+            <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo htmlspecialchars($c_account_no_or); ?>">
 
             <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($c_or_type); ?>">
            

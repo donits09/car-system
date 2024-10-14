@@ -4,14 +4,14 @@ session_start();
 require_once('../../inc/check_session.php');
 check_user_group(3);
 include('../../config.php');
-$c_account_no_or = null;
+$c_account_no = null;
 $c_or_type = '';
 $c_or_amount = 0;
 $c_or_no = '';
 $c_or_paydate = date('Y-m-d');
 $c_encoded_by = '';
 $c_tran_date = date('Y-m-d H:i:s');
-$c_mop_or = '0';
+$c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
@@ -22,19 +22,19 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     odbc_execute($stmt, array($accountId));
 
     if ($result = odbc_fetch_array($stmt)) {
-        $c_account_no_or = $result["c_account_no"];
+        $c_account_no = $result["c_account_no"];
         $c_or_type = $result["c_or_type"];
         $c_or_amount = $result["c_or_amount"];
         $c_or_no = $result["c_or_no"];
         $c_or_paydate = $result["c_or_paydate"];
         $c_encoded_by = $result["c_encoded_by"];
-        $c_mop_or = $result["c_mop"];  
+        $c_mop = $result["c_mop"];  
         $c_bank = $result["c_bank"];
         $c_check_no = $result["c_check_no"];
         $c_remarks = $result["c_remarks"];
     }
 } else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
-    $c_account_no_or = $_GET['c_account_no'];
+    $c_account_no = $_GET['c_account_no'];
 }
 ?>
 <style>
@@ -51,7 +51,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="or-form" method="post" action="">
     <?php
-    $readonly = isset($c_account_no_or) && !empty($c_account_no_or) ? 'readonly' : '';
+    $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
@@ -172,7 +172,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no_or" name="c_account_no_or" value="<?php echo htmlspecialchars($c_account_no_or) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
+        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
     </div>
     <div class="form-group">
         <label for="or_no">OR No.</label>
@@ -197,22 +197,22 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <div id="or_amt_error"></div>
             </div>
             <div class="col-md-6">
-                <label for="c_mop_or">Mode of Payment</label>
-                <select class="form-control" id="c_mop_or" name="c_mop_or" required onchange="toggleCheckDropdownOR()">
-                    <option value="1" <?php echo ($c_mop_or == 1) ? 'selected' : ''; ?>>Cash</option>
-                    <option value="2" <?php echo ($c_mop_or == 2) ? 'selected' : ''; ?>>Check</option>
-                    <option value="3" <?php echo ($c_mop_or == 3) ? 'selected' : ''; ?>>Online</option>
+                <label for="c_mop">Mode of Payment</label>
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
+                    <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
+                    <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
+                    <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
                 </select>
             </div>  
         </div>  
     </div>  
 
-    <div class="form-group" id="checkListOR" style="display: <?php echo ($c_mop_or == 2) ? 'block' : 'none'; ?>;">
+    <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
-                <label for="c_bank_check_or">Check Bank</label>
+                <label for="c_bank_check">Check Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_check_or" name="c_bank_check_or" required>
+                    <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
                         $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $check_type_query);
@@ -231,12 +231,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
     </div>
 
-    <div class="form-group" id="onlineBankListOR" style="display: <?php echo ($c_mop_or == 3) ? 'block' : 'none'; ?>;">
+    <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6"> 
-                <label for="c_bank_online_or">Online Bank</label>
+                <label for="c_bank_online">Online Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_online_or" name="c_bank_online_or" required>
+                    <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
                         $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);
@@ -293,48 +293,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-<script src="<?php echo base_url; ?>dist/js/of_js/manage_or.js"></script>
+<script src="../../dist/js/of_js/manage_or.js"></script>
 <script>
-function toggleCheckDropdownOR() {
-    var modeOfPayment = document.getElementById("c_mop_or").value;
-    var checkList = document.getElementById("checkListOR");
-    var onlineBankList = document.getElementById("onlineBankListOR");
-    var cBankCheckInput = document.getElementById("c_bank_check_or");
-    var cBankOnlineInput = document.getElementById("c_bank_online_or");
-    var cCheckNo = document.getElementById("c_check_no");
-    var cRefNo = document.getElementById("c_ref_no");
-
-    if (modeOfPayment == '2') {
-        checkList.style.display = "block";
-        cCheckNo.style.display = "block";
-        onlineBankList.style.display = "none";
-        cRefNo.style.display = "none";
-        cBankCheckInput.setAttribute("required", "true");
-        cBankOnlineInput.removeAttribute("required");
-        cBankOnlineInput.value = ""; 
-        cRefNo.value = "";
-    } else if (modeOfPayment == '3') {
-        checkList.style.display = "none";
-        cCheckNo.style.display = "none";
-        onlineBankList.style.display = "block";
-        cRefNo.style.display = "block";
-        cBankOnlineInput.setAttribute("required", "true");
-        cBankCheckInput.removeAttribute("required");
-        cBankCheckInput.value = "";
-        cCheckNo.value = "";
-    } else {
-        checkList.style.display = "none";
-        cCheckNo.style.display = "none";
-        cRefNo.style.display = "none";
-        onlineBankList.style.display = "none";
-        cBankCheckInput.removeAttribute("required");
-        cBankOnlineInput.removeAttribute("required");
-        cBankCheckInput.value = "";
-        cBankOnlineInput.value = "";
-        cCheckNo.value = "";
-        cRefNo.value = "";
-    }
-}
 $(document).ready(function() {
     $('#or-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
@@ -399,14 +359,13 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createOrModal').modal('hide'); 
+                        $('#createCarModal').modal('hide'); 
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
-                        $('#or-form')[0].reset();
                         location.reload();
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    alert_toast(resp.msg, 'error'); 
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
@@ -440,10 +399,10 @@ $(document).ready(function() {
         }
     }
 
-    const accountNo = $('#c_account_no_or').val();
+    const accountNo = $('#c_account_no').val();
     fetchBuyerDetails(accountNo);
 
-    $('#c_account_no_or').on('input', function() {
+    $('#c_account_no').on('input', function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
@@ -490,13 +449,6 @@ $(document).ready(function() {
 });
 </script>
 <script>
-function clearAmt(){
-    var txtamt = document.getElementById('c_or_amount').value;
-
-    if(txtamt == '0.00'){
-        document.getElementById('c_or_amount').value='';
-    }
-}
 $(document).ready(function() {
     $('#get_atap_or').on('click', function() {
         const atapNo = $('#c_atap_no_or').val();
@@ -519,8 +471,8 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    if (response.data && response.data.c_account_no_or) {
-                        const currentAccountNo = $('#c_account_no_or').val();
+                    if (response.data && response.data.c_account_no) {
+                        const currentAccountNo = $('#c_account_no').val();
                         if (response.data.status === '1') {
                             $('#or_type_container').show();
                             $('#tran_type_container_or').hide();
@@ -533,30 +485,13 @@ $(document).ready(function() {
                             clearTxt();
                         } else {
                             populateForm(response.data);
-                            fetchBuyerDetails(response.data.c_account_no_or);
+                            fetchBuyerDetails(response.data.c_account_no);
                             fetchTranType(atapNo);
-
                             $('#or_type_container').hide();
-                            $('#tran_type_container_or').css({
-                                display: 'block',
-                                visibility: 'visible',
-                                opacity: 1
-                            }).show();
-
-                            setTimeout(function() {
-                                if ($('#tran_type_container_or').height() === 0 || $('#tran_type_container_or').width() === 0) {
-                                    //console.log('test');
-                                }
-
-                                if ($('#tran_type_container_or').is(':hidden') && $('#or_type_container').is(':hidden')) {
-                                    alert('No OR transactions remaining for this ATAP #.');
-                                    clearTxtNoOr();
-                                    $('#btnsave').prop('disabled', true);
-                                }
-
-                                // console.log('or_type_container hidden:', $('#or_type_container').is(':hidden'));
-                                // console.log('tran_type_container_or hidden:', $('#tran_type_container_or').is(':hidden'));
-                            }, 100); 
+                            $('#tran_type_container_or').show();
+                            if ($('#or_type_container').is(':hidden')) {
+                                alert('No OR transactions remaining for this ATAP #.');
+                            }
                         }
                     } else {
                         $('#or_type_container').show();
@@ -579,19 +514,12 @@ $(document).ready(function() {
             }
         });
     }
-    function clearTxtNoOr(){
-       const buyerNameField = $('#buyer_name_or');
-       const accField = $('#c_account_no_or');
-
-        buyerNameField.val('');
-        accField.val('');
-    }
 
     function clearTxt(){
         const atapNoField = $('#c_atap_no_or');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
-        const accField = $('#c_account_no_or');
+        const accField = $('#c_account_no');
 
         atapNoField.val('');
         amountField.val('');
@@ -602,7 +530,7 @@ $(document).ready(function() {
     function populateForm(data) {
         const buyerNameField = $('#buyer_name_or');
         const amountField = $('#c_or_amount');
-        const accField = $('#c_account_no_or');
+        const accField = $('#c_account_no');
         const statusField = $('#status');
 
         if (data.status === '1') {
@@ -617,7 +545,7 @@ $(document).ready(function() {
 
         buyerNameField.val(data.c_name).addClass('glow-effect');
         amountField.val(formattedAmount).addClass('glow-effect');
-        accField.val(data.c_account_no_or).addClass('glow-effect');
+        accField.val(data.c_account_no).addClass('glow-effect');
         statusField.addClass('glow-effect');
 
         setTimeout(function() {
@@ -626,10 +554,11 @@ $(document).ready(function() {
             accField.removeClass('glow-effect');
             statusField.removeClass('glow-effect');
         }, 1000);
-        $('#c_account_no_or').trigger('input');
+
+        $('#c_account_no').trigger('input');
     }
 
-    $('#c_account_no_or').on('input', function() {
+    $('#c_account_no').on('input', function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
@@ -665,7 +594,7 @@ $(document).ready(function() {
     }
 });
 
-function updateORList() {
+function updateCarList() {
     const username = $('#username').val(); 
     const accountNo = $('#buyer_acc_no').val();
 
@@ -677,8 +606,8 @@ function updateORList() {
             return response.text();
         })
         .then(data => {
-            document.getElementById('or-list-body').innerHTML = data;
-            calculateTotalORAmount(); 
+            document.getElementById('car-list-body').innerHTML = data;
+            calculateTotalAmount(); 
         })
         .catch(error => {
             console.error('Fetch error:', error);
@@ -825,4 +754,45 @@ function updateORList() {
         }
     }
     </script>
-    
+    <script>
+        function toggleCheckDropdown() {
+    var modeOfPayment = document.getElementById("c_mop").value;
+    var checkList = document.getElementById("checkList");
+    var onlineBankList = document.getElementById("onlineBankList");
+    var cBankCheckInput = document.getElementById("c_bank_check");
+    var cBankOnlineInput = document.getElementById("c_bank_online");
+    var cCheckNo = document.getElementById("c_check_no");
+    var cRefNo = document.getElementById("c_ref_no");
+
+    if (modeOfPayment == '2') {
+        checkList.style.display = "block";
+        cCheckNo.style.display = "block";
+        onlineBankList.style.display = "none";
+        cRefNo.style.display = "none";
+        cBankCheckInput.setAttribute("required", "true");
+        cBankOnlineInput.removeAttribute("required");
+        cBankOnlineInput.value = ""; 
+        cRefNo.value = "";
+    } else if (modeOfPayment == '3') {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        onlineBankList.style.display = "block";
+        cRefNo.style.display = "block";
+        cBankOnlineInput.setAttribute("required", "true");
+        cBankCheckInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cCheckNo.value = "";
+    } else {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        cRefNo.style.display = "none";
+        onlineBankList.style.display = "none";
+        cBankCheckInput.removeAttribute("required");
+        cBankOnlineInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cBankOnlineInput.value = "";
+        cCheckNo.value = "";
+        cRefNo.value = "";
+    }
+}
+    </script>
