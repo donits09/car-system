@@ -522,72 +522,57 @@ $(document).ready(function() {
     });
 
     function fetchAtapDetails(atapNo) {
-        $.ajax({
-            type: 'POST',
-            url: '../atap/get_atap_others_details.php',
-            data: { c_atap_no: atapNo },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    const data = response.data;
+    $.ajax({
+        type: 'POST',
+        url: '../atap/get_atap_others_details.php',
+        data: { c_atap_no: atapNo },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                const data = response.data;
 
-                    if (data.status === '1') {
-                        $('#car_type_container').show();
-                        $('#tran_type_container').hide();
-                        alert("This ATAP has already been PAID.");
-                        clearTxt();
-                    } else if (data.status === '3') {
-                        $('#car_type_container').show();
-                        $('#tran_type_container').hide();
-                        alert('This ATAP has already been CANCELLED');
-                        clearTxt();
-                    } else if ((data.status === '0' || data.status === '2') && data.c_account_no) {
-                        $('#car_type_container').show();
-                        $('#tran_type_container').hide();
-                        alert('The selected ATAP is a regular account.');
-                        clearTxt();
-                    } else {
-                        populateForm(response.data);
-                        fetchTranType(atapNo);
-                        $('#car_type_container').hide();
-                        $('#tran_type_container').css({
-                            display: 'block',
-                            visibility: 'visible',
-                            opacity: 1
-                        }).show();
-
-                        setTimeout(function() {
-                            if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
-                                //console.log('test');
-                            }
-
-                            if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
-                                alert('No CAR transactions remaining for this ATAP #.');
-                                clearTxtNoCar();
-                                $('#btnsave').prop('disabled', true);
-                            }
-                        }, 100); 
-                    }
-                } else {
+                if (data.status === '1') {
                     $('#car_type_container').show();
                     $('#tran_type_container').hide();
-                    alert('No account number found for the given ATAP No.');
+                    alert("This ATAP has already been PAID.");
                     clearTxt();
+                } else if (data.status === '3') {
+                    $('#car_type_container').show();
+                    $('#tran_type_container').hide();
+                    alert('This ATAP has already been CANCELLED');
+                    clearTxt();
+                } else if ((data.status === '0' || data.status === '2') && data.c_account_no) {
+                    $('#car_type_container').show();
+                    $('#tran_type_container').hide();
+                    alert('The selected ATAP is a regular account.');
+                    clearTxt();
+                } else {
+           
+                    populateForm(data);
+                    fetchTranType(atapNo);
+                    $('#car_type_container').hide();
+                    $('#tran_type_container').show();
+                    if ($('#car_type_container').is(':hidden')) {
+                        alert('No CAR transactions remaining for this ATAP #.');
+                    }
                 }
-            },
-            error: function() {
+            } else {
                 $('#car_type_container').show();
                 $('#tran_type_container').hide();
-                alert('An error occurred while fetching ATAP details.');
+                alert('No account number found for the given ATAP No.');
                 clearTxt();
             }
-        });
-    }
+        },
+        error: function() {
+            $('#car_type_container').show();
+            $('#tran_type_container').hide();
+            alert('An error occurred while fetching ATAP details.');
+            clearTxt();
+        }
+    });
+}
 
-    function clearTxtNoCar(){
-       const buyerNameField = $('#c_name');
-        buyerNameField.val('');
-    }
+
 
     function clearTxt(){
         $('#c_atap_no').val('');

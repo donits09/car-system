@@ -161,15 +161,6 @@ $(document).ready(function() {
     });
 });
 
-
-function clearAmt(){
-    var txtamt = document.getElementById('c_or_amount').value;
-
-    if(txtamt == '0.00'){
-        document.getElementById('c_or_amount').value='';
-    }
-}
-
 /* toggle para sa bank pantropiko */
 function toggleCheckDropdown() {
     var modeOfPayment = document.getElementById("c_mop").value;
