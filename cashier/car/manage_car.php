@@ -204,7 +204,7 @@ function toggleCarType() {
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeofPaymentChange()">
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
@@ -307,24 +307,24 @@ function toggleCarType() {
             document.getElementById('c_car_amount').value='';
         }
     }
-    function handleModeOfPaymentChange() {
-        var mop = document.getElementById('c_mop').value;
-        document.getElementById('c_bank_online').value = '';
-        document.getElementById('c_ref_no').value = '';
-        document.getElementById('c_bank_check').value = '';
-        document.getElementById('c_check_no').value = '';
+    // function handleModeOfPaymentChange() {
+    //     var mop = document.getElementById('c_mop').value;
+    //     document.getElementById('c_bank_online').value = '';
+    //     document.getElementById('c_ref_no').value = '';
+    //     document.getElementById('c_bank_check').value = '';
+    //     document.getElementById('c_check_no').value = '';
 
-        if (mop == '2') {
-            document.getElementById('checkList').style.display = 'block';
-            document.getElementById('onlineBankList').style.display = 'none';
-        } else if (mop == '3') {
-            document.getElementById('onlineBankList').style.display = 'block';
-            document.getElementById('checkList').style.display = 'none';
-        } else {
-            document.getElementById('checkList').style.display = 'none';
-            document.getElementById('onlineBankList').style.display = 'none';
-        }
-    }
+    //     if (mop == '2') {
+    //         document.getElementById('checkList').style.display = 'block';
+    //         document.getElementById('onlineBankList').style.display = 'none';
+    //     } else if (mop == '3') {
+    //         document.getElementById('onlineBankList').style.display = 'block';
+    //         document.getElementById('checkList').style.display = 'none';
+    //     } else {
+    //         document.getElementById('checkList').style.display = 'none';
+    //         document.getElementById('onlineBankList').style.display = 'none';
+    //     }
+    // }
 </script>
 <script>
 $(document).ready(function() {
