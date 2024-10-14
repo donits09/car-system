@@ -65,20 +65,17 @@ $(document).ready(function () {
         }
     });
 });
-
 function calculateTotalAmount() {
     var table = document.getElementById("car-list-table");
     if (!table) {
         console.log("Table not found.");
         return;
     }
-
     var tbody = table.getElementsByTagName("tbody")[0];
     if (!tbody) {
         console.log("Table body not found.");
         return;
     }
-
     var rows = tbody.getElementsByTagName("tr");
     var total = 0;
 
