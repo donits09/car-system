@@ -296,6 +296,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </form>
 <script src="../../dist/js/of_js/manage_or.js"></script>
 <script>
+
+function clearAmt(){
+    var txtamt = document.getElementById('c_or_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_or_amount').value='';
+    }
+}
+
 $(document).ready(function() {
     $('#or-form').submit(function(e) {
         e.preventDefault();

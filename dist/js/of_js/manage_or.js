@@ -30,10 +30,10 @@ function validateAlphaNumericInput(event) {
 }
 
 $(document).ready(function () {
-    $('#c_car_type').on('input', function () {
+    $('#c_or_type').on('input', function () {
         var input = $(this).val().toLowerCase();
         var hasVisibleOptions = false;
-        $('#comboBoxMenu .dropdown-item').each(function () {
+        $('#comboBoxMenu_or .dropdown-item').each(function () {
             if ($(this).text().toLowerCase().startsWith(input)) {
                 $(this).show();
                 hasVisibleOptions = true;
@@ -43,42 +43,39 @@ $(document).ready(function () {
         });
 
         if (hasVisibleOptions) {
-            $('#comboBoxMenu').show();
+            $('#comboBoxMenu_or').show();
         } else {
-            $('#comboBoxMenu').hide();
+            $('#comboBoxMenu_or').hide();
         }
     });
 
-    $('#comboBoxMenu').on('click', '.dropdown-item', function () {
+    $('#comboBoxMenu_or').on('click', '.dropdown-item', function () {
         var selectedText = $(this).data('value');
-        $('#c_car_type').val(selectedText);
-        $('#comboBoxMenu').hide();
+        $('#c_or_type').val(selectedText);
+        $('#comboBoxMenu_or').hide();
     });
 
-    $('#c_car_type').on('click', function () {
-        $('#comboBoxMenu').show();
+    $('#c_or_type').on('click', function () {
+        $('#comboBoxMenu_or').show();
     });
 
     $(document).on('click', function (e) {
         if (!$(e.target).closest('.dropdown').length) {
-            $('#comboBoxMenu').hide();
+            $('#comboBoxMenu_or').hide();
         }
     });
 });
-
 function calculateTotalAmount() {
     var table = document.getElementById("car-list-table");
     if (!table) {
         console.log("Table not found.");
         return;
     }
-
     var tbody = table.getElementsByTagName("tbody")[0];
     if (!tbody) {
         console.log("Table body not found.");
         return;
     }
-
     var rows = tbody.getElementsByTagName("tr");
     var total = 0;
 
@@ -110,9 +107,9 @@ function calculateTotalAmount() {
 }
 
 $(document).ready(function() {
-    var idValue = "<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
+    var idValue = "<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>";
     if (idValue) {
-        $('#comboBoxMenu').find('a[data-value="' + idValue + '"]').addClass('active');
+        $('#comboBoxMenu_or').find('a[data-value="' + idValue + '"]').addClass('active');
     }
 });
 
@@ -162,43 +159,43 @@ $(document).ready(function() {
 });
 
 /* toggle para sa bank pantropiko */
-function toggleCheckDropdown() {
-    var modeOfPayment = document.getElementById("c_mop").value;
-    var checkList = document.getElementById("checkList");
-    var onlineBankList = document.getElementById("onlineBankList");
-    var cBankCheckInput = document.getElementById("c_bank_check");
-    var cBankOnlineInput = document.getElementById("c_bank_online");
-    var cCheckNo = document.getElementById("c_check_no");
-    var cRefNo = document.getElementById("c_ref_no");
+// function toggleCheckDropdown() {
+//     var modeOfPayment = document.getElementById("c_mop").value;
+//     var checkList = document.getElementById("checkList");
+//     var onlineBankList = document.getElementById("onlineBankList");
+//     var cBankCheckInput = document.getElementById("c_bank_check");
+//     var cBankOnlineInput = document.getElementById("c_bank_online");
+//     var cCheckNo = document.getElementById("c_check_no");
+//     var cRefNo = document.getElementById("c_ref_no");
 
-    if (modeOfPayment == '2') {
-        checkList.style.display = "block";
-        cCheckNo.style.display = "block";
-        onlineBankList.style.display = "none";
-        cRefNo.style.display = "none";
-        cBankCheckInput.setAttribute("required", "true");
-        cBankOnlineInput.removeAttribute("required");
-        cBankOnlineInput.value = ""; 
-        cRefNo.value = "";
-    } else if (modeOfPayment == '3') {
-        checkList.style.display = "none";
-        cCheckNo.style.display = "none";
-        onlineBankList.style.display = "block";
-        cRefNo.style.display = "block";
-        cBankOnlineInput.setAttribute("required", "true");
-        cBankCheckInput.removeAttribute("required");
-        cBankCheckInput.value = "";
-        cCheckNo.value = "";
-    } else {
-        checkList.style.display = "none";
-        cCheckNo.style.display = "none";
-        cRefNo.style.display = "none";
-        onlineBankList.style.display = "none";
-        cBankCheckInput.removeAttribute("required");
-        cBankOnlineInput.removeAttribute("required");
-        cBankCheckInput.value = "";
-        cBankOnlineInput.value = "";
-        cCheckNo.value = "";
-        cRefNo.value = "";
-    }
-}
+//     if (modeOfPayment == '2') {
+//         checkList.style.display = "block";
+//         cCheckNo.style.display = "block";
+//         onlineBankList.style.display = "none";
+//         cRefNo.style.display = "none";
+//         cBankCheckInput.setAttribute("required", "true");
+//         cBankOnlineInput.removeAttribute("required");
+//         cBankOnlineInput.value = ""; 
+//         cRefNo.value = "";
+//     } else if (modeOfPayment == '3') {
+//         checkList.style.display = "none";
+//         cCheckNo.style.display = "none";
+//         onlineBankList.style.display = "block";
+//         cRefNo.style.display = "block";
+//         cBankOnlineInput.setAttribute("required", "true");
+//         cBankCheckInput.removeAttribute("required");
+//         cBankCheckInput.value = "";
+//         cCheckNo.value = "";
+//     } else {
+//         checkList.style.display = "none";
+//         cCheckNo.style.display = "none";
+//         cRefNo.style.display = "none";
+//         onlineBankList.style.display = "none";
+//         cBankCheckInput.removeAttribute("required");
+//         cBankOnlineInput.removeAttribute("required");
+//         cBankCheckInput.value = "";
+//         cBankOnlineInput.value = "";
+//         cCheckNo.value = "";
+//         cRefNo.value = "";
+//     }
+// }

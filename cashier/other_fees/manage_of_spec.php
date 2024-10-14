@@ -80,7 +80,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <label for="c_or_type">Transaction Type</label>
            
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_or_type" name="c_or_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
-            <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
+            <div class="dropdown-menu w-100" id="comboBoxMenu_or" style="max-height: 200px; overflow-y: auto;">
                 <?php
 
                 $or_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'O' ORDER BY c_payment_type ASC";
@@ -101,7 +101,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $('#c_or_type').on('input', function () {
                 var input = $(this).val().toLowerCase();
                 var hasVisibleOptions = false;
-                $('#comboBoxMenu .dropdown-item').each(function () {
+                $('#comboBoxMenu_or .dropdown-item').each(function () {
                     if ($(this).text().toLowerCase().startsWith(input)) {
                         $(this).show();
                         hasVisibleOptions = true;
@@ -111,25 +111,29 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 });
 
                 if (hasVisibleOptions) {
-                    $('#comboBoxMenu').show();
+                    $('#comboBoxMenu_or').show();
                 } else {
-                    $('#comboBoxMenu').hide();
+                    $('#comboBoxMenu_or').hide();
                 }
             });
 
-            $('#comboBoxMenu').on('click', '.dropdown-item', function () {
+            $('#comboBoxMenu_or').on('click', '.dropdown-item', function () {
+
+
+//             $('#comboBoxMenu').on('click', '.dropdown-item', function () {
+
                 var selectedText = $(this).data('value');
                 $('#c_or_type').val(selectedText);
-                $('#comboBoxMenu').hide();
+                $('#comboBoxMenu_or').hide();
             });
 
             $('#c_or_type').on('focus click', function () {
-                $('#comboBoxMenu').show();
+                $('#comboBoxMenu_or').show();
             });
 
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('.dropdown').length) {
-                    $('#comboBoxMenu').hide();
+                    $('#comboBoxMenu_or').hide();
                 }
             });
         });
@@ -296,7 +300,49 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </form>
 <script src="../../dist/js/of_js/manage_or.js"></script>
 <script>
-$(document).ready(function() {
+
+function toggleCheckDropdown() {
+    var modeOfPayment = document.getElementById("c_mop").value;
+    var checkList = document.getElementById("checkList");
+    var onlineBankList = document.getElementById("onlineBankList");
+    var cBankCheckInput = document.getElementById("c_bank_check");
+    var cBankOnlineInput = document.getElementById("c_bank_online");
+    var cCheckNo = document.getElementById("c_check_no");
+    var cRefNo = document.getElementById("c_ref_no");
+
+    if (modeOfPayment == '2') {
+        checkList.style.display = "block";
+        cCheckNo.style.display = "block";
+        onlineBankList.style.display = "none";
+        cRefNo.style.display = "none";
+        cBankCheckInput.setAttribute("required", "true");
+        cBankOnlineInput.removeAttribute("required");
+        cBankOnlineInput.value = ""; 
+        cRefNo.value = "";
+    } else if (modeOfPayment == '3') {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        onlineBankList.style.display = "block";
+        cRefNo.style.display = "block";
+        cBankOnlineInput.setAttribute("required", "true");
+        cBankCheckInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cCheckNo.value = "";
+    } else {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        cRefNo.style.display = "none";
+        onlineBankList.style.display = "none";
+        cBankCheckInput.removeAttribute("required");
+        cBankOnlineInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cBankOnlineInput.value = "";
+        cCheckNo.value = "";
+        cRefNo.value = "";
+    }
+}
+    $(document).ready(function() {
+
     $('#or-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
             event.preventDefault();
