@@ -121,9 +121,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $('#c_or_type').val(selectedText);
                 $('#comboBoxMenu').hide();
             });
+
             $('#c_or_type').on('focus click', function () {
                 $('#comboBoxMenu').show();
             });
+
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('.dropdown').length) {
                     $('#comboBoxMenu').hide();
@@ -249,6 +251,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
+
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">

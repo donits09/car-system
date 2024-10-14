@@ -2,13 +2,15 @@
 session_start();
 
 require_once('../../inc/check_session.php');
-check_user_group(1);
+check_user_group(3);
 
 include('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
 ?>
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+<link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
+<script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
 <style>
@@ -23,6 +25,11 @@ include('../../inc/header.php');
         padding: 5px 10px; 
         width: auto; 
     }
+    .dropdown-menu {
+    top: auto;
+    transform: translate3d(0, 0, 0); 
+    }
+
 </style>
 <body>
 <div class="container mt-5">
@@ -31,7 +38,7 @@ include('../../inc/header.php');
         <!-- <div class="pd-20" id="car-btn"> -->
         <h2 class="text-blue h4">Other Fees - Full List</h2>
         <hr>
-            <a id="create_new" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
+            <a id="create_new_of" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
                 <span class="fa fa-edit"></span> Create New OR
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
@@ -40,7 +47,29 @@ include('../../inc/header.php');
             <div class="pd-20">
             <hr>
         </div>
-            <div class="table-container">
+        <div class="pd-20">
+            <form method="get" action="">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="start_date">Start Date:</label>
+                        <input type="text" id="start_date" name="start_date" class="form-control datepicker" 
+                            value="<?php echo isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d'); ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date">End Date:</label>
+                        <input type="text" id="end_date" name="end_date" class="form-control datepicker" 
+                            value="<?php echo isset($_GET['end_date']) ? $_GET['end_date'] : date('Y-m-d'); ?>">
+                    </div>
+                    <div class="col-md-1 align-self-end">
+                        <button type="submit" class="btn btn-primary" id="btn-filter">
+                            <span class="fa fa-filter"></span> Filter
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <br>
+        </div>
+        <div class="table-container">
             <table class="table table-bordered table-striped" id="data-table">
                 <thead>
                     <tr>
@@ -52,7 +81,7 @@ include('../../inc/header.php');
                         <th>Name</th>
                         <th>Location</th>
                         <th>Amount</th>
-                        <th>Pay Date</th>
+                        <th>Transaction Date</th>
                         <th>Encoder</th>
                         <th>Action</th>
                     </tr>
@@ -61,12 +90,25 @@ include('../../inc/header.php');
                         <?php
                         $username = $_SESSION['username'];
 
+                        $start_date = isset($_GET['start_date']) ? $_GET['start_date'] : '';
+                        $end_date = isset($_GET['end_date']) ? $_GET['end_date'] : '';
+
                         $or_list = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
-                    a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.e_status, a.c_remarks
-                        FROM t_or_payment a
-                        LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no WHERE status != 1
-                        ORDER BY a.c_tran_updated DESC";
+                                    a.c_or_paydate, a.c_or_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank, 
+                                    b.c_name, b.c_phase, b.c_block, b.c_lot, a.e_status, a.c_remarks
+                                    FROM t_or_payment a
+                                    LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no
+                                    WHERE a.status != 1";
+
+                        if ($start_date && $end_date) {
+                            $or_list .= " AND CAST(a.c_tran_date AS date) BETWEEN '$start_date' AND '$end_date'";
+                        } else {
+                            $current_date = date('Y-m-d');
+                            $or_list .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
+                        }
+
+                        $or_list .= " ORDER BY a.c_tran_updated DESC";
+                        /* echo $or_list; */
                         $stmt = odbc_prepare($conn, $or_list);
 
                         $result = odbc_execute($stmt, array($username));
@@ -179,37 +221,41 @@ include('../../inc/header.php');
                                         ?>
                                     </td>
                                     <td align="center">
-                                    <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
-                                        Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                                            <!-- <span class="fa fa-eye text-primary"></span> -->View
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item edit_data" href="javascript:void(0)" 
-                                        data-id="<?php echo $row['id']; ?>" 
-                                        data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                                        data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
-                                        data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
-                                        data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
-                                        data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
-                                        data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
-                                            Edit
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
-                                            Print
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
-                                            Cancel
-                                        </a>
-                                    </div>
-                                </td>
+                                        <button type="button" class="btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon" data-toggle="dropdown">
+                                            Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
+                                                View
+                                            </a>
+                                            
+                                            <?php if ($row['c_encoded_by'] == $username){ ?>
+                                                <!-- <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item edit_or" href="javascript:void(0)" 
+                                                data-id="<?php echo $row['id']; ?>" 
+                                                data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
+                                                data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
+                                                data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
+                                                data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
+                                                data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
+                                                data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
+                                                    Edit
+                                                </a> -->
+                                                
+                                                <!--
+                                                <a class="dropdown-item delete_or" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
+                                                    Cancel
+                                                </a> -->
+                                            <?php }; ?>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
+                                                Print
+                                            </a>
+                                        </div>
+                                    </td>
                                 </tr>
-                        <?php
+                            <?php
                             }
                         }
                         ?>
@@ -284,6 +330,52 @@ $(document).ready(function() {
         calculateTotalAmount();
     });
 });
+// function delete_or(orId, orNo) {
+//     start_loader();
+//     $.ajax({
+//         url: "../../classes/Master.php?f=delete_or",
+//         method: "POST",
+//         data: { orId: orId, orNo: orNo },
+//         dataType: "json",
+//         error: function(err) {
+//             console.log(err);
+//             alert_toast("An error occurred.", 'error');
+//             end_loader();
+//         },
+//         success: function(resp) {
+//             if (resp && resp.status === 'success') {
+//                 alert_toast(resp.msg, 'success');
+//                 setTimeout(function() {
+//                     $('#confirm_modal').modal('hide'); 
+//                     $('body').removeClass('modal-open'); 
+//                     $('.modal-backdrop').remove(); 
+//                     location.reload();
+//                     //updateORList(); 
+//                     $('.delete_or[data-id="' + orId + '"]').closest('tr').remove();
+//                 }, 1000);
+//             } else if (resp && resp.status === 'failed' && resp.err) {
+//                 alert_toast("An error occurred: " + resp.err, 'error');
+//             } else {
+//                 alert_toast("An unexpected error occurred", 'error');
+//             }
+//             end_loader();
+//         }
+//     });
+// }
+</script>
+<script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('#myTab a').on('click', function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        });
+    });
 </script>
 </div>
 </body>

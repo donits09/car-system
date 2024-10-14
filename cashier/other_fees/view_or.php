@@ -2,7 +2,7 @@
     session_start();
 
     require_once('../../inc/check_session.php');
-    check_user_group(1);
+    check_user_group(3);
     $c_encoded_by = '';
     include('../../config.php');
     if(isset($_GET['id']) && $_GET['id'] > 0){
