@@ -246,7 +246,10 @@ include('../../inc/header.php');
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>" data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
-                                            Cancel <?php echo $row['c_atap_no']; ?>
+                                            Cancel 
+                                            <?php if ($row['c_atap_no'] != 0) {
+                                                echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8');
+                                            } ?>
                                         </a>
                                         <?php } ?>
                                     </div>
