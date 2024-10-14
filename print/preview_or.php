@@ -7,7 +7,7 @@ $c_or_type = $_GET['atap_val'] ?? '';
 $c_or_amount = $_GET['c_or_amount'] ?? '';
 $c_or_paydate = $_GET['c_or_paydate'] ?? '';
 $c_encoded_by = $_GET['c_encoded_by'] ?? '';
-$c_mop = $_GET['c_mop'] ?? '';
+$c_mop_or = $_GET['c_mop'] ?? '';
 $c_bank_check = $_GET['c_bank_check'] ?? '';
 $c_bank_online = $_GET['c_bank_online'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
@@ -17,11 +17,9 @@ $c_remarks = $_GET['c_remarks'] ?? '';
 $c_bank = '';
 $c_bank_2 = '';
 $c_check = '';
-
 $c_ref = '';
 $c_or_paydate_1 = '';
 $c_or_paydate_2 = '';
-
 
 if ($c_bank_check == '' || $c_bank_check == null){
     $c_bank_2 = $c_bank_online;
@@ -35,9 +33,9 @@ if ($c_check_no == '' || $c_check_no == null){
     $c_check = $c_check_no;
 }
 
-if ($c_mop == 3) {
+if ($c_mop_or == 3) {
     $c_or_paydate_2 = $c_or_paydate;
-} elseif ($c_mop == 2) {
+} elseif ($c_mop_or == 2) {
     $c_or_paydate_1 = $c_or_paydate;
 }
 
@@ -61,7 +59,6 @@ function format_value($value) {
         return number_format((float)str_replace(',', '', $value), 2);
     }
 }
-
 $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
 
 ?>
@@ -308,7 +305,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             font-size: 10px !important;
             position:absolute;
         }
-        #c_mop{
+        #c_mop_or{
             font-size: 10px !important;
             margin-top:100px;
             margin-left:-15px;
@@ -406,9 +403,9 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
             <input type="text" name="c_bank_main_2" id="c_bank_main_2" value="<?php echo htmlspecialchars($c_bank_2); ?>">
 
-            <?php if ($c_mop == 2): ?>
+            <?php if ($c_mop_or == 2): ?>
                 <input type="text" name="sign_check" id="sign_check" value="✓">
-            <?php elseif ($c_mop == 3): ?>
+            <?php elseif ($c_mop_or == 3): ?>
                 <input type="text" name="sign_ref" id="sign_ref" value="✓">
             <?php endif; ?>
                 
@@ -437,10 +434,10 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
 
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
 
-        <?php $c_mop = $c_mop ?? 0; ?>
+        <?php $c_mop_or = $c_mop_or ?? 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
-            <input type="hidden" id="c_mop" value="<?php echo number_format((float)str_replace(',', '', $c_or_amount), 2); ?>">
-            <input type="hidden" id="c_mop_value" value="<?php echo $c_mop; ?>">
+            <input type="hidden" id="c_mop_or" value="<?php echo number_format((float)str_replace(',', '', $c_or_amount), 2); ?>">
+            <input type="hidden" id="c_mop_value" value="<?php echo $c_mop_or; ?>">
         </div>
         <div class="dashes">
         --------------<br>
