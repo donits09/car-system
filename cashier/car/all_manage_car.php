@@ -296,7 +296,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
-<script>
+<!-- <script>
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop').value;
         document.getElementById('c_bank_online').value = '';
@@ -315,7 +315,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             document.getElementById('onlineBankList').style.display = 'none';
         }
     }
-</script>
+</script> -->
 <script>
  $(document).ready(function() {
     $('#get_atap').on('click', function() {
