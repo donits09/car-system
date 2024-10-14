@@ -116,17 +116,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $('#comboBoxMenu').hide();
                 }
             });
-
             $('#comboBoxMenu').on('click', '.dropdown-item', function () {
                 var selectedText = $(this).data('value');
                 $('#c_or_type').val(selectedText);
                 $('#comboBoxMenu').hide();
             });
-
             $('#c_or_type').on('focus click', function () {
                 $('#comboBoxMenu').show();
             });
-
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('.dropdown').length) {
                     $('#comboBoxMenu').hide();
@@ -136,7 +133,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <script>
         $(document).ready(function() {
-      
         function updateAtapVal(selectedValue) {
             $('#atap_val_or').val(selectedValue);
         }
@@ -148,7 +144,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $('#dropdownMenuButton').text(selectedValue);
             $('#c_or_type').val(selectedValue); 
         });
-
         var initialSelectedValue = $('#c_or_type').val();
         updateAtapVal(initialSelectedValue);
     });
@@ -207,7 +202,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>  
         </div>  
     </div>  
-
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
@@ -255,7 +249,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
