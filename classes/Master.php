@@ -239,6 +239,18 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = 'ATAP No not provided.';
 			}
+		/* Handle yung $atapNo na 0 (yung mga walang atap) */
+		}else if(!empty($carNo) && $atapNo == 0) {
+			$sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+			if ($stmt && @odbc_execute($stmt, array($carNo))) {
+				$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
+				$resp['status'] = 'success';
+				$resp['msg'] = "Car and ATAP status successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = "Failed to cancel car payment without atap " . odbc_errormsg($this->conn);
+			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['msg'] = 'Car No not provided.';
@@ -730,9 +742,15 @@ Class Master{
 			$maxId = 1;
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
+
+		/* Sa $c_atap_no if empty sya 0 yung nilalaman dito sa $values -dhendhen */
 	
 		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
-		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '" . (!empty($c_atap_no) ? $c_atap_no : '0') . "'";
+
+		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', " . (!empty($c_atap_no) ? "'$c_atap_no'" : 0);
+
+// 		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '" . (!empty($c_atap_no) ? $c_atap_no : '0') . "'";
+
 	
 		$resp = array();
 	
@@ -904,9 +922,15 @@ Class Master{
 		$data = "id, c_car_no, c_name, c_phase, c_block, c_lot";
 		$values = "'$maxId', '$c_car_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 
+		/* Sa $c_atap_no if empty sya 0 yung ilalaman dito sa $values1 -dhendhen */
+
 		$c_account_no = '';
 		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
-		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '" . (!empty($c_atap_no) ? $c_atap_no : '0') . "'";
+
+		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks'," . (!empty($c_atap_no) ? "'$c_atap_no'" : 0);
+
+// 		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '" . (!empty($c_atap_no) ? $c_atap_no : '0') . "'";
+
 	
 		$resp = array();
 	
