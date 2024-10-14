@@ -56,7 +56,7 @@ if (!empty($account_no)) {
                 </td>
                 <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
-                <!-- <td class="text-center"><?php 
+                <td class="text-center"><?php 
                     if ($row['status'] == 0){
                         echo  '<span class="badge badge-warning">PENDING</span>'; 
                     } else if($row['status'] == 1){
@@ -66,7 +66,7 @@ if (!empty($account_no)) {
                     } else {
                         echo  '<span class="badge badge-danger">CANCELLED</span>'; 
                     } ?>
-                </td> -->
+                </td>
                 <td class="text-center">
                     <?php
                     $c_encoded_by = $row['c_encoded_by'];
@@ -85,14 +85,23 @@ if (!empty($account_no)) {
                         Action
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
-                    <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item view_or_spec" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_or_no'] ?>">
-                            View
+                    <di class="dropdown-menu" role="menu">
+                        <a class="dropdown-item view_atap_spec" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-no="<?php echo $row['c_or_no'] ?>">
+                            <!-- <span class="fa fa-eye text-primary"></span> -->View 
+                        </a>
+                        <?php if ($row['c_encoded_by'] == $username){ ?>
+                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
+                        <a class="dropdown-item edit_atap_spec <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" 
+                            data-acc-no="<?php echo $row['c_account_no']; ?>"
+                            data-id="<?php echo $row['id']; ?>"
+                            data-no="<?php echo $row['c_or_no']; ?>">
+                            <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                         </a>
                         <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                        <div class="card-tools">
-                            <a class="dropdown-item" href="../../print/print_or.php?id=<?php echo $row['c_or_no']; ?>" target="_blank">Print</a>
-                        </div>
+                        <a class="dropdown-item delete_data <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_or_no']; ?>">
+                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
+                        </a>
+                        <?php }; ?>
                     </div>
                 </td>
             </tr>
@@ -127,9 +136,7 @@ if (!empty($account_no)) {
         });
     }
     
-
-    $(document).on('click', '.edit_of_spec', function() {
-
+     $(document).on('click', '.edit_or_spec', function() {
         var orId = $(this).data('id');
         var orNo = $(this).data('no');
         var accountNo = $(this).data('acc-no');
@@ -137,7 +144,7 @@ if (!empty($account_no)) {
         var modalSelector = '#createCarModal';
         var url;
     
-        url = '../other_fees/manage_of_spec.php?id=' + orId + '&no=' + orNo + '&acc-no=' + accountNo;
+        url = '../atap/manage_of_spec.php?id=' + orId + '&no=' + orNo + '&acc-no=' + accountNo;
         
         loadModal(modalTitle, url, modalSelector);
     });
@@ -149,4 +156,11 @@ if (!empty($account_no)) {
         });
         $('#confirm_modal').modal('show');
     };
+
+    $(document).on('click', '.delete_data', function() {
+        var orId = $(this).data('id');
+        var orNo = $(this).data('no');
+        _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);
+    });
+
 </script>
