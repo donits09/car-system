@@ -11,7 +11,7 @@ $c_or_no = '';
 $c_or_paydate = date('Y-m-d');
 $c_encoded_by = '';
 $c_tran_date = date('Y-m-d H:i:s');
-$c_mop = '0';
+$c_mop_or = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
@@ -28,7 +28,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_or_no = $result["c_or_no"];
         $c_or_paydate = $result["c_or_paydate"];
         $c_encoded_by = $result["c_encoded_by"];
-        $c_mop = $result["c_mop"];  
+        $c_mop_or = $result["c_mop"];  
         $c_bank = $result["c_bank"];
         $c_check_no = $result["c_check_no"];
         $c_remarks = $result["c_remarks"];
@@ -80,7 +80,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <label for="c_or_type">Transaction Type</label>
            
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_or_type" name="c_or_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
-            <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
+            <div class="dropdown-menu w-100" id="comboBoxMenu_or" style="max-height: 200px; overflow-y: auto;">
             <?php
 
                 $or_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'O' ORDER BY c_payment_type ASC";
@@ -101,7 +101,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $('#c_or_type').on('input', function () {
                 var input = $(this).val().toLowerCase();
                 var hasVisibleOptions = false;
-                $('#comboBoxMenu .dropdown-item').each(function () {
+                $('#comboBoxMenu_or .dropdown-item').each(function () {
                     if ($(this).text().toLowerCase().startsWith(input)) {
                         $(this).show();
                         hasVisibleOptions = true;
@@ -111,25 +111,25 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 });
 
                 if (hasVisibleOptions) {
-                    $('#comboBoxMenu').show();
+                    $('#comboBoxMenu_or').show();
                 } else {
-                    $('#comboBoxMenu').hide();
+                    $('#comboBoxMenu_or').hide();
                 }
             });
 
-            $('#comboBoxMenu').on('click', '.dropdown-item', function () {
+            $('#comboBoxMenu_or').on('click', '.dropdown-item', function () {
                 var selectedText = $(this).data('value');
                 $('#c_or_type').val(selectedText);
-                $('#comboBoxMenu').hide();
+                $('#comboBoxMenu_or').hide();
             });
 
             $('#c_or_type').on('focus click', function () {
-                $('#comboBoxMenu').show();
+                $('#comboBoxMenu_or').show();
             });
 
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('.dropdown').length) {
-                    $('#comboBoxMenu').hide();
+                    $('#comboBoxMenu_or').hide();
                 }
             });
         });
@@ -198,22 +198,22 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <div id="or_amt_error"></div>
             </div>
             <div class="col-md-6">
-                <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
-                    <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
-                    <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
-                    <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
+                <label for="c_mop_or">Mode of Payment</label>
+                <select class="form-control" id="c_mop_or" name="c_mop_or" required onchange="toggleCheckDropdownOR()">
+                    <option value="1" <?php echo ($c_mop_or == 1) ? 'selected' : ''; ?>>Cash</option>
+                    <option value="2" <?php echo ($c_mop_or == 2) ? 'selected' : ''; ?>>Check</option>
+                    <option value="3" <?php echo ($c_mop_or == 3) ? 'selected' : ''; ?>>Online</option>
                 </select>
             </div>  
         </div>  
     </div>  
 
-    <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
+    <div class="form-group" id="checkListOR" style="display: <?php echo ($c_mop_or == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
-                <label for="c_bank_check">Check Bank</label>
+                <label for="c_bank_check_or">Check Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_check" name="c_bank_check" required>
+                    <select class="form-control" id="c_bank_check_or" name="c_bank_check_or" required>
                         <?php
                         $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $check_type_query);
@@ -232,12 +232,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
     </div>
 
-    <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
+    <div class="form-group" id="onlineBankListOR" style="display: <?php echo ($c_mop_or == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6"> 
-                <label for="c_bank_online">Online Bank</label>
+                <label for="c_bank_online_or">Online Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_online" name="c_bank_online" required>
+                    <select class="form-control" id="c_bank_online_or" name="c_bank_online_or" required>
                         <?php
                         $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);
@@ -294,8 +294,48 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-<script src="<?php echo base_url; ?>/dist/js/of_js/manage_or.js"></script>
+<script src="<?php echo base_url; ?>dist/js/of_js/manage_or.js"></script>
 <script>
+    function toggleCheckDropdownOR() {
+    var modeOfPayment = document.getElementById("c_mop_or").value;
+    var checkList = document.getElementById("checkListOR");
+    var onlineBankList = document.getElementById("onlineBankListOR");
+    var cBankCheckInput = document.getElementById("c_bank_check_or");
+    var cBankOnlineInput = document.getElementById("c_bank_online_or");
+    var cCheckNo = document.getElementById("c_check_no");
+    var cRefNo = document.getElementById("c_ref_no");
+
+    if (modeOfPayment == '2') {
+        checkList.style.display = "block";
+        cCheckNo.style.display = "block";
+        onlineBankList.style.display = "none";
+        cRefNo.style.display = "none";
+        cBankCheckInput.setAttribute("required", "true");
+        cBankOnlineInput.removeAttribute("required");
+        cBankOnlineInput.value = ""; 
+        cRefNo.value = "";
+    } else if (modeOfPayment == '3') {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        onlineBankList.style.display = "block";
+        cRefNo.style.display = "block";
+        cBankOnlineInput.setAttribute("required", "true");
+        cBankCheckInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cCheckNo.value = "";
+    } else {
+        checkList.style.display = "none";
+        cCheckNo.style.display = "none";
+        cRefNo.style.display = "none";
+        onlineBankList.style.display = "none";
+        cBankCheckInput.removeAttribute("required");
+        cBankOnlineInput.removeAttribute("required");
+        cBankCheckInput.value = "";
+        cBankOnlineInput.value = "";
+        cCheckNo.value = "";
+        cRefNo.value = "";
+    }
+}
 function clearAmt(){
     var txtamt = document.getElementById('c_or_amount').value;
 
@@ -304,6 +344,11 @@ function clearAmt(){
     }
 }
 $(document).ready(function() {
+    $('#or-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
     $('#or-form').submit(function(e) {
         e.preventDefault();
 
@@ -591,7 +636,6 @@ $(document).ready(function() {
             accField.removeClass('glow-effect');
             statusField.removeClass('glow-effect');
         }, 1000);
-
         $('#c_account_no_or').trigger('input');
     }
 

@@ -14,7 +14,7 @@
     $c_or_paydate = date('Y-m-d');
     $c_encoded_by = '';
     $c_tran_date = date('Y-m-d H:i:s');
-    $c_mop = '0';
+    $c_mop_or = '0';
     $c_bank = '';
     $c_lot = '';
     $c_block = '';
@@ -41,7 +41,7 @@
             $c_or_no = $result["c_or_no"];
             $c_or_paydate = $result["c_or_paydate"];
             $c_encoded_by = $result["c_encoded_by"];
-            $c_mop = $result["c_mop"];
+            $c_mop_or = $result["c_mop"];
             $c_bank = $result["c_bank"];
             $c_check_no = $result["c_check_no"];
             $c_remarks = $result["c_remarks"];
@@ -278,7 +278,7 @@
         </div>
     </div>
 
-    <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
+    <div class="form-group" id="checkListOR" style="display: <?php echo ($c_mop_or == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
                 <label for="c_bank_check">Check Bank</label>
@@ -302,7 +302,7 @@
         </div>
     </div>
 
-    <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
+    <div class="form-group" id="onlineBankListOR" style="display: <?php echo ($c_mop_or == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6"> 
                 <label for="c_bank_online">Online Bank</label>
@@ -369,7 +369,7 @@
 <script src="../../dist/js/of_js/manage_or.js"></script>
 <!-- <script>
     function handleModeOfPaymentChange() {
-        var mop = document.getElementById('c_mop').value;
+        var mop = document.getElementById('c_mop_or').value;
         document.getElementById('c_bank_online').value = '';
         document.getElementById('c_ref_no').value = '';
         document.getElementById('c_bank_check').value = '';
@@ -400,7 +400,6 @@ $(document).ready(function() {
         e.preventDefault(); 
         var orNo = $('#c_or_no').val();
         const orAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
-
         let valid = true;
 
         let atapVal = $('#c_tran_type_single_or').val(); 
@@ -588,7 +587,6 @@ $(document).ready(function() {
        const buyerNameField = $('#c_name');
         buyerNameField.val('');
     }
-
     function clearTxt(){
         $('#c_atap_no_or').val('');
         $('#c_name').val('').removeClass('glow-effect');
@@ -723,7 +721,6 @@ function openPrintWindow() {
         function updateAtapVal(selectedValue) {
             $('#atap_val_or').val(selectedValue);
         }
- 
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
             //e.preventDefault();
             var selectedValue = $(this).data('value');
