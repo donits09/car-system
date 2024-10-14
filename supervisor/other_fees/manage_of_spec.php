@@ -387,7 +387,7 @@ $(document).ready(function() {
         if (accountNo.length > 0) {
             $.ajax({
                 type: 'POST',
-                url: '../../cashier/car/get_buyer_details.php',
+                url: '../../supervisor/car/get_buyer_details.php',
                 data: { account_no: accountNo },
                 dataType: 'json',
                 success: function(response) {
@@ -460,6 +460,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#get_atap_or').on('click', function() {
         const atapNo = $('#c_atap_no_or').val();
+        alert('ATAP No: ' + atapNo); 
         var clearType = $('#c_or_type');
         if (atapNo.length > 0) {
             $('#or_type_container').show();
