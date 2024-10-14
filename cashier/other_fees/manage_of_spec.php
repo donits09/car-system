@@ -4,7 +4,7 @@ session_start();
 require_once('../../inc/check_session.php');
 check_user_group(3);
 include('../../config.php');
-$c_account_no = null;
+$c_account_no_or = null;
 $c_or_type = '';
 $c_or_amount = 0;
 $c_or_no = '';
@@ -22,7 +22,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     odbc_execute($stmt, array($accountId));
 
     if ($result = odbc_fetch_array($stmt)) {
-        $c_account_no = $result["c_account_no"];
+        $c_account_no_or = $result["c_account_no"];
         $c_or_type = $result["c_or_type"];
         $c_or_amount = $result["c_or_amount"];
         $c_or_no = $result["c_or_no"];
@@ -34,7 +34,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_remarks = $result["c_remarks"];
     }
 } else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
-    $c_account_no = $_GET['c_account_no'];
+    $c_account_no_or = $_GET['c_account_no'];
 }
 ?>
 <style>
@@ -51,7 +51,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="or-form" method="post" action="">
     <?php
-    $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
+    $readonly = isset($c_account_no_or) && !empty($c_account_no_or) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
@@ -116,7 +116,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $('#comboBoxMenu').hide();
                 }
             });
-
             $('#comboBoxMenu').on('click', '.dropdown-item', function () {
                 var selectedText = $(this).data('value');
                 $('#c_or_type').val(selectedText);
@@ -136,7 +135,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <script>
         $(document).ready(function() {
-      
         function updateAtapVal(selectedValue) {
             $('#atap_val_or').val(selectedValue);
         }
@@ -148,7 +146,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $('#dropdownMenuButton').text(selectedValue);
             $('#c_or_type').val(selectedValue); 
         });
-
         var initialSelectedValue = $('#c_or_type').val();
         updateAtapVal(initialSelectedValue);
     });
@@ -173,7 +170,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
+        <input type="text" class="form-control" id="c_account_no_or" name="c_account_no_or" value="<?php echo htmlspecialchars($c_account_no_or) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
     </div>
     <div class="form-group">
         <label for="or_no">OR No.</label>
@@ -207,7 +204,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>  
         </div>  
     </div>  
-
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
@@ -294,9 +290,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-<script src="../../dist/js/of_js/manage_or.js"></script>
+<script src="<?php echo base_url; ?>dist/js/of_js/manage_or.js"></script>
 <script>
-$(document).ready(function() {
+    $(document).ready(function() {
     $('#or-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
             event.preventDefault();
@@ -401,10 +397,10 @@ $(document).ready(function() {
         }
     }
 
-    const accountNo = $('#c_account_no').val();
+    const accountNo = $('#c_account_no_or').val();
     fetchBuyerDetails(accountNo);
 
-    $('#c_account_no').on('input', function() {
+    $('#c_account_no_or').on('input', function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
@@ -466,67 +462,92 @@ $(document).ready(function() {
     });
 
     function fetchAtapDetails(atapNo) {
-        $.ajax({
-            type: 'POST',
-            url: '../../cashier/other_fees/get_atap_details_of.php',
-            data: { c_atap_no_or: atapNo },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success') {
-                    if (response.data && response.data.c_account_no) {
-                        const currentAccountNo = $('#c_account_no').val();
-                        if (response.data.c_account_no !== currentAccountNo) {
-                            $('#or_type_container').show();
-                            $('#tran_type_container_or').hide();
-                            alert('The account number of the selected ATAP No. does not match.');
-                            clearTxt();
-                        } else if (response.data.status === '1') {
-                            $('#or_type_container').show();
-                            $('#tran_type_container_or').hide();
-                            alert("This ATAP has already been PAID.");
-                            clearTxt();
-                        } else if (response.data.status === '3') {
-                            $('#or_type_container').show();
-                            $('#tran_type_container_or').hide();
-                            alert('This ATAP has already been CANCELLED');
-                            clearTxt();
-                        } else {
-                            populateForm(response.data);
-                            fetchBuyerDetails(response.data.c_account_no);
-                            fetchTranType(atapNo);
-                            $('#or_type_container').hide();
-                            $('#tran_type_container_or').show();
-                            if ($('#or_type_container').is(':hidden')) {
-                                alert('No OR transactions remaining for this ATAP #.');
-                            }
-                        }
-                    } else {
+    $.ajax({
+        type: 'POST',
+        url: '../../cashier/other_fees/get_atap_details_of.php',
+        data: { c_atap_no_or: atapNo },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                if (response.data && response.data.c_account_no_or) {
+                    const currentAccountNo = $('#c_account_no_or').val();
+                    if (response.data.c_account_no_or !== currentAccountNo) {
                         $('#or_type_container').show();
                         $('#tran_type_container_or').hide();
-                        alert('No account number found for the given ATAP No.');
+                        alert('The account number of the selected ATAP No. does not match.');
                         clearTxt();
+                    } else if (response.data.status === '1') {
+                        $('#or_type_container').show();
+                        $('#tran_type_container_or').hide();
+                        alert("This ATAP has already been PAID.");
+                        clearTxt();
+                    } else if (response.data.status === '3') {
+                        $('#or_type_container').show();
+                        $('#tran_type_container_or').hide();
+                        alert('This ATAP has already been CANCELLED');
+                        clearTxt();
+                    } else {
+                        populateForm(response.data);
+                        fetchBuyerDetails(response.data.c_account_no_or);
+                        fetchTranType(atapNo);
+
+                        $('#or_type_container').hide();
+                        $('#tran_type_container_or').css({
+                            display: 'block',
+                            visibility: 'visible',
+                            opacity: 1
+                        }).show();
+
+                        setTimeout(function() {
+                            if ($('#tran_type_container_or').height() === 0 || $('#tran_type_container_or').width() === 0) {
+                                //console.log('test');
+                            }
+
+                            if ($('#tran_type_container_or').is(':hidden') && $('#or_type_container').is(':hidden')) {
+                                alert('No OR transactions remaining for this ATAP #.');
+                                clearTxtNoOr();
+                                $('#btnsave').prop('disabled', true);
+                            }
+
+                            // console.log('or_type_container hidden:', $('#or_type_container').is(':hidden'));
+                            // console.log('tran_type_container_or hidden:', $('#tran_type_container_or').is(':hidden'));
+                        }, 100); 
                     }
                 } else {
                     $('#or_type_container').show();
                     $('#tran_type_container_or').hide();
-                    alert('No ATAP details found for the given ATAP No.');
+                    alert('No account number found for the given ATAP No.');
                     clearTxt();
                 }
-            },
-            error: function() {
+            } else {
                 $('#or_type_container').show();
                 $('#tran_type_container_or').hide();
-                alert('An error occurred while fetching ATAP details.');
+                alert('No ATAP details found for the given ATAP No.');
                 clearTxt();
             }
-        });
+        },
+        error: function() {
+            $('#or_type_container').show();
+            $('#tran_type_container_or').hide();
+            alert('An error occurred while fetching ATAP details.');
+            clearTxt();
+        }
+    });
+}
+
+    function clearTxtNoOr(){
+       const buyerNameField = $('#buyer_name_or');
+       const accField = $('#c_account_no_or');
+
+        buyerNameField.val('');
+        accField.val('');
     }
 
     function clearTxt(){
         const atapNoField = $('#c_atap_no_or');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
-        //const accField = $('#c_account_no');
+        //const accField = $('#c_account_no_or');
 
         atapNoField.val('');
         amountField.val('');
@@ -537,7 +558,7 @@ $(document).ready(function() {
     function populateForm(data) {
         const buyerNameField = $('#buyer_name_or');
         const amountField = $('#c_or_amount');
-        const accField = $('#c_account_no');
+        const accField = $('#c_account_no_or');
         const statusField = $('#status');
 
         if (data.status === '1') {
@@ -552,7 +573,7 @@ $(document).ready(function() {
 
         buyerNameField.val(data.c_name).addClass('glow-effect');
         amountField.val(formattedAmount).addClass('glow-effect');
-        accField.val(data.c_account_no).addClass('glow-effect');
+        accField.val(data.c_account_no_or).addClass('glow-effect');
         statusField.addClass('glow-effect');
 
         setTimeout(function() {
@@ -562,10 +583,10 @@ $(document).ready(function() {
             statusField.removeClass('glow-effect');
         }, 1000);
 
-        $('#c_account_no').trigger('input');
+        $('#c_account_no_or').trigger('input');
     }
 
-    $('#c_account_no').on('input', function() {
+    $('#c_account_no_or').on('input', function() {
         const accountNo = $(this).val();
         fetchBuyerDetails(accountNo);
     });
