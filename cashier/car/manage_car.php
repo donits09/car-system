@@ -400,7 +400,7 @@ $(document).ready(function() {
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
                         updateCarList(); 
-                    }, 1000);
+                    }, 0);
                 } else if (resp && resp.status === 'failed' && resp.msg) {
                     if (resp.msg === "CAR type does not exist.") {
                         alert_toast("Car type does not exist.", 'error');
