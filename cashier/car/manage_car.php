@@ -400,7 +400,7 @@ $(document).ready(function() {
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
                         updateCarList(); 
-                    }, 0);
+                    }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.msg) {
                     if (resp.msg === "CAR type does not exist.") {
                         alert_toast("Car type does not exist.", 'error');
@@ -528,10 +528,23 @@ $(document).ready(function() {
                             fetchBuyerDetails(response.data.c_account_no);
                             fetchTranType(atapNo);
                             $('#car_type_container').hide();
-                            $('#tran_type_container').show();
-                            if ($('#car_type_container').is(':hidden')) {
-                                alert('No CAR transactions remaining for this ATAP #.');
-                            }
+                            $('#tran_type_container').css({
+                                display: 'block',
+                                visibility: 'visible',
+                                opacity: 1
+                            }).show();
+
+                            setTimeout(function() {
+                                if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
+                                    //console.log('test');
+                                }
+
+                                if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
+                                    alert('No CAR transactions remaining for this ATAP #.');
+                                    clearTxtNoCar();
+                                    $('#btnsave').prop('disabled', true);
+                                }
+                            }, 100); 
                         }
                     } else {
                         $('#car_type_container').show();
@@ -553,6 +566,14 @@ $(document).ready(function() {
                 clearTxt();
             }
         });
+    }
+
+    function clearTxtNoCar(){
+       const buyerNameField = $('#buyer_name');
+       const accField = $('#c_account_no');
+
+        buyerNameField.val('');
+        accField.val('');
     }
 
     function clearTxt(){

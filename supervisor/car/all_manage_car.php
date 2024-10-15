@@ -75,7 +75,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
     </div>
     <div class="form-group" id="tran_type_container" style="display: none;">
-        <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+        <label for="c_tran_type">Payment Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
@@ -85,7 +85,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
             <label for="c_car_type">Transaction Type</label>
-           
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
             <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                 <?php
@@ -386,10 +385,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             fetchBuyerDetails(response.data.c_account_no);
                             fetchTranType(atapNo);
                             $('#car_type_container').hide();
-                            $('#tran_type_container').show();
-                            if ($('#car_type_container').is(':hidden')) {
-                                alert('No CAR transactions remaining for this ATAP #.');
-                            }
+                            $('#tran_type_container').css({
+                                display: 'block',
+                                visibility: 'visible',
+                                opacity: 1
+                            }).show();
+
+                            setTimeout(function() {
+                                if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
+                                    //console.log('test');
+                                }
+
+                                if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
+                                    alert('No CAR transactions remaining for this ATAP #.');
+                                    clearTxtNoCar();
+                                    $('#btnsave').prop('disabled', true);
+                                }
+                            }, 100); 
                         }
                     } else {
                         $('#car_type_container').show();
@@ -411,6 +423,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 clearTxt();
             }
         });
+    }
+
+    function clearTxtNoCar(){
+       const buyerNameField = $('#buyer_name');
+       const accField = $('#c_account_no');
+
+        buyerNameField.val('');
+        accField.val('');
     }
 
     function clearTxt(){
