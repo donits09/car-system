@@ -90,6 +90,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             padding: 20px;
             box-sizing: border-box;
             z-index: 2; 
+            margin-top:-35px;
         }
         .background-image {
             position: absolute;
@@ -245,7 +246,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
         }
         #c_loc{
             text-transform: uppercase;
-            background-color: red;
+            /* background-color: red; */
             width: auto;
             text-align: left;
             font-size: 12px !important;
@@ -313,11 +314,12 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
         }
         #c_paydate_check {
             float: left;
-            margin-top: 168px;
+            margin-top: 175px;
             width: auto;
             margin-left:200px;
             text-left: center;
             font-size: 10px !important;
+            /* background-color: red; */
         }
         #c_paydate_online {
             float: left;
