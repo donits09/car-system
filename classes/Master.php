@@ -491,12 +491,12 @@ Class Master{
 			$c_check_no = $c_ref_no;
 		}
 	
-		if ($c_mop == 1) {
+		if ($c_mop_or == 1) {
 			$c_bank = "";
-		} elseif ($c_mop == 2) {
-			$c_bank = isset($_POST['c_bank_check']) ? $_POST['c_bank_check'] : "";
-		} elseif ($c_mop == 3) {
-			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
+		} elseif ($c_mop_or == 2) {
+			$c_bank = isset($_POST['c_bank_check_or']) ? $_POST['c_bank_check_or'] : "";
+		} elseif ($c_mop_or == 3) {
+			$c_bank = isset($_POST['c_bank_online_or']) ? $_POST['c_bank_online_or'] : "";
 		}
 
 		if (!empty($_POST['c_tran_type_single_or'])) {
@@ -545,7 +545,11 @@ Class Master{
 		}
 
 		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop,c_bank,c_check_no,c_remarks, c_atap_no";
-		$values = "'$maxId','$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank','$c_check_no','$c_remarks', '$atap_id'";
+
+		$values = "'$maxId','$c_account_no_or', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop_or','$c_bank','$c_check_no','$c_remarks', '" . (!empty($atap_id) ? $atap_id : '0') . "'";
+
+// 		$values = "'$maxId','$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank','$c_check_no','$c_remarks', '$atap_id'";
+
 	
 		$resp = array();
 	
@@ -621,7 +625,7 @@ Class Master{
 						c_or_paydate = '$c_or_paydate',
 						c_or_amount = '$c_or_amount',
 						c_tran_updated = '$c_tran_date',
-						c_mop = '$c_mop',
+						c_mop_or = '$c_mop_or',
 						c_bank = '$c_bank',
 						c_check_no = '$c_check_no',
 						c_remarks = '$c_remarks'
@@ -1144,9 +1148,9 @@ Class Master{
 		if ($c_mop == 1) {
 			$c_bank = "";
 		} elseif ($c_mop == 2) {
-			$c_bank = isset($_POST['c_bank_check']) ? $_POST['c_bank_check'] : "";
+			$c_bank = isset($_POST['c_bank_check_or']) ? $_POST['c_bank_check_or'] : "";
 		} elseif ($c_mop == 3) {
-			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
+			$c_bank = isset($_POST['c_bank_online_or']) ? $_POST['c_bank_online_or'] : "";
 		}
 
 		if (!empty($_POST['c_tran_type_single_or'])) {

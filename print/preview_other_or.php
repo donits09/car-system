@@ -134,8 +134,6 @@ function format_value($value) {
             font-size:16px;
         }
         
-        
-        
         #c_bank{
             margin-top: 150px;
             margin-right: 50px;
