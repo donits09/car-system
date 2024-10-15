@@ -129,115 +129,85 @@ Class Master{
 	}	
 	function delete_car($carNo, $atapNo) {
 		$resp = array();
-		
-		if (!empty($carNo)) {
-			if ($atapNo == 0) {
-				$sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?";
-				$stmt = odbc_prepare($this->conn, $sql);
+		if (!empty($carNo) && !empty($atapNo)) {
+			$sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
 	
-				if ($stmt) {
-					$result = @odbc_execute($stmt, array($carNo));
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($carNo));
 	
-					if ($result) {
-						$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
-						$resp['status'] = 'success';
-						$resp['msg'] = "Car payment successfully canceled.";
-					} else {
-						$resp['status'] = 'failed';
-						$resp['err'] = "Failed to cancel car payment: " . odbc_errormsg($this->conn);
-					}
-				} else {
-					$resp['status'] = 'failed';
-					$resp['err'] = "Failed to prepare car payment cancellation: " . odbc_errormsg($this->conn);
-				}
-
-				header('Content-Type: application/json');
-				echo json_encode($resp);
-				return;
-			}
-
-			if (!empty($atapNo)) {
-				$sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?";
-				$stmt = odbc_prepare($this->conn, $sql);
-		
-				if ($stmt) {
-					$result = @odbc_execute($stmt, array($carNo));
-		
-					if ($result) {
-						$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
-		
-						$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?";
-						$stmt2 = odbc_prepare($this->conn, $sql2);
-		
-						if ($stmt2) {
-							$result2 = @odbc_execute($stmt2, array($carNo));
-		
-							if ($result2) {
-								$sqlGetCarNo = "SELECT c_car_no FROM t_atap WHERE c_atap_no = ?";
-								$stmtGetCarNo = odbc_prepare($this->conn, $sqlGetCarNo);
-		
-								if ($stmtGetCarNo) {
-									$resultGetCarNo = @odbc_execute($stmtGetCarNo, array($atapNo));
-		
-									if ($resultGetCarNo) {
-										$row = odbc_fetch_array($stmtGetCarNo);
-										$currentCarNo = $row['c_car_no'];
-		
-										if ($currentCarNo) {
-											$carNoArray = array_filter(explode(',', $currentCarNo), function($car) use ($carNo) {
-												return $car != $carNo;
-											});
-		
-											$updatedCarNo = implode(',', $carNoArray);
-		
-											if (!empty($updatedCarNo)) {
-												$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = ?, status = 2 WHERE c_atap_no = ?";
-												$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
-												$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($updatedCarNo, $atapNo));
-											} else {
-												$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = NULL, status = 0 WHERE c_atap_no = ?";
-												$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
-												$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($atapNo));
-											}
-		
-											if ($resultUpdateAtap) {
-												$resp['status'] = 'success';
-												$resp['msg'] = "Car and ATAP status successfully updated.";
-											} else {
-												$resp['status'] = 'failed';
-												$resp['err'] = "Failed to update ATAP status: " . odbc_errormsg($this->conn);
-											}
+				if ($result) {
+					$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
+	
+					$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?";
+					$stmt2 = odbc_prepare($this->conn, $sql2);
+	
+					if ($stmt2) {
+						$result2 = @odbc_execute($stmt2, array($carNo));
+	
+						if ($result2) {
+							// Fetch current car numbers associated with this ATAP
+							$sqlGetCarNo = "SELECT c_car_no FROM t_atap WHERE c_atap_no = ?";
+							$stmtGetCarNo = odbc_prepare($this->conn, $sqlGetCarNo);
+	
+							if ($stmtGetCarNo) {
+								$resultGetCarNo = @odbc_execute($stmtGetCarNo, array($atapNo));
+	
+								if ($resultGetCarNo) {
+									$row = odbc_fetch_array($stmtGetCarNo);
+									$currentCarNo = $row['c_car_no'];
+	
+									if ($currentCarNo) {
+										$carNoArray = array_filter(explode(',', $currentCarNo), function($car) use ($carNo) {
+											return $car != $carNo;
+										});
+	
+										$updatedCarNo = implode(',', $carNoArray);
+	
+										if (!empty($updatedCarNo)) {
+											$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = ?, status = 2 WHERE c_atap_no = ?";
+											$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
+											$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($updatedCarNo, $atapNo));
+										} else {
+											$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = NULL, status = 0 WHERE c_atap_no = ?";
+											$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
+											$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($atapNo));
+										}
+	
+										if ($resultUpdateAtap) {
+											$resp['status'] = 'success';
+											$resp['msg'] = "Car and ATAP status successfully updated.";
 										} else {
 											$resp['status'] = 'failed';
-											$resp['msg'] = "No car number found for the given ATAP number.";
+											$resp['err'] = "Failed to update ATAP status: " . odbc_errormsg($this->conn);
 										}
 									} else {
 										$resp['status'] = 'failed';
-										$resp['err'] = "Failed to retrieve car number: " . odbc_errormsg($this->conn);
+										$resp['msg'] = "No car number found for the given ATAP number.";
 									}
 								} else {
 									$resp['status'] = 'failed';
-									$resp['err'] = "Failed to prepare car number retrieval: " . odbc_errormsg($this->conn);
+									$resp['err'] = "Failed to retrieve car number: " . odbc_errormsg($this->conn);
 								}
 							} else {
 								$resp['status'] = 'failed';
-								$resp['err'] = "Failed to update ATAP items status: " . odbc_errormsg($this->conn);
+								$resp['err'] = "Failed to prepare car number retrieval: " . odbc_errormsg($this->conn);
 							}
 						} else {
 							$resp['status'] = 'failed';
-							$resp['err'] = "Failed to prepare ATAP items update: " . odbc_errormsg($this->conn);
+							$resp['err'] = "Failed to update ATAP items status: " . odbc_errormsg($this->conn);
 						}
 					} else {
 						$resp['status'] = 'failed';
-						$resp['err'] = "Failed to cancel car payment: " . odbc_errormsg($this->conn);
+						$resp['err'] = "Failed to prepare ATAP items update: " . odbc_errormsg($this->conn);
 					}
 				} else {
 					$resp['status'] = 'failed';
-					$resp['err'] = "Failed to prepare car payment cancellation: " . odbc_errormsg($this->conn);
+					$resp['err'] = "Failed to cancel car payment: " . odbc_errormsg($this->conn);
 				}
 			} else {
 				$resp['status'] = 'failed';
-				$resp['msg'] = 'ATAP No not provided.';
+				$resp['err'] = "Failed to prepare car payment cancellation: " . odbc_errormsg($this->conn);
 			}
 		/* Handle yung $atapNo na 0 (yung mga walang atap) */
 		}else if(!empty($carNo) && $atapNo == 0) {
@@ -253,12 +223,13 @@ Class Master{
 			}
 		} else {
 			$resp['status'] = 'failed';
-			$resp['msg'] = 'Car No not provided.';
+			$resp['msg'] = 'Car No or ATAP No not provided.';
 		}
 	
 		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
+	
 
 	
 	function delete_atap($atapId, $atapNo) {
@@ -574,7 +545,11 @@ Class Master{
 		}
 
 		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop,c_bank,c_check_no,c_remarks, c_atap_no";
+
 		$values = "'$maxId','$c_account_no_or', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop_or','$c_bank','$c_check_no','$c_remarks', '" . (!empty($atap_id) ? $atap_id : '0') . "'";
+
+// 		$values = "'$maxId','$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank','$c_check_no','$c_remarks', '$atap_id'";
+
 	
 		$resp = array();
 	
@@ -679,6 +654,130 @@ Class Master{
 		echo json_encode($resp);
 	}
 	
+	function delete_or($orId, $orNo) {
+		$resp = array();
+	
+		if (isset($orId) && isset($orNo)) {
+			$sql = "UPDATE t_or_payment SET status = 1 WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($orId)); 
+	
+				if ($result) {
+					//$this->car_logs('OR Management', "CANCELLED - OR#$orNo");
+					$resp['status'] = 'success';
+					$resp['msg'] = "OR payment successfully cancelled.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'OR ID or OR No not provided.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
+
+	// function save_car_payment() {
+	// 	extract($_POST);
+	// 	$conn = $this->conn;
+	
+	// 	odbc_autocommit($this->conn, false); 
+	
+	// 	$c_car_amounts = array_filter(array_map('trim', explode(',', $_POST['c_car_amount'])));
+	// 	$atap_ids = array_filter(array_map('trim', explode(',', $_POST['atap_id'])));
+	// 	$c_tran_types = array_filter(array_map('trim', explode(',', $_POST['atap_val'])));
+	
+		
+	// 	if (empty($c_check_no)) {
+	// 		$c_check_no = $c_ref_no;
+	// 	}
+	
+	// 	if ($c_mop == 1) {
+	// 		$c_bank = "";
+	// 	} elseif ($c_mop == 2) {
+	// 		$c_bank = $_POST['c_bank_check'] ?? "";
+	// 	} elseif ($c_mop == 3) {
+	// 		$c_bank = $_POST['c_bank_online'] ?? "";
+	// 	}
+	
+	// 	$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
+	// 	$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
+	
+	// 	$maxId = $maxIdResult ? odbc_fetch_array($maxIdResult)['max_id'] + 1 : 1;
+	// 	if (!$maxIdResult) {
+	// 		error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
+	// 	}
+	
+	// 	$resp = array();
+	// 	foreach ($atap_ids as $index => $atap_id) {
+	// 		$c_tran_type = $c_tran_types[$index] ?? '';
+	// 		$c_car_amount = str_replace(',', '', $c_car_amounts[$index] ?? 0);
+	
+	// 		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
+	// 		$values = "'$maxId','$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', $c_car_amount, '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop','$c_bank','$c_check_no','$c_remarks', '$c_atap_no'";
+	
+	// 		if (empty($id)) {
+	// 			$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
+	// 			$insert = "INSERT INTO t_car_payment ($data) VALUES ($values)";
+	// 			$save = odbc_exec($this->conn, $insert);
+	
+	// 			if ($save) {
+	// 				$inClause = implode(',', array_map(fn($id) => "'$id'", $atap_ids));
+	// 				$update_tran_items = "UPDATE t_atap_items SET atap_status = 1, c_car_no = $c_car_no WHERE id IN ($inClause)";
+	// 				$update_tran_item_result = odbc_exec($this->conn, $update_tran_items);
+	// 				if (!$update_tran_item_result) {
+	// 					$resp['status'] = 'failed';
+	// 					$resp['err'] = odbc_errormsg($this->conn);
+	// 					odbc_rollback($this->conn);
+	// 					break;
+	// 				}
+	
+	// 				$check_items_query = "SELECT c_car_no, 
+	// 									 (SELECT COUNT(*) FROM t_atap_items WHERE c_atap_no = '$c_atap_no' AND atap_status = 0) AS count_items 
+	// 									  FROM t_atap WHERE c_atap_no = '$c_atap_no'";
+	// 				$check_items_result = odbc_exec($this->conn, $check_items_query);
+	
+	// 				if ($check_items_result) {
+	// 					$row = odbc_fetch_array($check_items_result);
+	// 					$count_items = $row['count_items'];
+	// 					$car_numbers = !empty($row['c_car_no']) ? explode(',', $row['c_car_no']) : [];
+	// 					if (!in_array($c_car_no, $car_numbers)) {
+	// 						$car_numbers[] = $c_car_no;
+	// 					}
+	// 					$new_car_no = implode(',', $car_numbers);
+	// 					$update_atap = $count_items > 0
+	// 						? "UPDATE t_atap SET status = 2, c_car_no = '$new_car_no' WHERE c_atap_no = '$c_atap_no'"
+	// 						: "UPDATE t_atap SET status = 1, c_car_no = '$new_car_no' WHERE c_atap_no = '$c_atap_no'";
+	// 					$update = odbc_exec($this->conn, $update_atap);
+	// 				} else {
+	// 					$update = false;
+	// 				}
+	// 			}
+	// 		}
+	
+	// 		if ($update && $save) {
+	// 			odbc_commit($this->conn);  
+	// 			$resp['status'] = 'success';
+	// 			$resp['msg'] = "New car payment successfully saved.";
+	// 		} else {
+	// 			odbc_rollback($this->conn);  
+	// 			$resp['status'] = 'failed';
+	// 			$resp['err'] = odbc_errormsg($this->conn);
+	// 		}
+	
+	// 		echo json_encode($resp);
+	// 	}
+	// }
+	
+
 	function save_car_payment() {
 		extract($_POST);
 		$conn = $this->conn;
@@ -746,11 +845,7 @@ Class Master{
 		/* Sa $c_atap_no if empty sya 0 yung nilalaman dito sa $values -dhendhen */
 	
 		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
-
 		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', " . (!empty($c_atap_no) ? "'$c_atap_no'" : 0);
-
-// 		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '" . (!empty($c_atap_no) ? $c_atap_no : '0') . "'";
-
 	
 		$resp = array();
 	
@@ -926,11 +1021,7 @@ Class Master{
 
 		$c_account_no = '';
 		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
-
 		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks'," . (!empty($c_atap_no) ? "'$c_atap_no'" : 0);
-
-// 		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '" . (!empty($c_atap_no) ? $c_atap_no : '0') . "'";
-
 	
 		$resp = array();
 	
@@ -1095,6 +1186,39 @@ Class Master{
 			echo json_encode($resp);
 			return;
 		}
+
+		// $c_tran_type_or = isset($_POST['c_or_type']) ? $_POST['c_or_type'] : ''; 
+		// $c_tran_type_main = isset($_POST['c_tran_type']) ? $_POST['c_tran_type'] : ''; 
+
+		// $transaction_types = array($c_tran_type_or, $c_tran_type_main);
+		// $transaction_types = array_filter($transaction_types); 
+
+		// if (!empty($c_tran_type_main)) {
+		// } else {
+		// 	foreach ($transaction_types as $tran_type) {
+		// 		$tran_type = trim(pg_escape_string($tran_type)); 
+
+		// 		$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE LOWER(c_payment_type) = LOWER('$tran_type')";
+		// 		$check_type_result = odbc_exec($conn, $check_type_query);
+
+		// 		if (!$check_type_result) {
+		// 			$resp['status'] = 'failed';
+		// 			$resp['msg'] = "Error executing query.";
+		// 			echo json_encode($resp);
+		// 			return;
+		// 		}
+
+		// 		$type_exists = odbc_fetch_array($check_type_result)['count'];
+
+		// 		if ($type_exists == 0) {
+		// 			$resp['status'] = 'failed';
+		// 			//$resp['msg'] = "Transaction type '$tran_type' does not exist.";
+		// 			$resp['msg'] = "CAR type does not exist.";
+		// 			echo json_encode($resp); 
+		// 			return;
+		// 		}
+		// 	}
+		// }
 	
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
@@ -1112,7 +1236,7 @@ Class Master{
 
 		$c_account_no = '';
 		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
-		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks','" . (!empty($atap_id) ? $atap_id : '0') . "'";
+		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '$atap_id'";
 	
 		$resp = array();
 	
@@ -2105,223 +2229,6 @@ Class Master{
 		echo json_encode($resp);
 	}	
 
-	function delete_or($orNo, $atapNo) {
-		$resp = array();
-
-		if (empty($orNo)) {
-			$resp['status'] = 'failed';
-			$resp['msg'] = 'OR No not provided.';
-			header('Content-Type: application/json');
-			echo json_encode($resp);
-			return;
-		}
-
-		$sql = "UPDATE t_or_payment SET status = 1 WHERE c_or_no = ?";
-		$stmt = odbc_prepare($this->conn, $sql);
-	
-		if (!$stmt || !@odbc_execute($stmt, array($orNo))) {
-			$resp['status'] = 'failed';
-			$resp['err'] = "Failed to cancel OR payment: " . odbc_errormsg($this->conn);
-			header('Content-Type: application/json');
-			echo json_encode($resp);
-			return;
-		}
-	
-		$this->car_logs('OR Management', "CANCELLED - CAR#$orNo");
-	
-
-		if ($atapNo == 0) {
-			$resp['status'] = 'success';
-			$resp['msg'] = "OR payment successfully canceled.";
-			header('Content-Type: application/json');
-			echo json_encode($resp);
-			return;
-		}
-	
-
-		if (!empty($atapNo)) {
-			$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?";
-			$stmt2 = odbc_prepare($this->conn, $sql2);
-	
-			if (!$stmt2 || !@odbc_execute($stmt2, array($orNo))) {
-				$resp['status'] = 'failed';
-				$resp['err'] = "Failed to update ATAP items status: " . odbc_errormsg($this->conn);
-				header('Content-Type: application/json');
-				echo json_encode($resp);
-				return;
-			}
-
-			$sqlGetOrNo = "SELECT c_car_no FROM t_atap WHERE c_atap_no = ?";
-			$stmtGetOrNo = odbc_prepare($this->conn, $sqlGetOrNo);
-	
-			if (!$stmtGetOrNo || !@odbc_execute($stmtGetOrNo, array($atapNo))) {
-				$resp['status'] = 'failed';
-				$resp['err'] = "Failed to retrieve OR number: " . odbc_errormsg($this->conn);
-				header('Content-Type: application/json');
-				echo json_encode($resp);
-				return;
-			}
-
-			$row = odbc_fetch_array($stmtGetOrNo);
-			$currentOrNo = $row['c_car_no'];
-	
-			if ($currentOrNo) {
-				$orNoArray = array_filter(explode(',', $currentOrNo), function($car) use ($orNo) {
-					return $car != $orNo;
-				});
-	
-				$updatedOrNo = implode(',', $orNoArray);
-	
-				if (!empty($updatedOrNo)) {
-					$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = ?, status = 2 WHERE c_atap_no = ?";
-					$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
-					$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($updatedOrNo, $atapNo));
-				} else {
-					$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = NULL, status = 0 WHERE c_atap_no = ?";
-					$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
-					$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($atapNo));
-				}
-	
-				if ($resultUpdateAtap) {
-					$resp['status'] = 'success';
-					$resp['msg'] = "OR and ATAP status successfully updated.";
-				} else {
-					$resp['status'] = 'failed';
-					$resp['err'] = "Failed to update ATAP status: " . odbc_errormsg($this->conn);
-				}
-			} else {
-				$resp['status'] = 'failed';
-				$resp['msg'] = "No OR number found for the given ATAP number.";
-			}
-		} else {
-			$resp['status'] = 'failed';
-			$resp['msg'] = 'ATAP No not provided.';
-		}
-	
-		header('Content-Type: application/json');
-		echo json_encode($resp);
-	}
-	
-	// function delete_or($orNo, $atapNo) {
-	// 	$resp = array();
-		
-	// 	if (!empty($orNo)) {
-	// 		if ($atapNo == 0) {
-	// 			$sql = "UPDATE t_or_payment SET status = 1 WHERE c_or_no = ?";
-	// 			$stmt = odbc_prepare($this->conn, $sql);
-	
-	// 			if ($stmt) {
-	// 				$result = @odbc_execute($stmt, array($orNo));
-	
-	// 				if ($result) {
-	// 					$this->car_logs('OR Management', "CANCELLED - CAR#$orNo");
-	// 					$resp['status'] = 'success';
-	// 					$resp['msg'] = "OR payment successfully canceled.";
-	// 				} else {
-	// 					$resp['status'] = 'failed';
-	// 					$resp['err'] = "Failed to cancel OR payment: " . odbc_errormsg($this->conn);
-	// 				}
-	// 			} else {
-	// 				$resp['status'] = 'failed';
-	// 				$resp['err'] = "Failed to prepare OR payment cancellation: " . odbc_errormsg($this->conn);
-	// 			}
-
-	// 			header('Content-Type: application/json');
-	// 			echo json_encode($resp);
-	// 			return;
-	// 		}
-
-	// 		if (!empty($atapNo)) {
-	// 			$sql = "UPDATE t_or_payment SET status = 1 WHERE c_or_no = ?";
-	// 			$stmt = odbc_prepare($this->conn, $sql);
-		
-	// 			if ($stmt) {
-	// 				$result = @odbc_execute($stmt, array($orNo));
-		
-	// 				if ($result) {
-	// 					$this->car_logs('OR Management', "CANCELLED - CAR#$orNo");
-		
-	// 					$sql2 = "UPDATE t_atap_items SET atap_status = 0 WHERE c_car_no = ?";
-	// 					$stmt2 = odbc_prepare($this->conn, $sql2);
-		
-	// 					if ($stmt2) {
-	// 						$result2 = @odbc_execute($stmt2, array($orNo));
-		
-	// 						if ($result2) {
-	// 							$sqlGetOrNo = "SELECT c_car_no FROM t_atap WHERE c_atap_no = ?";
-	// 							$stmtGetOrNo = odbc_prepare($this->conn, $sqlGetOrNo);
-		
-	// 							if ($stmtGetOrNo) {
-	// 								$resultGetCarNo = @odbc_execute($stmtGetOrNo, array($atapNo));
-		
-	// 								if ($resultGetCarNo) {
-	// 									$row = odbc_fetch_array($stmtGetOrNo);
-	// 									$currentOrNo = $row['c_car_no'];
-		
-	// 									if ($currentOrNo) {
-	// 										$orNoArray = array_filter(explode(',', $currentOrNo), function($car) use ($orNo) {
-	// 											return $car != $orNo;
-	// 										});
-		
-	// 										$updatedOrNo = implode(',', $orNoArray);
-		
-	// 										if (!empty($updatedOrNo)) {
-	// 											$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = ?, status = 2 WHERE c_atap_no = ?";
-	// 											$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
-	// 											$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($updatedOrNo, $atapNo));
-	// 										} else {
-	// 											$sqlUpdateAtap = "UPDATE t_atap SET c_car_no = NULL, status = 0 WHERE c_atap_no = ?";
-	// 											$stmtUpdateAtap = odbc_prepare($this->conn, $sqlUpdateAtap);
-	// 											$resultUpdateAtap = @odbc_execute($stmtUpdateAtap, array($atapNo));
-	// 										}
-		
-	// 										if ($resultUpdateAtap) {
-	// 											$resp['status'] = 'success';
-	// 											$resp['msg'] = "OR and ATAP status successfully updated.";
-	// 										} else {
-	// 											$resp['status'] = 'failed';
-	// 											$resp['err'] = "Failed to update ATAP status: " . odbc_errormsg($this->conn);
-	// 										}
-	// 									} else {
-	// 										$resp['status'] = 'failed';
-	// 										$resp['msg'] = "No OR number found for the given ATAP number.";
-	// 									}
-	// 								} else {
-	// 									$resp['status'] = 'failed';
-	// 									$resp['err'] = "Failed to retrieve OR number: " . odbc_errormsg($this->conn);
-	// 								}
-	// 							} else {
-	// 								$resp['status'] = 'failed';
-	// 								$resp['err'] = "Failed to prepare OR number retrieval: " . odbc_errormsg($this->conn);
-	// 							}
-	// 						} else {
-	// 							$resp['status'] = 'failed';
-	// 							$resp['err'] = "Failed to update ATAP items status: " . odbc_errormsg($this->conn);
-	// 						}
-	// 					} else {
-	// 						$resp['status'] = 'failed';
-	// 						$resp['err'] = "Failed to prepare ATAP items update: " . odbc_errormsg($this->conn);
-	// 					}
-	// 				} else {
-	// 					$resp['status'] = 'failed';
-	// 					$resp['err'] = "Failed to cancel OR payment: " . odbc_errormsg($this->conn);
-	// 				}
-	// 			} else {
-	// 				$resp['status'] = 'failed';
-	// 				$resp['err'] = "Failed to prepare OR payment cancellation: " . odbc_errormsg($this->conn);
-	// 			}
-	// 		} else {
-	// 			$resp['status'] = 'failed';
-	// 			$resp['msg'] = 'ATAP No not provided.';
-	// 		}
-	// 	} else {
-	// 		$resp['status'] = 'failed';
-	// 		$resp['msg'] = 'OR No not provided.';
-	// 	}
-	
-	// 	header('Content-Type: application/json');
-	// 	echo json_encode($resp);
-	// }
 	function delete_emp_department($departmentId, $departmentType) {
 		$resp = array();
 	
@@ -2412,11 +2319,10 @@ switch ($action) {
 		echo $Master->save_remarks();
 		break;
 	case 'delete_or':
-		if (isset($_POST['orNo']) && isset($_POST['atapNo'])) {
-			$response = $Master->delete_or($_POST['orNo'], $_POST['atapNo']);
-			echo $response;
+		if (isset($_POST['orId']) && isset($_POST['orNo'])) {
+			echo $Master->delete_or($_POST['orId'], $_POST['orNo']);
 		} else {
-			echo json_encode(array('status' => 'failed', 'msg' => 'Required parameters not provided.'));
+			echo json_encode(array('status' => 'failed', 'msg' => 'OR type not provided.'));
 		}
 		break;
 	case 'delete_car':

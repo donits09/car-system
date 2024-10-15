@@ -549,25 +549,11 @@ $(document).ready(function() {
                     }else {
                         populateForm(response.data);
                         fetchTranType(atapNo);
-
                         $('#car_type_container').hide();
-                        $('#tran_type_container').css({
-                            display: 'block',
-                            visibility: 'visible',
-                            opacity: 1
-                        }).show();
-
-                        setTimeout(function() {
-                            if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
-                                //console.log('test');
-                            }
-
-                            if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
-                                alert('No CAR transactions remaining for this ATAP #.');
-                                clearTxtNoCar();
-                                $('#btnsave').prop('disabled', true);
-                            }
-                        }, 100); 
+                        $('#tran_type_container').show();
+                        if ($('#car_type_container').is(':hidden')) {
+                            alert('No CAR transactions remaining for this ATAP #.');
+                        }
                     }
                 } else {
                     $('#car_type_container').show();
@@ -585,10 +571,6 @@ $(document).ready(function() {
         });
     }
 
-    function clearTxtNoCar(){
-       const buyerNameField = $('#c_name');
-        buyerNameField.val('');
-    }
 
     function clearTxt(){
         $('#c_atap_no').val('');

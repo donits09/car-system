@@ -70,18 +70,10 @@
             </div>
         </div>
         <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap_or" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarTypeOR()">
+            <a id="get_atap_or" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
-    </div>
-    <div class="form-group" id="tran_type_container_or" style="display: none;">
-        <label for="c_tran_type_or">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
-            <select class="form-control" id="c_tran_type_or" name="c_tran_type_or">
-            </select>
-        </div>
-        <input type="text" class="form-control" id="c_tran_type_single_or" name="c_tran_type_single_or" style="display: none;" readonly>
     </div>
     <div class="form-group">
         <div class="dropdown" id="or_type_container">
@@ -137,42 +129,19 @@
             });
         });
     </script>
-<script>
-        $(document).ready(function() {
-      
-        function updateAtapVal(selectedValue) {
-            $('#atap_val_or').val(selectedValue);
-        }
-        $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            //e.preventDefault();
-            var selectedValue = $(this).data('value');
-            updateAtapVal(selectedValue);
 
-            $('#dropdownMenuButton').text(selectedValue);
-            $('#c_or_type').val(selectedValue); 
-        });
-
-        var initialSelectedValue = $('#c_or_type').val();
-        updateAtapVal(initialSelectedValue);
-    });
-    </script>
-    <script>
-    function toggleCarTypeOR() {
-        var atapNo = document.getElementById('c_atap_no_or').value;
-        var orTypeContainer = document.getElementById('or_type_container');
-        var tranTypeContainer =document.getElementById('tran_type_container_or');
-
-        if (atapNo.trim() === '') {
-            orTypeContainer.style.display = 'block';
-            tranTypeContainer.style.display = 'none';
-        } else {
-            tranTypeContainer.style.display = 'block';
-            orTypeContainer.style.display = 'none';  
-        }
-    }
-    </script>
+   
+    <div class="form-group" id="tran_type_container" style="display: none;">
+        <label for="c_tran_type_or">Transaction Type/s from client's ATAP</label>
+        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
+            <select class="form-control" id="c_tran_type_or" name="c_tran_type_or">
+            </select>
+        </div>
+        <input type="text" class="form-control" id="c_tran_type_single_or" name="c_tran_type_single_or" style="display: none;" readonly>
+    </div>
     <input type="hidden" class="form-control" id="atap_id_or" name="atap_id_or" readonly>
     <input type="hidden" class="form-control" id="atap_val_or" name="atap_val_or" readonly>
+
     <hr>
     <div class="form-group">
         <label for="name">Name</label>
@@ -334,7 +303,7 @@
             </div>
             <div class="col-md-6">
                 <label for="encoder">Encoded by</label>
-                <input type="text" class="hidden_fields" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
+                <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo $_SESSION['username'] ?>" readonly>
                 <?php
                 if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $c_encoded_by == $c_encoded_by;
@@ -398,7 +367,7 @@ $(document).ready(function() {
 
     $('#other-or-form').on('submit', function(e) {
         e.preventDefault(); 
-        var orNo = $('#c_or_no').val();
+        const orNo = $('#c_or_no').val();
         const orAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
         let valid = true;
 
@@ -452,8 +421,8 @@ $(document).ready(function() {
                         $('.modal-backdrop').remove(); 
                         location.reload();
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    alert_toast(resp.msg, 'error'); 
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
@@ -521,7 +490,7 @@ $(document).ready(function() {
     function fetchAtapDetails(atapNo) {
         $.ajax({
             type: 'POST',
-            url: '<?php echo base_url; ?>cashier/other_fees/get_atap_others_details_of.php',
+            url: '../../cashier/other_fees/get_atap_others_details_of.php',
             data: { c_atap_no_or: atapNo },
             dataType: 'json',
             success: function(response) {
@@ -542,35 +511,19 @@ $(document).ready(function() {
                         alert('The selected ATAP is a regular account.');
                         clearTxt();
                     }else {
-                            populateForm(response.data);
-                            fetchTranType(atapNo);
-
-                            $('#or_type_container').hide();
-                            $('#tran_type_container_or').css({
-                                display: 'block',
-                                visibility: 'visible',
-                                opacity: 1
-                            }).show();
-
-                            setTimeout(function() {
-                                if ($('#tran_type_container_or').height() === 0 || $('#tran_type_container_or').width() === 0) {
-                                    //console.log('test');
-                                }
-
-                                if ($('#tran_type_container_or').is(':hidden') && $('#or_type_container').is(':hidden')) {
-                                    alert('No OR transactions remaining for this ATAP #.');
-                                    clearTxtNoOr();
-                                    $('#btnsave').prop('disabled', true);
-                                }
-
-                                // console.log('or_type_container hidden:', $('#or_type_container').is(':hidden'));
-                                // console.log('tran_type_container_or hidden:', $('#tran_type_container_or').is(':hidden'));
-                            }, 100); 
+                        populateForm(response.data);
+                        //fetchBuyerDetails(response.data.c_account_no);
+                        fetchTranType(atapNo);
+                        $('#or_type_container').hide();
+                        $('#tran_type_container_or').show();
+                        if ($('#or_type_container').is(':hidden')) {
+                            alert('No OR transactions remaining for this ATAP #.');
                         }
-                    } else {
+                    }
+                } else {
                     $('#or_type_container').show();
                     $('#tran_type_container_or').hide();
-                    alert('No account number found for the given ATAP No.');
+                    alert('No ATAP details found for the given ATAP No.');
                     clearTxt();
                 }
             },
@@ -587,6 +540,7 @@ $(document).ready(function() {
        const buyerNameField = $('#c_name');
         buyerNameField.val('');
     }
+
     function clearTxt(){
         $('#c_atap_no_or').val('');
         $('#c_name').val('').removeClass('glow-effect');
@@ -685,8 +639,8 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching data:', error);
-                $('#tran_type_container_or').hide();
-                $('#atap_id_or').val(''); 
+                $('#tran_type_container').hide();
+                $('#atap_id').val(''); 
                 $('#c_or_amount').val(''); 
                 $('#atap_val_or').val(''); 
             }
