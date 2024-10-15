@@ -149,10 +149,4 @@ if (!empty($account_no)) {
         });
         $('#confirm_modal').modal('show');
     };
-
-    $(document).on('click', '.delete_or', function() {
-        var orId = $(this).data('id');
-        var orNo = $(this).data('no');
-        _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);
-    });
 </script>

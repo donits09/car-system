@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
-    $c_atap_no_or = $_POST['c_atap_no_or'];
+    $c_atap_no = $_POST['c_atap_no_or'];
     $query = "SELECT 
                 a.id, 
                 a.c_account_no, 
@@ -53,7 +53,7 @@ if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
         exit;
     }
     
-    $executed = odbc_execute($stmt, array($c_atap_no_or));
+    $executed = odbc_execute($stmt, array($c_atap_no));
     
     if (!$executed) {
         echo json_encode(['status' => 'error', 'message' => 'SQL execution failed: ' . odbc_errormsg()]);
@@ -62,7 +62,7 @@ if (isset($_POST['c_atap_no_or']) && !empty($_POST['c_atap_no_or'])) {
     
     if ($result = odbc_fetch_array($stmt)) {
         $data = [
-            'c_account_no' => $result['c_account_no'],
+            'c_account_no_or' => $result['c_account_no'],
             'c_or_amount' => $result['c_atap_amount'], 
             'c_phase' => $result['c_phase'],
             'c_block' => $result['c_block'],
