@@ -974,7 +974,7 @@ Class Master{
 				return;
 			}
 		}
-		
+
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -998,7 +998,6 @@ Class Master{
 
 // 		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '" . (!empty($c_atap_no) ? $c_atap_no : '0') . "'";
 
-	
 		$resp = array();
 	
 		if (empty($id)) {
