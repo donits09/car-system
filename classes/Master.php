@@ -1381,108 +1381,6 @@ Class Master{
 		echo json_encode($resp);
 	}
 
-	// function save_atap_payment() {
-	// 	extract($_POST);
-	// 	$conn = $this->conn;
-
-	// 	$get_max_query = "SELECT MAX(c_atap_no) AS max_atap_no FROM t_atap";
-	// 	$results = odbc_exec($conn, $get_max_query);
-	// 	if ($row = odbc_fetch_array($results)) {
-	// 		$max_atap_no = $row['max_atap_no'];
-	// 		$new_atap_no = $max_atap_no + 1;
-	// 	} else {
-	// 		$new_atap_no = 1;
-	// 	}
-
-	// 	$prev_c_atap_no = addslashes($c_atap_no);
-	// 	$c_account_no = isset($c_account_no) ? addslashes($c_account_no) : '';
-	// 	$c_atap_no = addslashes($new_atap_no);
-	// 	$c_encoded_by = addslashes($c_encoded_by);
-	// 	$c_tran_date = addslashes($c_tran_date);
-	// 	$atap_remarks = pg_escape_string($atap_remarks);
-	// 	$data = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks";
-	// 	$values = "'$c_account_no', '$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks'";
-	// 	$resp = array();
-	
-	// 	if (empty($id)) {
-	// 		$insert_atap = "INSERT INTO t_atap ($data) VALUES ($values)";
-	// 		$save_atap = odbc_exec($conn, $insert_atap);
-	
-	// 		if ($save_atap) {
-	// 			$atap_id = odbc_exec($conn, "SELECT @@IDENTITY AS id");
-	// 			$atap_id = odbc_result($atap_id, 'id');
-	
-	// 			foreach ($transaction_type as $key => $tran_type) {
-	// 				$tran_type = pg_escape_string($tran_type);
-	// 				$atap_amount = addslashes($transaction_amount[$key]);
-	// 				$insert_item = "INSERT INTO t_atap_items (c_atap_no, c_tran_type, c_atap_amount) VALUES ('$c_atap_no', '$tran_type', '$atap_amount')";
-	// 				odbc_exec($conn, $insert_item);
-	// 			}
-	
-	// 			$this->car_logs('Car Type Management - ATAP', "ADDED - $atap_id");
-	// 			$resp['status'] = 'success';
-	// 			$resp['msg'] = "New ATAP successfully saved.";
-
-	// 			//For atap notification
-	// 			require_once('../auth/session_auth.php');
-	// 			$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'unknown';
-	// 			$get_user_ataper = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
-	// 			$stmt = odbc_prepare($conn, $get_user_ataper);
-	// 			$result = odbc_execute($stmt, array($username));
-
-	// 			$realname = 'unknown';
-	// 			if ($result && $row = odbc_fetch_array($stmt)) {
-	// 				$realname = $row['c_realname'];
-	// 			}
-
-	// 			$message = '<strong>ATAP NO. ' . htmlspecialchars($c_atap_no) . '</strong> ' . htmlspecialchars($realname) . ' has created a new ATAP request.';
-	// 			$seen_status = 0;
-	// 			$date_created = date('Y-m-d H:i:s');
-	// 			$c_account_no = $c_account_no;
-	// 			$c_atap_no = $c_atap_no;
-
-	// 			$users_to_be_notified = ['3', '2'];
-
-	// 			foreach ($users_to_be_notified as $user_to_be_notified) {
-	// 				$insert_notif = "INSERT INTO t_car_notif (message, user_to_be_notified, seen_status, date_created, c_account_no, c_atap_no) 
-	// 				VALUES ('$message', '$user_to_be_notified', $seen_status, '$date_created', '$c_account_no', '$c_atap_no')";
-	// 				odbc_exec($conn, $insert_notif);
-	// 			}
-
-	// 		} else {
-	// 			$resp['status'] = 'failed';
-	// 			$resp['err'] = odbc_errormsg($conn);
-	// 		}
-	// 	} else {
-	// 		$update_atap = "UPDATE t_atap SET 
-	// 						c_tran_updated = '$c_tran_date',
-	// 						atap_remarks = '$atap_remarks'
-	// 						WHERE c_atap_no = '$prev_c_atap_no'";
-	// 		$save_atap = odbc_exec($conn, $update_atap);
-	
-	// 		if ($save_atap) {
-	// 			$delete_items = "DELETE FROM t_atap_items WHERE c_atap_no = '$prev_c_atap_no'";
-	// 			odbc_exec($conn, $delete_items);
-	
-	// 			foreach ($transaction_type as $key => $tran_type) {
-	// 				$tran_type = addslashes($tran_type);
-	// 				$atap_amount = addslashes($transaction_amount[$key]);
-	// 				$insert_item = "INSERT INTO t_atap_items (c_atap_no, c_tran_type, c_atap_amount) VALUES ('$prev_c_atap_no', '$tran_type', '$atap_amount')";
-	// 				odbc_exec($conn, $insert_item);
-	// 			}
-	
-	// 			$this->car_logs('Car Type Management - ATAP', "UPDATED - $id");
-	// 			$resp['status'] = 'success';
-	// 			$resp['msg'] = "ATAP successfully updated.";
-	// 		} else {
-	// 			$resp['status'] = 'failed';
-	// 			$resp['err'] = odbc_errormsg($conn);
-	// 		}
-	// 	}
-	
-	// 	echo json_encode($resp);
-	// }
-	
 	function save_atap_payment() {
 		extract($_POST);
 		$conn = $this->conn;
@@ -1509,6 +1407,28 @@ Class Master{
 			$approver = '';
 		}
 	
+		if (empty($id)) {
+			$check_atap_no_query = "SELECT COUNT(*) AS count FROM t_atap WHERE c_tran_date = '$c_tran_date'";
+			$check_atap_no_result = odbc_exec($this->conn, $check_atap_no_query);
+
+			if ($check_atap_no_result) {
+				$row = odbc_fetch_array($check_atap_no_result);
+				$atap_no_exists = $row['count'];
+
+				if ($atap_no_exists > 0) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = "ATAP number '$c_atap_no' already exists.";
+					echo json_encode($resp);
+					return;
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Error checking atap number.";
+				echo json_encode($resp);
+				return;
+			}
+		}
+
 		foreach ($transaction_type as $key => $tran_type) {
 			$tran_type = pg_escape_string($tran_type);
 			$check_type_query = "SELECT COUNT(*) AS count FROM t_car_type WHERE c_payment_type = '$tran_type'";
@@ -1523,6 +1443,7 @@ Class Master{
 			}
 		}
 	
+		
 		$data = "c_account_no, c_atap_no, c_encoded_by, c_tran_date, c_tran_updated, atap_remarks, approval_status, approver";
 		$values = "'$c_account_no', '$c_atap_no', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$atap_remarks', '$approval_status', '$approver'";
 		$resp = array();
@@ -1612,6 +1533,28 @@ Class Master{
 	
 		if ($approval_status == 1){
 			$approver = '';
+		}
+		
+		if (empty($id)) {
+			$check_atap_no_query = "SELECT COUNT(*) AS count FROM t_atap WHERE c_tran_date = '$c_tran_date'";
+			$check_atap_no_result = odbc_exec($this->conn, $check_atap_no_query);
+
+			if ($check_atap_no_result) {
+				$row = odbc_fetch_array($check_atap_no_result);
+				$atap_no_exists = $row['count'];
+
+				if ($atap_no_exists > 0) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = "ATAP number '$c_atap_no' already exists.";
+					echo json_encode($resp);
+					return;
+				}
+			} else {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Error checking atap number.";
+				echo json_encode($resp);
+				return;
+			}
 		}
 		
 		foreach ($transaction_type as $key => $tran_type) {

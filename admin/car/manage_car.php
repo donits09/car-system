@@ -795,8 +795,14 @@ $(document).ready(function() {
                     $('.modal-backdrop').remove(); 
                     updateCarList();
                 }, 1000);
-            } else if (resp && resp.status === 'failed' && resp.err) {
-                alert_toast("An error occurred: " + resp.err, 'error');
+            } else if (resp && resp.status === 'failed') {
+                if (resp.msg === "Transaction type or car type is required.") {
+                    alert_toast("Transaction type or car type is required.", 'error'); 
+                } else if (resp.msg === "CAR type does not exist.") {
+                    alert_toast("Car type does not exist.", 'error');
+                } else if (resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                }
             } else {
                 alert_toast("An unexpected error occurred", 'error');
             }
