@@ -252,7 +252,7 @@
             <div class="col-md-6">      
                 <label for="c_bank_check">Check Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_check" name="c_bank_check" required>
+                    <select class="form-control" id="c_bank_check" name="c_bank_check">
                         <?php
                         $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $check_type_query);
@@ -276,7 +276,7 @@
             <div class="col-md-6"> 
                 <label for="c_bank_online">Online Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_online" name="c_bank_online" required>
+                    <select class="form-control" id="c_bank_online" name="c_bank_online">
                         <?php
                         $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);

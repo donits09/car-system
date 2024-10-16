@@ -8,7 +8,7 @@ $c_or_amount = $_GET['c_or_amount'] ?? '';
 $c_or_paydate = $_GET['c_or_paydate'] ?? '';
 $c_encoded_by = $_GET['c_encoded_by'] ?? '';
 $c_mop_or = $_GET['c_mop_or'] ?? '';
-$$c_bank_check_or = $_GET['$c_bank_check_or'] ?? '';
+$c_bank_check_or = $_GET['c_bank_check_or'] ?? '';
 $c_bank_online_or = $_GET['c_bank_online_or'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
 $c_ref_no = $_GET['c_ref_no'] ?? '';
@@ -90,7 +90,6 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             padding: 20px;
             box-sizing: border-box;
             z-index: 2; 
-            margin-top:-35px;
         }
         .background-image {
             position: absolute;
@@ -246,7 +245,6 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
         }
         #c_loc{
             text-transform: uppercase;
-            /* background-color: red; */
             width: auto;
             text-align: left;
             font-size: 12px !important;
@@ -314,12 +312,11 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
         }
         #c_paydate_check {
             float: left;
-            margin-top: 175px;
+            margin-top: 168px;
             width: auto;
             margin-left:200px;
             text-left: center;
             font-size: 10px !important;
-            /* background-color: red; */
         }
         #c_paydate_online {
             float: left;
@@ -358,6 +355,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
 
 <body onload="initializePage()" id="previewORContent">
     <img src="<?php echo base_url; ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy">
+     
     <div class="container">
         <div class="box_middle">
             <input type="text" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">

@@ -211,11 +211,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             $stmt_items = odbc_prepare($conn, $get_atap_items);
                             odbc_execute($stmt_items, array($atapNo));
 
-                            $eligibleTranTypes = ['GRASS CUTTING FEE', 'STREETLIGHT FEE', 'GRASS CUTTING AND STREETLIGHT FEE'];
+                            $eligibleTranTypes = ['GRASS CUTTING FEE', 'STREETLIGHT FEE'];
 
                             while ($row_items = odbc_fetch_array($stmt_items)) {
                                 $amount = $row_items['c_atap_amount'];
                                 $itemId = $row_items['id'];
+                                $atapStats = $row_items['atap_status'];
                                 $totalAmount += $amount; 
 
                                 $c_payment = $row_items['c_tran_type'];
@@ -242,12 +243,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     }
                                 }
 
-                            
                                 if (in_array($row_items['c_tran_type'], $eligibleTranTypes) && $row_items['atap_status'] == 0) {
                                     $enableSaveButton = true;
                                 }
-
-                                ?>
+                        ?>
                                 <tr>
                                     <td class="text-center"><?php echo $i++; ?></td>
                                     <td class="text-center"><?php echo htmlspecialchars($row_items['c_tran_type']); ?></td>
@@ -265,7 +264,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                         ?>
                                     </td>
                                     <td align="center">
-                                        <?php if ($pstatus == 'ST') { ?>
+                                        <?php if ($atapStats != 3 && $pstatus == 'ST') { ?>
                                             <input type="checkbox" class="atap-status" data-id="<?php echo $itemId; ?>" data-no="<?php echo $atapNo; ?>"
                                                 <?php echo ($row_items['atap_status'] == 1) ? 'checked disabled' : ''; ?>>
                                             <input type="hidden" class="hidden-item-id" id="atapId" value="<?php echo $itemId; ?>" readonly>
@@ -277,7 +276,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     </td>
                                 </tr>
                             <?php
-                            }
+                                }
                             ?>
                         </tbody>
                         <tfoot>
