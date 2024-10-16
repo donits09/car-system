@@ -402,9 +402,14 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
         var cPayDateField = document.getElementById('c_paydate_prev');
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
-        if (cMopValue == '1' || cMopValue == '3') {
+        if (cMopValue == '1') {
             dynamicMarginDiv.style.marginTop = '190px';
             cPayDateField.style.display = 'none';
+            cBankCheck.style.display = 'none';
+            cCheckNo.style.display = 'none';
+        } else if (cMopValue == '3') {
+            dynamicMarginDiv.style.marginTop = '190px';
+            cPayDateField.style.display = 'block';
             cBankCheck.style.display = 'none';
             cCheckNo.style.display = 'none';
         } else {

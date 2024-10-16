@@ -323,14 +323,19 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
     </div> -->
     <script>
         var cMopValue = document.getElementById('c_mop_value').value;
-        var cBankCheck = document.getElementById('c_bank_main').value;
-        var cCheckNo = document.getElementById('c_check_main').value;
+        var cBankCheck = document.getElementById('c_bank_main');
+        var cCheckNo = document.getElementById('c_check_main');
         var cPayDateField = document.getElementById('c_paydate');
         var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
 
-        if (cMopValue == '1' || cMopValue == '3') { // Binago ko to yung online payment daw same sa cash nakapwesto. -denden
+        if (cMopValue == '1') {
             dynamicMarginDiv.style.marginTop = '190px';
             cPayDateField.style.display = 'none';
+            cBankCheck.style.display = 'none';
+            cCheckNo.style.display = 'none';
+        } else if (cMopValue == '3') {
+            dynamicMarginDiv.style.marginTop = '190px';
+            cPayDateField.style.display = 'block';
             cBankCheck.style.display = 'none';
             cCheckNo.style.display = 'none';
         } else {
