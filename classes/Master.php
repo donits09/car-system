@@ -562,6 +562,26 @@ Class Master{
 			return;
 		}
 
+		$check_or_no_query = "SELECT COUNT(*) AS count FROM t_or_payment WHERE c_or_no = '$c_or_no'";
+		$check_or_no_result = odbc_exec($this->conn, $check_or_no_query);
+
+		if ($check_or_no_result) {
+			$row = odbc_fetch_array($check_or_no_result);
+			$or_no_exists = $row['count'];
+
+			if ($or_no_exists > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "OR number '$c_or_no' already exists.";
+				echo json_encode($resp);
+				return;
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Error checking OR number.";
+			echo json_encode($resp);
+			return;
+		}
+
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -732,6 +752,26 @@ Class Master{
 			return;
 		}
 	
+		$check_car_no_query = "SELECT COUNT(*) AS count FROM t_car_payment WHERE c_car_no = '$c_car_no'";
+		$check_car_no_result = odbc_exec($this->conn, $check_car_no_query);
+
+		if ($check_car_no_result) {
+			$row = odbc_fetch_array($check_car_no_result);
+			$car_no_exists = $row['count'];
+
+			if ($car_no_exists > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Car number '$c_car_no' already exists.";
+				echo json_encode($resp);
+				return;
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Error checking car number.";
+			echo json_encode($resp);
+			return;
+		}
+
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 
@@ -855,6 +895,7 @@ Class Master{
 		echo json_encode($resp);
 	}
 		
+
 	function save_other_car_payment() {
 		extract($_POST);
 		$conn = $this->conn;
@@ -907,7 +948,27 @@ Class Master{
 			echo json_encode($resp);
 			return;
 		}
-	
+		
+		$check_car_no_query = "SELECT COUNT(*) AS count FROM t_car_payment WHERE c_car_no = '$c_car_no'";
+		$check_car_no_result = odbc_exec($this->conn, $check_car_no_query);
+
+		if ($check_car_no_result) {
+			$row = odbc_fetch_array($check_car_no_result);
+			$car_no_exists = $row['count'];
+
+			if ($car_no_exists > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "Car number '$c_car_no' already exists.";
+				echo json_encode($resp);
+				return;
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Error checking car number.";
+			echo json_encode($resp);
+			return;
+		}
+
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -1054,11 +1115,11 @@ Class Master{
 		}
 		
 		/* Nag add lang me here -DhenDwen */
-		if ($c_mop == 1) {
+		if ($c_mop_or == 1) {
 			$c_bank = "";
-		} elseif ($c_mop == 2) {
+		} elseif ($c_mop_or == 2) {
 			$c_bank = isset($_POST['c_bank_check_or']) ? $_POST['c_bank_check_or'] : "";
-		} elseif ($c_mop == 3) {
+		} elseif ($c_mop_or == 3) {
 			$c_bank = isset($_POST['c_bank_online_or']) ? $_POST['c_bank_online_or'] : "";
 		}
 
@@ -1096,6 +1157,26 @@ Class Master{
 			return;
 		}
 	
+		$check_or_no_query = "SELECT COUNT(*) AS count FROM t_or_payment WHERE c_or_no = '$c_or_no'";
+		$check_or_no_result = odbc_exec($this->conn, $check_or_no_query);
+
+		if ($check_or_no_result) {
+			$row = odbc_fetch_array($check_or_no_result);
+			$or_no_exists = $row['count'];
+
+			if ($or_no_exists > 0) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = "OR number '$c_or_no' already exists.";
+				echo json_encode($resp);
+				return;
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = "Error checking OR number.";
+			echo json_encode($resp);
+			return;
+		}
+
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -1112,7 +1193,7 @@ Class Master{
 
 		$c_account_no = '';
 		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
-		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks','" . (!empty($atap_id) ? $atap_id : '0') . "'";
+		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop_or', '$c_bank', '$c_check_no', '$c_remarks','" . (!empty($atap_id) ? $atap_id : '0') . "'";
 	
 		$resp = array();
 	
@@ -1218,7 +1299,7 @@ Class Master{
 						c_or_paydate = '$c_or_paydate',
 						c_or_amount = '$c_or_amount',
 						c_tran_updated = '$c_tran_date',
-						c_mop = '$c_mop',
+						c_mop = '$c_mop_or',
 						c_bank = '$c_bank',
 						c_check_no = '$c_check_no',
 						c_remarks = '$c_remarks'

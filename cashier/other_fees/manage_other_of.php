@@ -87,7 +87,7 @@
         <div class="dropdown" id="or_type_container">
             <label for="c_or_type">Transaction Type</label>
            
-            <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_or_type" name="c_or_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
+            <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_or_type" name="c_or_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_or_type) ? htmlspecialchars($c_or_type, ENT_QUOTES, 'UTF-8') : ''; ?>" required>
             <div class="dropdown-menu w-100" id="comboBoxMenu_or" style="max-height: 200px; overflow-y: auto;">
                 <?php
                 $or_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'O' ORDER BY c_payment_type ASC";
@@ -268,11 +268,11 @@
                 <div id="or_amt_error"></div>
             </div>
             <div class="col-md-6">
-                <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
-                    <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
-                    <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
-                    <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
+                <label for="c_mop_or">Mode of Payment</label>
+                <select class="form-control" id="c_mop_or" name="c_mop_or" required onchange="toggleCheckDropdown()">
+                    <option value="1" <?php echo ($c_mop_or == 1) ? 'selected' : ''; ?>>Cash</option>
+                    <option value="2" <?php echo ($c_mop_or == 2) ? 'selected' : ''; ?>>Check</option>
+                    <option value="3" <?php echo ($c_mop_or == 3) ? 'selected' : ''; ?>>Online</option>
                 </select>
             </div>
         </div>
@@ -281,9 +281,10 @@
     <div class="form-group" id="checkListOR" style="display: <?php echo ($c_mop_or == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
-                <label for="c_bank_check">Check Bank</label>
+                <label for="c_bank_check_or">Check Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_check" name="c_bank_check" required>
+                    <select class="form-control" id="c_bank_check_or" name="c_bank_check_or">
+                        <option value="" selected disabled>Select a bank</option>
                         <?php
                         $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $check_type_query);
@@ -305,9 +306,10 @@
     <div class="form-group" id="onlineBankListOR" style="display: <?php echo ($c_mop_or == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6"> 
-                <label for="c_bank_online">Online Bank</label>
+                <label for="c_bank_online_or">Online Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_online" name="c_bank_online" required>
+                    <select class="form-control" id="c_bank_online_or" name="c_bank_online_or">
+                        <option value="" selected disabled>Select a bank</option>
                         <?php
                         $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);
@@ -370,9 +372,9 @@
 <!-- <script>
     function handleModeOfPaymentChange() {
         var mop = document.getElementById('c_mop_or').value;
-        document.getElementById('c_bank_online').value = '';
+        document.getElementById('c_bank_online_or').value = '';
         document.getElementById('c_ref_no').value = '';
-        document.getElementById('c_bank_check').value = '';
+        document.getElementById('c_bank_check_or').value = '';
         document.getElementById('c_check_no').value = '';
 
         if (mop == '2') {
@@ -453,9 +455,9 @@ $(document).ready(function() {
                         location.reload();
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                    alert_toast("OR type does not exist.", 'error');
                 } else {
-                    alert_toast("An unexpected error occurred", 'error');
+                    alert_toast("OR type does not exist.", 'error');
                 }
                 end_loader();
             }
@@ -472,7 +474,7 @@ $(document).ready(function() {
             submitButton.attr('disabled', true);
         } else if (orNo.length > 6) {
             orNoError.text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
-            submitButton.attr('disabled', true);
+            //submitButton.attr('disabled', true);
         } else {
             $.ajax({
                 type: 'POST',
@@ -750,11 +752,11 @@ function openPrintWindow() {
     </script>
     <script>
         function toggleCheckDropdown() {
-            var modeOfPayment = document.getElementById("c_mop").value;
-            var checkList = document.getElementById("checkList");
-            var onlineBankList = document.getElementById("onlineBankList");
-            var cBankCheckInput = document.getElementById("c_bank_check");
-            var cBankOnlineInput = document.getElementById("c_bank_online");
+            var modeOfPayment = document.getElementById("c_mop_or").value;
+            var checkList = document.getElementById("checkListOR");
+            var onlineBankList = document.getElementById("onlineBankListOR");
+            var cBankCheckInput = document.getElementById("c_bank_check_or");
+            var cBankOnlineInput = document.getElementById("c_bank_online_or");
             var cCheckNo = document.getElementById("c_check_no");
             var cRefNo = document.getElementById("c_ref_no");
 
