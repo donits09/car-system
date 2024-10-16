@@ -543,7 +543,7 @@ $(document).ready(function() {
 
                                 if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
                                     alert('No CAR transactions remaining for this ATAP #.');
-                                    clearTxtNoCar();
+                                    //clearTxtNoCar();
                                     $('#btnsave').prop('disabled', true);
                                 }
                             }, 100); 
