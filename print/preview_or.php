@@ -423,7 +423,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
         <input type="text" name="c_or_no" id="c_or_no" value="<?php echo htmlspecialchars($c_or_no); ?>">
 
         <?php
-            $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = ?";
+            $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = ?";  /* ddd */
             $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
             odbc_execute($encoder_stmt, array($c_encoded_by));
             if ($encoder = odbc_fetch_array($encoder_stmt)) {
