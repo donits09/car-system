@@ -336,8 +336,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         } else if (cMopValue == '3') {
             dynamicMarginDiv.style.marginTop = '190px';
             cPayDateField.style.display = 'block';
-            cBankCheck.style.display = 'none';
-            cCheckNo.style.display = 'none';
+            cBankCheck.style.display = 'block';
+            cCheckNo.style.display = 'block';
         } else {
             dynamicMarginDiv.style.marginTop = '205px';
             cPayDateField.style.display = 'block';
