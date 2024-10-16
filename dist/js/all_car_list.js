@@ -284,7 +284,9 @@ $(document).ready(function() {
                         location.reload();
                     }, 1000);
                 } else if (resp && resp.status === 'failed') {
-                    if (resp.msg === "CAR type does not exist.") {
+                    if (resp.msg === "Transaction type or car type is required.") {
+                        alert_toast("Transaction type or car type is required.", 'error'); 
+                    } else if (resp.msg === "CAR type does not exist.") {
                         alert_toast("Car type does not exist.", 'error');
                     } else if (resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');
@@ -295,6 +297,7 @@ $(document).ready(function() {
                 end_loader();
             }
         });
+        
     });
     
 
