@@ -562,24 +562,26 @@ Class Master{
 			return;
 		}
 
-		$check_or_no_query = "SELECT COUNT(*) AS count FROM t_or_payment WHERE c_or_no = '$c_or_no'";
-		$check_or_no_result = odbc_exec($this->conn, $check_or_no_query);
+		if (empty($id)) {
+			$check_or_no_query = "SELECT COUNT(*) AS count FROM t_or_payment WHERE c_or_no = '$c_or_no'";
+			$check_or_no_result = odbc_exec($this->conn, $check_or_no_query);
 
-		if ($check_or_no_result) {
-			$row = odbc_fetch_array($check_or_no_result);
-			$or_no_exists = $row['count'];
+			if ($check_or_no_result) {
+				$row = odbc_fetch_array($check_or_no_result);
+				$or_no_exists = $row['count'];
 
-			if ($or_no_exists > 0) {
+				if ($or_no_exists > 0) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = "OR number '$c_or_no' already exists.";
+					echo json_encode($resp);
+					return;
+				}
+			} else {
 				$resp['status'] = 'failed';
-				$resp['msg'] = "OR number '$c_or_no' already exists.";
+				$resp['msg'] = "Error checking OR number.";
 				echo json_encode($resp);
 				return;
 			}
-		} else {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Error checking OR number.";
-			echo json_encode($resp);
-			return;
 		}
 
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";
@@ -752,24 +754,26 @@ Class Master{
 			return;
 		}
 	
-		$check_car_no_query = "SELECT COUNT(*) AS count FROM t_car_payment WHERE c_car_no = '$c_car_no'";
-		$check_car_no_result = odbc_exec($this->conn, $check_car_no_query);
+		if (empty($id)) {
+			$check_car_no_query = "SELECT COUNT(*) AS count FROM t_car_payment WHERE c_car_no = '$c_car_no'";
+			$check_car_no_result = odbc_exec($this->conn, $check_car_no_query);
 
-		if ($check_car_no_result) {
-			$row = odbc_fetch_array($check_car_no_result);
-			$car_no_exists = $row['count'];
+			if ($check_car_no_result) {
+				$row = odbc_fetch_array($check_car_no_result);
+				$car_no_exists = $row['count'];
 
-			if ($car_no_exists > 0) {
+				if ($car_no_exists > 0) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = "Car number '$c_car_no' already exists.";
+					echo json_encode($resp);
+					return;
+				}
+			} else {
 				$resp['status'] = 'failed';
-				$resp['msg'] = "Car number '$c_car_no' already exists.";
+				$resp['msg'] = "Error checking car number.";
 				echo json_encode($resp);
 				return;
 			}
-		} else {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Error checking car number.";
-			echo json_encode($resp);
-			return;
 		}
 
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
@@ -949,26 +953,28 @@ Class Master{
 			return;
 		}
 		
-		$check_car_no_query = "SELECT COUNT(*) AS count FROM t_car_payment WHERE c_car_no = '$c_car_no'";
-		$check_car_no_result = odbc_exec($this->conn, $check_car_no_query);
+		if (empty($id)) {
+			$check_car_no_query = "SELECT COUNT(*) AS count FROM t_car_payment WHERE c_car_no = '$c_car_no'";
+			$check_car_no_result = odbc_exec($this->conn, $check_car_no_query);
 
-		if ($check_car_no_result) {
-			$row = odbc_fetch_array($check_car_no_result);
-			$car_no_exists = $row['count'];
+			if ($check_car_no_result) {
+				$row = odbc_fetch_array($check_car_no_result);
+				$car_no_exists = $row['count'];
 
-			if ($car_no_exists > 0) {
+				if ($car_no_exists > 0) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = "Car number '$c_car_no' already exists.";
+					echo json_encode($resp);
+					return;
+				}
+			} else {
 				$resp['status'] = 'failed';
-				$resp['msg'] = "Car number '$c_car_no' already exists.";
+				$resp['msg'] = "Error checking car number.";
 				echo json_encode($resp);
 				return;
 			}
-		} else {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Error checking car number.";
-			echo json_encode($resp);
-			return;
 		}
-
+		
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_car_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 	
@@ -1157,24 +1163,26 @@ Class Master{
 			return;
 		}
 	
-		$check_or_no_query = "SELECT COUNT(*) AS count FROM t_or_payment WHERE c_or_no = '$c_or_no'";
-		$check_or_no_result = odbc_exec($this->conn, $check_or_no_query);
+		if (empty($id)) {
+			$check_or_no_query = "SELECT COUNT(*) AS count FROM t_or_payment WHERE c_or_no = '$c_or_no'";
+			$check_or_no_result = odbc_exec($this->conn, $check_or_no_query);
 
-		if ($check_or_no_result) {
-			$row = odbc_fetch_array($check_or_no_result);
-			$or_no_exists = $row['count'];
+			if ($check_or_no_result) {
+				$row = odbc_fetch_array($check_or_no_result);
+				$or_no_exists = $row['count'];
 
-			if ($or_no_exists > 0) {
+				if ($or_no_exists > 0) {
+					$resp['status'] = 'failed';
+					$resp['msg'] = "OR number '$c_or_no' already exists.";
+					echo json_encode($resp);
+					return;
+				}
+			} else {
 				$resp['status'] = 'failed';
-				$resp['msg'] = "OR number '$c_or_no' already exists.";
+				$resp['msg'] = "Error checking OR number.";
 				echo json_encode($resp);
 				return;
 			}
-		} else {
-			$resp['status'] = 'failed';
-			$resp['msg'] = "Error checking OR number.";
-			echo json_encode($resp);
-			return;
 		}
 
 		$maxIdQuery = "SELECT MAX(id) AS max_id FROM t_or_payment";

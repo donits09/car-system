@@ -29,6 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 check_session();
 ?>
+ <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAR ENCODING</title>
 <link rel="stylesheet" href="../dist/css/login.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/login.css">
 <link rel="icon" type="image/png" sizes="32x32" href="<?php echo base_url ?>dist/header_files/favicon/alsc-32.png">
