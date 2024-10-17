@@ -166,7 +166,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             position:absolute;
         }
         #c_check_main{
-            margin-top:318px;
+            margin-top:303px;
             margin-left:10px;
             width: auto;
             text-align: center;
