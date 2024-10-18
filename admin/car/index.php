@@ -36,8 +36,8 @@ include('../../inc/header.php');
     endif;
     }
 ?>
-<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
-<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/index.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
@@ -140,7 +140,7 @@ include('../../inc/header.php');
                     <a class="nav-link" id="car-list-tab" data-toggle="tab" href="#car-list" role="tab" aria-controls="car-list" aria-selected="false">Other Fees (CAR)</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">Other Fees (OR/SI)</a>
+                    <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">Other Fees (OR)</a>
                 </li>
                 
             </ul>
@@ -412,12 +412,12 @@ include('../../inc/header.php');
                 <div class="tab-pane fade" id="or-list" role="tabpanel" aria-labelledby="or-list-tab">
                     <div class="card mt-3">
                         <div class="container">
-                            <h2 class="text-blue h4">Other Fees (OR/SI)</h2>
+                            <h2 class="text-blue h4">Other Fees (OR)</h2>
                             <hr>
-                            <!-- <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
-                            <span class="fa fa-edit"></span> Create New OR/SI
-                            </button> 
-                            <hr> -->
+                            <button type="button" id="create_new_or" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createOrModal" onclick="updateAccountNoOR()" disabled>
+                                <span class="fa fa-edit"></span> Create New OR
+                            </button>
+                            <hr>
                             <div class="container">
                                 <div class="row">
                                     <div class="col-12 col-md-4">
@@ -700,6 +700,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const createNewBtn = document.getElementById('create_new');
         const exportcsvBtn = document.getElementById('export_csv');
         const exportpdfBtn = document.getElementById('export_pdf');
+        const createNewOrBtn = document.getElementById('create_new_or');
         let initialValue = accnoInput.value; 
      
         function checkValueChange() {
@@ -710,6 +711,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 exportpdfBtn.classList.remove('disabled-link'); 
                 exportcsvBtn.removeAttribute('disabled'); 
                 exportpdfBtn.removeAttribute('disabled'); 
+                createNewOrBtn.disabled = false;
                 initialValue = accnoInput.value; 
             }
         }
@@ -890,39 +892,35 @@ $(document).ready(function() {
         });
     }
     $(document).ready(function() {
+        $(document).on('click', '.view_data', function() {
+            var accountId = $(this).data('id');
+            loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
+        });
+
         $('#create_new_atap').click(function() {
             var accountNo = $('#buyer_acc_no').val();
             loadModal('Create New ATAP', '../atap/manage_atap_spec.php?c_account_no=' + accountNo, '#createCarModal');
         });
 
         $('#create_new').click(function() {
-            /* var accountNo = $(this).data('account-no'); */
-            var accountNo = $('#buyer_acc_no').val();
+            var accountNo = $(this).data('account-no');
             loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
         });
 
         $('#create_new_or').click(function() {
-            /* var accountNo = $(this).data('account-no'); */
-            var accountNo = $('#buyer_acc_no').val();
-            loadModal('Create New OR/SI', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
+            var accountNo = $(this).data('account-no');
+            loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
         });
 
         $(document).on('click', '.edit_data', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');
-            var carNo = $(this).data('car-no'); 
-
+        
             if (!accountNo) {
-                // loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
-                loadModal('Edit Car Details', 'edit_car_spec.php?car_no=' + carNo, '#createCarModal');
+                loadModal('Edit Car Details', 'manage_other_car.php?id=' + accountId, '#createCarModal');
             } else {
-                loadModal('Edit Car Details', 'edit_car_spec.php?car_no=' + carNo, '#createCarModal');
+                loadModal('Edit Car Details', 'manage_car.php?id=' + accountId, '#createCarModal');
             }
-        });
-
-        $(document).on('click', '.view_data', function() {
-            var carNo = $(this).data('car-no'); 
-            loadModal('Car Details', 'view_car.php?car_no=' + carNo, '#viewModal'); 
         });
 
         $('#create_other_new').click(function() {
@@ -932,6 +930,7 @@ $(document).ready(function() {
         $(document).on('click', '.delete_data_car', function() {
             var carNo = $(this).data('car-no');
             var atapNo = $(this).data('atap-no'); 
+            console.log("Car No: " + carNo + ", ATAP No: " + atapNo);
             _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
         });
 

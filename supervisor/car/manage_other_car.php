@@ -567,7 +567,7 @@ $(document).ready(function() {
                                 clearTxtNoCar();
                                 $('#btnsave').prop('disabled', true);
                             }
-                        }, 100); 
+                        }, 300); 
                     }
                 } else {
                     $('#car_type_container').show();

@@ -263,7 +263,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                                 $statusText = '<span class="badge badge-secondary">Other</span>';
                                                 break;
                                         }
-
                                         echo $statusText;
                                     }
                                     ?>
@@ -299,7 +298,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
                         <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                     </tr>
-
                     <script>
                         $(document).ready(function () {
                             $('.c_car_type').on('input', function () {
@@ -465,7 +463,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-
 <script>
     var dropdownOptions = `
         <?php
@@ -591,6 +588,7 @@ $(document).ready(function() {
                 </td>
                 <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
                 <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+                
             </tr>`;
             $('#transaction-table tbody').append(newRow);
             initializeDropdown();
@@ -610,6 +608,11 @@ calculateTotal();
 /* Avoid Enter */
 $('#atap-form').on('keydown', function(event) {
     if (event.key === "Enter" || event.keyCode === 13) {
+        var target = event.target;
+        
+        if ($(target).is('textarea')) {
+            return true;
+        }
         event.preventDefault();
     }
 });
@@ -660,7 +663,6 @@ $('#atap-form').submit(function(e) {
             $(this).removeClass('is-invalid');
         }
     });
-
 
     if (!valid) {
         $(this).data('formSubmitting', false);

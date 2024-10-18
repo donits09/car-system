@@ -1760,6 +1760,38 @@ Class Master{
 		echo json_encode($resp);
 	}
 
+	public function save_tenant() {
+		extract($_POST);
+		$tenant_acc_no = isset($_POST['tenant_acc_no']) ? $_POST['tenant_acc_no'] : '';
+		$tenant_lname = isset($_POST['tenant_lname']) ? $_POST['tenant_lname'] : '';
+		$tenant_fname = isset($_POST['tenant_fname']) ? $_POST['tenant_fname'] : '';
+		$tenant_mname = isset($_POST['tenant_mname']) ? $_POST['tenant_mname'] : '';
+
+		$stmt = $this->conn->prepare("INSERT INTO t_tenant_accounts (c_account_no, c_last_name, c_first_name, c_middle_name) VALUES (?, ?, ?, ?)");
+
+		$stmt->bind_param("ssss",
+			$tenant_acc_no,
+			$tenant_lname,
+			$tenant_fname,
+			$tenant_mname
+		);
+
+		if ($stmt->execute()) {
+			$response = [
+				'status' => 'success',
+				'msg' => 'Tenant saved successfully!'
+			];
+		} else {
+			$response = [
+				'status' => 'error',
+				'msg' => 'Error saving tenant: ' . $stmt->error
+			];
+		}
+		$stmt->close();
+		echo json_encode($response);
+	}
+
+	
 	function save_car_check() {
 		extract($_POST);
 	
@@ -2435,6 +2467,9 @@ switch ($action) {
 		break;
 	case 'save_car_check':
 		echo $Master->save_car_check();
+		break;
+	case 'save_tenant':
+		echo $Master->save_tenant();
 		break;
 	case 'save_car_online':
 		echo $Master->save_car_online();

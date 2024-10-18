@@ -74,7 +74,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         // $current_approval_status = $result["approval_status"];
         $current_approver = $result["approver"];
     }
-
     $get_transaction_types_query = "SELECT * FROM t_atap_items WHERE c_atap_no = ?";
     $stmt_types = odbc_prepare($conn, $get_transaction_types_query);
     odbc_execute($stmt_types, array($atapNo));
@@ -118,6 +117,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     padding:10px;
 }
 </style>
+<link rel="stylesheet" href="../../dist/css/manage_atap.css">
+<body onload="">
 <form id="atap-form" method="post" action="">
     <input type="hidden" name="id" value="<?php echo isset($atapId) ? $atapId : '' ?>">
     <input type="hidden" id="c_atap_no" name="c_atap_no" value="<?php echo isset($c_atap_no) ? $c_atap_no : '' ?>">
@@ -665,6 +666,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         /* Avoid Enter */
         $('#atap-form').on('keydown', function(event) {
             if (event.key === "Enter" || event.keyCode === 13) {
+                var target = event.target;
+                
+                if ($(target).is('textarea')) {
+                    return true;
+                }
                 event.preventDefault();
             }
         });

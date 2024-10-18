@@ -105,11 +105,11 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                 <span class="sr-only">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu" role="menu">
-            <a class="dropdown-item view_data" href="javascript:void(0)" data-car-no="<?php echo $row['c_car_no'] ?>">
+            <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
                 View
             </a>
                 <div class="dropdown-divider"></div>
-                <!-- <a class="dropdown-item edit_data" href="javascript:void(0)"
+                <a class="dropdown-item edit_data" href="javascript:void(0)"
                    data-id="<?php echo $row['id']; ?>"
                    data-account-no="<?php echo $row['c_account_no']; ?>"
                    data-payment-type="<?php echo $row['c_car_type']; ?>"
@@ -118,11 +118,8 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
                    data-pay-date="<?php echo $row['c_car_paydate']; ?>"
                    data-encoder="<?php echo $row['c_encoded_by']; ?>">
                     Edit
-                </a> -->
-                <!-- <a class="dropdown-item edit_data" href="javascript:void(0)" data-car-no="<?php echo $row['c_car_no']; ?>">
-                    Edit <?php echo $row['c_car_no']; ?>
-                </a> -->
-                <!-- <div class="dropdown-divider"></div> -->
+                </a> 
+                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
                     Print
                 </a>

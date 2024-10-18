@@ -7,7 +7,7 @@ check_user_group(1);
 include('../../config.php');
 $selected = ''; 
 $c_name = '';
-$c_account_no = null;
+$c_account_no = '';
 $atap_remarks = '';
 $c_atap_no = null;
 $c_encoded_by = '';
@@ -86,38 +86,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <?php
     $specIdNo = isset($_GET['spec_idno']) ? $_GET['spec_idno'] : '';
 ?>
-<style>
-.bold-text {
-    padding: 5px;
-    font-size: 11px;
-    font-style: italic;
-}
-.transaction-type {
-    text-align: center;
-}
-
-.transaction-amount, .total-amount {
-    text-align: right;
-}
-
-.total-amount {
-    text-align: right;
-}
-#add-row{
-    border-radius: 0px;
-}
-.remove-row{
-    border-radius: 0px;
-    text-align: center;
-}
-#btnsave{
-    width: 100% !important;
-}
-#approver_cont{
-    background-color: whitesmoke;
-    padding:10px;
-}
-</style>
+<link rel="stylesheet" href="<?php base_url; ?>dist/css/atap.css">
 <script>
     function calculateTotal() {
         let total = 0;
@@ -497,36 +466,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script>
-    function calculateTotal() {
-        let total = 0;
-        var inputs = document.querySelectorAll('.transaction-amount');
-        for (var i = 0; i < inputs.length; i++) {
-            let value = parseFloat(inputs[i].value.replace(/,/g, ''));
-            if (!isNaN(value)) {
-                total += value;
-            }
-        }
-
-        function formatNumberWithCommas(number) {
-            var parts = number.toFixed(2).split('.');
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            return parts.join('.');
-        }
-
-        console.log('Total:', total);
-        document.getElementById('total-amount').textContent = formatNumberWithCommas(total);
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var inputs = document.querySelectorAll('.transaction-amount');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].addEventListener('input', calculateTotal);
-        }
-
-        calculateTotal();
-    });
-</script>
-<script>
     var dropdownOptions = `
         <?php
         $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
@@ -574,11 +513,11 @@ $(document).ready(function() {
             $hiddenInput.val($(this).data('value'));
             $hiddenStatusInput.val(paymentStatus);
 
-            if (paymentStatus.trim() == 'C') {
+            if (paymentStatus.trim() === 'C') {
                 $statusText.html('<span class="badge badge-secondary">CAR</span>');
-            } else if (paymentStatus.trim() == 'ST') {
+            } else if (paymentStatus.trim() === 'ST') {
                 $statusText.html('<span class="badge badge-secondary">Special</span>');
-            } else if (paymentStatus.trim() == 'O') {
+            } else if (paymentStatus.trim() === 'O') {
                 $statusText.html('<span class="badge badge-secondary">OR</span>');
             } else {
                 $statusText.html('<span class="badge badge-secondary">Other</span>');
@@ -657,6 +596,7 @@ $(document).ready(function() {
         calculateTotal();
         checkRemoveButton();
     });
+});
 
     $('#transaction-table').on('input', '.transaction-amount', function() {
         calculateTotal();
@@ -750,8 +690,10 @@ $(document).ready(function() {
                     }, 1000);
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'not_found') {
+                alert_toast("CAR type not exist.", 'error');
                 } else {
-                    alert_toast("An unexpected error occurred", 'error');
+                    alert_toast("CAR type not exist.", 'error');
                 }
                 end_loader();
             },
@@ -764,10 +706,9 @@ $(document).ready(function() {
     const accountNo = $('#c_account_no').val();
     fetchBuyerDetails(accountNo);
 
-        $('#c_account_no').on('input', function() {
-            const accountNo = $(this).val();
-            fetchBuyerDetails(accountNo);
-        });
+    $('#c_account_no').on('input', function() {
+        const accountNo = $(this).val();
+        fetchBuyerDetails(accountNo);
     });
 });
 

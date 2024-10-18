@@ -401,7 +401,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     clearTxtNoCar();
                                     $('#btnsave').prop('disabled', true);
                                 }
-                            }, 100); 
+                            }, 300); 
                         }
                     } else {
                         $('#car_type_container').show();
