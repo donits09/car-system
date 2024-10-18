@@ -172,7 +172,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             text-align: center;
             font-size: 12px !important;
             position:absolute;
-
+            /* background-color: pink; */
         }
         #c_check_main2{
             margin-top:305px;
