@@ -116,6 +116,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     padding:10px;
 }
 </style>
+<link rel="stylesheet" href="../../dist/css/manage_atap.css">
 <form id="atap-form" method="post" action="">
     <input type="hidden" name="id" value="<?php echo isset($atapId) ? $atapId : '' ?>">
     <input type="hidden" id="c_atap_no" name="c_atap_no" value="<?php echo isset($c_atap_no) ? $c_atap_no : '' ?>">
@@ -648,9 +649,13 @@ $('#transaction-table').on('click', '.remove-row', function() {
     calculateTotal();
 });
 
-/* Avoid Enter */
 $('#atap-form').on('keydown', function(event) {
     if (event.key === "Enter" || event.keyCode === 13) {
+        var target = event.target;
+        
+        if ($(target).is('textarea')) {
+            return true;
+        }
         event.preventDefault();
     }
 });

@@ -185,7 +185,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
         <div id="car_no_error"></div>
     </div>
-    
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
@@ -505,7 +504,6 @@ $(document).ready(function() {
         }
     });
 });
-
 </script>
 <script>
  $(document).ready(function() {
@@ -558,17 +556,27 @@ $(document).ready(function() {
                                 opacity: 1
                             }).show();
 
-                            setTimeout(function() {
-                                if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
-                                    //console.log('test');
-                                }
+                            // setTimeout(function() {
+                            //     if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
+                            //         //console.log('test');
+                            //     }
 
+                            //     if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
+                            //         alert('No CAR transactions remaining for this ATAP #.');
+                            //         //clearTxtNoCar();
+                            //         $('#btnsave').prop('disabled', true);
+                            //     }
+                            // }, 100); 
+                            /* Alert on No remaining ATAP */
+
+                            let checkVisibility = setInterval(function() {
                                 if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
                                     alert('No CAR transactions remaining for this ATAP #.');
-                                    //clearTxtNoCar();
+                                    clearTxtNoCar();
                                     $('#btnsave').prop('disabled', true);
+                                    clearInterval(checkVisibility);
                                 }
-                            }, 100); 
+                            }, 300);
                         }
                     } else {
                         $('#car_type_container').show();
@@ -645,7 +653,6 @@ $(document).ready(function() {
 
         $('#c_account_no').trigger('input');
     }
-
 
     $('#c_account_no').on('input', function() {
         const accountNo = $(this).val();

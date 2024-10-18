@@ -1,87 +1,53 @@
 <?php
-session_start();
-require_once('../../inc/check_session.php');
-check_user_group(1);
-$c_encoded_by = '';
-include('../../config.php');
+    session_start();
+    /* if (!isset($_SESSION['user_group']) || $_SESSION['user_group'] != 2) {
+        require_once('../logout.php');
+        exit();
+    } */
 
-if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
-    $totalAmount = 0;
-    $carNo = $_GET['car_no'];
-    $get_car_query = "SELECT a.c_account_no, a.c_car_no, a.c_car_type, a.c_car_amount, 
-                             a.c_car_paydate, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, 
-                             a.c_mop, a.c_bank, b.c_name, b.c_phase, b.c_block, b.c_lot, 
-                             a.c_check_no, a.c_remarks
-                      FROM t_car_payment a
-                      LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no 
-                      WHERE a.c_car_no = ?";
+    require_once('../../inc/check_session.php');
+    check_user_group(1);
 
-    $stmt = odbc_prepare($conn, $get_car_query);
-    odbc_execute($stmt, array($carNo));
-    $carData = [];
-
-    while ($firstEntry = odbc_fetch_array($stmt)) {
-        $carData[] = $firstEntry;
-    }
-
-    if (!empty($carData)) {
-        $firstEntry = $carData[0]; 
+    include('../../config.php');
+    $c_encoded_by = '';
+    if(isset($_GET['id']) && $_GET['id'] > 0){
+        $accountId = $_GET['id'];
+        $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, a.c_bank, b.c_name, b.c_phase,
+                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks
+                        FROM t_car_payment a
+                        LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
+        $stmt = odbc_prepare($conn, $get_car_query);
+        odbc_execute($stmt, array($accountId));
+        $result = odbc_fetch_array($stmt);
+        if($result){
+        $row = $result;
 ?>
+<link rel="stylesheet" href="../../dist/css/view_car.css">
 <div class="container-fluid">
     <div class="callout callout-primary">
-        <table class="table table-bordered" style="text-align:left;">
+        <table class="table table-bordered">
             <tbody>
                 <tr>
                     <th style="width: 30%;">Account No.:</th>
-                    <td><?php echo !empty($firstEntry['c_account_no']) ? $firstEntry['c_account_no'] : '----------'; ?></td>
+                    <?php if ($row['c_account_no'] != "" || $row['c_account_no'] != null) { ?>
+                        <td><?php echo $row['c_account_no']; ?></td>
+                    <?php }else{ ?>
+                        <td>----------</td>
+                    <?php } ?>
                 </tr>
                 <tr>
-                    <th>Car No.:</th>
-                    <td><?php echo $firstEntry['c_car_no']; ?></td>
+                    <th>CAR No.:</th>
+                    <td><?php echo $row['c_car_no']; ?></td>
                 </tr>
                 <tr>
-                    <th>Payment Type & Amount Breakdown:</th>
-                    <td>
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Car Type</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-
-                                foreach ($carData as $car) {
-                                    $carTypes = explode(',', $car['c_car_type']);
-                                    $carAmounts = explode(',', $car['c_car_amount']);
-
-                                    foreach ($carTypes as $index => $type) {
-                                        $amount = isset($carAmounts[$index]) ? (float)$carAmounts[$index] : 0;
-                                        $totalAmount += $amount;
-                                ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars(trim($type)); ?></td>
-                                        <td><?php echo number_format($amount, 2); ?></td>
-                                    </tr>
-                                <?php 
-                                    } 
-                                } 
-                                ?>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Total:</th>
-                                    <td><?php echo number_format($totalAmount, 2); ?></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </td>
+                    <th>Transaction Type:</th>
+                    <td><?php echo $row['c_car_type']; ?></td>
                 </tr>
                 <tr>
                     <th style="width: 30%;">Name:</th>
                     <?php
-                        $c_buyer_acc = !empty($firstEntry['c_account_no']) ? $firstEntry['c_account_no'] : '';
+                        $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
 
                         if (!empty($c_buyer_acc)) {
                             $get_buyer_details_qry = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
@@ -99,7 +65,7 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                                 echo "<td>Unknown</td>";
                             }
                         } else {
-                            echo '<td>' . htmlspecialchars($firstEntry['c_name']) . '</td>';
+                            echo '<td>' . htmlspecialchars($row['c_name']) . '</td>';
                         }
                     ?>
                 </tr>
@@ -107,7 +73,7 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                     <th style="width: 30%;">Location:</th>
                     <td>
                     <?php
-                        $c_account_no = $firstEntry['c_account_no'];
+                        $c_account_no = $row['c_account_no'];
 
                         try {
                             if (!empty($c_account_no)) {
@@ -130,9 +96,9 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                                     echo "-----";
                                 }
                             } else {
-                                $c_phase = $firstEntry['c_phase'];
-                                $c_block = $firstEntry['c_block'];
-                                $c_lot = $firstEntry['c_lot'];
+                                $c_phase = $row['c_phase'];
+                                $c_block = $row['c_block'];
+                                $c_lot = $row['c_lot'];
 
                                 if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
                                     echo "-------------";
@@ -160,14 +126,18 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                     </td>
                 </tr>
                 <tr>
+                    <th>Amount:</th>
+                    <td><?php echo number_format($row['c_car_amount'],2); ?></td>
+                </tr>
+                <tr>
                     <th>Mode of Payment:</th>
                     <td>
                         <?php 
-                        if ($firstEntry['c_mop'] == 1) {
+                        if ($row['c_mop'] == 1) {
                             echo "Cash";
-                        } elseif ($firstEntry['c_mop'] == 2) {
+                        } elseif ($row['c_mop'] == 2) {
                             echo "Check";
-                        } elseif ($firstEntry['c_mop'] == 3) {
+                        } elseif ($row['c_mop'] == 3) {
                             echo "Online";
                         } else {
                             echo "-";
@@ -175,24 +145,24 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                         ?>
                     </td>
                 </tr>
-                <?php if ($firstEntry['c_mop'] == 2 || $firstEntry['c_mop'] == 3): ?>
+                <?php if ($row['c_mop'] == 2 || $row['c_mop'] == 3): ?>
                 <tr>
                     <th>Issuance Bank:</th>
                     <td>
-                        <?php echo htmlspecialchars($firstEntry['c_bank']); ?>
+                        <?php echo htmlspecialchars($row['c_bank']); ?>
                     </td>
                 </tr>
                 <tr>
-                    <th><?php echo $firstEntry['c_mop'] == 2 ? 'Check No' : 'Reference No'; ?>:</th>
+                    <th><?php echo $row['c_mop'] == 2 ? 'Check No' : 'Reference No'; ?>:</th>
                     <td>
-                        <?php echo htmlspecialchars($firstEntry['c_check_no']); ?>
+                        <?php echo htmlspecialchars($row['c_check_no']); ?>
                     </td>
                 </tr>
                 <?php endif; ?>
                 <tr>
                     <th>Transaction Date:</th>
                     <td><?php
-                        $dateTime = new DateTime($firstEntry['c_tran_date']);
+                        $dateTime = new DateTime($row['c_tran_date']);
                         echo htmlspecialchars($dateTime->format('Y-m-d')); 
                     ?>
                     </td>
@@ -200,17 +170,17 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
                 <tr>
                     <th>Remarks:</th>
                     <td style="max-width: 200px; word-wrap: break-word;">
-                        <?php echo htmlspecialchars($firstEntry['c_remarks']); ?>
+                        <?php echo htmlspecialchars($row['c_remarks']); ?>
                     </td>
                 </tr>
                 <tr>
                     <th>Pay Date:</th>
-                    <td><?php echo $firstEntry['c_car_paydate']; ?></td>
+                    <td><?php echo $row['c_car_paydate']; ?></td>
                 </tr>
                 <tr>
                     <th>Encoded by:</th>
                     <?php
-                        $c_encoded_by =  $firstEntry['c_encoded_by']; 
+                        $c_encoded_by =  $row['c_encoded_by']; 
                         $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
                         $results = odbc_exec($conn, $get_encoder_details_qry);
 
@@ -226,7 +196,9 @@ if (isset($_GET['car_no']) && !empty($_GET['car_no'])) {
 </div>
 <?php
     } else {
-        echo "No data found for the given car number.";
+        echo "No data found for the given ID.";
     }
+} else {
+    echo "Invalid request.";
 }
 ?>

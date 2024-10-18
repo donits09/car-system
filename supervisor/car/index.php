@@ -44,8 +44,8 @@ include('../../inc/header.php');
     endif;
     }
 ?>
-<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/table.css">
-<link rel="stylesheet" href="<?php echo base_url; ?>/dist/css/index.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
+<link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <style>
     .table-container {
         margin-bottom: 20px;
@@ -958,6 +958,11 @@ $(document).ready(function() {
             loadModal('Car Details', 'view_car.php?id=' + accountId, '#viewModal');
         });
 
+        $('#create_new_atap').click(function() {
+            var accountNo = $('#buyer_acc_no').val();
+            loadModal('Create New ATAP', '../atap/manage_atap_spec.php?c_account_no=' + accountNo, '#createCarModal');
+        });
+
         $('#create_new').click(function() {
             var accountNo = $(this).data('account-no');
             loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
@@ -987,7 +992,6 @@ $(document).ready(function() {
             console.log("Car No: " + carNo + ", ATAP No: " + atapNo);
             _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
         });
-
 
         window._conf = function(msg, func, params) {
             $('#confirm_modal .modal-body').html(msg);
@@ -1116,7 +1120,6 @@ function updateORList() {
         });
 }
 </script>
-
 <!-- Para sa car_summary.php (dito pala nag pproblem sa toggle hanimals yan) -->
 <script>
 $(document).ready(function() {

@@ -6,7 +6,6 @@ check_user_group(1);
 
 include('../../config.php');
 $selected = ''; 
-
 $c_name = '';
 $c_account_no = '';
 $atap_remarks = '';
@@ -124,7 +123,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 <form id="atap-form" method="post" action="">
     <input type="hidden" name="id" value="<?php echo isset($atapId) ? $atapId : '' ?>">
     <input type="hidden" id="c_atap_no" name="c_atap_no" value="<?php echo isset($c_atap_no) ? $c_atap_no : '' ?>">
-   
     <div class="form-group">
         <label for="account_no">Account No.</label>
         <input type="number" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" readonly required>
@@ -139,7 +137,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </label>
         <textarea class="form-control txt" rows="2" cols="50" id="atap_remarks" name="atap_remarks" required><?php echo htmlspecialchars($atap_remarks) ?></textarea>
     </div>
-    <br>
     <div class="form-group">
         <label for="encoder">Encoded by</label>
         <input type="text" id="c_encoded_by" class="hidden_fields" name="c_encoded_by" value="<?php echo $_SESSION['username'] ?>" readonly>
@@ -471,7 +468,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 </tr>
             </tfoot>
         </table>
-
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
@@ -741,7 +737,6 @@ function calculateTotal() {
     });
     $('#total-amount').text(formatNumber(total.toFixed(2)));
 }
-
 function formatNumber(number) {
     return number.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -759,15 +754,12 @@ $('#transaction-table').on('click', '.remove-row', function() {
 $(document).ready(function() {
     function initializeDropdown() {
         $('.dropdown-menu a').off('click').on('click', function(event) {
-            //event.preventDefault();  
-            
             var $dropdown = $(this).closest('.dropdown');
             var $input = $dropdown.find('input[name="c_car_type"]');
             var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
             var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
             var $statusText = $dropdown.closest('tr').find('.payment-status-text');
             var paymentStatus = $(this).data('status');
-            
             $input.val($(this).data('value'));
             $hiddenInput.val($(this).data('value'));
             $hiddenStatusInput.val(paymentStatus);
@@ -785,7 +777,6 @@ $(document).ready(function() {
             $dropdown.find('.dropdown-item').removeClass('active');
             $(this).addClass('active');
 
-
             $dropdown.find('.dropdown-menu').hide();
         });
 
@@ -793,7 +784,6 @@ $(document).ready(function() {
             var input = $(this).val().toLowerCase();
             var $menu = $(this).siblings('.dropdown-menu');
             var hasVisibleOptions = false;
-
             $menu.find('.dropdown-item').each(function () {
                 if ($(this).text().toLowerCase().startsWith(input)) {
                     $(this).show();
@@ -827,7 +817,6 @@ $(document).ready(function() {
         $(window).on('resize', positionDropdown);
         positionDropdown();
     }
-
     $('#add-row').on('click', function() {
         let newRow = `<tr>
             <td>
@@ -881,6 +870,7 @@ $(document).ready(function() {
         $(this).data('formSubmitting', true);
 
         const buyerName = $('#c_name').val();
+        let valid = true;
 
     if (!buyerName || buyerName === 'Unknown') {
         alert('Name field is required.');
@@ -953,48 +943,6 @@ $(document).ready(function() {
                 alert_toast("CAR type not exist.", 'error');
             } else {
                 alert_toast("CAR type not exist.", 'error');
-            }
-            end_loader();
-        },
-        complete: function() {
-            $('#atap-form').data('formSubmitting', false);
-
-        }
-
-        if (!valid) {
-            $(this).data('formSubmitting', false);
-            return;
-        }
-        
-        start_loader();
-
-        $.ajax({
-            url: "../../classes/Master.php?f=save_atap_payment",
-            data: new FormData($(this)[0]),
-            cache: false,
-            contentType: false,
-            processData: false,
-            method: 'POST',
-            dataType: 'json',
-            error: function(err) {
-                console.log(err);
-                alert_toast("An error occurred.", 'error');
-                end_loader();
-            },
-            success: function(resp) {
-                console.log(resp);
-                if (resp && resp.status === 'success') {
-                    alert_toast(resp.msg, 'success');
-                    setTimeout(function() {
-                        $('#createCarModal').modal('hide');
-                        $('body').removeClass('modal-open');
-                        $('.modal-backdrop').remove();
-                        updateAtapList();
-                    }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
-                } else {
-                    alert_toast("An unexpected error occurred", 'error');
                 }
                 end_loader();
             },
@@ -1029,14 +977,14 @@ $(document).ready(function() {
         }
     }
 
-    const accountNo = $('#c_account_no').val();
-    fetchBuyerDetails(accountNo);
+const accountNo = $('#c_account_no').val();
+fetchBuyerDetails(accountNo);
 
-        $('#c_account_no').on('input', function() {
-            const accountNo = $(this).val();
-            fetchBuyerDetails(accountNo);
-        });
+    $('#c_account_no').on('input', function() {
+        const accountNo = $(this).val();
+        fetchBuyerDetails(accountNo);
     });
+});
 $(document).ready(function() {
     calculateTotal();
 });
