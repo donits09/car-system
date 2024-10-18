@@ -343,9 +343,15 @@ function clearAmt(){
     $(document).ready(function() {
     $('#or-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
+            var target = event.target;
+            
+            if ($(target).is('textarea')) {
+                return true;
+            }
             event.preventDefault();
         }
     });
+
     $('#or-form').submit(function(e) {
         e.preventDefault();
 

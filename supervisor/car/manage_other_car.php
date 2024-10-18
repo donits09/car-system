@@ -162,7 +162,6 @@
     });
 
     </script>
-
     <script>
     function toggleCarType() {
         var atapNo = document.getElementById('c_atap_no').value;
@@ -182,7 +181,6 @@
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
 
     <hr>
-
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" oninput="validateAlphaNumericInput(event)" required>
@@ -194,8 +192,7 @@
         <textarea class="form-control txt" rows="2" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
     </div>
     <div class="row align-items-end">
-        <div class="col-md-6 form-group">
-            
+        <div class="col-md-6 form-group">     
             <label for="c_phase" class="control-label">Phase</label>
             <select name="c_phase" id="c_phase" class="custom-select form-control" autocomplete="off">
                 <option value="" selected>--SELECT--</option>
@@ -399,6 +396,11 @@ $(document).ready(function() {
 
     $('#other-car-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
+            var target = event.target;
+            
+            if ($(target).is('textarea')) {
+                return true;
+            }
             event.preventDefault();
         }
     });
@@ -628,6 +630,7 @@ $(document).ready(function() {
         function updateAtapAmount(selectedValue) {
             $('#c_car_amount').val(selectedValue);
         }
+        
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }

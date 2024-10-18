@@ -397,6 +397,11 @@ $(document).ready(function() {
     /* Avoid Enter */
     $('#other-car-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
+            var target = event.target;
+            
+            if ($(target).is('textarea')) {
+                return true;
+            }
             event.preventDefault();
         }
     });

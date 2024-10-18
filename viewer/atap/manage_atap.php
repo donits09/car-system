@@ -610,6 +610,11 @@ calculateTotal();
 /* Avoid Enter */
 $('#atap-form').on('keydown', function(event) {
     if (event.key === "Enter" || event.keyCode === 13) {
+        var target = event.target;
+        
+        if ($(target).is('textarea')) {
+            return true;
+        }
         event.preventDefault();
     }
 });

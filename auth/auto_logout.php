@@ -2,6 +2,7 @@
 #session_start();
 $_SESSION = array();
 session_destroy();
-header("Location: ../auth/login.php");
+
+header("Location: " . $base_url . "../auth/login.php");
 exit();
 ?>
