@@ -81,12 +81,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </div>
     <script>
         function disableAtapNo() {
-            document.getElementById('c_atap_no').disabled = true;
+            document.getElementById('c_atap_no').readOnly = true;
             toggleCarType(); 
         }
 
         function enableAtapNo() {
-            document.getElementById('c_atap_no').disabled = false;
+            document.getElementById('c_atap_no').readOnly = false;
             const atapNoField = $('#c_atap_no');
             const amountField = $('#c_car_amount');
             const statusField = $('#status');
@@ -99,8 +99,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             statusField.val('');
 
             comboBoxMenu.classList.remove('disabled');
-            atapNoField.prop('disabled', false);
-            carTypeInput.disabled = false;
+            carTypeInput.readOnly = false;
 
             getAtapButton.style.backgroundColor = '';
             getAtapButton.style.borderColor = '';
@@ -139,13 +138,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
             if (atapNo !== '') {
                 comboBoxMenu.classList.add('disabled');
-                carTypeInput.disabled = true;
+                carTypeInput.readOnly = true;
                 getAtapButton.style.backgroundColor = 'green';
                 getAtapButton.style.borderColor = 'green';
                 // getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Click Me!';
             } else {
                 comboBoxMenu.classList.remove('disabled');
-                carTypeInput.disabled = false;
+                carTypeInput.readOnly = false;
                 getAtapButton.style.backgroundColor = '';
                 getAtapButton.style.borderColor = '';
                 getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
