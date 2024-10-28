@@ -112,14 +112,8 @@ include('../inc/header.php');
                                             <!-- <span class="fa fa-eye text-primary"></span> -->View
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item edit_or" href="javascript:void(0)" 
-                                        data-id="<?php echo $row['id']; ?>" 
-                                        data-account-no="<?php echo htmlspecialchars($row['c_account_no']); ?>" 
-                                        data-payment-type="<?php echo htmlspecialchars($row['c_or_type']); ?>" 
-                                        data-amount="<?php echo htmlspecialchars($row['c_or_amount']); ?>" 
-                                        data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>" 
-                                        data-pay-date="<?php echo htmlspecialchars($row['c_or_paydate']); ?>" 
-                                        data-encoder="<?php echo htmlspecialchars($row['c_encoded_by']); ?>">
+                                        <a class="dropdown-item edit_tenant" href="javascript:void(0)" 
+                                        data-id="<?php echo $row['id']; ?>">
                                             Edit
                                         </a>
                                         <div class="dropdown-divider"></div>
@@ -173,7 +167,6 @@ function loadModal(title, url, modalId) {
         }
     });
 }
-
 window._conf = function(msg, func, params) {
     $('#confirm_modal .modal-body').html(msg);
     $('#confirm_modal #confirm').off('click').on('click', function() {
@@ -181,43 +174,16 @@ window._conf = function(msg, func, params) {
     });
     $('#confirm_modal').modal('show');
 };
-
 </script>
 <script>
     $('#create_new_tenant').click(function() {
         loadModal('Create New Tenant', '../tenants/manage_tenant.php', '#createTenantModal');
     });
-</script>
-<script>
 
-$(document).ready(function() {
-    $('#c_account_no').on('input', function() {
-        const accountNo = $(this).val();
-        const buyerNameField = $('#buyer_name');
-        if (accountNo.length > 0) {
-            $.ajax({
-                type: 'POST',
-                url: '../../admin/car/get_buyer_details.php',
-                data: { account_no: accountNo },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        buyerNameField.val(response.name);
-                        buyerNameField.removeAttr('required');
-                    } else {
-                        buyerNameField.val('Unknown');
-                        buyerNameField.attr('required', 'required');
-                    }
-                }
-            });
-        } else {
-            buyerNameField.val('');
-            buyerNameField.attr('required', 'required');
-        }
+    $(document).on('click', '.edit_tenant', function() {
+        var accountId = $(this).data('id');
+        loadModal('Edit Tenant Details', '../tenants/manage_tenant.php?id=' + accountId, '#createCarModal');
     });
-    var table = $('#data-table').DataTable();
-});
-
 </script>
 </div>
 </body>

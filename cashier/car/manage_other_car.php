@@ -23,7 +23,7 @@
 
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, a.c_bank, b.c_name, b.c_phase,
+                    a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
                     b.c_block, b.c_lot, a.c_check_no, a.c_remarks
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
@@ -64,18 +64,52 @@
 <form id="other-car-form">
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <div class="form-group">
-                <label for="c_atap_no">ATAP No.</label>
-                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
+                <label for="c_atap_no">ATAP No.</label> 
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no" oninput="checkAtapNo()">
             </div>
         </div>
-        <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
+        <div class="col-sm-3" style="margin-top: 25px; padding-right: 5px;">
+            <a id="get_atap" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="disableAtapNo()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
+        <div class="col-sm-3" style="margin-top: 25px; padding-left: 5px;">
+            <a id="refresh_btn" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="enableAtapNo()">
+                <span class="fa fa-refresh"></span> Refresh
+            </a>
+        </div>
     </div>
+    <script>
+    function disableAtapNo() {
+        document.getElementById('c_atap_no').disabled = true;
+        toggleCarType(); 
+    }
+
+    function enableAtapNo() {
+        document.getElementById('c_atap_no').disabled = false;
+        const atapNoField = $('#c_atap_no');
+        const amountField = $('#c_car_amount');
+        const statusField = $('#status');
+        var comboBoxMenu = document.getElementById('comboBoxMenu_car');
+        var carTypeInput = document.getElementById('c_car_type');
+        var getAtapButton = document.getElementById('get_atap');
+
+        atapNoField.val('');
+        amountField.val('');
+        statusField.val('');
+
+        comboBoxMenu.classList.remove('disabled');
+        atapNoField.prop('disabled', false);
+        carTypeInput.disabled = false;
+
+        getAtapButton.style.backgroundColor = '';
+        getAtapButton.style.borderColor = '';
+        getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+        toggleCarType(); 
+    }
+    </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
@@ -99,6 +133,28 @@
             </div>
         </div>
     </div>
+    <script>
+        function checkAtapNo() {
+            var atapNo = document.getElementById('c_atap_no').value;
+            var comboBoxMenu = document.getElementById('comboBoxMenu_car');
+            var carTypeInput = document.getElementById('c_car_type');
+            var getAtapButton = document.getElementById('get_atap');
+
+            if (atapNo !== '') {
+                comboBoxMenu.classList.add('disabled');
+                carTypeInput.disabled = true;
+                getAtapButton.style.backgroundColor = 'green';
+                getAtapButton.style.borderColor = 'green';
+                // getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Click Me!';
+            } else {
+                comboBoxMenu.classList.remove('disabled');
+                carTypeInput.disabled = false;
+                getAtapButton.style.backgroundColor = '';
+                getAtapButton.style.borderColor = '';
+                getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+            }
+        }
+    </script>
     <script>
         $(document).ready(function () {
             $('#c_car_type').on('input', function () {
@@ -159,7 +215,6 @@
     });
 
     </script>
-
     <script>
     function toggleCarType() {
         var atapNo = document.getElementById('c_atap_no').value;
@@ -179,7 +234,6 @@
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
 
     <hr>
-
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" oninput="validateAlphaNumericInput(event)" required>
@@ -331,7 +385,6 @@
             </div>
         </div>
     </div>
-
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
@@ -601,6 +654,7 @@ $(document).ready(function() {
         $('#c_block').val('').removeClass('glow-effect');
         $('#c_lot').val('').removeClass('glow-effect');
         $('#c_car_amount').val('').removeClass('glow-effect');
+        $('#comboBoxMenu_car').val('').removeClass('glow-effect');
     }
 
     function populateForm(data) {

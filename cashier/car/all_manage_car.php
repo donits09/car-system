@@ -62,42 +62,97 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <div class="form-group">
-                <label for="c_atap_no">ATAP No.</label>
-                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
+                <label for="c_atap_no">ATAP No.</label> 
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no" oninput="checkAtapNo()">
             </div>
         </div>
-        <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
+        <div class="col-sm-3" style="margin-top: 25px; padding-right: 5px;">
+            <a id="get_atap" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="disableAtapNo()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
-    </div>
-    <div class="form-group" id="tran_type_container" style="display: none;">
-        <label for="c_tran_type">Payment Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
-            <select class="form-control" id="c_tran_type" name="c_tran_type">
-            </select>
-        </div>
-        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
-    </div>
-    <div class="form-group">
-        <div class="dropdown" id="car_type_container">
-            <label for="c_car_type">Transaction Type</label>
-            <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
-            <div class="dropdown-menu w-100" id="comboBoxMenu_car" style="max-height: 200px; overflow-y: auto;">
-                <?php
-                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'C' ORDER BY c_payment_type ASC";
-                $type_result = odbc_exec($conn, $car_type_query);
-                while ($row = odbc_fetch_array($type_result)) {
-                    echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
-                }
-                ?>
-            </div>
+        <div class="col-sm-3" style="margin-top: 25px; padding-left: 5px;">
+            <a id="refresh_btn" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="enableAtapNo()">
+                <span class="fa fa-refresh"></span> Refresh
+            </a>
         </div>
     </div>
     <script>
+        function disableAtapNo() {
+            document.getElementById('c_atap_no').disabled = true;
+            toggleCarType(); 
+        }
+
+        function enableAtapNo() {
+            document.getElementById('c_atap_no').disabled = false;
+            const atapNoField = $('#c_atap_no');
+            const amountField = $('#c_car_amount');
+            const statusField = $('#status');
+            var comboBoxMenu = document.getElementById('comboBoxMenu_car');
+            var carTypeInput = document.getElementById('c_car_type');
+            var getAtapButton = document.getElementById('get_atap');
+
+            atapNoField.val('');
+            amountField.val('');
+            statusField.val('');
+
+            comboBoxMenu.classList.remove('disabled');
+            atapNoField.prop('disabled', false);
+            carTypeInput.disabled = false;
+
+            getAtapButton.style.backgroundColor = '';
+            getAtapButton.style.borderColor = '';
+            getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+            toggleCarType(); 
+        }
+        </script>
+        <div class="form-group" id="tran_type_container" style="display: none;">
+            <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+            <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
+                <select class="form-control" id="c_tran_type" name="c_tran_type"></select>
+            </div>
+            <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
+        </div>
+        <div class="form-group">
+            <div class="dropdown" id="car_type_container">
+                <label for="c_car_type">Transaction Type</label>
+                <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
+                <div class="dropdown-menu w-100" id="comboBoxMenu_car" style="max-height: 200px; overflow-y: auto;">
+                    <?php
+                    $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'C' ORDER BY c_payment_type ASC";
+                    $type_result = odbc_exec($conn, $car_type_query);
+                    while ($row = odbc_fetch_array($type_result)) {
+                        echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+        <script>
+            function checkAtapNo() {
+                var atapNo = document.getElementById('c_atap_no').value;
+                var comboBoxMenu = document.getElementById('comboBoxMenu_car');
+                var carTypeInput = document.getElementById('c_car_type');
+                var getAtapButton = document.getElementById('get_atap');
+
+                if (atapNo !== '') {
+                    comboBoxMenu.classList.add('disabled');
+                    carTypeInput.disabled = true;
+                    getAtapButton.style.backgroundColor = 'green';
+                    getAtapButton.style.borderColor = 'green';
+                    // getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Click Me!';
+                } else {
+                    comboBoxMenu.classList.remove('disabled');
+                    carTypeInput.disabled = false;
+                    getAtapButton.style.backgroundColor = '';
+                    getAtapButton.style.borderColor = '';
+                    getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+                }
+            }
+        </script>
+        <script>
         $(document).ready(function () {
             $('#c_car_type').on('input', function () {
                 var input = $(this).val().toLowerCase();
@@ -136,21 +191,39 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         });
     </script>
     <script>
-        $(document).ready(function() {
+    $(document).ready(function() {
+        function updateAtapId(selectedId) {
+            $('#atap_id').val(selectedId);
+        }
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            //e.preventDefault();
-            var selectedValue = $(this).data('value');
-            updateAtapVal(selectedValue);
+            e.preventDefault();
+
+            var selectedValue = $(this).data('value'); 
+            var selectedId = $(this).data('id'); 
+
+            updateAtapId(selectedId); 
+            updateAtapVal(selectedValue); 
 
             $('#dropdownMenuButton').text(selectedValue);
-            $('#c_car_type').val(selectedValue); 
+            $('#c_car_type').val(selectedValue);
         });
-
         var initialSelectedValue = $('#c_car_type').val();
-        updateAtapVal(initialSelectedValue);
+        if (initialSelectedValue) {
+            updateAtapVal(initialSelectedValue);
+        }
+        $('#c_tran_type').change(function() {
+            var selectedOption = $(this).find(':selected');
+            var selectedValue = selectedOption.val();
+            var amount = selectedOption.data('amount'); 
+            var atap_val = selectedOption.text(); 
+
+            updateAtapId(selectedValue);
+            updateAtapAmount(amount); 
+            updateAtapVal(atap_val); 
+        });
     });
     </script>
     <script>
@@ -170,7 +243,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
-
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
@@ -209,7 +281,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>  
         </div>  
     </div>  
-
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
@@ -256,7 +327,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
@@ -283,7 +353,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-
     <div class="form-group hidden_fields">
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
@@ -296,26 +365,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
-<!-- <script>
-    function handleModeOfPaymentChange() {
-        var mop = document.getElementById('c_mop').value;
-        document.getElementById('c_bank_online').value = '';
-        document.getElementById('c_ref_no').value = '';
-        document.getElementById('c_bank_check').value = '';
-        document.getElementById('c_check_no').value = '';
-
-        if (mop == '2') {
-            document.getElementById('checkList').style.display = 'block';
-            document.getElementById('onlineBankList').style.display = 'none';
-        } else if (mop == '3') {
-            document.getElementById('onlineBankList').style.display = 'block';
-            document.getElementById('checkList').style.display = 'none';
-        } else {
-            document.getElementById('checkList').style.display = 'none';
-            document.getElementById('onlineBankList').style.display = 'none';
-        }
-    }
-</script> -->
 <script>
  $(document).ready(function() {
     $('#get_atap').on('click', function() {
@@ -404,17 +453,26 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         accField.val('');
     }
 
-    function clearTxt(){
+    function clearTxt() {
         const atapNoField = $('#c_atap_no');
         const amountField = $('#c_car_amount');
         const statusField = $('#status');
+        var comboBoxMenu = document.getElementById('comboBoxMenu_car');
+        var carTypeInput = document.getElementById('c_car_type');
+        var getAtapButton = document.getElementById('get_atap');
 
         atapNoField.val('');
         amountField.val('');
         statusField.val('');
 
-    }
+        comboBoxMenu.classList.remove('disabled');
+        atapNoField.prop('disabled', false);
+        carTypeInput.disabled = false;
 
+        getAtapButton.style.backgroundColor = '';
+        getAtapButton.style.borderColor = '';
+        getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+    }
     function populateForm(data) {
         const buyerNameField = $('#buyer_name');
         const amountField = $('#c_car_amount');
@@ -445,7 +503,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
         $('#c_account_no').trigger('input');
     }
-
 
     $('#c_account_no').on('input', function() {
         const accountNo = $(this).val();
@@ -482,33 +539,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
     }
 });
-
 </script>
 <script>
-    $(document).ready(function() {
-        function updateAtapId(selectedValue) {
-            $('#atap_id').val(selectedValue);
-        }
-
-        function updateAtapAmount(selectedValue) {
-            $('#c_car_amount').val(selectedValue);
-        }
-        function updateAtapVal(selectedValue) {
-            $('#atap_val').val(selectedValue);
-        }
-
-        $('#c_tran_type').change(function() {
-            var selectedOption = $(this).find(':selected');
-            var selectedValue = selectedOption.val();
-            var amount = selectedOption.data('amount'); 
-            var atap_val = selectedOption.text(); 
-
-            updateAtapId(selectedValue);
-            updateAtapAmount(amount);
-            updateAtapVal(atap_val); 
-        });
-    });
-
     function fetchTranType(atapNo) {
         $.ajax({
             url: 'fetch_tran_type.php',

@@ -31,6 +31,40 @@ require_once('../config.php');
     endif;
     }
 ?>
+<?php 
+if (isset($_GET['id']) && $_GET['id'] > 0) {
+    $get_tenant_query = "SELECT * FROM t_tenant_accounts WHERE id = ?";
+    $accountId = $_GET['id'];
+    $stmt = odbc_prepare($conn, $get_tenant_query);
+    odbc_execute($stmt, array($accountId));
+
+    if ($result = odbc_fetch_array($stmt)) {
+        $c_account_no = $result["c_account_no"];
+        $c_last_name = $result["c_last_name"];
+        $c_first_name = $result["c_first_name"];
+        $c_middle_name = $result["c_middle_name"];
+        $c_address = $result["c_address"];
+        $c_city_prov = $result["c_city_prov"];
+        $c_zip_code = $result["c_zip_code"];
+        $c_tel_no = $result["c_tel_no"];
+        $c_mobile_no = $result["c_mobile_no"];
+        $c_lot_area = $result["c_lot_area"];
+        $c_price_sqm = $result["c_price_sqm"];
+        $c_email = $result["c_email"];
+        $c_civil = $result["c_civil_status"];
+        $c_gender = $result["c_sex"];
+        $c_birthday = $result["c_birthday"];
+        $c_remarks = $result["c_remarks"];
+        $c_employment = $result["c_employment_status"];
+        $c_encoded_by = $result["c_encoded_by"];
+        $c_phase = $result["c_phase"];
+        $c_block = $result["c_block"];
+        $c_lot = $result["c_lot"];
+    }
+} else if (isset($_GET['c_account_no']) && $_GET['c_account_no'] > 0) {
+    $c_account_no = $_GET['c_account_no'];
+}
+?>
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <body>
@@ -106,65 +140,66 @@ require_once('../config.php');
     document.getElementById('c_lot').addEventListener('input', concatenateValues);
 </script>
 <form id="tenant-form" method="post" action="">
+        <input type="text" name="id" value="<?php echo isset($id) ? $id : '' ?>">
         <div class="col-md-4">
             <label for="lname" class="form-label">Last Name</label>
-            <input type="text" class="form-control txt" id="tenant_lname" name="tenant_lname">
+            <input type="text" class="form-control txt" id="tenant_lname" name="tenant_lname" value="<?php echo htmlspecialchars($c_last_name) ?>">
         </div>
         <div class="col-md-4">
             <label for="fname" class="form-label">First Name</label>
-            <input type="text" class="form-control txt" id="tenant_fname" name="tenant_fname">
+            <input type="text" class="form-control txt" id="tenant_fname" name="tenant_fname" value="<?php echo htmlspecialchars($c_first_name) ?>">
         </div>
         <div class="col-md-4">
             <label for="mname" class="form-label">Middle Name</label>
-            <input type="text" class="form-control txt" id="tenant_mname" name="tenant_mname">
+            <input type="text" class="form-control txt" id="tenant_mname" name="tenant_mname" value="<?php echo htmlspecialchars($c_middle_name) ?>">
         </div>
         <div class="col-md-4">
             <label for="address" class="form-label">Address</label>
-            <input type="text" class="form-control txt" id="tenant_address" name="tenant_address">
+            <input type="text" class="form-control txt" id="tenant_address" name="tenant_address" value="<?php echo htmlspecialchars($c_address) ?>">
         </div>
         <div class="col-md-4">
             <label for="city_prov" class="form-label">City/Province</label>
-            <input type="text" class="form-control txt" id="tenant_city_prov" name="tenant_city_prov">
+            <input type="text" class="form-control txt" id="tenant_city_prov" name="tenant_city_prov" value="<?php echo htmlspecialchars($c_city_prov) ?>">
         </div>
         <div class="col-md-4">
             <label for="zip" class="form-label">Zip Code</label>
-            <input type="text" class="form-control txt" id="tenant_zip" name="tenant_zip">
+            <input type="text" class="form-control txt" id="tenant_zip" name="tenant_zip" value="<?php echo htmlspecialchars($c_zip_code) ?>">
         </div>
         <div class="col-md-4">
             <label for="tel_no" class="form-label">Tel No.</label>
-            <input type="text" class="form-control txt" id="tenant_tel" name="tenant_tel">
+            <input type="text" class="form-control txt" id="tenant_tel" name="tenant_tel" value="<?php echo htmlspecialchars($c_tel_no) ?>">
         </div>
         <div class="col-md-4">
             <label for="mobile" class="form-label">Mobile #</label>
-            <input type="text" class="form-control txt" id="tenant_mobile" name="tenant_mobile">
+            <input type="text" class="form-control txt" id="tenant_mobile" name="tenant_mobile" value="<?php echo htmlspecialchars($c_mobile_no) ?>">
         </div>
         <div class="col-md-4">
             <label for="email" class="form-label">Email Address</label>
-            <input type="text" class="form-control txt" id="tenant_email" name="tenant_email">
+            <input type="text" class="form-control txt" id="tenant_email" name="tenant_email" value="<?php echo htmlspecialchars($c_email) ?>">
         </div>
         <div class="col-md-4">
             <label for="civil" class="form-label">Civil Status</label>
-            <input type="text" class="form-control txt" id="tenant_civil" name="tenant_civil">
+            <input type="text" class="form-control txt" id="tenant_civil" name="tenant_civil" value="<?php echo htmlspecialchars($c_civil) ?>">
         </div>
         <div class="col-md-4">
             <label for="birthday" class="form-label">Birthday</label>
-            <input type="date" class="form-control txt" id="tenant_birthday" name="tenant_birthday">
+            <input type="date" class="form-control txt" id="tenant_birthday" name="tenant_birthday" value="<?php echo htmlspecialchars($c_birthday) ?>">
         </div>
         <div class="col-md-4">
             <label for="gender" class="form-label">Gender</label>
-            <input type="text" class="form-control txt" id="tenant_gender" name="tenant_gender">
+            <input type="text" class="form-control txt" id="tenant_gender" name="tenant_gender" value="<?php echo htmlspecialchars($c_gender) ?>">
         </div>
         <div class="col-md-4">
             <label for="emp_status" class="form-label">Employment Status</label>
-            <input type="text" class="form-control txt" id="tenant_emp_status" name="tenant_emp_status">
+            <input type="text" class="form-control txt" id="tenant_emp_status" name="tenant_emp_status" value="<?php echo htmlspecialchars($c_gender) ?>">
         </div>
         <div class="col-md-4">
             <label for="area" class="form-label">Lot Area</label>
-            <input type="text" class="form-control txt" id="tenant_area" name="tenant_area">
+            <input type="text" class="form-control txt" id="tenant_area" name="tenant_area" value="<?php echo htmlspecialchars($c_lot_area) ?>">
         </div>
         <div class="col-md-4">
             <label for="price_sqm" class="form-label">Price Sqm</label>
-            <input type="text" class="form-control txt" id="tenant_sqm" name="tenant_sqm">
+            <input type="text" class="form-control txt" id="tenant_sqm" name="tenant_sqm" value="<?php echo htmlspecialchars($c_price_sqm) ?>">
         </div>
         <div class="col-md-12">
             <label for="remarks" class="form-label">
