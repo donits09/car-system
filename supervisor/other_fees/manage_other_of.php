@@ -487,7 +487,7 @@ $(document).ready(function() {
         } else {
             $.ajax({
                 type: 'POST',
-                url: '../../admin/other_fees/check_or_no.php',
+                url: '../../supervisor/other_fees/check_or_no.php',
                 data: { c_or_no: orNo },  
                 dataType: 'json',
                 success: function(response) {
@@ -765,7 +765,7 @@ function openPrintWindow() {
             }
         }
     </script>
-     <script>
+    <script>
         function toggleCheckDropdown() {
             var modeOfPayment = document.getElementById("c_mop_or").value;
             var checkList = document.getElementById("checkListOR");

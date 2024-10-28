@@ -64,7 +64,7 @@ if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetc
 /* Para sa banks shutaenabells kayong lahat! */
 $l_bank_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
                         LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
-                        WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' GROUP BY c_bank 
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' AND c_mop = '3' GROUP BY c_bank 
                         HAVING SUM(c_car_amount) > 0
                         ORDER BY c_bank; ";
 
@@ -153,7 +153,10 @@ if (empty($carData)) {
         $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $totalCashOnline += $cashAmount + $onlineAmount;
         $totalCheck += $checkAmount;
+        $totalCash += $cashAmount;
+        $totalOnline += $onlineAmount;
         $totalOfall += $cashAmount + $onlineAmount + $checkAmount;
+        $totalCashCheck += $cashAmount + $checkAmount;
 
         $html .= '
         <tr>
@@ -261,7 +264,7 @@ if (empty($carData)) {
     if (!empty($l_bank_list)) {
         $html .= '
         <div style="margin-top: 20px;">
-            <h4>Total amount of banks</h4>
+            <h4>Total amount of banks (Online)</h4>
             <table>
                 <thead>
                     <tr>
@@ -271,13 +274,23 @@ if (empty($carData)) {
                 </thead>
                 <tbody>';
     
+        $total_amount = 0;
+
         foreach ($l_bank_list as $bank => $bank_total) {
             $html .= '
             <tr>
-                <td class="pdf-font">' . htmlspecialchars($bank) . '</td>
-                <td class="pdf-font">' . number_format($bank_total, 2) . '</td>
+                <td class="pdf-font" style="width: 25%;">' . htmlspecialchars($bank) . '</td>
+                <td class="pdf-font" style="width: 25%;">' . number_format($bank_total, 2) . '</td>
             </tr>';
+        
+            $total_amount += $bank_total;
         }
+    
+        $html .= '
+            <tr>
+                <td class="pdf-font" style="width: 25%;"><strong>TOTAL ONLINE:</strong></td>
+                <td class="pdf-font" style="width: 25%;"><strong>' . number_format($total_amount, 2) . '</strong></td>
+            </tr>';
     
         $html .= '
                 </tbody>
@@ -301,6 +314,29 @@ if (empty($carData)) {
             </table>
         </div>';
     }  
+
+    /* ETO YUNG SA TOTAL NG CASH/ONLIN/CHECK */
+    $html .= '
+    <div style="margin-top: 40px;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Cash</th>
+                    <th>Check</th>
+                    <th>Online</th>
+                    <th>Total of Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCash, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCheck, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . "-" . number_format($totalOnline, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCashCheck, 2) . '<strong>' . '</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>';
 
 $html .= '</p>
     </div>

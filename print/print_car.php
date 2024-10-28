@@ -1,6 +1,8 @@
 <?php
 
 include('../config.php');
+require_once('../classes/Master.php');
+
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
         return false;
@@ -13,6 +15,7 @@ function fetchBuyerDetails($conn, $accountNo) {
     }
     return false;
 }
+
 function fetchCarDetails($conn, $carNo) {
     $query = "SELECT * FROM t_other_car_payment WHERE c_car_no = ?";
     $stmt = odbc_prepare($conn, $query);
@@ -41,12 +44,146 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         $carDetails = fetchCarDetails($conn, $row['c_car_no']);
         $c_remarks = $row['c_remarks'];
+
+        $master = new Master();
+        $module = "Car Print Management";
+        $notes = "PRINT CAR - " . "ACCT#" . $row['c_account_no'] . "  CAR#" . $row['c_car_no'];
+        $master->car_logs($module, $notes);
+
         ?>
 <!DOCTYPE html>
 <html>
 <head>
     <link rel="stylesheet" href="../dist/css/car_print.css">
     <style>
+        body {
+            position: relative;
+            font-size: 8px !important;
+        }
+        .container {
+            position: relative;
+            width: 500px;
+            padding: 20px;
+            box-sizing: border-box;
+            z-index: 2; 
+        }
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 280px;
+            width: 670px;
+            z-index: 1;
+            object-fit: cover;
+        }
+        input {
+            border: none;
+            width: 100px;
+            text-align: left;
+            background-color: transparent;
+        }
+        textarea{
+            width: 100%;
+            text-align: left;
+            font-weight: 300;
+            border: none;
+            background-color: transparent;
+            font-size: 12px !important;
+            resize: none;
+            overflow: hidden;
+        }
+        #c_current_date {
+            float: right;
+            margin-top: 70px;
+            margin-right: -200px;
+        }
+        #c_car_type {
+            float: right;
+            margin-top: 190px;
+            margin-right: -190px;
+            width: 300px;
+        }
+        #c_car_amount {
+            float: right;
+            margin-top: 165px;
+            margin-right: -340px;
+            width: 140px;
+        }
+        #c_car_amount_words {
+            float: right;
+            margin-top: 140px;
+            margin-right: -290px;
+            width: 340px;
+            height: auto;
+            line-height: 1.2em;
+            overflow: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        /* #c_car_no {
+            float: right;
+            margin-top: 60px;
+            margin-right: -410px;
+            width: 80px;
+        } */
+        #c_received {
+            text-transform: uppercase;
+            float: right;
+            margin-top: 80px;
+            margin-right: -390px;
+            width: 350px;
+            padding:0px;
+        }
+        #c_address {
+            text-transform: uppercase;
+            float: right;
+            margin-top: 115px;
+            margin-right: -360px;
+            width: 360px;
+            text-align: center;
+        }
+        #c_encoded_by {
+            text-transform: uppercase;
+            float: left;
+            margin-top: 5px;
+            width: auto;
+            margin-left:530px;
+            text-align: center;
+            font-size: 10px !important;
+        }
+        #c_loc{
+            text-transform: uppercase;
+            float:left;
+            margin-top: -80px;
+            margin-right: 145px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+        }
+        #c_acc_no{
+            text-transform: uppercase;
+            float: right;
+            margin-top: 50px;
+            margin-right: 100px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        .dynamic-margin {
+            width: 100px;
+            height: 100px;
+            margin-left:70px;
+            position:absolute;
+        }
+        #c_bank{
+            margin-top: 120px;
+            margin-right: 100px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
         .small-font {
             font-size: 12px;
             white-space: pre-wrap; 
@@ -60,7 +197,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             resize: none; 
         }
         #c_check_main{
-            margin-top:170px;
+            margin-top:140px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -75,22 +212,22 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         #c_paydate_main {
             float: left;
-            margin-top: -10px;
+            margin-top: -5px;
             width: auto;
-            margin-left:70px;
+            margin-left:90px;
             text-align: center;
             font-size: 10px !important;
         }
         #c_car_no {
             float: right;
-            margin-top: 55px;
-            margin-right: -360px;
+            margin-top: 45px;
+            margin-right: -430px;
             width: 80px;
         }
     </style>
 </head>
 <body onload="initializePage()">
-    <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
+    <!-- <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy"> -->
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">
@@ -101,7 +238,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
         <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
         
-        <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>">
+        <!-- <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>"> -->
         
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
@@ -160,19 +297,25 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
             if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
             } else {
-                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
-
-                if (odbc_execute($phase_stmt, array($c_phase))) {
-                    $phase_details = odbc_fetch_array($phase_stmt);
-
-                    if ($phase_details) {
-                        $loc = $phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot;
+                if (!empty($c_phase)) {
+                    $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                    $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+            
+                    if (odbc_execute($phase_stmt, array($c_phase))) {
+                        $phase_details = odbc_fetch_array($phase_stmt);
+            
+                        if ($phase_details) {
+                            $loc = $phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot;
+                        } else {
+                            $loc = '----- B' . $c_block . ' L' . $c_lot;
+                        }
                     }
+                } else {
+                    $loc = '----- B' . $c_block . ' L' . $c_lot;
                 }
             }
         ?>
-            <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>">
+            <!-- <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>"> -->
             <textarea name="c_received" id="c_received"><?php echo htmlspecialchars($c_name); ?></textarea>
             <textarea name="c_address" id="c_address">-----------------</textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
@@ -202,7 +345,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             dynamicMarginDiv.style.marginTop = '195px';
             cPayDateField.style.display = 'none';
         } else {
-            dynamicMarginDiv.style.marginTop = '210px';
+            dynamicMarginDiv.style.marginTop = '215px';
             cPayDateField.style.display = 'block';
         }
     </script>

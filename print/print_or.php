@@ -1,6 +1,8 @@
 <?php
 
 include('../config.php');
+require_once('../classes/Master.php');
+
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
         return false;
@@ -44,6 +46,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         $orDetails = fetchORDetails($conn, $row['c_or_no']);
         $c_remarks = $row['c_remarks'];
+
+        $master = new Master();
+        $module = "OR/SI Print Management";
+        $notes = "PRINT OR/SI - ACCT#" . $c_account_no . "  CAR#" . $row['c_or_no'];
+        $master->car_logs($module, $notes);
 
         if ($c_mop == 2){
             $c_or_paydate_1 = $c_or_paydate;
@@ -108,7 +115,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-weight: 300;
             border: none;
             background-color: transparent;
-            font-size: 11px !important;
+            font-size: 13px !important;
             resize: none;
             overflow: hidden;
         }
@@ -126,8 +133,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
             z-index: 10;
             float: left;
-            margin-top: -5px;
-            margin-left: 640px;
+            margin-top: 8px;
+            margin-left: 660px;
             width: 80px;
             font-size:16px;
         }
@@ -138,15 +145,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         
         #c_bank_main_1{
             margin-top: 320px;
-            margin-left: 275px;
+            margin-left: 285px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
         #c_bank_main_2{
-            margin-top: 330px;
-            margin-left: 275px;
+            margin-top: 335px;
+            margin-left: 280px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -162,15 +169,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         #c_paydate_main_1 {
             margin-top: 320px;
-            margin-left: 150px;
+            margin-left: 160px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
         #c_paydate_main_2 {
-            margin-top: 330px;
-            margin-left: 150px;
+            margin-top: 335px;
+            margin-left: 165px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -198,17 +205,17 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 12px !important;
             position:absolute;
         }
-        #c_check_main_1{
+        #c_check_main_1{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
             margin-top:320px;
-            margin-left:-30px;
+            margin-left:-10px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
         #c_check_main_2{
-            margin-top:330px;
-            margin-left:-30px;
+            margin-top:335px;
+            margin-left:-10px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -216,15 +223,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         #sign_check{
             margin-top:320px;
-            margin-left:-65px;
+            margin-left:-90px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
         #sign_ref{
-            margin-top:330px;
-            margin-left:-65px;
+            margin-top:335px;
+            margin-left:-90px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -258,12 +265,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
 
         #c_received {
-            text-transform: uppercase!important;
+            text-transform: uppercase !important;
+            position: relative;
             float: right;
-            margin-right:15px;
-            margin-top: 55px;
+            margin-right: 15px;
+            top: -45px;
             width: 350px;
-            padding:0px;
+            padding: 0px;
         }
         #c_current_date {
             float: right;
@@ -272,9 +280,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         #c_address {
             text-transform: uppercase;
+            position: relative;
             float: right;
-            margin-top: -10px;
-            margin-right: 3px;
+            top: -180px;
+            margin-right: 5px;
             width: 360px;
             text-align: left;
         }
@@ -343,7 +352,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             float: left;
             margin-top: 430px;
             width: auto;
-            margin-left:620px;
+            margin-left:630px;
             text-align: left;
             font-size: 10px !important;
             position:absolute;
@@ -390,7 +399,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy">
+    <!-- <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy"> -->
     <div class="container">
         <div class="box_middle">
             <input type="text" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">
@@ -459,15 +468,21 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
             if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
             } else {
-                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
-
-                if (odbc_execute($phase_stmt, array($c_phase))) {
-                    $phase_details = odbc_fetch_array($phase_stmt);
-
-                    if ($phase_details) {
-                        $loc = $phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot;
+                if (!empty($c_phase)) {
+                    $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                    $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+            
+                    if (odbc_execute($phase_stmt, array($c_phase))) {
+                        $phase_details = odbc_fetch_array($phase_stmt);
+            
+                        if ($phase_details) {
+                            $loc = $phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot;
+                        } else {
+                            $loc = '----- B' . $c_block . ' L' . $c_lot;
+                        }
                     }
+                } else {
+                    $loc = '----- B' . $c_block . ' L' . $c_lot;
                 }
             }
         ?>

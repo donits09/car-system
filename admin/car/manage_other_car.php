@@ -81,7 +81,7 @@
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
-        <input type="text" class="form-control" id="c_tran_type_single" style="display: none;" readonly>
+        <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
@@ -544,7 +544,24 @@ $(document).ready(function() {
                         populateForm(response.data);
                         fetchTranType(atapNo);
                         $('#car_type_container').hide();
-                        $('#tran_type_container').show();
+                        $('#tran_type_container').css({
+                                display: 'block',
+                                visibility: 'visible',
+                                opacity: 1
+                            }).show();
+
+                            setTimeout(function() {
+                                if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
+                                    //console.log('test');
+                                }
+
+                                if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
+                                    alert('No CAR transactions remaining for this ATAP #.');
+                                    clearTxtNoCar();
+                                    $('#btnsave').prop('disabled', true);
+                                }
+
+                            }, 100); 
                     }
                 } else {
                     $('#car_type_container').show();
@@ -562,6 +579,17 @@ $(document).ready(function() {
         });
     }
 
+    function clearTxtNoCar(){
+        const buyerNameField = $('#c_name');
+        const phaseField = $('#c_phase');
+        const blockField = $('#c_block');
+        const lotField = $('#c_lot');
+
+        buyerNameField.val('');
+        phaseField.val('');
+        blockField.val('');
+        lotField.val('');
+    }
     function clearTxt(){
         $('#c_atap_no').val('');
         $('#c_name').val('').removeClass('glow-effect');
