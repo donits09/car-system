@@ -189,7 +189,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             });
         });
     </script>
-        <script>
+    <script>
         $(document).ready(function() {
             function updateAtapId(selectedId) {
                 $('#atap_id').val(selectedId);

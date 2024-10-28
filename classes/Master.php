@@ -672,7 +672,7 @@ Class Master{
 						c_or_paydate = '$c_or_paydate',
 						c_or_amount = '$c_or_amount',
 						c_tran_updated = '$c_tran_date',
-						c_mop_or = '$c_mop_or',
+						c_mop = '$c_mop_or',
 						c_bank = '$c_bank',
 						c_check_no = '$c_check_no',
 						c_remarks = '$c_remarks'
@@ -811,6 +811,9 @@ Class Master{
 			$save = odbc_exec($this->conn, $insert);
 	
 			if ($save) {
+
+				/* may problem dito dhen */
+
 				if (!empty($atap_id)) {
 					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1, c_car_no ='$c_car_no' WHERE id = '$atap_id'";
 					$update_tran_type_result = odbc_exec($this->conn, $update_tran_type);
@@ -1208,6 +1211,7 @@ Class Master{
 		$c_account_no = '';
 		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
 		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop_or', '$c_bank', '$c_check_no', '$c_remarks','" . (!empty($atap_id) ? $atap_id : '0') . "'";
+
 	
 		$resp = array();
 	

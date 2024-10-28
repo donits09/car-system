@@ -34,10 +34,10 @@ include('../../inc/header.php');
         <h2 class="text-blue h4">Other Fees - Full List</h2>
         <hr>
             <a id="create_new_of" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New OR
+                <span class="fa fa-edit"></span> Create New OR/SI
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
-                <span class="fa fa-edit"></span> Create Other OR
+                <span class="fa fa-edit"></span> Create Other OR/SI
             </a>
             <div class="pd-20">
             <hr>
@@ -102,9 +102,7 @@ include('../../inc/header.php');
                         }
 
                         $or_list .= " ORDER BY a.c_tran_updated DESC";
-
                         /* echo $or_list; */
-
                         $stmt = odbc_prepare($conn, $or_list);
                         $result = odbc_execute($stmt, array($username));
 
@@ -174,24 +172,28 @@ include('../../inc/header.php');
                                             } else {
                                                 $c_phase = $row['c_phase'];
                                                 $c_block = $row['c_block'];
-                                                $c_lot = $row['c_lot'];
+                                                $c_lot = $row['c_lot'];     
 
                                                 if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
                                                     echo "-------------";
                                                 } else {
-                                                    $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                                                    $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+                                                    if (!empty($c_phase) && is_numeric($c_phase)) {
+                                                        $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                                                        $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
 
-                                                    if (odbc_execute($phase_stmt, array($c_phase))) {
-                                                        $phase_details = odbc_fetch_array($phase_stmt);
+                                                        if (odbc_execute($phase_stmt, array($c_phase))) {
+                                                            $phase_details = odbc_fetch_array($phase_stmt);
 
-                                                        if ($phase_details) {
-                                                            echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                            if ($phase_details) {
+                                                                echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                            } else {
+                                                                echo "-----";
+                                                            }
                                                         } else {
                                                             echo "-----";
                                                         }
                                                     } else {
-                                                        echo "-----";
+                                                        echo htmlspecialchars("-----" . ' B' . $c_block . ' L' . $c_lot);
                                                     }
                                                 }
                                             }

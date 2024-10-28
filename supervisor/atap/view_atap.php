@@ -120,19 +120,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                         if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
                                             echo "-------------";
                                         } else {
-                                            $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                                            $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+                                            if (!empty($c_phase) && is_numeric($c_phase)) {
+                                                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                                                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
 
-                                            if (odbc_execute($phase_stmt, array($c_phase))) {
-                                                $phase_details = odbc_fetch_array($phase_stmt);
+                                                if (odbc_execute($phase_stmt, array($c_phase))) {
+                                                    $phase_details = odbc_fetch_array($phase_stmt);
 
-                                                if ($phase_details) {
-                                                    echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                    if ($phase_details) {
+                                                        echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                    } else {
+                                                        echo "-----";
+                                                    }
                                                 } else {
                                                     echo "-----";
                                                 }
                                             } else {
-                                                echo "-----";
+                                                echo htmlspecialchars("-----" . ' B' . $c_block . ' L' . $c_lot);
                                             }
                                         }
                                     }

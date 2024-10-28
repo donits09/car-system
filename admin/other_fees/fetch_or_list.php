@@ -56,6 +56,17 @@ if (!empty($account_no)) {
                 </td>
                 <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
+                <!-- <td class="text-center"><?php 
+                    if ($row['status'] == 0){
+                        echo  '<span class="badge badge-warning">PENDING</span>'; 
+                    } else if($row['status'] == 1){
+                        echo  '<span class="badge badge-primary">PAID</span>'; 
+                    }else if($row['status'] == 2){
+                        echo  '<span class="badge badge-success">PARTIAL</span>'; 
+                    } else {
+                        echo  '<span class="badge badge-danger">CANCELLED</span>'; 
+                    } ?>
+                </td> -->
                 <td class="text-center">
                     <?php
                     $c_encoded_by = $row['c_encoded_by'];
@@ -89,9 +100,12 @@ if (!empty($account_no)) {
                         <a class="dropdown-item" href="../../print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
                             Print
                         </a>
-                        <div class="dropdown-divider <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>"></div>
-                        <a class="dropdown-item delete_or <?php echo ($row['status'] != 0) ? 'd-none' : ''; ?>" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-no="<?php echo $row['c_or_no']; ?>">
-                            <!-- <span class="fa fa-ban text-danger"></span>  -->Cancel
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item delete_or_spec" href="javascript:void(0)" 
+                            data-atap-no="<?php echo $row['c_atap_no']; ?>" 
+                            data-id="<?php echo $row['id']; ?>" 
+                            data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
+                        Cancel
                         </a>
                     </div>
                 </td>
@@ -148,9 +162,50 @@ if (!empty($account_no)) {
         $('#confirm_modal').modal('show');
     };
 
-    $(document).on('click', '.delete_or', function() {
-        var orId = $(this).data('id');
-        var orNo = $(this).data('no');
-        _conf("Are you sure you want to cancel this transaction permanently?", delete_or, [orId, orNo]);
+    function delete_or_spec(orId, orNo, atapNo) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=delete_or",
+        method: "POST",
+        data: { orId: orId, orNo: orNo, atapNo: atapNo }, 
+        dataType: "json",
+        error: function(err) {
+            console.log(err);
+            alert_toast("An error occurred while processing your request.", 'error');
+            end_loader(); 
+        },
+        success: function(resp) {
+            if (resp) {
+                if (resp.status === 'success') {
+                    alert_toast(resp.msg, 'success'); 
+                    setTimeout(function() {
+                        $('#confirm_modal').modal('hide'); 
+                        $('body').removeClass('modal-open'); 
+                        $('.modal-backdrop').remove(); 
+                        $('.delete_or[data-id="' + orId + '"]').closest('tr').remove(); 
+                        updateORList();
+                    }, 1000);
+                } else if (resp.status === 'failed' && resp.err) {
+                    alert_toast("Error: " + resp.err, 'error'); 
+                } else {
+                    alert_toast("An unexpected response occurred: " + JSON.stringify(resp), 'error'); 
+                }
+            } else {
+                alert_toast("No response from the server.", 'error'); 
+            }
+            end_loader(); 
+        }
     });
+}
+
+</script>
+<script>
+$(document).on('click', '.delete_or_spec', function() {
+    var orId = $(this).data('id');
+    var orNo = $(this).data('or-no');
+    var atapNo = $(this).data('atap-no');
+    
+    window._conf("Are you sure you want to cancel this OR?", delete_or_spec, [orId, orNo, atapNo]);
+});
+
 </script>
