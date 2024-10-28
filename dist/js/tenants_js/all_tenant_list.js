@@ -39,13 +39,7 @@ $(document).ready(function() {
     
     $(document).on('click', '.edit_tenant', function() {
         var accountId = $(this).data('id');
-        var accountNo = $(this).data('account-no');
-    
-        if (!accountNo) {
-            loadModal('Edit OR Details', '../other_fees/manage_other_of.php?id=' + accountId, '#createCarModal');
-        } else {
-            loadModal('Edit OR Details', '../other_fees/manage_of.php?id=' + accountId, '#createCarModal');
-        }
+        loadModal('Edit Tenant Details', 'manage_tenant.php?id=' + accountId, '#createCarModal');
     });
 
     window._conf = function(msg, func, params) {
