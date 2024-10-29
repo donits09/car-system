@@ -56,13 +56,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
-        <div class="col-sm-6">
+    <div class="col-sm-6">
             <div class="form-group">
                 <label for="c_atap_no_or">ATAP No.</label>
                 <input type="number" class="form-control" id="c_atap_no_or" name="c_atap_no_or" oninput="checkAtapNo()">
             </div>
         </div>
-        <div class="col-sm-3" style="margin-top: 25px; padding-left: 5px;">
+        <div class="col-sm-3" style="margin-top: 25px; padding-right: 5px;">
             <a id="get_atap_or" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="toggleCarTypeOR(); disableAtapNo()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>

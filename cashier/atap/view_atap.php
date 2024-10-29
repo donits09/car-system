@@ -288,10 +288,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             <th colspan="3" class="text-right">Total Amount:</th>
                             <th class="text-right"><?php echo number_format($totalAmount, 2); ?></th>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="6" class="text-center">
                                 <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" 
                                     <?php echo (!$enableSaveButton) ? 'disabled' : ''; ?>>Save</button>
+                            </td>
+                        </tr> -->
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;">Save</button>
                             </td>
                         </tr>
                     </tfoot>

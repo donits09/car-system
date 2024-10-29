@@ -176,7 +176,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         <tr>
                             <td>
                                 <div class="dropdown">
-                                    <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
+                                    <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" value="<?php echo htmlspecialchars($type['c_tran_type'] ?? ''); ?>">
                                     <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                                         <?php
                                         $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
@@ -186,11 +186,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                         }
                                         ?>
                                     </div>
-                                    <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
+                                    <input type="text" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type'] ?? ''); ?>">
+                                    <input type="text" name="payment_status[]" value="<?php echo htmlspecialchars($type['payment_status'] ?? ''); ?>">
                                 </div>
                                 <script>
                                 $(document).ready(function () {
-                                 
                                     $(document).on('input', '.c_car_type', function () {
                                         var input = $(this).val().toLowerCase();
                                         var comboBoxMenu = $(this).siblings('.comboBoxMenu');
@@ -288,8 +288,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     }
                                     ?>
                                 </div>
-                                <input type="hidden" name="transaction_type[]" class="transaction-type-input">
-                                <input type="hidden" name="payment_status[]">
+                                <input type="text" name="transaction_type[]" class="transaction-type-input">
+                                <input type="text" name="payment_status[]">
                             </div>
                         </td>
                         <td>
@@ -579,8 +579,8 @@ $(document).ready(function() {
                         <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
                             ${dropdownOptions}
                         </div>
-                        <input type="hidden" name="transaction_type[]">
-                        <input type="hidden" name="payment_status[]">
+                        <input type="text" name="transaction_type[]">
+                        <input type="text" name="payment_status[]">
                     </div>
                 </td>
                 <td>
