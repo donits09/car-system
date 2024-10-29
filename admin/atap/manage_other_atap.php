@@ -256,7 +256,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             </script>
                             </td>
                             <td>
-                                <span class="payment-status">
+                                <span class="payment-status-text">
                                     <?php
                                     $c_payment = $type['c_tran_type'];
                                     $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
@@ -412,7 +412,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         var hiddenInput = this.closest('.dropdown').querySelector('input[type="hidden"]');
                         hiddenInput.value = this.getAttribute('data-value');
 
-                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status');
+                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status-text');
                         var status = this.getAttribute('data-status').trim(); 
                         var statusText = '';
 
@@ -552,108 +552,110 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $('#transaction-table .remove-row').prop('disabled', rowCount <= 1);
         }
 
-        function initializeDropdown() {
-            $('.dropdown-menu .dropdown-item').off('click').on('click', function(event) {
-                //event.preventDefault();
-                var $dropdown = $(this).closest('.dropdown');
-                var $input = $dropdown.find('input[name="c_car_type"]');
-                var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
-                var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
-                var $statusText = $dropdown.closest('tr').find('.payment-status-text');
-                var paymentStatus = $(this).data('status');
-                $input.val($(this).data('value'));
-                $hiddenInput.val($(this).data('value'));
-                $hiddenStatusInput.val(paymentStatus);
+$(document).ready(function() {
+    function initializeDropdown() {
+        $('.dropdown-menu a').off('click').on('click', function(event) {
+            //event.preventDefault();
+            var $dropdown = $(this).closest('.dropdown');
+            var $input = $dropdown.find('input[name="c_car_type"]');
+            var $hiddenInput = $dropdown.find('input[name="transaction_type[]"]');
+            var $hiddenStatusInput = $dropdown.find('input[name="payment_status[]"]');
+            var $statusText = $dropdown.closest('tr').find('.payment-status-text');
+            var paymentStatus = $(this).data('status');
+            $input.val($(this).data('value'));
+            $hiddenInput.val($(this).data('value'));
+            $hiddenStatusInput.val(paymentStatus);
 
-                if (paymentStatus.trim() === 'C') {
-                    $statusText.html('<span class="badge badge-secondary">CAR</span>');
-                } else if (paymentStatus.trim() === 'ST') {
-                    $statusText.html('<span class="badge badge-secondary">Special</span>');
-                } else if (paymentStatus.trim() === 'O') {
-                    $statusText.html('<span class="badge badge-secondary">OR</span>');
-                } else {
-                    $statusText.html('<span class="badge badge-secondary">Other</span>');
-                }
-
-                $dropdown.find('.dropdown-item').removeClass('active');
-                $(this).addClass('active');
-
-                $dropdown.find('.dropdown-menu').hide();
-            });
-
-            $('.dropdown input[name="c_car_type"]').off('input').on('input', function () {
-                var input = $(this).val().toLowerCase();
-                var $menu = $(this).siblings('.dropdown-menu');
-                var hasVisibleOptions = false;
-                $menu.find('.dropdown-item').each(function () {
-                    if ($(this).text().toLowerCase().startsWith(input)) {
-                        $(this).show();
-                        hasVisibleOptions = true;
-                    } else {
-                        $(this).hide();
-                    }
-                });
-
-                $menu.toggle(hasVisibleOptions);
-            });
-
-            $('.dropdown input[name="c_car_type"]').off('focus click').on('focus click', function () {
-                var $menu = $(this).siblings('.dropdown-menu');
-                $menu.show();
-            });
-
-            // $(document).off('click.dropdown').on('click.dropdown', function (e) {
-            //     if (!$(e.target).closest('.dropdown').length) {
-            //         $('.dropdown-menu').hide();
-            //     }
-            // });
-
-            function positionDropdown() {
-                $('.dropdown').each(function () {
-                    var $input = $(this).find('input[name="c_car_type"]');
-                    var $menu = $(this).find('.dropdown-menu');
-                    var inputOffset = $input.offset();
-                    $menu.css({
-                        top: inputOffset.top + $input.outerHeight(),
-                        left: inputOffset.left,
-                        width: $input.outerWidth()
-                    });
-                });
+            if (paymentStatus.trim() === 'C') {
+                $statusText.html('<span class="badge badge-secondary">CAR</span>');
+            } else if (paymentStatus.trim() === 'ST') {
+                $statusText.html('<span class="badge badge-secondary">Special</span>');
+            } else if (paymentStatus.trim() === 'O') {
+                $statusText.html('<span class="badge badge-secondary">OR</span>');
+            } else {
+                $statusText.html('<span class="badge badge-secondary">Other</span>');
             }
 
-            $(window).on('resize', positionDropdown);
-            positionDropdown();
+            $dropdown.find('.dropdown-item').removeClass('active');
+            $(this).addClass('active');
+
+            $dropdown.find('.dropdown-menu').hide();
+        });
+
+        $('.dropdown input[name="c_car_type"]').off('input').on('input', function () {
+            var input = $(this).val().toLowerCase();
+            var $menu = $(this).siblings('.dropdown-menu');
+            var hasVisibleOptions = false;
+            $menu.find('.dropdown-item').each(function () {
+                if ($(this).text().toLowerCase().startsWith(input)) {
+                    $(this).show();
+                    hasVisibleOptions = true;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            $menu.toggle(hasVisibleOptions);
+        });
+
+        $('.dropdown input[name="c_car_type"]').off('focus click').on('focus click', function () {
+            var $menu = $(this).siblings('.dropdown-menu');
+            $menu.show();
+        });
+
+        // $(document).off('click.dropdown').on('click.dropdown', function (e) {
+        //     if (!$(e.target).closest('.dropdown').length) {
+        //         $('.dropdown-menu').hide();
+        //     }
+        // });
+
+        function positionDropdown() {
+            $('.dropdown').each(function () {
+                var $input = $(this).find('input[name="c_car_type"]');
+                var $menu = $(this).find('.dropdown-menu');
+                var inputOffset = $input.offset();
+                $menu.css({
+                    top: inputOffset.top + $input.outerHeight(),
+                    left: inputOffset.left,
+                    width: $input.outerWidth()
+                });
+            });
         }
 
-        $('#transaction-table').on('click', '.remove-row', function() {
-            $(this).closest('tr').remove();
-            calculateTotal();
-            checkRemoveButton();
-        });
+        $(window).on('resize', positionDropdown);
+        positionDropdown();
+    }
 
-        $('#add-row').on('click', function() {
-            let newRow = `<tr>
-                <td>
-                    <div class="dropdown">
-                        <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" name="c_car_type" placeholder="Type or select an option" autocomplete="off">
-                        <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
-                            ${dropdownOptions}
-                        </div>
-                        <input type="hidden" name="transaction_type[]">
-                        <input type="hidden" name="payment_status[]">
+    $('#transaction-table').on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
+        calculateTotal();
+        checkRemoveButton();
+    });
+
+    $('#add-row').on('click', function() {
+        let newRow = `<tr>
+            <td>
+                <div class="dropdown">
+                    <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" name="c_car_type" placeholder="Type or select an option" autocomplete="off">
+                    <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
+                        ${dropdownOptions}
                     </div>
-                </td>
-                <td>
-                    <span class="payment-status-text"></span>
-                </td>
-                <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-            </tr>`;
-            $('#transaction-table tbody').append(newRow);
-            initializeDropdown();
-            calculateTotal();
-            checkRemoveButton();
-        });
+                    <input type="hidden" name="transaction_type[]">
+                    <input type="hidden" name="payment_status[]">
+                </div>
+            </td>
+            <td>
+                <span class="payment-status-text"></span>
+            </td>
+            <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
+            <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
+        </tr>`;
+        $('#transaction-table tbody').append(newRow);
+        initializeDropdown();
+        calculateTotal();
+        checkRemoveButton();
+    });
+});
 
         $('#transaction-table').on('input', '.transaction-amount', function() {
             calculateTotal();

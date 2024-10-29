@@ -187,7 +187,6 @@
             $('#c_car_type').on('focus click', function () {
                 $('#comboBoxMenu_car').show();
             });
-
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('.dropdown').length) {
                     $('#comboBoxMenu_car').hide();
@@ -290,7 +289,6 @@
                     document.getElementById('comboBoxMenu_car').style.display = 'none';
                 });
             });
-
             document.getElementById('c_car_type').addEventListener('focus', function() {
                 document.getElementById('comboBoxMenu_car').style.display = 'block';
             });
@@ -478,7 +476,6 @@ $(document).ready(function() {
             alert('The selected transaction type is Special.');
             valid = false;
         }
-        
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
@@ -648,7 +645,6 @@ $(document).ready(function() {
        const buyerNameField = $('#c_name');
         buyerNameField.val('');
     }
-
     function clearTxt(){
         $('#c_atap_no').val('');
         $('#c_name').val('').removeClass('glow-effect');
@@ -657,8 +653,6 @@ $(document).ready(function() {
         $('#c_lot').val('').removeClass('glow-effect');
         $('#c_car_amount').val('').removeClass('glow-effect');
         $('#comboBoxMenu_car').val('').removeClass('glow-effect');
-        
-
     }
 
     function populateForm(data) {

@@ -63,18 +63,51 @@
 <form id="other-car-form">
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <div class="form-group">
-                <label for="c_atap_no">ATAP No.</label>
-                <input type="text" class="form-control" id="c_atap_no" name="c_atap_no">
+                <label for="c_atap_no">ATAP No.</label> 
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no" oninput="checkAtapNo()">
             </div>
         </div>
-        <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
+        <div class="col-sm-3" style="margin-top: 25px; padding-right: 5px;">
+            <a id="get_atap" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="disableAtapNo()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
+        <div class="col-sm-3" style="margin-top: 25px; padding-left: 5px;">
+            <a id="refresh_btn" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="enableAtapNo()">
+                <span class="fa fa-refresh"></span> Refresh
+            </a>
+        </div>
     </div>
+    <script>
+    function disableAtapNo() {
+        document.getElementById('c_atap_no').readOnly = true;
+        toggleCarType(); 
+    }
+
+    function enableAtapNo() {
+        document.getElementById('c_atap_no').readOnly = false;
+        const atapNoField = $('#c_atap_no');
+        const amountField = $('#c_car_amount');
+        const statusField = $('#status');
+        var comboBoxMenu = document.getElementById('comboBoxMenu_car');
+        var carTypeInput = document.getElementById('c_car_type');
+        var getAtapButton = document.getElementById('get_atap');
+
+        atapNoField.val('');
+        amountField.val('');
+        statusField.val('');
+
+        comboBoxMenu.classList.remove('disabled');
+        carTypeInput.readOnly = false;
+
+        getAtapButton.style.backgroundColor = '';
+        getAtapButton.style.borderColor = '';
+        getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+        toggleCarType(); 
+    }
+    </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
@@ -85,12 +118,11 @@
     </div>
     <div class="form-group">
         <div class="dropdown" id="car_type_container">
-            <label for="c_car_type">Transaction Type</label>
-           
+        <label for="c_car_type">Transaction Type</label>
             <input type="text" class="form-control" oninput="validateAlphaNumericInput(event)" id="c_car_type" name="c_car_type" placeholder="Type or select an option" autocomplete="off" value="<?php echo isset($c_car_type) ? htmlspecialchars($c_car_type, ENT_QUOTES, 'UTF-8') : ''; ?>">
-            <div class="dropdown-menu w-100" id="comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
+            <div class="dropdown-menu w-100" id="comboBoxMenu_car" style="max-height: 200px; overflow-y: auto;">
                 <?php
-                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status != 'O' ORDER BY c_payment_type ASC";
+                $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'C' ORDER BY c_payment_type ASC";
                 $type_result = odbc_exec($conn, $car_type_query);
                 while ($row = odbc_fetch_array($type_result)) {
                     echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
@@ -100,11 +132,33 @@
         </div>
     </div>
     <script>
+        function checkAtapNo() {
+            var atapNo = document.getElementById('c_atap_no').value;
+            var comboBoxMenu = document.getElementById('comboBoxMenu_car');
+            var carTypeInput = document.getElementById('c_car_type');
+            var getAtapButton = document.getElementById('get_atap');
+
+            if (atapNo !== '') {
+                comboBoxMenu.classList.add('disabled');
+                carTypeInput.readOnly = true;
+                getAtapButton.style.backgroundColor = 'green';
+                getAtapButton.style.borderColor = 'green';
+                // getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Click Me!';
+            } else {
+                comboBoxMenu.classList.remove('disabled');
+                carTypeInput.readOnly = false;
+                getAtapButton.style.backgroundColor = '';
+                getAtapButton.style.borderColor = '';
+                getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+            }
+        }
+    </script>
+    <script>
         $(document).ready(function () {
             $('#c_car_type').on('input', function () {
                 var input = $(this).val().toLowerCase();
                 var hasVisibleOptions = false;
-                $('#comboBoxMenu .dropdown-item').each(function () {
+                $('#comboBoxMenu_car .dropdown-item').each(function () {
                     if ($(this).text().toLowerCase().startsWith(input)) {
                         $(this).show();
                         hasVisibleOptions = true;
@@ -114,30 +168,28 @@
                 });
 
                 if (hasVisibleOptions) {
-                    $('#comboBoxMenu').show();
+                    $('#comboBoxMenu_car').show();
                 } else {
-                    $('#comboBoxMenu').hide();
+                    $('#comboBoxMenu_car').hide();
                 }
             });
 
-            $('#comboBoxMenu').on('click', '.dropdown-item', function () {
+            $('#comboBoxMenu_car').on('click', '.dropdown-item', function () {
                 var selectedText = $(this).data('value');
                 $('#c_car_type').val(selectedText);
-                $('#comboBoxMenu').hide();
+                $('#comboBoxMenu_car').hide();
             });
 
             $('#c_car_type').on('focus click', function () {
-                $('#comboBoxMenu').show();
+                $('#comboBoxMenu_car').show();
             });
-
             $(document).on('click', function (e) {
                 if (!$(e.target).closest('.dropdown').length) {
-                    $('#comboBoxMenu').hide();
+                    $('#comboBoxMenu_car').hide();
                 }
             });
         });
     </script>
-
     <script>
         $(document).ready(function() {
       
@@ -231,17 +283,16 @@
                 item.addEventListener('click', function() {
                     var value = this.getAttribute('data-value');
                     document.getElementById('c_car_type').value = value;
-                    document.getElementById('comboBoxMenu').style.display = 'none';
+                    document.getElementById('comboBoxMenu_car').style.display = 'none';
                 });
             });
-
             document.getElementById('c_car_type').addEventListener('focus', function() {
-                document.getElementById('comboBoxMenu').style.display = 'block';
+                document.getElementById('comboBoxMenu_car').style.display = 'block';
             });
 
             document.getElementById('c_car_type').addEventListener('blur', function() {
                 setTimeout(function() {
-                    document.getElementById('comboBoxMenu').style.display = 'none';
+                    document.getElementById('comboBoxMenu_car').style.display = 'none';
                 }, 200);
             });
         });
@@ -396,8 +447,14 @@
 <script>
 $(document).ready(function() {
     
+    /* Avoid Enter */
     $('#other-car-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
+            var target = event.target;
+            
+            if ($(target).is('textarea')) {
+                return true;
+            }
             event.preventDefault();
         }
     });
@@ -407,6 +464,18 @@ $(document).ready(function() {
         var carNo = $('#c_car_no').val();
         const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
         let valid = true;
+
+        let atapVal = $('#c_tran_type_single').val(); 
+        if (!atapVal) {
+            atapVal = $('#atap_val').val(); 
+        }else{
+            atapVal = $('#c_car_type').val(); 
+        }
+
+        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+            alert('The selected transaction type is Special.');
+            valid = false;
+        }
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
@@ -445,8 +514,12 @@ $(document).ready(function() {
                         $('.modal-backdrop').remove();
                         location.reload();
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'failed') {
+                    if (resp.msg === "CAR type does not exist.") {
+                        alert_toast("CAR type does not exist.", 'error');
+                    } else if (resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    }
                 } else {
                     alert_toast("An unexpected error occurred", 'error');
                 }
@@ -513,55 +586,44 @@ $(document).ready(function() {
             dataType: 'json',
             success: function(response) {
                 if (response.status === 'success') {
-                    // const appStats = $('#approval_status').val();
-                    // if (response.data.approval_status === '0') {
-                    //     $('#car_type_container').show();
-                    //     $('#tran_type_container').hide();
-                    //     alert('The selected ATAP requires approval.');
-                    //     clearTxt();
-                    // }else if (response.data.approval_status === '3') {
-                    //     $('#car_type_container').show();
-                    //     $('#tran_type_container').hide();
-                    //     alert('The selected ATAP was disapproved.');
-                    //     clearTxt();
-                    // }else 
-                    if (response.data.status === '1') {
+                    const data = response.data;
+
+                    if (data.status === '1') {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert("This ATAP has already been PAID.");
                         clearTxt();
-                    } else if (response.data.status === '3') {
+                    } else if (data.status === '3') {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert('This ATAP has already been CANCELLED');
                         clearTxt();
-                    } else if ((response.data.status === '0' || response.data.status === '2') && (response.data.c_account_no !== '' && response.data.c_account_no !== null)) {
+                    } else if ((data.status === '0' || data.status === '2') && data.c_account_no) {
                         $('#car_type_container').show();
                         $('#tran_type_container').hide();
                         alert('The selected ATAP is a regular account.');
                         clearTxt();
-                    }else {
+                    } else {
                         populateForm(response.data);
                         fetchTranType(atapNo);
                         $('#car_type_container').hide();
                         $('#tran_type_container').css({
-                                display: 'block',
-                                visibility: 'visible',
-                                opacity: 1
-                            }).show();
+                            display: 'block',
+                            visibility: 'visible',
+                            opacity: 1
+                        }).show();
 
-                            setTimeout(function() {
-                                if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
-                                    //console.log('test');
-                                }
+                        setTimeout(function() {
+                            if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
+                                //console.log('test');
+                            }
 
-                                if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
-                                    alert('No CAR transactions remaining for this ATAP #.');
-                                    clearTxtNoCar();
-                                    $('#btnsave').prop('disabled', true);
-                                }
-
-                            }, 100); 
+                            if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
+                                alert('No CAR transactions remaining for this ATAP #.');
+                                clearTxtNoCar();
+                                $('#btnsave').prop('disabled', true);
+                            }
+                        }, 100); 
                     }
                 } else {
                     $('#car_type_container').show();
@@ -597,6 +659,7 @@ $(document).ready(function() {
         $('#c_block').val('').removeClass('glow-effect');
         $('#c_lot').val('').removeClass('glow-effect');
         $('#c_car_amount').val('').removeClass('glow-effect');
+        $('#comboBoxMenu_car').val('').removeClass('glow-effect');
     }
 
     function populateForm(data) {

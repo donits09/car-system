@@ -176,7 +176,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         <tr>
                             <td>
                                 <div class="dropdown">
-                                    <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" value="<?php echo htmlspecialchars($type['c_tran_type'] ?? ''); ?>">
+                                    <input type="text" class="form-control c_car_type" oninput="validateAlphaNumericInput(event)" name="c_car_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
                                     <div class="dropdown-menu w-100 comboBoxMenu" style="max-height: 200px; overflow-y: auto;">
                                         <?php
                                         $car_type_query = "SELECT DISTINCT c_payment_type, id, payment_status FROM t_car_type WHERE status = 0 ORDER BY c_payment_type ASC";
@@ -186,8 +186,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                         }
                                         ?>
                                     </div>
-                                    <input type="text" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type'] ?? ''); ?>">
-                                    <input type="text" name="payment_status[]" value="<?php echo htmlspecialchars($type['payment_status'] ?? ''); ?>">
+                                    <input type="hidden" name="transaction_type[]" value="<?php echo htmlspecialchars($type['c_tran_type']); ?>">
                                 </div>
                                 <script>
                                 $(document).ready(function () {
@@ -239,7 +238,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             </script>
                             </td>
                             <td>
-                                <span class="payment-status">
+                                <span class="payment-status-text">
                                     <?php
                                     $c_payment = $type['c_tran_type'];
                                     $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
@@ -288,8 +287,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     }
                                     ?>
                                 </div>
-                                <input type="text" name="transaction_type[]" class="transaction-type-input">
-                                <input type="text" name="payment_status[]">
+                                <input type="hidden" name="transaction_type[]" class="transaction-type-input">
+                                <input type="hidden" name="payment_status[]">
                             </div>
                         </td>
                         <td>
@@ -394,7 +393,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         var hiddenInput = this.closest('.dropdown').querySelector('input[type="hidden"]');
                         hiddenInput.value = this.getAttribute('data-value');
 
-                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status');
+                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status-text');
                         var status = this.getAttribute('data-status').trim(); 
                         var statusText = '';
 
@@ -579,8 +578,8 @@ $(document).ready(function() {
                         <div class="dropdown-menu w-100" style="max-height: 200px; overflow-y: auto;">
                             ${dropdownOptions}
                         </div>
-                        <input type="text" name="transaction_type[]">
-                        <input type="text" name="payment_status[]">
+                        <input type="hidden" name="transaction_type[]">
+                        <input type="hidden" name="payment_status[]">
                     </div>
                 </td>
                 <td>
@@ -588,7 +587,6 @@ $(document).ready(function() {
                 </td>
                 <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
                 <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
-                
             </tr>`;
             $('#transaction-table tbody').append(newRow);
             initializeDropdown();
@@ -596,7 +594,6 @@ $(document).ready(function() {
             checkRemoveButton();
         });
 });
-       
 
 $('#transaction-table').on('input', '.transaction-amount', function() {
     calculateTotal();
@@ -624,14 +621,12 @@ $('#atap-form').submit(function(e) {
     $(this).data('formSubmitting', true);
 
     const buyerName = $('#c_name').val();
-
     let valid = true;
 
     if (!buyerName || buyerName === 'Unknown') {
         alert('Name field is required.');
         valid = false;
     }
-
     $('input[name="c_car_type"]').each(function () {
         const carType = $(this).val().toLowerCase();
         const dropdownMenu = $(this).siblings('.dropdown-menu');
