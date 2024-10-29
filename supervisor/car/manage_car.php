@@ -705,9 +705,7 @@ $(document).ready(function() {
         } else {
             statusField.val('PENDING');
         }
-
         const formattedAmount = parseFloat(data.c_car_amount).toFixed(2);
-
         buyerNameField.val(data.c_name).addClass('glow-effect');
         amountField.val(formattedAmount).addClass('glow-effect');
         accField.val(data.c_account_no).addClass('glow-effect');

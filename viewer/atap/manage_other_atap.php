@@ -260,7 +260,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             </script>
                             </td>
                             <td>
-                                <span class="payment-status">
+                                <span class="payment-status-text">
                                     <?php
                                     $c_payment = $type['c_tran_type'];
                                     $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
@@ -416,7 +416,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         var hiddenInput = this.closest('.dropdown').querySelector('input[type="hidden"]');
                         hiddenInput.value = this.getAttribute('data-value');
 
-                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status');
+                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status-text');
                         var status = this.getAttribute('data-status').trim(); 
                         var statusText = '';
 

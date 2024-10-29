@@ -373,7 +373,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-
 <script src="../../dist/js/all_car_list.js"></script>
 <!-- <script>
     function handleModeOfPaymentChange() {

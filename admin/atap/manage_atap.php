@@ -160,7 +160,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <hr>
     <div class="form-group">
         <hr>
         <table class="table table-striped" id="transaction-table">
@@ -190,7 +189,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 </div>
                                 <script>
                                 $(document).ready(function () {
-                                 
                                     $(document).on('input', '.c_car_type', function () {
                                         var input = $(this).val().toLowerCase();
                                         var comboBoxMenu = $(this).siblings('.comboBoxMenu');
@@ -239,7 +237,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             </script>
                             </td>
                             <td>
-                                <span class="payment-status">
+                                <span class="payment-status-text">
                                     <?php
                                     $c_payment = $type['c_tran_type'];
                                     $get_pstatus_qry = "SELECT * FROM t_car_type WHERE c_payment_type = '$c_payment'";
@@ -263,7 +261,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                                 $statusText = '<span class="badge badge-secondary">Other</span>';
                                                 break;
                                         }
-
                                         echo $statusText;
                                     }
                                     ?>
@@ -299,7 +296,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         <td><input type="number" name="transaction_amount[]" class="form-control transaction-amount" step="0.01" required></td>
                         <td><button type="button" class="btn btn-sm btn-danger remove-row"><i class="fas fa-trash"></i></button></td>
                     </tr>
-
                     <script>
                         $(document).ready(function () {
                             $('.c_car_type').on('input', function () {
@@ -396,7 +392,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         var hiddenInput = this.closest('.dropdown').querySelector('input[type="hidden"]');
                         hiddenInput.value = this.getAttribute('data-value');
 
-                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status');
+                        var paymentStatusSpan = this.closest('tr').querySelector('.payment-status-text');
                         var status = this.getAttribute('data-status').trim(); 
                         var statusText = '';
 
@@ -622,9 +618,7 @@ $(document).ready(function() {
 
         if ($(this).data('formSubmitting')) return;
         $(this).data('formSubmitting', true);
-
         const buyerName = $('#c_name').val();
-
         let valid = true;
 
     if (!buyerName || buyerName === 'Unknown') {

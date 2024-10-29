@@ -63,18 +63,51 @@
 <form id="other-or-form">
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-6">
             <div class="form-group">
                 <label for="c_atap_no_or">ATAP No.</label>
-                <input type="number" class="form-control" id="c_atap_no_or" name="c_atap_no_or">
+                <input type="number" class="form-control" id="c_atap_no_or" name="c_atap_no_or" oninput="checkAtapNo()">
             </div>
         </div>
-        <div class="col-sm-4" style="margin-top: 25px;">
-            <a id="get_atap_or" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarTypeOR()">
+        <div class="col-sm-3" style="margin-top: 25px; padding-right: 5px;">
+            <a id="get_atap_or" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="toggleCarTypeOR(); disableAtapNo()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
+        <div class="col-sm-3" style="margin-top: 25px; padding-left: 5px;">
+            <a id="refresh_btn" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="enableAtapNo()">
+                <span class="fa fa-refresh"></span> Refresh
+            </a>
+        </div>
     </div>
+    <script>
+    function disableAtapNo() {
+        document.getElementById('c_atap_no_or').readOnly = true;
+        toggleCarTypeOR(); 
+    }
+
+    function enableAtapNo() {
+        document.getElementById('c_atap_no_or').readOnly = false;
+        const atapNoField = $('#c_atap_no_or');
+        const amountField = $('#c_or_amount');
+        const statusField = $('#status');
+        var comboBoxMenu = document.getElementById('comboBoxMenu_or');
+        var orTypeInput = document.getElementById('c_or_type');
+        var getAtapButton = document.getElementById('get_atap_or');
+
+        atapNoField.val('');
+        amountField.val('');
+        statusField.val('');
+
+        comboBoxMenu.classList.remove('disabled');
+        orTypeInput.readOnly = false;
+
+        getAtapButton.style.backgroundColor = '';
+        getAtapButton.style.borderColor = '';
+        getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+        toggleCarTypeOR(); 
+    }
+    </script>
     <div class="form-group" id="tran_type_container_or" style="display: none;">
         <label for="c_tran_type_or">Transaction Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
@@ -103,6 +136,28 @@
             </div>
         </div>
     </div>
+    <script>
+    function checkAtapNo() {
+        var atapNo = document.getElementById('c_atap_no_or').value;
+        var comboBoxMenu = document.getElementById('comboBoxMenu_or');
+        var orTypeInput = document.getElementById('c_or_type');
+        var getAtapButton = document.getElementById('get_atap_or');
+
+        if (atapNo !== '') {
+            comboBoxMenu.classList.add('disabled');
+            orTypeInput.readOnly = true;
+            getAtapButton.style.backgroundColor = 'green';
+            getAtapButton.style.borderColor = 'green';
+            // getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Click Me!';
+        } else {
+            comboBoxMenu.classList.remove('disabled');
+            orTypeInput.readOnly = false;
+            getAtapButton.style.backgroundColor = '';
+            getAtapButton.style.borderColor = '';
+            getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
+        }
+    }
+    </script>
     <script>
         $(document).ready(function () {
             $('#c_or_type').on('input', function () {
@@ -143,22 +198,40 @@
     </script>
 <script>
         $(document).ready(function() {
-      
-        function updateAtapVal(selectedValue) {
-            $('#atap_val_or').val(selectedValue);
-        }
-        $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-            //e.preventDefault();
-            var selectedValue = $(this).data('value');
-            updateAtapVal(selectedValue);
+            function updateAtapId(selectedId) {
+                $('#atap_id').val(selectedId);
+            }
+            function updateAtapVal(selectedValue) {
+                $('#atap_val_or').val(selectedValue);
+            }
+            $('.dropdown-menu a.dropdown-item').on('click', function(e) {
+                //e.preventDefault();
 
-            $('#dropdownMenuButton').text(selectedValue);
-            $('#c_or_type').val(selectedValue); 
+                var selectedValue = $(this).data('value'); 
+                var selectedId = $(this).data('id'); 
+
+                updateAtapId(selectedId); 
+                updateAtapVal(selectedValue); 
+
+                $('#dropdownMenuButton').text(selectedValue);
+                $('#c_or_type').val(selectedValue);
+            });
+
+            var initialSelectedValue = $('#c_or_type').val();
+            if (initialSelectedValue) {
+                updateAtapVal(initialSelectedValue);
+            }
+            $('#c_tran_type').change(function() {
+                var selectedOption = $(this).find(':selected');
+                var selectedValue = selectedOption.val();
+                var amount = selectedOption.data('amount'); 
+                var atap_val = selectedOption.text(); 
+
+                updateAtapId(selectedValue);
+                updateAtapAmount(amount); 
+                updateAtapVal(atap_val); 
+            });
         });
-
-        var initialSelectedValue = $('#c_or_type').val();
-        updateAtapVal(initialSelectedValue);
-    });
     </script>
     <script>
     function toggleCarTypeOR() {
@@ -463,10 +536,16 @@ $(document).ready(function() {
                         $('.modal-backdrop').remove();
                         location.reload();
                     }, 1000);
-                } else if (resp && resp.status === 'failed' && resp.err) {
-                    alert_toast("OR type does not exist.", 'error');
+                } else if (resp && resp.status === 'failed') {
+                    if (resp.msg === "Transaction type or OR type is required.") {
+                        alert_toast("Transaction type or OR type is required.", 'error'); 
+                    } else if (resp.msg === "OR type does not exist.") {
+                        alert_toast("OR type does not exist.", 'error');
+                    } else if (resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    }
                 } else {
-                    alert_toast("OR type does not exist.", 'error');
+                    alert_toast("An unexpected error occurred", 'error');
                 }
                 end_loader();
             }
@@ -515,6 +594,13 @@ $(document).ready(function() {
 });
 </script>
 <script>
+    function clearAmt(){
+    var txtamt = document.getElementById('c_or_amount').value;
+
+    if(txtamt == '0.00'){
+        document.getElementById('c_or_amount').value='';
+    }
+}
 $(document).ready(function() {
     $('#get_atap_or').on('click', function() {
         const atapNo = $('#c_atap_no_or').val();
@@ -594,16 +680,7 @@ $(document).ready(function() {
 
     function clearTxtNoOr(){
         const buyerNameField = $('#c_name');
-        const accField = $('#c_account_no');
-        const phaseField = $('#c_phase');
-        const blockField = $('#c_block');
-        const lotField = $('#c_lot');
-
         buyerNameField.val('');
-        accField.val('');
-        phaseField.val('');
-        blockField.val('');
-        lotField.val('');
     }
     function clearTxt(){
         $('#c_atap_no_or').val('');
@@ -612,6 +689,32 @@ $(document).ready(function() {
         $('#c_block').val('').removeClass('glow-effect');
         $('#c_lot').val('').removeClass('glow-effect');
         $('#c_or_amount').val('').removeClass('glow-effect');
+
+
+        const atapNoField = $('#c_atap_no_or');
+        const nameField = $('#c_name');
+        const phaseField = $('#c_phase');
+        const blockField = $('#c_block');
+        const lotField = $('#c_lot');
+        const amountField = $('#c_or_amount');
+
+        var comboBoxMenu = document.getElementById('comboBoxMenu_or');
+        var orTypeInput = document.getElementById('c_or_type');
+        var getAtapButton = document.getElementById('get_atap_or');
+
+        atapNoField.val('');
+        nameField.val('');
+        phaseField.val('');
+        blockField.val('');
+        lotField.val('');
+        amountField.val('');
+        comboBoxMenu.classList.remove('disabled');
+        atapNoField.prop('readonly', false); 
+        orTypeInput.readOnly = false;      
+
+        getAtapButton.style.backgroundColor = '';
+        getAtapButton.style.borderColor = '';
+        getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
     }
 
     function populateForm(data) {
