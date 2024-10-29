@@ -265,6 +265,20 @@ $current_date = date('Y-m-d');
         todayHighlight: true
     });
 
+    /* for display of current date sa table */
+    let today = new Date();
+    let yyyy = today.getFullYear();
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let dd = String(today.getDate()).padStart(2, '0');
+    let currentDate = `${yyyy}-${mm}-${dd}`;
+
+    $('#car-type-body tr').each(function() {
+        let transactionDate = $(this).find('.tran-date').text().trim();
+        if (transactionDate !== currentDate) {
+            $(this).hide();
+        }
+    });
+
     $('#filter').click(function() {
         let startDate = parseDate($('#start_date').val());
         let endDate = parseDate($('#end_date').val());

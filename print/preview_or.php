@@ -183,6 +183,14 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             position:absolute;
             /* background-color: red; */
         }
+        #sign_cash{
+            margin-top:290px;
+            margin-left:-65px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
         #sign_check{
             margin-top:303px;
             margin-left:-65px;
@@ -408,6 +416,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
                 <input type="text" name="sign_check" id="sign_check" value="✓">
             <?php elseif ($c_mop_or == 3): ?>
                 <input type="text" name="sign_ref" id="sign_ref" value="✓">
+            <?php elseif ($c_mop_or == 1): ?>
+                <input type="text" name="sign_cash" id="sign_cash" value="✓">
             <?php endif; ?>
                 
             <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">

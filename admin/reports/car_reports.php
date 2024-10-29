@@ -258,23 +258,38 @@ $current_date = date('Y-m-d');
 <script src="../../dist/js/table.js"></script>
 <!-- <script src="../../dist/js/car_reports.js"></script> -->
  <script>
-    $(document).ready(function(){
+$(document).ready(function(){
     $('.datepicker').datepicker({
         dateFormat: 'mm/dd/yy',
         autoclose: true,
         todayHighlight: true
     });
 
+    /* for display of current date sa table */
+    let today = new Date();
+    let yyyy = today.getFullYear();
+    let mm = String(today.getMonth() + 1).padStart(2, '0');
+    let dd = String(today.getDate()).padStart(2, '0');
+    let currentDate = `${yyyy}-${mm}-${dd}`;
+
+    $('#car-type-body tr').each(function() {
+        let transactionDate = $(this).find('.tran-date').text().trim();
+        if (transactionDate !== currentDate) {
+            $(this).hide();
+        }
+    });
+
     $('#filter').click(function() {
         let startDate = parseDate($('#start_date').val());
         let endDate = parseDate($('#end_date').val());
         let rows = $('#car-type-body tr');
-        
+
         rows.each(function() {
             let dateText = $(this).find('.tran-date').text().trim();
             let payDate = parseYMDDate(dateText);
-            
-            if ((isNaN(startDate.getTime()) || payDate >= startDate) && (isNaN(endDate.getTime()) || payDate <= endDate)) {
+
+            if ((isNaN(startDate.getTime()) || payDate >= startDate) && 
+                (isNaN(endDate.getTime()) || payDate <= endDate)) {
                 $(this).show();
             } else {
                 $(this).hide();
