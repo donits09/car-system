@@ -172,6 +172,14 @@ function format_value($value) {
             font-size: 12px !important;
             position:absolute;
         }
+        #sign_cash{
+            margin-top:290px;
+            margin-left:-65px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
         #sign_check{
             margin-top:303px;
             margin-left:-65px;
@@ -392,6 +400,8 @@ function format_value($value) {
                 <input type="text" name="sign_check" id="sign_check" value="✓">
             <?php elseif ($c_mop == 3): ?>
                 <input type="text" name="sign_ref" id="sign_ref" value="✓">
+            <?php elseif ($c_mop == 1): ?>
+                <input type="text" name="sign_cash" id="sign_cash" value="✓">
             <?php endif; ?>
 
             <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">

@@ -221,6 +221,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 12px !important;
             position:absolute;
         }
+        #sign_cash{
+            margin-top:290px;
+            margin-left:-65px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
         #sign_check{
             margin-top:320px;
             margin-left:-90px;
@@ -442,6 +450,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
 
+            <?php if ($c_mop == 1): ?>
+                <input type="text" name="sign_cash" id="sign_cash" value="✓">
+            <?php endif; ?>
+
             <?php if ($c_mop == 2): ?>
                 <!-- Para sa Check Payment -->
                 <input type="text" name="sign_check" id="sign_check" value="✓">
@@ -489,6 +501,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <textarea name="c_received" id="c_received"><?php echo htmlspecialchars($c_name); ?></textarea>
             <textarea name="c_address" id="c_address">-----------------</textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
+
+            <?php if ($c_mop == 1): ?>
+                <input type="text" name="sign_cash" id="sign_cash" value="✓">
+            <?php endif; ?>
 
             <?php if ($c_mop == 2): ?>
                 <input type="text" name="sign_check" id="sign_check" value="✓">
