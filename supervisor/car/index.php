@@ -369,7 +369,7 @@ include('../../inc/header.php');
                                                     <th>Name</th>
                                                     <th>Location</th>
                                                     <th>Amount</th>
-                                                    <th>Transaction Date</th>
+                                                    <th>Pay Date</th>
                                                     <th>Encoder</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -459,7 +459,7 @@ include('../../inc/header.php');
                                             <th>ATAP No.</th>
                                             <th>Name</th>
                                             <th>Total Amount</th>
-                                            <th>Transaction Date</th>
+                                            <th>Pay Date</th>
                                             <th>Status</th>
                                             <th>Requester</th>
                                             <th>Action</th>
@@ -526,7 +526,7 @@ include('../../inc/header.php');
                                             <th>OR No.</th>
                                             <th>Name</th>
                                             <th>Total Amount</th>
-                                            <th>Transaction Date</th>
+                                            <th>Pay Date</th>
                                             <!-- <th>Status</th> -->
                                             <th>Encoder</th>
                                             <th>Action</th>

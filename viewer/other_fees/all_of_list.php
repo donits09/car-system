@@ -67,7 +67,7 @@ include('../../inc/header.php');
                         <th>Name</th>
                         <th>Location</th>
                         <th>Amount</th>
-                        <th>Transaction Date</th>
+                        <th>Pay Date</th>
                         <th>Encoder</th>
                         <th>Action</th>
                     </tr>
@@ -91,8 +91,8 @@ include('../../inc/header.php');
                             $current_date = date('Y-m-d');
                             $or_list .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
                         }
-
-                        $or_list .= " ORDER BY a.c_tran_updated DESC";
+                        
+                        $or_list .= " ORDER BY a.c_or_paydate DESC";
 
                         /* echo $or_list; */
 

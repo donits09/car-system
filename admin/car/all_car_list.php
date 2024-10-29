@@ -78,7 +78,7 @@ include('../../inc/header.php');
                         <th>Name</th>
                         <th>Location</th>
                         <th>Amount</th>
-                        <th>Transaction Date</th>
+                        <th>Pay Date</th>
                         <th>Encoder</th>
                         <th>Action</th>
                     </tr>
@@ -104,7 +104,7 @@ include('../../inc/header.php');
                             $car_list .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
                         }
 
-                        $car_list .= " ORDER BY a.c_tran_updated DESC";
+                        $car_list .= " ORDER BY a.c_car_paydate DESC";
                         /* echo $car_list; */
                         $stmt = odbc_prepare($conn, $car_list);
                         $result = odbc_execute($stmt, array($username));

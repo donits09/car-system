@@ -2,7 +2,7 @@
 session_start();
 include('../../config.php');
 $account_no = $_GET['buyer_acc_no'];
-$car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_tran_updated DESC";
+$car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_car_paydate DESC";
 
 $stmt = odbc_prepare($conn, $car_list);
 $car_data = []; 

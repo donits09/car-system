@@ -12,7 +12,7 @@ $username = isset($_GET['username']) ? $_GET['username'] : 'Unknown';
 $account_no = isset($_GET['buyer_acc_no']) ? $_GET['buyer_acc_no'] : '';
 
 if (!empty($account_no)) {
-    $get_or = "SELECT * FROM t_or_payment WHERE c_account_no = ? and status != 1 ORDER BY c_tran_updated DESC";
+    $get_or = "SELECT * FROM t_or_payment WHERE c_account_no = ? and status != 1 ORDER BY c_or_paydate DESC";
 
     $stmt = odbc_prepare($conn, $get_or);
     if (!$stmt) {
@@ -55,7 +55,7 @@ if (!empty($account_no)) {
                     ?>
                 </td>
                 <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>
-                <td class="text-center"><?php echo htmlspecialchars($row['c_tran_date']); ?></td>
+                <td class="text-center"><?php echo htmlspecialchars($row['c_or_paydate']); ?></td>
                 <!-- <td class="text-center"><?php 
                     if ($row['status'] == 0){
                         echo  '<span class="badge badge-warning">PENDING</span>'; 

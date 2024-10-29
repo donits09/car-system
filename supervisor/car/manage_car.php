@@ -199,7 +199,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $('#atap_val').val(selectedValue);
             }
             $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-                e.preventDefault();
+                //e.preventDefault();
 
                 var selectedValue = $(this).data('value'); 
                 var selectedId = $(this).data('id'); 
