@@ -1,11 +1,8 @@
 <?php 
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(1);
-
 include('../../config.php');
-
 $c_account_no = null;
 $c_car_type = '';
 $c_car_amount = 0;
@@ -17,7 +14,6 @@ $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
     $accountId = $_GET['id'];
@@ -109,7 +105,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown_or" class="dropdown" style="width:100%;">
+        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
             <select class="form-control" id="c_tran_type" name="c_tran_type">
             </select>
         </div>
@@ -124,7 +120,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'C' ORDER BY c_payment_type ASC";
                 $type_result = odbc_exec($conn, $car_type_query);
                 while ($row = odbc_fetch_array($type_result)) {
-                    echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+                    echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                 }
                 ?>
             </div>
@@ -243,7 +239,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
-    
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
@@ -664,8 +659,8 @@ $(document).ready(function() {
         statusField.val('');
 
         comboBoxMenu.classList.remove('disabled');
-        atapNoField.prop('disabled', false);
-        carTypeInput.disabled = false;
+        atapNoField.prop('readonly', false);
+        carTypeInput.readOnly = false;    
 
         getAtapButton.style.backgroundColor = '';
         getAtapButton.style.borderColor = '';
@@ -799,13 +794,13 @@ function updateCarList() {
                     $('#tran_type_container').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
-                        $('#tran_type_dropdown_or').hide();
+                        $('#tran_type_dropdown').hide();
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
                     } else {
                         $textbox.hide();
-                        $('#tran_type_dropdown_or').show();
+                        $('#tran_type_dropdown').show();
                         $.each(response, function(index, option) {
                             $select.append($('<option>', {
                                 value: option.value,

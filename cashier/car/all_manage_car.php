@@ -252,7 +252,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
         <div id="car_no_error"></div>
     </div>
-   
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
@@ -465,8 +464,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         statusField.val('');
 
         comboBoxMenu.classList.remove('disabled');
-        atapNoField.prop('disabled', false);
-        carTypeInput.disabled = false;
+        atapNoField.prop('readonly', false);
+        carTypeInput.readOnly = false;    
 
         getAtapButton.style.backgroundColor = '';
         getAtapButton.style.borderColor = '';
