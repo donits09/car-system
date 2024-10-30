@@ -57,20 +57,37 @@ if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetc
 }
 
 
-/* Para sa banks shutaenabells kayong lahat! */
-$l_bank_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
+/* Online Banks */
+$l_online_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
                         LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
                         WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_encoded_by = ? AND c_mop = '3' 
                         GROUP BY c_bank 
                         HAVING SUM(c_car_amount) > 0
                         ORDER BY c_bank;";
 
-$bank_stmt = odbc_prepare($conn, $l_bank_query);
+$bank_stmt = odbc_prepare($conn, $l_online_query);
 $bank_executeParams = [$startDate, $endDate, $c_encoded_by];
-$l_bank_list = [];
+$l_online_list = [];
 if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
     while ($bank_row = odbc_fetch_array($bank_stmt)) {
-        $l_bank_list[$bank_row['c_bank']] = $bank_row['total_amount'];
+        $l_online_list[$bank_row['c_bank']] = $bank_row['total_amount'];
+    }
+}
+
+/* Check Banks */
+$l_check_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
+                        LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_encoded_by = ? AND c_mop = '3' 
+                        GROUP BY c_bank 
+                        HAVING SUM(c_car_amount) > 0
+                        ORDER BY c_bank;";
+
+$bank_stmt = odbc_prepare($conn, $l_check_query);
+$bank_executeParams = [$startDate, $endDate, $c_encoded_by];
+$l_check_list = [];
+if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
+    while ($bank_row = odbc_fetch_array($bank_stmt)) {
+        $l_check_list[$bank_row['c_bank']] = $bank_row['total_amount'];
     }
 }
 
@@ -243,11 +260,11 @@ $html .= '
     $html .= '
         <div class="page-break"></div>';
 
-    // BANKS LIST PUTTTTAAAAAAAA!!! SEPARATE PA SA TABLE NI REPORT
-    if (!empty($l_bank_list)) {
+    /* Online Bank */
+    if (!empty($l_online_list)) {
         $html .= '
-        <div style="margin-top: 20px;">
-            <h4>Total amount of banks</h4>
+        <div>
+            <h4>Total amount of banks (Online)</h4>
             <table>
                 <thead>
                     <tr>
@@ -259,7 +276,7 @@ $html .= '
         
                 $total_amount = 0;
     
-        foreach ($l_bank_list as $bank => $bank_total) {
+        foreach ($l_online_list as $bank => $bank_total) {
             $html .= '
             <tr>
                 <td class="pdf-font" style="width: 25%;">' . htmlspecialchars($bank) . '</td>
@@ -281,8 +298,8 @@ $html .= '
         </div>';
     } else {
         $html .= '
-        <div style="margin-top: 20px;">
-            <h4>Total amount of banks</h4>
+        <div>
+            <h4>Total amount of banks (Online)</h4>
             <table>
                 <thead>
                     <tr>
@@ -297,6 +314,61 @@ $html .= '
             </table>
         </div>';
     }
+
+    /* Check banks */
+    if (!empty($l_check_list)) {
+        $html .= '
+        <div style="margin-top: 20px;">
+            <h4>Total amount of banks (Check)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bank</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>';
+    
+        $total_amount = 0;
+
+        foreach ($l_check_list as $bank => $bank_total) {
+            $html .= '
+            <tr>
+                <td class="pdf-font" style="width: 25%;">' . htmlspecialchars($bank) . '</td>
+                <td class="pdf-font" style="width: 25%;">' . number_format($bank_total, 2) . '</td>
+            </tr>';
+        
+            $total_amount += $bank_total;
+        }
+    
+        $html .= '
+            <tr>
+                <td class="pdf-font" style="width: 25%;"><strong>TOTAL CHECK:</strong></td>
+                <td class="pdf-font" style="width: 25%;"><strong>' . number_format($total_amount, 2) . '</strong></td>
+            </tr>';
+    
+        $html .= '
+                </tbody>
+            </table>
+        </div>';
+    } else {
+        $html .= '
+        <div style="margin-top: 20px;">
+            <h4>Total amount of banks (Check)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="pdf-font" colspan="2">Bank/Total amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pdf-font" colspan="2" style="text-align: center;">No records found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>';
+    }  
 
     /* ETO YUNG SA TOTAL NG CASH/ONLIN/CHECK */
     $html .= '

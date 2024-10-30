@@ -57,15 +57,15 @@ if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetc
 }
 
 
-/* Para sa banks shutaenabells kayong lahat! */
-$l_bank_query = "SELECT c_bank, SUM(c_or_amount) AS total_amount FROM t_or_payment 
+/* Online Banks */
+$l_bank_online = "SELECT c_bank, SUM(c_or_amount) AS total_amount FROM t_or_payment 
                         LEFT JOIN t_other_or_payment ON t_or_payment.c_or_no = t_other_or_payment.c_or_no
                         WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_encoded_by = ? AND c_mop = '3'
                         GROUP BY c_bank 
                         HAVING SUM(c_or_amount) > 0
                         ORDER BY c_bank;";
 
-$bank_stmt = odbc_prepare($conn, $l_bank_query);
+$bank_stmt = odbc_prepare($conn, $l_bank_online);
 $bank_executeParams = [$startDate, $endDate, $c_encoded_by];
 $l_bank_list = [];
 if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
@@ -74,6 +74,22 @@ if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
     }
 }
 
+/* Check Banks */
+$l_bank_check = "SELECT c_bank, SUM(c_or_amount) AS total_amount FROM t_or_payment 
+                        LEFT JOIN t_other_or_payment ON t_or_payment.c_or_no = t_other_or_payment.c_or_no
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_encoded_by = ? AND c_mop = '2'
+                        GROUP BY c_bank 
+                        HAVING SUM(c_or_amount) > 0
+                        ORDER BY c_bank;";
+
+$bank_check_stmt = odbc_prepare($conn, $l_bank_check);
+$bank_check_executeParams = [$startDate, $endDate, $c_encoded_by];
+$l_check_list = [];
+if ($bank_check_stmt && odbc_execute($bank_check_stmt, $bank_check_executeParams)) {
+    while ($bank_row = odbc_fetch_array($bank_check_stmt)) { // Change this line
+        $l_check_list[$bank_row['c_bank']] = $bank_row['total_amount'];
+    }
+}
 
 $options = new Options();
 $options->set('defaultFont', 'Courier');
@@ -242,11 +258,11 @@ $html .= '
     $html .= '
         <div class="page-break"></div>';
 
-    // BANKS LIST PUTTTTAAAAAAAA!!! SEPARATE PA SA TABLE NI REPORT
+    // LIST OF BANKS (ONLINE)
     if (!empty($l_bank_list)) {
         $html .= '
-        <div style="margin-top: 20px;">
-            <h4>Total amount of banks</h4>
+        <div>
+            <h4>Total amount of banks (Online)</h4>
             <table>
                 <thead>
                     <tr>
@@ -280,8 +296,63 @@ $html .= '
         </div>';
     } else {
         $html .= '
+        <div>
+            <h4>Total amount of banks (Online)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="pdf-font" colspan="2">Bank/Total amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pdf-font" colspan="2" style="text-align: center;">No records found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>';
+    }
+
+    //LIST OF BANKS (CHECK)
+    if (!empty($l_check_list)) {
+        $html .= '
         <div style="margin-top: 20px;">
-            <h4>Total amount of banks</h4>
+            <h4>Total amount of banks (Check)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bank</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>';
+
+            $total_amount = 0;
+    
+        foreach ($l_check_list as $bank => $bank_total) {
+            $html .= '
+            <tr>
+                <td class="pdf-font" style="width: 25%;">' . htmlspecialchars($bank) . '</td>
+                <td class="pdf-font" style="width: 25%;">' . number_format($bank_total, 2) . '</td>
+            </tr>';
+        
+            $total_amount += $bank_total;
+        }
+    
+        $html .= '
+            <tr>
+                <td class="pdf-font" style="width: 25%;"><strong>TOTAL CHECK:</strong></td>
+                <td class="pdf-font" style="width: 25%;"><strong>' . number_format($total_amount, 2) . '</strong></td>
+            </tr>';
+    
+        $html .= '
+                </tbody>
+            </table>
+        </div>';
+    } else {
+        $html .= '
+        <div style="margin-top: 20px;">
+            <h4>Total amount of banks (Check)</h4>
             <table>
                 <thead>
                     <tr>

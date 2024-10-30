@@ -265,6 +265,7 @@ $current_date = date('Y-m-d');
         todayHighlight: true
     });
 
+    /* for display of current date sa table */
     let today = new Date();
     let yyyy = today.getFullYear();
     let mm = String(today.getMonth() + 1).padStart(2, '0');
