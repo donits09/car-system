@@ -414,15 +414,13 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
 
             <?php if ($c_mop_or == 2): ?>
                 <input type="text" name="sign_check" id="sign_check" value="✓">
+                <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
             <?php elseif ($c_mop_or == 3): ?>
                 <input type="text" name="sign_ref" id="sign_ref" value="✓">
+                <input type="text" name="c_ref_main" id="c_ref_main" value="<?php echo htmlspecialchars($c_ref); ?>">
             <?php elseif ($c_mop_or == 1): ?>
                 <input type="text" name="sign_cash" id="sign_cash" value="✓">
             <?php endif; ?>
-                
-            <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
-            <input type="text" name="c_ref_main" id="c_ref_main" value="<?php echo htmlspecialchars($c_ref); ?>">
-
            
         <?php } ?>
 
