@@ -470,7 +470,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         } else {
                             $statusText.html('<span class="badge badge-secondary">Other</span>');
                         }
-
                         $dropdown.find('.dropdown-item').removeClass('active');
                         $(this).addClass('active');
                     });
@@ -478,9 +477,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </script>
             <tfoot>
                 <tr>
-
                     <!-- <th colspan="1" style="text-align:right;"> <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:</th> -->
-
                     <th colspan="1" style="text-align:right;">
                         <button type="button" class="btn btn-sm btn-info" id="add-row"><i class="fas fa-add"></i> Add Row</button> Total:
                     </th>

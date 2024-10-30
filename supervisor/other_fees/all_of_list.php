@@ -34,10 +34,10 @@ include('../../inc/header.php');
         <h2 class="text-blue h4">Other Fees - Full List</h2>
         <hr>
             <a id="create_new_of" class="btn btn-flat btn-primary" href="javascript:void(0)" data-account-no="">
-                <span class="fa fa-edit"></span> Create New OR/SI
+                <span class="fa fa-edit"></span> Create New OR
             </a>
             <a id="create_other_new" class="btn btn-flat btn-success" href="javascript:void(0)">
-                <span class="fa fa-edit"></span> Create Other OR/SI
+                <span class="fa fa-edit"></span> Create Other OR
             </a>
             <div class="pd-20">
             <hr>

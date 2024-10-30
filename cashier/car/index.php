@@ -964,7 +964,7 @@ $(document).ready(function() {
         $('#create_new_or').click(function() {
             /* var accountNo = $(this).data('account-no'); */
             var accountNo = $('#buyer_acc_no').val();
-            loadModal('Create New OR/SI', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
+            loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
         });
         $(document).on('click', '.edit_data', function() {
             var accountId = $(this).data('id');

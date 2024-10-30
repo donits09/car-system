@@ -62,7 +62,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 <input type="number" class="form-control" id="c_atap_no_or" name="c_atap_no_or" oninput="checkAtapNo()">
             </div>
         </div>
-        <div class="col-sm-3" style="margin-top: 25px; padding-left: 5px;">
+        <div class="col-sm-3" style="margin-top: 25px; padding-right: 5px;">
             <a id="get_atap_or" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="toggleCarTypeOR(); disableAtapNo()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
@@ -360,12 +360,18 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <div class="mb-3">
-        <a href="javascript:void(0);" class="btn btn-success" onclick="openPrintWindow()">
-            <span class="fas fa-print"></span> OR Preview
-        </a>
-    </div>
-    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50%; text-align:center;">
+                <a href="javascript:void(0);" class="btn btn-success" onclick="openPrintWindow()" style="width:100%;">
+                    <span class="fas fa-print"></span> OR Preview
+                </a>
+            </td>
+            <td style="width:50%; text-align:center;">
+                <button type="submit" class="btn btn-primary" id="btnsave" style="width:100%;">Save</button>
+            </td>
+        </tr>
+    </table>
 </form>
 <script src="<?php echo base_url; ?>dist/js/of_js/manage_or.js"></script>
 <script>

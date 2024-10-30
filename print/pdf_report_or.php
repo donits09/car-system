@@ -338,6 +338,3 @@ header('Content-Type: application/pdf');
 header('Content-Disposition: inline; filename="daily_collection_report.pdf"');
 echo $dompdf->output();
 ?>
-
-
-

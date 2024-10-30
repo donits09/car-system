@@ -364,14 +364,18 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-
-    <div class="mb-3">
-        <a href="javascript:void(0);" class="btn btn-success" onclick="openPrintWindow()">
-            <span class="fas fa-print"></span> CAR Preview
-        </a>
-    </div>
-
-    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50%; text-align:center;">
+                <a href="javascript:void(0);" class="btn btn-success" onclick="openPrintWindow()" style="width:100%;">
+                    <span class="fas fa-print"></span> CAR Preview
+                </a>
+            </td>
+            <td style="width:50%; text-align:center;">
+                <button type="submit" class="btn btn-primary" id="btnsave" style="width:100%;">Save</button>
+            </td>
+        </tr>
+    </table>
 </form>
 <script src="../../dist/js/all_car_list.js"></script>
 <!-- <script>

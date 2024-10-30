@@ -108,7 +108,7 @@ include('../inc/header.php');
                                         <span class="sr-only">Toggle Dropdown</span>
                                     </button>
                                     <div class="dropdown-menu" role="menu">
-                                        <a class="dropdown-item view_or" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
+                                        <a class="dropdown-item view_tenant" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
                                             <!-- <span class="fa fa-eye text-primary"></span> -->View
                                         </a>
                                         <div class="dropdown-divider"></div>
@@ -180,10 +180,17 @@ window._conf = function(msg, func, params) {
         loadModal('Create New Tenant', '../tenants/manage_tenant.php', '#createTenantModal');
     });
 
-    $(document).on('click', '.edit_tenant', function() {
-        var accountId = $(this).data('id');
-        loadModal('Edit Tenant Details', '../tenants/manage_tenant.php?id=' + accountId, '#createCarModal');
+    $(document).on('click', '.view_tenant', function() {
+        var tenantId = $(this).data('id');
+        loadModal('Tenant Details', '../tenants/view_tenant.php?id=' + tenantId, '#viewModal');
     });
+
+    $(document).on('click', '.edit_tenant', function() {
+        var tenantId = $(this).data('id');
+        loadModal('Edit Tenant Details', '../tenants/manage_tenant.php?id=' + tenantId, '#createTenantModal');
+    });
+
+
 </script>
 </div>
 </body>

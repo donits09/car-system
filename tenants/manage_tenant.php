@@ -3,9 +3,25 @@ session_start();
 require_once('../inc/check_session.php');
 require_once('../config.php');
 
-?>
-<?php
-    $c_remarks = '';
+$tenantId = '';
+$c_account_no = null;
+$c_last_name = '';
+$c_first_name = '';
+$c_middle_name = '';
+$c_address = '';
+$c_city_prov = '';
+$c_zip_code = '';
+$c_tel_no = '';
+$c_lot_area = '';
+$c_price_sqm = '';
+$c_mobile_no = '';
+$c_email = '';
+$c_civil_status = '';
+$c_birthday = date('Y-m-d');
+$c_sex = '';
+$c_employment_status = '';
+$c_remarks = '';
+
     $l_site = isset($_GET["phase"]) ? $_GET["phase"] : '';
     $l_block = isset($_GET["block"]) ? $_GET["block"] : '';
     $l_lot = isset($_GET["lot"]) ? $_GET["lot"] : '' ;
@@ -33,10 +49,11 @@ require_once('../config.php');
 ?>
 <?php 
 if (isset($_GET['id']) && $_GET['id'] > 0) {
+    echo htmlspecialchars($_GET['id']);
     $get_tenant_query = "SELECT * FROM t_tenant_accounts WHERE id = ?";
-    $accountId = $_GET['id'];
+    $tenantId = $_GET['id'];
     $stmt = odbc_prepare($conn, $get_tenant_query);
-    odbc_execute($stmt, array($accountId));
+    odbc_execute($stmt, array($tenantId));
 
     if ($result = odbc_fetch_array($stmt)) {
         $c_account_no = $result["c_account_no"];
@@ -51,11 +68,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $c_lot_area = $result["c_lot_area"];
         $c_price_sqm = $result["c_price_sqm"];
         $c_email = $result["c_email"];
-        $c_civil = $result["c_civil_status"];
-        $c_gender = $result["c_sex"];
+        $c_civil_status = $result["c_civil_status"];
+        $c_sex = $result["c_sex"];
         $c_birthday = $result["c_birthday"];
         $c_remarks = $result["c_remarks"];
-        $c_employment = $result["c_employment_status"];
+        $c_employment_status = $result["c_employment_status"];
         $c_encoded_by = $result["c_encoded_by"];
         $c_phase = $result["c_phase"];
         $c_block = $result["c_block"];
@@ -65,6 +82,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $c_account_no = $_GET['c_account_no'];
 }
 ?>
+
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <body>
@@ -72,7 +90,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <form class="row g-3" id="tenantForm">
     <div class="col-md-12">
     <label for="acc_no" class="form-label">Account No.</label>
-    <input type="text" class="form-control txt" id="tenant_acc_no" name="tenant_acc_no" readonly>
+    <input type="text" class="form-control txt" id="tenant_acc_no" name="tenant_acc_no" value="<?php echo htmlspecialchars($c_account_no) ?>" readonly>
 </div>
 <div class="col-md-4 form-group">
     <label for="c_phase" class="control-label">Phase</label>
@@ -93,10 +111,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </div>
 <div class="col-md-4 form-group">
     <label for="c_block" class="control-label">Block</label>
-    <input type="number" id="c_block" name="c_block" class="form-control" 
-           value="<?php echo htmlspecialchars($c_block); ?>" 
-           oninput="concatenateValues();" 
-           onblur="padBlockValue(); limitInputLength(this, 3);">
+    <input type="number" id="c_block" name="c_block" class="form-control" value="<?php echo htmlspecialchars($c_block); ?>" oninput="concatenateValues();" onblur="padBlockValue(); limitInputLength(this, 3);">
 </div>
 <div class="col-md-4 form-group">
     <label for="c_lot" class="control-label">Lot</label>
@@ -140,7 +155,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     document.getElementById('c_lot').addEventListener('input', concatenateValues);
 </script>
 <form id="tenant-form" method="post" action="">
-        <input type="text" name="id" value="<?php echo isset($id) ? $id : '' ?>">
+        <input type="hidden" name="id" value="<?php echo $tenantId ? $tenantId : '' ?>">
         <div class="col-md-4">
             <label for="lname" class="form-label">Last Name</label>
             <input type="text" class="form-control txt" id="tenant_lname" name="tenant_lname" value="<?php echo htmlspecialchars($c_last_name) ?>">
@@ -179,7 +194,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
         <div class="col-md-4">
             <label for="civil" class="form-label">Civil Status</label>
-            <input type="text" class="form-control txt" id="tenant_civil" name="tenant_civil" value="<?php echo htmlspecialchars($c_civil) ?>">
+            <select class="form-control" id="tenant_civil" name="tenant_civil">
+                <option value="">Select Civil Status</option>
+                <option value="1" <?php echo $c_civil_status == 1 ? 'selected' : ''; ?>>Married</option>
+                <option value="2" <?php echo $c_civil_status == 2 ? 'selected' : ''; ?>>Separated</option>
+                <option value="3" <?php echo $c_civil_status == 3 ? 'selected' : ''; ?>>Single</option>
+                <option value="4" <?php echo $c_civil_status == 4 ? 'selected' : ''; ?>>Widowed</option>
+            </select>
         </div>
         <div class="col-md-4">
             <label for="birthday" class="form-label">Birthday</label>
@@ -187,11 +208,23 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         </div>
         <div class="col-md-4">
             <label for="gender" class="form-label">Gender</label>
-            <input type="text" class="form-control txt" id="tenant_gender" name="tenant_gender" value="<?php echo htmlspecialchars($c_gender) ?>">
+            <select class="form-control" id="tenant_gender" name="tenant_gender">
+                <option value="">Select Gender</option>
+                <option value="1" <?php echo $c_sex == 1 ? 'selected' : ''; ?>>Female</option>
+                <option value="2" <?php echo $c_sex == 2 ? 'selected' : ''; ?>>Male</option>
+            </select>
         </div>
         <div class="col-md-4">
             <label for="emp_status" class="form-label">Employment Status</label>
-            <input type="text" class="form-control txt" id="tenant_emp_status" name="tenant_emp_status" value="<?php echo htmlspecialchars($c_gender) ?>">
+            <select class="form-control" id="tenant_emp_status" name="tenant_emp_status">
+                <option value="">Select Employment Status</option> <!-- Blank option -->
+                <option value="1" <?php echo $c_employment_status == 1 ? 'selected' : ''; ?>>Unemployed</option>
+                <option value="2" <?php echo $c_employment_status == 2 ? 'selected' : ''; ?>>Employed</option>
+                <option value="3" <?php echo $c_employment_status == 3 ? 'selected' : ''; ?>>Self-employed</option>
+                <option value="4" <?php echo $c_employment_status == 4 ? 'selected' : ''; ?>>OCW</option>
+                <option value="5" <?php echo $c_employment_status == 5 ? 'selected' : ''; ?>>Retired</option>
+                <option value="6" <?php echo $c_employment_status == 6 ? 'selected' : ''; ?>>Others</option>
+            </select>
         </div>
         <div class="col-md-4">
             <label for="area" class="form-label">Lot Area</label>
@@ -204,14 +237,30 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <div class="col-md-12">
             <label for="remarks" class="form-label">
                 Remarks 
-                <!-- <span class="rem_note">
-                    (<span class="note">NOTE:</span> The Enter key is enabled only on the last line)
-                </span> -->
             </label>
             <textarea class="form-control txt" rows="5" cols="50" id="tenant_remarks" name="tenant_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
         </div>
+        <div class="col-md-6">
+            <label for="encoder">Encoded by</label>
+            <input type="hidden" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
+            <?php
+            if (isset($_GET['id']) && $_GET['id'] > 0) {
+                $c_encoded_by == $c_encoded_by;
+            }else{
+                $c_encoded_by = $_SESSION['username'];
+            }
+            $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = '$c_encoded_by'";
+            $results = odbc_exec($conn, $get_encoder_details_qry);
+
+            if ($encoder = odbc_fetch_array($results)) {
+                $realname = $encoder["c_realname"];
+            }
+            ?>
+            <input type="text" class="form-control" value="<?php echo $realname ?>" readonly>
+        </div>
+        <br>
         <div class="col-md-12">
-            <button type="submit" class="btn btn-primary" id="btnsave">Submit</button>
+            <button type="submit" class="btn btn-primary" id="btnsave" style="width:100%;">Save</button>
         </div>
     </form>
 </div>
@@ -221,9 +270,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 $(document).ready(function() {
         $('#tenantForm').on('submit', function(e) {
             e.preventDefault(); 
-
             var formData = $(this).serialize(); 
-
             $.ajax({
             url: '<?php echo base_url; ?>classes/Master.php?f=save_tenant',
             data: new FormData($(this)[0]),
@@ -250,9 +297,9 @@ $(document).ready(function() {
                 } else if (resp && resp.status === 'failed' && resp.err) {
                     alert_toast("An error occurred: " + resp.err, 'error');
                 } else if (resp && resp.status === 'not_found') {
-                    alert_toast("CAR type not exist.", 'error');
+                    alert_toast("An error occurred.", 'error');
                 } else {
-                    alert_toast("CAR type not exist.", 'error');
+                    alert_toast("An error occurred.", 'error');
                 }
                 end_loader();
             },
@@ -262,7 +309,6 @@ $(document).ready(function() {
         });
     });
 });
-
 </script>
 <script src="../dist/js/table.js"></script>
 <script src="../dist/js/index.js"></script>

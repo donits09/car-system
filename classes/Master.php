@@ -1774,23 +1774,12 @@ Class Master{
 	function save_tenant() {
 		extract($_POST);
 	
-		$data = "c_account_no, c_last_name, c_first_name, c_middle_name, c_address, c_city_prov, c_zip_code, c_tel_no, c_lot_area, c_price_sqm, c_mobile_no, c_email, c_civil_status, c_birthday, c_sex, c_employment_status, c_remarks, c_phase, c_block, c_lot";
-		$values = "'$tenant_acc_no', '$tenant_lname', '$tenant_fname', '$tenant_mname','$tenant_address','$tenant_city_prov','$tenant_zip','$tenant_tel','$tenant_area','$tenant_sqm','$tenant_mobile','$tenant_email','$tenant_civil','$tenant_birthday','$tenant_gender','$tenant_emp_status','$tenant_remarks', '$c_phase','$c_block','$c_lot'";
+		$data = "c_account_no, c_last_name, c_first_name, c_middle_name, c_address, c_city_prov, c_zip_code, c_tel_no, c_lot_area, c_price_sqm, c_mobile_no, c_email, c_civil_status, c_birthday, c_sex, c_employment_status, c_remarks, c_phase, c_block, c_lot, c_encoded_by";
+		$values = "'$tenant_acc_no', '$tenant_lname', '$tenant_fname', '$tenant_mname','$tenant_address','$tenant_city_prov','$tenant_zip','$tenant_tel','$tenant_area','$tenant_sqm','$tenant_mobile','$tenant_email','$tenant_civil','$tenant_birthday','$tenant_gender','$tenant_emp_status','$tenant_remarks', '$c_phase','$c_block','$c_lot','$c_encoded_by'";
 	
 		$resp = array();
 	
-		// if (empty($id)) {
-		// 	$tenant_acc = "SELECT * FROM t_tenant WHERE c_account_no = '$tenant_acc_no'";
-		// 	$result_check = odbc_exec($this->conn, $tenant_acc);
-
-		// 	odbc_fetch_row($result_check);
-		// 	if (odbc_num_rows($result_check) > 0) {
-		// 		$resp['status'] = 'failed';
-		// 		$resp['msg'] = "Tenant account already exists.";
-		// 		echo json_encode($resp);
-		// 		return;
-		// 	}
-
+		if (empty($id)) {
 			$insert = "INSERT INTO t_tenant_accounts ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert);
 	
@@ -1802,46 +1791,35 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
-		// } else {
-		// 	$check_acc = "SELECT * FROM t_tenant_accounts WHERE c_account_nol = '$tenant_acc_no'";
-		// 	$result_check = odbc_exec($this->conn, $check_acc);
-
-		// 	odbc_fetch_row($result_check);
-		// 	if (odbc_num_rows($result_check) > 0) {
-		// 		$resp['status'] = 'failed';
-		// 		$resp['msg'] = "Tenant account already exists.";
-		// 		echo json_encode($resp);
-		// 		return;
-		// 	}
-
-		// 	$update = "UPDATE t_tenant_accounts SET 
-		// 				c_account_no = '$tenant_acc_no',
-		// 				c_last_name = '$tenant_lname',
-		// 				c_first_name = '$tenant_fname',
-		// 				c_middle_name = '$tenant_mname',
-		// 				c_address = '$tenant_address',
-		// 				c_city_prov = '$tenant_city_prov',
-		// 				c_zip_code = '$tenant_zip',
-		// 				c_tel_no = '$tenant_tel',
-		// 				c_mobile_no = '$tenant_mobile',
-		// 				c_email = '$tenant_email',
-		// 				c_civil_status = '$tenant_civil',
-		// 				c_birthday = '$tenant_birthday',
-		// 				c_sex = '$tenant_gender',
-		// 				c_employment_status = '$tenant_emp_status',
-		// 				c_remarks = '$tenant_remarks'
-		// 			WHERE id = '$id'";
-		// 	$save = odbc_exec($this->conn, $update);
+		} else {
+			$update = "UPDATE t_tenant_accounts SET 
+						c_account_no = '$tenant_acc_no',
+						c_last_name = '$tenant_lname',
+						c_first_name = '$tenant_fname',
+						c_middle_name = '$tenant_mname',
+						c_address = '$tenant_address',
+						c_city_prov = '$tenant_city_prov',
+						c_zip_code = '$tenant_zip',
+						c_tel_no = '$tenant_tel',
+						c_mobile_no = '$tenant_mobile',
+						c_email = '$tenant_email',
+						c_civil_status = '$tenant_civil',
+						c_birthday = '$tenant_birthday',
+						c_sex = '$tenant_gender',
+						c_employment_status = '$tenant_emp_status',
+						c_remarks = '$tenant_remarks'
+					WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
 	
-		// 	if ($save) {
-		// 		$this->car_logs('Tenant Accounts', "UPDATED - $tenant_acc_no");
-		// 		$resp['status'] = 'success';
-		// 		$resp['msg'] = "Tenant account successfully updated.";
-		// 	} else {
-		// 		$resp['status'] = 'failed';
-		// 		$resp['err'] = odbc_errormsg($this->conn);
-		// 	}
-		//}
+			if ($save) {
+				//$this->car_logs('Tenant Accounts', "UPDATED - $tenant_acc_no");
+				$resp['status'] = 'success';
+				$resp['msg'] = "Tenant account successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
 		echo json_encode($resp);
 	}
 
