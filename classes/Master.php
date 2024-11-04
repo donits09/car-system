@@ -709,12 +709,12 @@ Class Master{
 		
 		$atap_id = $_POST['atap_id'];
 	
-		if(empty($atap_id)){
+		/* if(empty($atap_id)){
 			$resp['status'] = 'failed';
 			$resp['msg'] = "CAR type does not exist.";
 			echo json_encode($resp);
 			return;
-		}
+		} */
 		if ($c_check_no == '' || $c_check_no == null) {
 			$c_check_no = $c_ref_no;
 		}
