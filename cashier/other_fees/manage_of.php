@@ -240,6 +240,17 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
     }
     </script>
+    <script>
+        document.querySelectorAll('#comboBoxMenu_or .dropdown-item').forEach(item => {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+                const selectedValue = this.getAttribute('data-value');
+                document.getElementById('c_or_type').value = selectedValue;
+              
+                document.getElementById('c_atap_no_or').readOnly = true;
+            });
+        });
+    </script>
     <input type="hidden" class="form-control" id="atap_id_or" name="atap_id_or" readonly>
     <input type="hidden" class="form-control" id="atap_val_or" name="atap_val_or" readonly>
     <hr>

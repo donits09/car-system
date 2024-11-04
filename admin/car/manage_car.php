@@ -241,6 +241,17 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
     }
     </script>
+    <script>
+        document.querySelectorAll('#comboBoxMenu_car .dropdown-item').forEach(item => {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+                const selectedValue = this.getAttribute('data-value');
+                document.getElementById('c_car_type').value = selectedValue;
+              
+                document.getElementById('c_atap_no').readOnly = true;
+            });
+        });
+    </script>
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
     <hr>
@@ -430,10 +441,10 @@ $(document).ready(function() {
             atapVal = $('#c_car_type').val(); 
         }
 
-        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
-            alert('The selected transaction type is Special.');
-            valid = false;
-        }
+        // if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+        //     alert('The selected transaction type is Special.');
+        //     valid = false;
+        // }
 
     if (carNo.length < 6) {
         $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');

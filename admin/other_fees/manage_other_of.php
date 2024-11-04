@@ -502,10 +502,10 @@ $(document).ready(function() {
             atapVal = $('#c_or_type').val(); 
         }
 
-        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
-            alert('The selected transaction type is Special.');
-            valid = false;
-        }
+        // if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+        //     alert('The selected transaction type is Special.');
+        //     valid = false;
+        // }
 
         if (orNo.length < 6) {
             $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
@@ -882,6 +882,17 @@ function openPrintWindow() {
                 carTypeContainer.style.display = 'none';  
             }
         }
+    </script>
+    <script>
+        document.querySelectorAll('#comboBoxMenu_or .dropdown-item').forEach(item => {
+            item.addEventListener('click', function (event) {
+                event.preventDefault();
+                const selectedValue = this.getAttribute('data-value');
+                document.getElementById('c_or_type').value = selectedValue;
+              
+                document.getElementById('c_atap_no_or').readOnly = true;
+            });
+        });
     </script>
     <script>
         function toggleCheckDropdown() {
