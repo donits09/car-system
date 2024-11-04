@@ -59,6 +59,10 @@
     max-height: 200px; 
     overflow-y: auto;
 }
+.disabled {
+    pointer-events: none;
+    opacity: 0;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <form id="other-car-form">
@@ -144,7 +148,6 @@
                 carTypeInput.readOnly = true;
                 getAtapButton.style.backgroundColor = 'green';
                 getAtapButton.style.borderColor = 'green';
-                // getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Click Me!';
             } else {
                 comboBoxMenu.classList.remove('disabled');
                 carTypeInput.readOnly = false;
