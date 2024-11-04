@@ -80,7 +80,7 @@ if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
 /* Check Banks */
 $l_bank_check = "SELECT c_bank, SUM(c_or_amount) AS total_amount FROM t_or_payment 
                         LEFT JOIN t_other_or_payment ON t_or_payment.c_or_no = t_other_or_payment.c_or_no
-                        WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' AND c_mop = '2' GROUP BY c_bank 
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' AND c_mop = '2' AND c_bank != 'On Hand' GROUP BY c_bank 
                         HAVING SUM(c_or_amount) > 0
                         ORDER BY c_bank; ";
 
@@ -168,9 +168,17 @@ if (empty($orData)) {
         $totalCashOnline += $cashAmount + $onlineAmount;
         $totalCheck += $checkAmount;
         $totalCash += $cashAmount;
-        $totalOnline += $onlineAmount;
         $totalOfall += $cashAmount + $onlineAmount + $checkAmount;
-        $totalCashCheck += $cashAmount + $checkAmount;
+
+        /* Checked On Hand */
+        $checked = ($row['c_mop'] == 2 && $row['status'] != 1 && $row['c_bank'] != 'On Hand') ? $row['c_or_amount'] : 0;
+        $t_checked += $checked;
+
+        $checkOnhand = ($row['c_mop'] == 2 && $row['status'] != 1 && $row['c_bank'] == 'On Hand') ? $row['c_or_amount'] : 0;
+        $t_check_on_hand += $checkOnhand;
+
+        $totalCashCheck += $cashAmount + $checked + $checkOnhand;
+        $totalCashOnly += $cashAmount + $checkOnhand;
 
         $html .= '
         <tr>
@@ -333,7 +341,7 @@ if (empty($orData)) {
     if (!empty($l_check_list)) {
         $html .= '
         <div style="margin-top: 20px;">
-            <h4>Total amount of banks (Check)</h4>
+            <h4>Total amount of banks (Check Deposited)</h4>
             <table>
                 <thead>
                     <tr>
@@ -368,7 +376,7 @@ if (empty($orData)) {
     } else {
         $html .= '
         <div style="margin-top: 20px;">
-            <h4>Total amount of banks (Check)</h4>
+            <h4>Total amount of banks (Check Deposited)</h4>
             <table>
                 <thead>
                     <tr>
@@ -384,23 +392,46 @@ if (empty($orData)) {
         </div>';
     }
 
-    /* ETO YUNG SA TOTAL NG CASH/ONLIN/CHECK */
-    $html .= '
-    <div style="margin-top: 40px;">
+    /* CASH */
+    /* $html .= '
+    <div>
+        <h4>Total of (Cash)</h4>
         <table>
             <thead>
                 <tr>
-                    <th>Cash</th>
-                    <th>Check</th>
-                    <th>Online</th>
-                    <th>Total of Payment</th>
+                    <th>Cash On Hand</th>
+                    <th>Check On Hand</th>
+                    <th>Total On Hand</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCash, 2) . '<strong>' . '</td>
-                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCheck, 2) . '<strong>' . '</td>
-                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . "-" . number_format($totalOnline, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($t_check_on_hand, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCashOnly, 2) . '<strong>' . '</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>'; */
+
+    /* CASH AND CHECK */
+    $html .= '
+    <div>
+        <h4>Total of (Cash and Check)</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cash On Hand</th>
+                    <th>Check Deposited</th>
+                    <th>Check On Hand   
+                    <th>Total On Hand</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCash, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($t_checked, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($t_check_on_hand, 2) . '<strong>' . '</td>
                     <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCashCheck, 2) . '<strong>' . '</td>
                 </tr>
             </tbody>
