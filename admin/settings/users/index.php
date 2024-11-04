@@ -61,6 +61,9 @@ include('manage_user.php');
                             }
                             elseif ($row['c_group'] == '4'){
                                 echo 'Viewer';   
+                            }
+                            elseif ($row['c_group'] == '5'){
+                                echo 'Encoder';   
                             }else{
                                 echo $row['c_group'];
                             }
