@@ -91,7 +91,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             <td>
                             <?php
                                 $c_account_no = $row['c_account_no'];
-
                                 try {
                                     if (!empty($c_account_no)) {
                                         $c_phase = substr($c_account_no, 0, 3);
@@ -193,7 +192,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tr>
                     </tbody>
                 </table>
-
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -215,7 +213,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             $stmt_items = odbc_prepare($conn, $get_atap_items);
                             odbc_execute($stmt_items, array($atapNo));
 
-                            $eligibleTranTypes = ['GRASS CUTTING FEE', 'STREETLIGHT FEE'];
+                            $eligibleTranTypes = ['ST'];
 
                             while ($row_items = odbc_fetch_array($stmt_items)) {
                                 $amount = $row_items['c_atap_amount'];
@@ -247,10 +245,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                     }
                                 }
 
-                                if (in_array($row_items['c_tran_type'], $eligibleTranTypes) && $row_items['atap_status'] == 0) {
+                                if (in_array($pstatus, $eligibleTranTypes) && $row_items['atap_status'] == 0) {
                                     $enableSaveButton = true;
                                 }
-                        ?>
+
+                                ?>
                                 <tr>
                                     <td class="text-center"><?php echo $i++; ?></td>
                                     <td class="text-center"><?php echo htmlspecialchars($row_items['c_tran_type']); ?></td>
@@ -268,9 +267,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                         ?>
                                     </td>
                                     <td align="center">
-                                        <?php if ($atapStats != 3 && $pstatus == 'ST') { ?>
+                                        <?php if ($pstatus == 'ST') { ?>
                                             <input type="checkbox" class="atap-status" data-id="<?php echo $itemId; ?>" data-no="<?php echo $atapNo; ?>"
-                                                <?php echo ($row_items['atap_status'] == 1) ? 'checked disabled' : ''; ?>>
+                                            <?php echo ($row_items['atap_status'] == 1 || $row_items['atap_status'] == 3) ? 'checked disabled' : ''; ?>>
                                             <input type="hidden" class="hidden-item-id" id="atapId" value="<?php echo $itemId; ?>" readonly>
                                             <input type="hidden" class="hidden-atap-status" id="status" value="<?php echo ($row_items['atap_status'] == 1) ? '1' : '0'; ?>" readonly>
                                             <button type="button" class="btn btn-primary btn-save-status d-none">Save</button>
@@ -288,17 +287,17 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <th colspan="3" class="text-right">Total Amount:</th>
                                 <th class="text-right"><?php echo number_format($totalAmount, 2); ?></th>
                             </tr>
-                            <!-- <tr>
+                            <tr>
                                 <td colspan="6" class="text-center">
                                     <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" 
                                         <?php echo (!$enableSaveButton) ? 'disabled' : ''; ?>>Save</button>
                                 </td>
-                            </tr> -->
-                            <tr>
+                            </tr>
+                            <!-- <tr>
                                 <td colspan="6" class="text-center">
                                     <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;">Save</button>
                                 </td>
-                            </tr>
+                            </tr> -->
                         </tfoot>
                     </table>
             </div>

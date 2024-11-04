@@ -300,6 +300,41 @@ Class Master{
 		echo json_encode($resp);
 	}
 
+	function delete_tenant($tenantId) {
+		$resp = array();
+	
+		if (isset($tenantId)) {
+	
+			$sql = "UPDATE t_tenant_accounts SET c_status = 2 WHERE id = ?";
+			$stmt = odbc_prepare($this->conn, $sql);
+	
+			if ($stmt) {
+				$result = @odbc_execute($stmt, array($tenantId));
+	
+				if ($result) {
+					$this->car_logs('Tenant Accounts', "DELETED - Tenant#$tenantId");
+					$resp['status'] = 'success';
+					$resp['msg'] = "Tenant's Information successfully removed.";
+				} else {
+					error_log("Error executing updates for Tenant #: $tenantId");
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			} else {
+				
+				error_log("Error preparing statements for Tenant #: $tenantId");
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['msg'] = 'Tenant # not provided.';
+		}
+	
+		header('Content-Type: application/json');
+		echo json_encode($resp);
+	}
+
 	function approve_atap($atapId, $atapNo) {
 		$resp = array();
 	
@@ -442,14 +477,14 @@ Class Master{
 			if ($atapNo !== null) {
 				$check_status_sql = "SELECT atap_status FROM t_atap_items WHERE c_atap_no = ?";
 				$check_status_stmt = odbc_prepare($conn, $check_status_sql);
-	
+			
 				if ($check_status_stmt) {
 					$check_result = @odbc_execute($check_status_stmt, array($atapNo));
-	
+			
 					if ($check_result) {
 						$hasPartial = false;
 						$allPaid = true;
-	
+			
 						while ($row = odbc_fetch_array($check_status_stmt)) {
 							if ($row['atap_status'] == 1) {
 								$hasPartial = true;
@@ -457,22 +492,21 @@ Class Master{
 								$allPaid = false;
 							}
 						}
-	
+			
 						$new_status = 0;
 						if ($allPaid) {
 							$new_status = 1; 
 						} elseif ($hasPartial) {
 							$new_status = 2; 
-						} else {
-							$new_status = 0;
 						}
-
+			
+			
 						$update_atap_sql = "UPDATE t_atap SET status = ? WHERE c_atap_no = ?";
 						$update_atap_stmt = odbc_prepare($conn, $update_atap_sql);
-	
+			
 						if ($update_atap_stmt) {
 							$update_result = @odbc_execute($update_atap_stmt, array($new_status, $atapNo));
-	
+			
 							if ($update_result) {
 								$Logs = true;
 								$resp['status'] = 'success';
@@ -492,9 +526,10 @@ Class Master{
 				} else {
 					$resp['status'] = 'failed';
 					$resp['err'] = odbc_errormsg($conn);
+					
 				}
 			}
-
+			
 			if ($atapNo !== null && $Logs && $atapId !== null) {
 				$this->car_logs('Car Type Management - ATAP', "UPDATED PAYMENT STATUS - $atapNo");
 			}
@@ -507,6 +542,7 @@ Class Master{
 		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
+	
 
 	function save_or_payment() {
 		extract($_POST);
@@ -709,12 +745,14 @@ Class Master{
 		
 		$atap_id = $_POST['atap_id'];
 	
-		/* if(empty($atap_id)){
-			$resp['status'] = 'failed';
-			$resp['msg'] = "CAR type does not exist.";
-			echo json_encode($resp);
-			return;
-		} */
+
+		// if(empty($atap_id)){
+		// 	$resp['status'] = 'failed';
+		// 	$resp['msg'] = "CAR type does not exist.";
+		// 	echo json_encode($resp);
+		// 	return;
+		// }
+
 		if ($c_check_no == '' || $c_check_no == null) {
 			$c_check_no = $c_ref_no;
 		}
@@ -1771,6 +1809,51 @@ Class Master{
 		echo json_encode($resp);
 	}
     
+	function save_sr() {
+		extract($_POST);
+	
+		
+		$data = "date_created, c_time, requestor, nature_of_request, notes, assigned_to, c_status";
+		$values = "'$date_created', '$c_time', '$requestor', '$nature_of_request','$notes','$assigned_to','$c_status'";
+		
+		$resp = array();
+	
+		if (empty($id)) {
+			$insert = "INSERT INTO t_service_requests ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				//$this->car_logs('Service Requests', "Created - $id");
+				$resp['status'] = 'success';
+				$resp['msg'] = "New service request created successfully.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$update = "UPDATE t_service_requests SET 
+						date_created = '$date_created',
+						c_time = '$c_time',
+						requestor = '$requestor',
+						nature_of_request = '$nature_of_request',
+						notes = '$notes',
+						assigned_to = '$assigned_to',
+						c_status = '$c_status'
+					WHERE id = '$id'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				//$this->car_logs('Tenant Accounts', "UPDATED - $tenant_acc_no");
+				$resp['status'] = 'success';
+				$resp['msg'] = "Service request successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+		echo json_encode($resp);
+	}
+
 	function save_tenant() {
 		extract($_POST);
 	
@@ -2503,6 +2586,9 @@ switch ($action) {
 	case 'save_tenant':
 		echo $Master->save_tenant();
 		break;
+	case 'save_sr':
+		echo $Master->save_sr();
+		break;
 	case 'save_car_online':
 		echo $Master->save_car_online();
 		break;
@@ -2531,20 +2617,13 @@ switch ($action) {
 			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
 		}
 		break;
-	/* case 'delete_car_check':
-		if (isset($_POST['carTypeId']) && isset($_POST['carType'])) {
-			echo $Master->delete_car_check($_POST['carTypeId'], $_POST['carType']);
+	case 'delete_tenant':
+		if (isset($_POST['tenantId'])) {
+			echo $Master->delete_tenant($_POST['tenantId']);
 		} else {
-			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
+			echo json_encode(array('status' => 'failed', 'msg' => 'Tenant # not provided.'));
 		}
 		break;
-	case 'delete_car_online':
-		if (isset($_POST['onlineTypeId']) && isset($_POST['onlineType'])) {
-			echo $Master->delete_car_online($_POST['onlineTypeId'], $_POST['onlineType']);
-		} else {
-			echo json_encode(array('status' => 'failed', 'msg' => 'Car type not provided.'));
-		}
-		break; */
     case 'save_car_users':
         echo $Master->save_car_users();
         break;
