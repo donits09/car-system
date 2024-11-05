@@ -767,7 +767,7 @@ Class Master{
 	
 		if (!empty($_POST['c_tran_type_single'])) {
 			$c_tran_type = $_POST['c_tran_type_single'];
-		} elseif (!empty($_POST['c_tran_type'])) {
+		} elseif (!empty($_POST['c_tran_type_car'])) {
 			$c_tran_type = $_POST['atap_val'];
 		} elseif (!empty($_POST['c_car_type'])) {
 			$c_tran_type = $_POST['c_car_type'];

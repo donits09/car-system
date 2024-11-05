@@ -384,7 +384,7 @@ $(document).ready(function() {
                     alert_toast("An error occurred: " + resp.msg, 'error');
                 }
             } else {
-                alert_toast("An unexpected error occurred", 'error');
+                alert_toast("An unexpected error occurred: " + resp.msg, 'error');
             }
             end_loader();
         }

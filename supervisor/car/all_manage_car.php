@@ -112,9 +112,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
     </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
-        <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+        <label for="c_tran_type_car">Transaction Type/s from client's ATAP</label>
         <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
-            <select class="form-control" id="c_tran_type" name="c_tran_type"></select>
+            <select class="form-control" id="c_tran_type_car" name="c_tran_type_car"></select>
         </div>
         <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
@@ -221,7 +221,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (initialSelectedValue) {
                 updateAtapVal(initialSelectedValue);
             }
-            $('#c_tran_type').change(function() {
+            $('#c_tran_type_car').change(function() {
                 var selectedOption = $(this).find(':selected');
                 var selectedValue = selectedOption.val();
                 var amount = selectedOption.data('amount'); 
@@ -622,7 +622,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $('#atap_val').val(selectedValue);
         }
 
-        $('#c_tran_type').change(function() {
+        $('#c_tran_type_car').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();
             var amount = selectedOption.data('amount'); 
@@ -641,7 +641,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
-                var $select = $('#c_tran_type');
+                var $select = $('#c_tran_type_car');
                 var $textbox = $('#c_tran_type_single');
                 var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_car_amount'); 

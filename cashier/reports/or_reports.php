@@ -84,6 +84,9 @@ $current_date = date('Y-m-d');
                     if ($stmt && odbc_execute($stmt, array($username))) {
                         $i = 1;
                         while ($row = odbc_fetch_array($stmt)): 
+                            if ($i > 100) {
+                                break;
+                            }
                     ?>
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
@@ -268,18 +271,18 @@ $current_date = date('Y-m-d');
         todayHighlight: true
     });
 
-    let today = new Date();
-    let yyyy = today.getFullYear();
-    let mm = String(today.getMonth() + 1).padStart(2, '0');
-    let dd = String(today.getDate()).padStart(2, '0');
-    let currentDate = `${yyyy}-${mm}-${dd}`;
+    // let today = new Date();
+    // let yyyy = today.getFullYear();
+    // let mm = String(today.getMonth() + 1).padStart(2, '0');
+    // let dd = String(today.getDate()).padStart(2, '0');
+    // let currentDate = `${yyyy}-${mm}-${dd}`;
 
-    $('#car-type-body tr').each(function() {
-        let transactionDate = $(this).find('.tran-date').text().trim();
-        if (transactionDate !== currentDate) {
-            $(this).hide();
-        }
-    });
+    // $('#car-type-body tr').each(function() {
+    //     let transactionDate = $(this).find('.tran-date').text().trim();
+    //     if (transactionDate !== currentDate) {
+    //         $(this).hide();
+    //     }
+    // });
 
     $('#filter').click(function() {
         let startDate = parseDate($('#start_date').val());
