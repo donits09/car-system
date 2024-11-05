@@ -1,11 +1,8 @@
 <?php 
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(1);
-
 include('../../config.php');
-
 $c_account_no = null;
 $c_car_type = '';
 $c_car_amount = 0;
@@ -17,7 +14,6 @@ $c_mop = '0';
 $c_bank = '';
 $c_check_no = '';
 $c_remarks = '';
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $get_car_query = "SELECT * FROM t_car_payment WHERE id = ?";
     $accountId = $_GET['id'];
@@ -218,7 +214,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (initialSelectedValue) {
                 updateAtapVal(initialSelectedValue);
             }
-            $('#c_tran_type_car').change(function() {
+            $('#c_tran_type').change(function() {
                 var selectedOption = $(this).find(':selected');
                 var selectedValue = selectedOption.val();
                 var amount = selectedOption.data('amount'); 
@@ -545,8 +541,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         statusField.val('');
 
         comboBoxMenu.classList.remove('disabled');
-        atapNoField.prop('disabled', false);
-        carTypeInput.disabled = false;
+        atapNoField.prop('readonly', false);
+        carTypeInput.readOnly = false;    
 
         getAtapButton.style.backgroundColor = '';
         getAtapButton.style.borderColor = '';
@@ -633,7 +629,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }
-
         $('#c_tran_type_car').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();

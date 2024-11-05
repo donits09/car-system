@@ -218,7 +218,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             if (initialSelectedValue) {
                 updateAtapVal(initialSelectedValue);
             }
-            $('#c_tran_type_car').change(function() {
+            $('#c_tran_type').change(function() {
                 var selectedOption = $(this).find(':selected');
                 var selectedValue = selectedOption.val();
                 var amount = selectedOption.data('amount'); 

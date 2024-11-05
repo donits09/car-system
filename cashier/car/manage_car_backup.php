@@ -2,7 +2,7 @@
 session_start();
 
 require_once('../../inc/check_session.php');
-check_user_group(2);
+check_user_group(3);
 
 include('../../config.php');
 
@@ -53,68 +53,31 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     max-height: 200px; 
     overflow-y: auto;
 }
-.disabled {
-    pointer-events: none;
-    opacity: 0;
-}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
-<body>
 <form id="car-form" method="post" action="">
     <?php
     $readonly = isset($c_account_no) && !empty($c_account_no) ? 'readonly' : '';
     ?>
     <input type="hidden" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-8">
             <div class="form-group">
-                <label for="c_atap_no">ATAP No.</label> 
-                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no" oninput="checkAtapNo()">
+                <label for="c_atap_no">ATAP No.</label>
+                <input type="number" class="form-control" id="c_atap_no" name="c_atap_no">
             </div>
         </div>
-        <div class="col-sm-3" style="margin-top: 25px; padding-right: 5px;">
-            <a id="get_atap" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="disableAtapNo()">
+        <div class="col-sm-4" style="margin-top: 25px;">
+            <a id="get_atap" class="btn btn-flat btn-primary" style="width: 100%; color: white;" onclick="toggleCarType()">
                 <span class="fa fa-edit"></span> Get ATAP
             </a>
         </div>
-        <div class="col-sm-3" style="margin-top: 25px; padding-left: 5px;">
-            <a id="refresh_btn" class="btn btn-flat btn-secondary" style="width: 100%; color: white;" onclick="enableAtapNo()">
-                <span class="fa fa-refresh"></span> Refresh
-            </a>
-        </div>
     </div>
-    <script>
-        function disableAtapNo() {
-            document.getElementById('c_atap_no').readOnly = true;
-            toggleCarType(); 
-        }
-
-        function enableAtapNo() {
-            document.getElementById('c_atap_no').readOnly = false;
-            const atapNoField = $('#c_atap_no');
-            const amountField = $('#c_car_amount');
-            const statusField = $('#status');
-            var comboBoxMenu = document.getElementById('comboBoxMenu_car');
-            var carTypeInput = document.getElementById('c_car_type');
-            var getAtapButton = document.getElementById('get_atap');
-
-            atapNoField.val('');
-            amountField.val('');
-            statusField.val('');
-
-            comboBoxMenu.classList.remove('disabled');
-            carTypeInput.readOnly = false;
-
-            getAtapButton.style.backgroundColor = '';
-            getAtapButton.style.borderColor = '';
-            getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
-            toggleCarType(); 
-        }
-    </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
-        <label for="c_tran_type_car">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
-            <select class="form-control" id="c_tran_type_car" name="c_tran_type_car"></select>
+        <label for="c_tran_type">Transaction Type/s from client's ATAP</label>
+        <div id="tran_type_dropdown_or" class="dropdown" style="width:100%;">
+            <select class="form-control" id="c_tran_type" name="c_tran_type">
+            </select>
         </div>
         <input type="text" class="form-control" id="c_tran_type_single" name="c_tran_type_single" style="display: none;" readonly>
     </div>
@@ -127,34 +90,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $car_type_query = "SELECT DISTINCT c_payment_type, id FROM t_car_type WHERE status = 0 AND payment_status = 'C' ORDER BY c_payment_type ASC";
                 $type_result = odbc_exec($conn, $car_type_query);
                 while ($row = odbc_fetch_array($type_result)) {
-                    echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "' data-id='" . $row['id'] . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
+                    echo "<a class='dropdown-item' href='#' data-value='" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($row['c_payment_type'], ENT_QUOTES, 'UTF-8') . "</a>";
                 }
                 ?>
             </div>
         </div>
     </div>
-    <script>
-        function checkAtapNo() {
-            var atapNo = document.getElementById('c_atap_no').value;
-            var comboBoxMenu = document.getElementById('comboBoxMenu_car');
-            var carTypeInput = document.getElementById('c_car_type');
-            var getAtapButton = document.getElementById('get_atap');
-
-            if (atapNo !== '') {
-                comboBoxMenu.classList.add('disabled');
-                carTypeInput.readOnly = true;
-                getAtapButton.style.backgroundColor = 'green';
-                getAtapButton.style.borderColor = 'green';
-                // getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Click Me!';
-            } else {
-                comboBoxMenu.classList.remove('disabled');
-                carTypeInput.readOnly = false;
-                getAtapButton.style.backgroundColor = '';
-                getAtapButton.style.borderColor = '';
-                getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
-            }
-        }
-    </script>
     <script>
         $(document).ready(function () {
             $('#c_car_type').on('input', function () {
@@ -195,83 +136,55 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <script>
         $(document).ready(function() {
-            function updateAtapId(selectedId) {
-                $('#atap_id').val(selectedId);
-            }
       
-            function updateAtapVal(selectedValue) {
-                $('#atap_val').val(selectedValue);
-            }
+        function updateAtapVal(selectedValue) {
+            $('#atap_val').val(selectedValue);
+        }
 
  
-            $('.dropdown-menu a.dropdown-item').on('click', function(e) {
-                //e.preventDefault();
+        $('.dropdown-menu a.dropdown-item').on('click', function(e) {
+            //e.preventDefault();
+            var selectedValue = $(this).data('value');
+            updateAtapVal(selectedValue);
 
-                var selectedValue = $(this).data('value'); 
-                var selectedId = $(this).data('id'); 
-
-                updateAtapId(selectedId); 
-                updateAtapVal(selectedValue); 
-
-                $('#dropdownMenuButton').text(selectedValue);
-                $('#c_car_type').val(selectedValue);
-            });
-
-            var initialSelectedValue = $('#c_car_type').val();
-            if (initialSelectedValue) {
-                updateAtapVal(initialSelectedValue);
-            }
-            $('#c_tran_type').change(function() {
-                var selectedOption = $(this).find(':selected');
-                var selectedValue = selectedOption.val();
-                var amount = selectedOption.data('amount'); 
-                var atap_val = selectedOption.text(); 
-
-                updateAtapId(selectedValue);
-                updateAtapAmount(amount); 
-                updateAtapVal(atap_val); 
-            });
+            $('#dropdownMenuButton').text(selectedValue);
+            $('#c_car_type').val(selectedValue); 
         });
-    </script>
-    <script>
-    function toggleCarType() {
-        var atapNo = document.getElementById('c_atap_no').value;
-        var carTypeContainer = document.getElementById('car_type_container');
-        var tranTypeContainer =document.getElementById('tran_type_container');
 
-        if (atapNo.trim() === '') {
-            carTypeContainer.style.display = 'block';
-            tranTypeContainer.style.display = 'none';
-        } else {
-            tranTypeContainer.style.display = 'block';
-            carTypeContainer.style.display = 'none';  
-        }
+        var initialSelectedValue = $('#c_car_type').val();
+        updateAtapVal(initialSelectedValue);
+    });
+</script>
+
+<script>
+function toggleCarType() {
+    var atapNo = document.getElementById('c_atap_no').value;
+    var carTypeContainer = document.getElementById('car_type_container');
+    var tranTypeContainer =document.getElementById('tran_type_container');
+
+    if (atapNo.trim() === '') {
+        carTypeContainer.style.display = 'block';
+        tranTypeContainer.style.display = 'none';
+    } else {
+        tranTypeContainer.style.display = 'block';
+        carTypeContainer.style.display = 'none';  
     }
-    </script>
-    <script>
-        document.querySelectorAll('#comboBoxMenu_car .dropdown-item').forEach(item => {
-            item.addEventListener('click', function (event) {
-                event.preventDefault();
-                const selectedValue = this.getAttribute('data-value');
-                document.getElementById('c_car_type').value = selectedValue;
-              
-                document.getElementById('c_atap_no').readOnly = true;
-            });
-        });
+}
     </script>
     <input type="hidden" class="form-control" id="atap_id" name="atap_id" readonly>
     <input type="hidden" class="form-control" id="atap_val" name="atap_val" readonly>
+
     <hr>
     <div class="form-group">
         <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" oninput="validateNumberInput(event)" required>
+        <input type="text" class="form-control" id="c_account_no" name="c_account_no" value="<?php echo htmlspecialchars($c_account_no) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
     </div>
     <div class="form-group">
         <label for="car_no">CAR No.</label>
         <input type="number" class="form-control" id="c_car_no" name="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
         <div id="car_no_error"></div>
     </div>
-    
+
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
@@ -291,7 +204,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeofPaymentChange()">
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
@@ -302,10 +215,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6">      
                 <label for="c_bank_check">Check Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_check" name="c_bank_check">
+                    <select class="form-control" id="c_bank_check" name="c_bank_check" required>
                         <?php
                         $check_type_query = "SELECT DISTINCT c_bank_type, id FROM t_car_check WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $check_type_query);
@@ -326,10 +239,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
-            <div class="col-md-6">   
+            <div class="col-md-6">
                 <label for="c_bank_online">Online Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_online" name="c_bank_online">
+                    <select class="form-control" id="c_bank_online" name="c_bank_online" required>
                         <?php
                         $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);
@@ -374,64 +287,201 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-
     <div class="form-group hidden_fields">
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
-    <table style="width:100%;">
-        <tr>
-            <td style="width:50%; text-align:center;">
-                <a href="javascript:void(0);" class="btn btn-success" onclick="openPrintWindow()" style="width:100%;">
-                    <span class="fas fa-print"></span> CAR Preview
-                </a>
-            </td>
-            <td style="width:50%; text-align:center;">
-                <button type="submit" class="btn btn-primary" id="btnsave" style="width:100%;">Save</button>
-            </td>
-        </tr>
-    </table>
+    <div class="mb-3">
+        <a href="javascript:void(0);" class="btn btn-success" onclick="openPrintWindow()">
+            <span class="fas fa-print"></span> CAR Preview
+        </a>
+    </div>
+    <button type="submit" class="btn btn-primary" id="btnsave">Save</button>
 </form>
-<script src="../../dist/js/all_car_list.js"></script>
-<!-- <script>
-    function handleModeOfPaymentChange() {
-        var mop = document.getElementById('c_mop').value;
-        document.getElementById('c_bank_online').value = '';
-        document.getElementById('c_ref_no').value = '';
-        document.getElementById('c_bank_check').value = '';
-        document.getElementById('c_check_no').value = '';
-
-        if (mop == '2') {
-            document.getElementById('checkList').style.display = 'block';
-            document.getElementById('onlineBankList').style.display = 'none';
-        } else if (mop == '3') {
-            document.getElementById('onlineBankList').style.display = 'block';
-            document.getElementById('checkList').style.display = 'none';
-        } else {
-            document.getElementById('checkList').style.display = 'none';
-            document.getElementById('onlineBankList').style.display = 'none';
-        }
-    }
-</script> -->
+<script src="../../dist/js/manage_car_cshr.js"></script>
 <script>
-    function handleModeOfPaymentChange() {
-        var mop = document.getElementById('c_mop').value;
-        document.getElementById('c_bank_online').value = '';
-        document.getElementById('c_ref_no').value = '';
-        document.getElementById('c_bank_check').value = '';
-        document.getElementById('c_check_no').value = '';
+    function clearAmt(){
+        var txtamt = document.getElementById('c_car_amount').value;
 
-        if (mop == '2') {
-            document.getElementById('checkList').style.display = 'block';
-            document.getElementById('onlineBankList').style.display = 'none';
-        } else if (mop == '3') {
-            document.getElementById('onlineBankList').style.display = 'block';
-            document.getElementById('checkList').style.display = 'none';
-        } else {
-            document.getElementById('checkList').style.display = 'none';
-            document.getElementById('onlineBankList').style.display = 'none';
+        if(txtamt == '0.00'){
+            document.getElementById('c_car_amount').value='';
         }
     }
+    // function handleModeOfPaymentChange() {
+    //     var mop = document.getElementById('c_mop').value;
+    //     document.getElementById('c_bank_online').value = '';
+    //     document.getElementById('c_ref_no').value = '';
+    //     document.getElementById('c_bank_check').value = '';
+    //     document.getElementById('c_check_no').value = '';
+
+    //     if (mop == '2') {
+    //         document.getElementById('checkList').style.display = 'block';
+    //         document.getElementById('onlineBankList').style.display = 'none';
+    //     } else if (mop == '3') {
+    //         document.getElementById('onlineBankList').style.display = 'block';
+    //         document.getElementById('checkList').style.display = 'none';
+    //     } else {
+    //         document.getElementById('checkList').style.display = 'none';
+    //         document.getElementById('onlineBankList').style.display = 'none';
+    //     }
+    // }
+</script>
+<script>
+$(document).ready(function() {
+
+    /* Avoid Enter */
+    $('#car-form').on('keydown', function(event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault();
+        }
+    });
+
+    $('#car-form').submit(function(e) {
+        e.preventDefault();
+
+        const buyerName = $('#buyer_name').val();
+        const carNo = $('#c_car_no').val();
+        const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
+
+        let valid = true;
+
+        let atapVal = $('#c_tran_type_single').val(); 
+        if (!atapVal) {
+            atapVal = $('#atap_val').val(); 
+        }else{
+            atapVal = $('#c_car_type').val(); 
+        }
+
+        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+            alert('The selected transaction type is Special.');
+            valid = false;
+        }
+
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
+        if (carAmount <= 0) {
+            $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
+        if (!buyerName || buyerName === 'Unknown') {
+            alert('Name field is required.');
+            valid = false;
+        }
+
+        if (!valid) {
+            return;
+        }
+
+        start_loader();
+
+        $.ajax({
+            url: "../../classes/Master.php?f=save_car_payment",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function(err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+            },
+            success: function(resp) {
+                console.log(resp); 
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        $('#createCarModal').modal('hide'); 
+                        $('body').removeClass('modal-open'); 
+                        $('.modal-backdrop').remove(); 
+                        updateCarList(); 
+                    }, 1000);
+                } else if (resp && resp.status === 'failed' && resp.msg) {
+                    if (resp.msg === "CAR type does not exist.") {
+                        alert_toast("Car type does not exist.", 'error');
+                    } else if (resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    }
+                } else {
+                    alert_toast("An unexpected error occurred", 'error');
+                }
+                end_loader();
+            }
+        });
+    });
+
+    function fetchBuyerDetails(accountNo) {
+        const buyerNameField = $('#buyer_name');
+
+        if (accountNo.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '../../cashier/car/get_buyer_details.php',
+                data: { account_no: accountNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        buyerNameField.val(response.name);
+                        buyerNameField.removeAttr('required');
+                    } else {
+                        buyerNameField.val('Unknown');
+                        buyerNameField.attr('required', 'required');
+                    }
+                }
+            });
+        } else {
+            buyerNameField.val('');
+            buyerNameField.attr('required', 'required');
+        }
+    }
+
+    const accountNo = $('#c_account_no').val();
+    fetchBuyerDetails(accountNo);
+
+    $('#c_account_no').on('input', function() {
+        const accountNo = $(this).val();
+        fetchBuyerDetails(accountNo);
+    });
+
+    $('#c_car_no').on('input', function() {
+        const carNo = $('#c_car_no').val();
+
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            $('#car-form button[type="submit"]').attr('disabled', true);
+        } else if (carNo.length > 6) {
+            $('#car_no_error').text('CAR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
+            $('#car-form button[type="submit"]').attr('disabled', false);
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '<?php echo base_url; ?>cashier/car/check_car_no.php',
+                data: { car_no: carNo },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text').css('color', 'red');
+                        $('#car-form button[type="submit"]').attr('disabled', true);
+                    } else {
+                        $('#car_no_error').text('').removeClass('bold-text');
+                        $('#car-form button[type="submit"]').attr('disabled', false);
+                    }
+                }
+            });
+        }
+    });
+
+    $('#car-form').on('submit', function(e) {
+        if ($('#car_no_error').text().includes('must be 6 digits')) {
+            e.preventDefault();
+        }
+    });
+});
 </script>
 <script>
  $(document).ready(function() {
@@ -458,7 +508,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 if (response.status === 'success') {
                     if (response.data && response.data.c_account_no) {
                         const currentAccountNo = $('#c_account_no').val();
-                        if (response.data.status === '1') {
+                        if (response.data.c_account_no !== currentAccountNo) {
+                            $('#car_type_container').show();
+                            $('#tran_type_container').hide();
+                            alert('The account number of the selected ATAP No. does not match.');
+                            clearTxt();
+                        } else if (response.data.status === '1') {
                             $('#car_type_container').show();
                             $('#tran_type_container').hide();
                             alert("This ATAP has already been PAID.");
@@ -473,23 +528,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             fetchBuyerDetails(response.data.c_account_no);
                             fetchTranType(atapNo);
                             $('#car_type_container').hide();
-                            $('#tran_type_container').css({
-                                display: 'block',
-                                visibility: 'visible',
-                                opacity: 1
-                            }).show();
-
-                            setTimeout(function() {
-                                if ($('#tran_type_container').height() === 0 || $('#tran_type_container').width() === 0) {
-                                    //console.log('test');
-                                }
-
-                                if ($('#tran_type_container').is(':hidden') && $('#car_type_container').is(':hidden')) {
-                                    alert('No CAR transactions remaining for this ATAP #.');
-                                    clearTxtNoCar();
-                                    $('#btnsave').prop('disabled', true);
-                                }
-                            }, 100); 
+                            $('#tran_type_container').show();
+                            if ($('#car_type_container').is(':hidden')) {
+                                alert('No CAR transactions remaining for this ATAP #.');
+                            }
                         }
                     } else {
                         $('#car_type_container').show();
@@ -513,33 +555,19 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         });
     }
 
-    function clearTxtNoCar(){
-       const buyerNameField = $('#buyer_name');
-       const accField = $('#c_account_no');
-
-        buyerNameField.val('');
-        accField.val('');
-    }
-
-    function clearTxt() {
+    function clearTxt(){
         const atapNoField = $('#c_atap_no');
+        //const buyerNameField = $('#buyer_name');
         const amountField = $('#c_car_amount');
+        //const accField = $('#c_account_no');
         const statusField = $('#status');
-        var comboBoxMenu = document.getElementById('comboBoxMenu_car');
-        var carTypeInput = document.getElementById('c_car_type');
-        var getAtapButton = document.getElementById('get_atap');
 
         atapNoField.val('');
+        //buyerNameField.val('');
         amountField.val('');
+        //accField.val('');
         statusField.val('');
 
-        comboBoxMenu.classList.remove('disabled');
-        atapNoField.prop('readonly', false);
-        carTypeInput.readOnly = false;    
-
-        getAtapButton.style.backgroundColor = '';
-        getAtapButton.style.borderColor = '';
-        getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
     }
 
     function populateForm(data) {
@@ -608,6 +636,26 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
     }
 });
+
+function updateCarList() {
+    const username = $('#username').val(); 
+    const accountNo = $('#buyer_acc_no').val();
+
+    fetch(`car_list.php?username=${username}&buyer_acc_no=${accountNo}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('car-list-body').innerHTML = data;
+            calculateTotalAmount(); 
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
+}
 </script>
 <script>
     $(document).ready(function() {
@@ -621,8 +669,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }
-
-        $('#c_tran_type_car').change(function() {
+        $('#c_tran_type').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();
             var amount = selectedOption.data('amount'); 
@@ -641,7 +688,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             data: { c_atap_no: atapNo },
             dataType: 'json',
             success: function(response) {
-                var $select = $('#c_tran_type_car');
+                var $select = $('#c_tran_type');
                 var $textbox = $('#c_tran_type_single');
                 var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_car_amount'); 
@@ -652,13 +699,13 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     $('#tran_type_container').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
-                        $('#tran_type_dropdown').hide();
+                        $('#tran_type_dropdown_or').hide();
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
                     } else {
                         $textbox.hide();
-                        $('#tran_type_dropdown').show();
+                        $('#tran_type_dropdown_or').show();
                         $.each(response, function(index, option) {
                             $select.append($('<option>', {
                                 value: option.value,
@@ -712,4 +759,3 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $('#previewCarModal').modal('show');
     }
 </script>
-</body>
