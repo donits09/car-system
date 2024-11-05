@@ -292,7 +292,7 @@ include('../../inc/header.php');
                         <div class="container">
                             <h2 class="text-blue h4">Other Fees (CAR)</h2>
                             <hr>
-                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="checkReopenStatus()" disabled>
+                            <button type="button" id="create_new" data-account-no="" class="btn btn-primary" data-toggle="modal" href="javascript:void(0)" data-target="#createCarModal" onclick="updateAccountNo()" disabled>
                                 <span class="fa fa-edit"></span> Create New CAR
                             </button>
                             <a id="export_csv" class="btn btn-flat btn-success disabled-link" href="javascript:void(0)">
