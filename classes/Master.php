@@ -510,7 +510,7 @@ Class Master{
 							if ($update_result) {
 								$Logs = true;
 								$resp['status'] = 'success';
-								$resp['msg'] = "ATAP #$atapNo successfully updated . ";
+								$resp['msg'] = "ATAP #$atapNo successfully updated.";
 							} else {
 								$resp['status'] = 'failed';
 								$resp['err'] = odbc_errormsg($conn);

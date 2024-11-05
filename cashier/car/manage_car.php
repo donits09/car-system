@@ -97,6 +97,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         atapNoField.val('');
         amountField.val('');
         statusField.val('');
+        carTypeInput.value = '';
+        comboBoxMenu.querySelectorAll('.dropdown-item').forEach(item => {
+            item.classList.remove('active'); 
+        });
 
         comboBoxMenu.classList.remove('disabled');
         carTypeInput.readOnly = false;
@@ -106,6 +110,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
         toggleCarType(); 
     }
+
     </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type">Transaction Type/s from client's ATAP</label>

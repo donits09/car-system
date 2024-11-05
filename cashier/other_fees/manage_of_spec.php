@@ -465,10 +465,10 @@ function clearAmt(){
             atapVal = $('#c_or_type').val(); 
         }
 
-        if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
-            alert('The selected transaction type is Special.');
-            valid = false;
-        }
+        // if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
+        //     alert('The selected transaction type is Special.');
+        //     valid = false;
+        // }
 
         if (orNo.length < 6) {
             $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
@@ -507,7 +507,7 @@ function clearAmt(){
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createOrModal').modal('hide'); 
+                        $('#createCarModal').modal('hide'); 
                         $('body').removeClass('modal-open'); 
                         $('.modal-backdrop').remove(); 
                         $('#or-form')[0].reset();
@@ -662,7 +662,7 @@ $(document).ready(function() {
 
                             if ($('#tran_type_container_or').is(':hidden') && $('#or_type_container').is(':hidden')) {
                                 alert('No OR transactions remaining for this ATAP #.');
-                                clearTxtNoOr();
+                                //clearTxtNoOr();
                                 $('#btnsave').prop('disabled', true);
                             }
 
@@ -912,3 +912,4 @@ function updateORList() {
         $('#previewORModal').modal('show');
     }
 </script>
+</body>
