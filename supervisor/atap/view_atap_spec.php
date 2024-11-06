@@ -289,8 +289,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 <th class="text-right"><?php echo number_format($totalAmount, 2); ?></th>
                             </tr>
                             <tr>
-                                <td colspan="6" class="text-center">
+                                <!-- <td colspan="6" class="text-center">
                                     <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;">Save</button>
+                                </td> -->
+                                <td colspan="6" class="text-center">
+                                    <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" data-atap-no="<?php echo htmlspecialchars($atapNo); ?>" <?php echo (!$enableSaveButton) ? 'disabled' : ''; ?>>Save Status</button>
                                 </td>
                             </tr>
                         </tfoot>
@@ -332,7 +335,8 @@ $(document).on('click', '.btn-save-status', function() {
 
 $(document).on('click', '.btn-save-status-all', function() {
     var items = [];
-    var atapNo = '<?php echo htmlspecialchars($atapNo); ?>'; 
+    var atapNo = $(this).data('atap-no'); 
+    console.log(atapNo); 
 
     $('.hidden-item-id').each(function() {
         var $textbox = $(this);
@@ -349,7 +353,7 @@ $(document).on('click', '.btn-save-status-all', function() {
         }
     });
 
-    console.log("Sending items:", items); 
+    console.log(items); 
 
     if (items.length > 0) {
         $.ajax({

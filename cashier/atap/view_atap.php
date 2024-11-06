@@ -3,6 +3,7 @@ session_start();
 include('../../config.php');
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $atapId = $_GET['id'];
+    $atapNo = $_GET['no'];
     $get_atap = "SELECT 
         a.id, 
         a.c_account_no, 
@@ -59,7 +60,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tr>
                         <tr>
                             <th style="width: 30%;">ATAP No.:</th>
-                            <td><?php echo htmlspecialchars($row['c_atap_no'] ?: '----------'); ?></td>
+                            <td><?php echo htmlspecialchars($atapNo ?: '----------'); ?></td>
                         </tr>
                         <tr>
                             <th style="width: 30%;">Name:</th>
@@ -209,7 +210,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         $i = 1;
                         $totalAmount = 0;
                         $enableSaveButton = false;
-                        $atapNo = $_GET['no'];
+                        // $atapNo = $_GET['no'];
                         $get_atap_items = "SELECT * FROM t_atap_items WHERE c_atap_no = ?";
                         $stmt_items = odbc_prepare($conn, $get_atap_items);
                         odbc_execute($stmt_items, array($atapNo));
@@ -289,8 +290,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tr>
                         <tr>
                             <td colspan="6" class="text-center">
-                                <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" 
-                                    <?php echo (!$enableSaveButton) ? 'disabled' : ''; ?>>Save</button>
+                                <button type="button" class="btn btn-primary btn-save-status-all" style="width:100%;" data-atap-no="<?php echo htmlspecialchars($atapNo); ?>" <?php echo (!$enableSaveButton) ? 'disabled' : ''; ?>>Save Status</button>
                             </td>
                         </tr>
                     </tfoot>
@@ -357,7 +357,8 @@ $(document).on('click', '.btn-save-status', function() {
 
 $(document).on('click', '.btn-save-status-all', function() {
     var items = [];
-    var atapNo = '<?php echo htmlspecialchars($atapNo); ?>'; 
+    var atapNo = $(this).data('atap-no'); 
+    console.log(atapNo); 
 
     $('.hidden-item-id').each(function() {
         var $textbox = $(this);
@@ -374,7 +375,7 @@ $(document).on('click', '.btn-save-status-all', function() {
         }
     });
 
-    console.log("Sending items:", items); 
+    console.log(items); 
 
     if (items.length > 0) {
         $.ajax({
