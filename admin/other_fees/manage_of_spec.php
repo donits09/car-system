@@ -507,7 +507,7 @@ $(document).ready(function() {
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createCarModal').modal('hide'); 
+                        $('#createOrModal').modal('hide'); 
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
                         $('#or-form')[0].reset();
