@@ -317,7 +317,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         </tfoot>
                     </table>
             </div>
-        
         </div>
 <?php
     } else {

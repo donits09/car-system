@@ -499,8 +499,7 @@ Class Master{
 						} elseif ($hasPartial) {
 							$new_status = 2; 
 						}
-			
-			
+		
 						$update_atap_sql = "UPDATE t_atap SET status = ? WHERE c_atap_no = ?";
 						$update_atap_stmt = odbc_prepare($conn, $update_atap_sql);
 			

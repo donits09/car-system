@@ -57,6 +57,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     pointer-events: none;
     opacity: 0;
 }
+.lbl_rem{
+    float:left;
+    margin-right:5px;
+}
+.remarks_ref{
+    color:red;
+    font-style: italic;
+    float:left;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <body>
@@ -94,9 +103,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             const atapNoField = $('#c_atap_no');
             const amountField = $('#c_car_amount');
             const statusField = $('#status');
+            const remarksField = $('#current_remarks');
             var comboBoxMenu = document.getElementById('comboBoxMenu_car');
             var carTypeInput = document.getElementById('c_car_type');
             var getAtapButton = document.getElementById('get_atap');
+            remarksField.val('');
 
             atapNoField.val('');
             amountField.val('');
@@ -277,10 +288,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
     </div>
     <div class="form-group">
-        <label for="remarks" class="form-label">
+        <label for="current_remarks" class="form-label lbl_rem">
+            ATAP Remarks 
+        </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
+        <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+    </div>
+    <div class="form-group">
+        <label for="new_remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="2" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
+        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"></textarea>
     </div>
     <div class="form-group">
         <div class="row">
@@ -525,6 +542,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         const atapNoField = $('#c_atap_no');
         const amountField = $('#c_car_amount');
         const statusField = $('#status');
+        const remarksField = $('#current_remarks');
         var comboBoxMenu = document.getElementById('comboBoxMenu_car');
         var carTypeInput = document.getElementById('c_car_type');
         var getAtapButton = document.getElementById('get_atap');
@@ -532,6 +550,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         atapNoField.val('');
         amountField.val('');
         statusField.val('');
+        remarksField.val('');
 
         comboBoxMenu.classList.remove('disabled');
         atapNoField.prop('readonly', false);
@@ -547,6 +566,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         const amountField = $('#c_car_amount');
         const accField = $('#c_account_no');
         const statusField = $('#status');
+        const remarksField = $('#current_remarks');
      
         if (data.status === '1') {
             statusField.val('PAID');
@@ -562,12 +582,14 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         amountField.val(formattedAmount).addClass('glow-effect');
         accField.val(data.c_account_no).addClass('glow-effect');
         statusField.addClass('glow-effect');
+        remarksField.val(data.current_remarks).addClass('glow-effect');
 
         setTimeout(function() {
             buyerNameField.removeClass('glow-effect');
             amountField.removeClass('glow-effect');
             accField.removeClass('glow-effect');
             statusField.removeClass('glow-effect');
+            remarksField.removeClass('glow-effect');
         }, 1000);
 
         $('#c_account_no').trigger('input');
@@ -646,6 +668,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 var $atapId = $('#atap_id'); 
                 var $atapAmount = $('#c_car_amount'); 
                 var $atapVal = $('#atap_val'); 
+                var $atapRemarks = $('#current_remarks'); 
                 $select.empty();
                 
                 if (response.length > 0) {
@@ -656,6 +679,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
+                        $atapRemarks.val(response[0].remarks);
                     } else {
                         $textbox.hide();
                         $('#tran_type_dropdown').show();
@@ -664,18 +688,21 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                                 value: option.value,
                                 text: option.text,
                                 'data-amount': option.amount,
-                                'data-atap_val': option.text
+                                'data-atap_val': option.text,
+                                'data-remarks': option.remarks
                             }));
                         });
                         $atapId.val(response[0].value);
                         $atapAmount.val(response[0].amount);
                         $atapVal.val(response[0].text);
+                        $atapRemarks.val(response[0].remarks);
                     }
                 } else {
                     $('#tran_type_container').hide();
                     $atapId.val(''); 
                     $atapAmount.val(''); 
                     $atapVal.val('');
+                    $atapRemarks.val('');
                 }
             },
             error: function(xhr, status, error) {
@@ -684,6 +711,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 $('#atap_id').val(''); 
                 $('#c_car_amount').val(''); 
                 $('#atap_val').val(''); 
+                $('#current_remarks').val(''); 
             }
         });
     }

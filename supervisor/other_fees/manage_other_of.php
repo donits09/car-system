@@ -62,8 +62,18 @@
     pointer-events: none;
     opacity: 0;
 }
+.lbl_rem{
+    float:left;
+    margin-right:5px;
+}
+.remarks_ref{
+    color:red;
+    font-style: italic;
+    float:left;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
+<body>
 <form id="other-or-form">
     <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
@@ -95,10 +105,11 @@
         const atapNoField = $('#c_atap_no_or');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
+        const remarksField = $('#current_remarks');
         var comboBoxMenu = document.getElementById('comboBoxMenu_or');
         var orTypeInput = document.getElementById('c_or_type');
         var getAtapButton = document.getElementById('get_atap_or');
-
+        remarksField.val('');
         atapNoField.val('');
         amountField.val('');
         statusField.val('');
@@ -260,10 +271,16 @@
         <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
     <div class="form-group">
-        <label for="remarks" class="form-label">
+        <label for="current_remarks" class="form-label lbl_rem">
+            ATAP Remarks 
+        </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
+        <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+    </div>
+    <div class="form-group">
+        <label for="new_remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="2" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
+        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"></textarea>
     </div>
     <div class="row align-items-end">
         <div class="col-md-6 form-group">
@@ -698,7 +715,7 @@ $(document).ready(function() {
         $('#c_block').val('').removeClass('glow-effect');
         $('#c_lot').val('').removeClass('glow-effect');
         $('#c_or_amount').val('').removeClass('glow-effect');
-
+        $('#current_remarks').val('').removeClass('glow-effect');
 
         const atapNoField = $('#c_atap_no_or');
         const nameField = $('#c_name');
@@ -706,6 +723,7 @@ $(document).ready(function() {
         const blockField = $('#c_block');
         const lotField = $('#c_lot');
         const amountField = $('#c_or_amount');
+        const remarksField = $('#current_remarks');
 
         var comboBoxMenu = document.getElementById('comboBoxMenu_or');
         var orTypeInput = document.getElementById('c_or_type');
@@ -717,6 +735,7 @@ $(document).ready(function() {
         blockField.val('');
         lotField.val('');
         amountField.val('');
+        remarksField.val('');
         comboBoxMenu.classList.remove('disabled');
         atapNoField.prop('readonly', false); 
         orTypeInput.readOnly = false;      
@@ -731,6 +750,7 @@ $(document).ready(function() {
         $('#c_phase').val(data.c_phase).addClass('glow-effect');
         $('#c_block').val(data.c_block).addClass('glow-effect');
         $('#c_lot').val(data.c_lot).addClass('glow-effect');
+        $('#current_remarks').val(data.current_remarks).addClass('glow-effect');
 
         const formattedAmount = parseFloat(data.c_or_amount).toFixed(2);
         $('#c_or_amount').val(formattedAmount).addClass('glow-effect');
@@ -741,6 +761,7 @@ $(document).ready(function() {
             $('#c_block').removeClass('glow-effect');
             $('#c_lot').removeClass('glow-effect');
             $('#c_or_amount').removeClass('glow-effect');
+            $('#current_remarks').removeClass('glow-effect');
         }, 1000);
     }
 });
@@ -781,6 +802,7 @@ $(document).ready(function() {
                 var $atapId = $('#atap_id_or'); 
                 var $atapAmount = $('#c_or_amount'); 
                 var $atapVal = $('#atap_val_or'); 
+                var $atapRemarks = $('#current_remarks'); 
                 $select.empty();
                 
                 if (response.length > 0) {
@@ -791,6 +813,7 @@ $(document).ready(function() {
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
+                        $atapRemarks.val(response[0].remarks);
                     } else {
                         $textbox.hide();
                         $('#tran_type_dropdown').show();
@@ -799,18 +822,21 @@ $(document).ready(function() {
                                 value: option.value,
                                 text: option.text,
                                 'data-amount': option.amount,
-                                'data-atap_val': option.text
+                                'data-atap_val': option.text,
+                                'data-remarks': option.remarks
                             }));
                         });
                         $atapId.val(response[0].value);
                         $atapAmount.val(response[0].amount);
                         $atapVal.val(response[0].text);
+                        $atapRemarks.val(response[0].remarks);
                     }
                 } else {
                     $('#tran_type_container_or').hide();
                     $atapId.val(''); 
                     $atapAmount.val(''); 
                     $atapVal.val('');
+                    $atapRemarks.val('');
                 }
             },
             error: function(xhr, status, error) {
@@ -819,6 +845,7 @@ $(document).ready(function() {
                 $('#atap_id_or').val(''); 
                 $('#c_or_amount').val(''); 
                 $('#atap_val_or').val(''); 
+                $('#current_remarks').val(''); 
             }
         });
     }

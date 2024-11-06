@@ -52,6 +52,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     pointer-events: none;
     opacity: 0;
 }
+.lbl_rem{
+    float:left;
+    margin-right:5px;
+}
+.remarks_ref{
+    color:red;
+    font-style: italic;
+    float:left;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <body>
@@ -89,6 +98,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         const atapNoField = $('#c_atap_no_or');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
+        const remarksField = $('#current_remarks');
         var comboBoxMenu = document.getElementById('comboBoxMenu_or');
         var orTypeInput = document.getElementById('c_or_type');
         var getAtapButton = document.getElementById('get_atap_or');
@@ -96,6 +106,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         atapNoField.val('');
         amountField.val('');
         statusField.val('');
+        remarksField.val('');
 
         comboBoxMenu.classList.remove('disabled');
         orTypeInput.readOnly = false;
@@ -273,10 +284,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" class="form-control" id="buyer_name_or" name="buyer_name_or" oninput="validateAlphaNumericInput(event)" readonly>
     </div>
     <div class="form-group">
-        <label for="remarks" class="form-label">
+        <label for="current_remarks" class="form-label lbl_rem">
+            ATAP Remarks 
+        </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
+        <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+    </div>
+    <div class="form-group">
+        <label for="new_remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="2" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
+        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"></textarea>
     </div>
     <div class="form-group">
         <div class="row">
@@ -701,6 +718,7 @@ $(document).ready(function() {
         const atapNoField = $('#c_atap_no_or');
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
+        const remarksField = $('#current_remarks');
         var comboBoxMenu = document.getElementById('comboBoxMenu_or');
         var orTypeInput = document.getElementById('c_or_type');
         var getAtapButton = document.getElementById('get_atap_or');
@@ -708,6 +726,7 @@ $(document).ready(function() {
         atapNoField.val('');
         amountField.val('');
         statusField.val('');
+        remarksField.val('');
 
         comboBoxMenu.classList.remove('disabled');
         atapNoField.prop('readonly', false); 
@@ -723,6 +742,7 @@ $(document).ready(function() {
         const amountField = $('#c_or_amount');
         const accField = $('#c_account_no_or');
         const statusField = $('#status');
+        const remarksField = $('#current_remarks');
 
         if (data.status === '1') {
             statusField.val('PAID');
@@ -738,12 +758,14 @@ $(document).ready(function() {
         amountField.val(formattedAmount).addClass('glow-effect');
         accField.val(data.c_account_no_or).addClass('glow-effect');
         statusField.addClass('glow-effect');
+        remarksField.val(data.current_remarks).addClass('glow-effect');
 
         setTimeout(function() {
             buyerNameField.removeClass('glow-effect');
             amountField.removeClass('glow-effect');
             accField.removeClass('glow-effect');
             statusField.removeClass('glow-effect');
+            remarksField.removeClass('glow-effect');
         }, 1000);
         $('#c_account_no_or').trigger('input');
     }
@@ -843,6 +865,7 @@ function updateORList() {
                 var $atapId = $('#atap_id_or'); 
                 var $atapAmount = $('#c_or_amount'); 
                 var $atapVal = $('#atap_val_or'); 
+                var $atapRemarks = $('#current_remarks'); 
                 $select.empty();
                 
                 if (response.length > 0) {
@@ -853,6 +876,7 @@ function updateORList() {
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
+                        $atapRemarks.val(response[0].remarks);
                     } else {
                         $textbox.hide();
                         $('#tran_type_dropdown').show();
@@ -861,18 +885,21 @@ function updateORList() {
                                 value: option.value,
                                 text: option.text,
                                 'data-amount': option.amount,
-                                'data-atap_val': option.text
+                                'data-atap_val': option.text,
+                                'data-remarks': option.remarks
                             }));
                         });
                         $atapId.val(response[0].value);
                         $atapAmount.val(response[0].amount);
                         $atapVal.val(response[0].text);
+                        $atapRemarks.val(response[0].remarks);
                     }
                 } else {
                     $('#tran_type_container_or').hide();
                     $atapId.val(''); 
                     $atapAmount.val(''); 
                     $atapVal.val('');
+                    $atapRemarks.val('');
                 }
             },
             error: function(xhr, status, error) {
@@ -881,6 +908,7 @@ function updateORList() {
                 $('#atap_id_or').val(''); 
                 $('#c_or_amount').val(''); 
                 $('#atap_val_or').val(''); 
+                $('#current_remarks').val(''); 
             }
         });
     }
