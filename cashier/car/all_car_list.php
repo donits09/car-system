@@ -127,7 +127,7 @@ include('../../inc/header.php');
                                         </td>
                                         <td class="text-center"><?php echo htmlspecialchars($row['c_car_no']); ?></td>
                                         <td class="text-center"><?php echo htmlspecialchars($row['c_car_type']); ?></td>
-                                        <td class="text-center"><?php echo htmlspecialchars($row['c_remarks']); ?></td>
+                                        <td class="text-center" style="white-space: normal; word-wrap: break-word; max-width: 200px;"><?php echo htmlspecialchars($row['c_remarks']); ?></td>
                                         <td class="text-center">
                                             <?php
                                             $c_buyer_acc = !empty($row['c_account_no']) ? $row['c_account_no'] : '';
