@@ -125,7 +125,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
         <label for="c_tran_type_car">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
+        <div id="tran_type_dropdown_car" class="dropdown" style="width:100%;">
             <select class="form-control" id="c_tran_type_car" name="c_tran_type_car">
             </select>
         </div>
@@ -288,17 +288,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
     </div>
-    <div class="form-group">
-        <label for="current_remarks" class="form-label lbl_rem">
-            ATAP Remarks 
-        </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
-        <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
-    </div>
+    <?php 
+        if (!isset($_GET['id']) || $_GET['id'] == null): ?>
+            <div class="form-group">
+                <label for="current_remarks" class="form-label lbl_rem">
+                    ATAP Remarks 
+                </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
+                <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+            </div>
+    <?php endif; ?>
     <div class="form-group">
         <label for="new_remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"></textarea>
+        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
     </div>
     <div class="form-group">
         <div class="row">
@@ -842,14 +845,14 @@ function updateCarList() {
                     $('#tran_type_container').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
-                        $('#tran_type_dropdown').hide();
+                        $('#tran_type_dropdown_car').hide();
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
                         $atapRemarks.val(response[0].remarks);
                     } else {
                         $textbox.hide();
-                        $('#tran_type_dropdown').show();
+                        $('#tran_type_dropdown_car').show();
                         $.each(response, function(index, option) {
                             $select.append($('<option>', {
                                 value: option.value,

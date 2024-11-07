@@ -49,7 +49,7 @@ $c_remarks = '';
 ?>
 <?php 
 if (isset($_GET['id']) && $_GET['id'] > 0) {
-    echo htmlspecialchars($_GET['id']);
+    //echo htmlspecialchars($_GET['id']);
     $get_tenant_query = "SELECT * FROM t_tenant_accounts WHERE id = ?";
     $tenantId = $_GET['id'];
     $stmt = odbc_prepare($conn, $get_tenant_query);
@@ -240,7 +240,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </label>
             <textarea class="form-control txt" rows="5" cols="50" id="tenant_remarks" name="tenant_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
             <label for="encoder">Encoded by</label>
             <input type="hidden" id="c_encoded_by" name="c_encoded_by" value="<?php echo  $_SESSION['username'] ?>" readonly>
             <?php
@@ -258,7 +258,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             ?>
             <input type="text" class="form-control" value="<?php echo $realname ?>" readonly>
         </div>
-        <br>
         <div class="col-md-12">
             <button type="submit" class="btn btn-primary" id="btnsave" style="width:100%;">Save</button>
         </div>
