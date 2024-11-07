@@ -540,7 +540,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_or_amount" id="c_or_amount" value="<?php echo number_format($row['c_or_amount'], 2); ?>">
         <textarea name="c_or_amount_words" id="c_or_amount_words"></textarea>
         
-        <input type="text" name="c_or_no" id="c_or_no" value="<?php echo htmlspecialchars($row['c_or_no']); ?>">
+        <!-- <input type="text" name="c_or_no" id="c_or_no" value="<?php echo htmlspecialchars($row['c_or_no']); ?>"> -->
         
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
