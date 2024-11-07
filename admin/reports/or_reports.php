@@ -81,6 +81,9 @@ $current_date = date('Y-m-d');
                     if ($stmt && odbc_execute($stmt)) {
                         $i = 1;
                         while ($row = odbc_fetch_array($stmt)): 
+                            if ($i > 100) {
+                                break;
+                            }
                     ?>
                             <tr>
                                 <td class="text-center"><?php echo $i++; ?></td>
@@ -266,7 +269,7 @@ $current_date = date('Y-m-d');
     });
 
     /* for display of current date sa table */
-    let today = new Date();
+    /* let today = new Date();
     let yyyy = today.getFullYear();
     let mm = String(today.getMonth() + 1).padStart(2, '0');
     let dd = String(today.getDate()).padStart(2, '0');
@@ -277,7 +280,7 @@ $current_date = date('Y-m-d');
         if (transactionDate !== currentDate) {
             $(this).hide();
         }
-    });
+    }); */
 
     $('#filter').click(function() {
         let startDate = parseDate($('#start_date').val());
