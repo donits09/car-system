@@ -175,7 +175,7 @@ function isActive($pages) {
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">CAR List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/atap/all_atap_list.php">ATAP List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/other_fees/all_of_list.php">Other Fees</a>
-                        <!-- <a class="dropdown-item" href="<?php echo base_url ?>tenants/list.php">Tenant List</a> -->
+                        <a class="dropdown-item" href="<?php echo base_url ?>tenants/list.php">Tenant List</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown<?php echo isActive([

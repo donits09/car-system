@@ -3,6 +3,7 @@ session_start();
 require_once('../../inc/check_session.php');
 check_user_group(1);
 include('../../config.php');
+$accountId = null;
 $c_account_no = null;
 $c_car_type = '';
 $c_car_amount = 0;
@@ -283,17 +284,21 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name" name="buyer_name" oninput="validateAlphaNumericInput(event)" readonly>
     </div>
-    <div class="form-group">
-        <label for="current_remarks" class="form-label lbl_rem">
-            ATAP Remarks 
-        </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
-        <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
-    </div>
+    <?php 
+        if (!isset($_GET['id']) || $_GET['id'] == null): ?>
+            <div class="form-group">
+                <label for="current_remarks" class="form-label lbl_rem">
+                    ATAP Remarks 
+                </label>
+                <div class="remarks_ref">(These remarks are for your reference only.)</div>
+                <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+            </div>
+    <?php endif; ?>
     <div class="form-group">
         <label for="new_remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"></textarea>
+        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
     </div>
     <div class="form-group">
         <div class="row">

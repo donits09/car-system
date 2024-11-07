@@ -116,14 +116,14 @@ include('../inc/header.php');
                                         data-id="<?php echo $row['id']; ?>">
                                             Edit
                                         </a>
-                                        <div class="dropdown-divider"></div>
+                                        <!-- <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="<?php echo base_url ?>print/print_or.php?id=<?php echo htmlspecialchars($row['c_or_no']); ?>" target="_blank">
                                             Print
                                         </a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item delete_or" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>" data-or-no="<?php echo htmlspecialchars($row['c_or_no']); ?>">
                                             Cancel
-                                        </a>
+                                        </a> -->
                                     </div>
                                 </td>
                                 </tr>
@@ -132,13 +132,6 @@ include('../inc/header.php');
                         }
                         ?>
                     </tbody>
-                <tfoot>
-                    <tr>
-                        <th colspan="7" class="text-right" id="totalAmt">Total amount:</th>
-                        <th id="totalAmount" class="text-center"></th>
-                        <th colspan="3"></th>
-                    </tr>
-                </tfoot>
             </table>
         </div>
         <?php include ('modals/main_modals.php'); ?>

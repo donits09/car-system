@@ -266,17 +266,20 @@
         <label for="name">Name</label>
         <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
-    <div class="form-group">
-        <label for="current_remarks" class="form-label lbl_rem">
-            ATAP Remarks 
-        </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
-        <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
-    </div>
+    <?php 
+        if (!isset($_GET['id']) || $_GET['id'] == null): ?>
+            <div class="form-group">
+                <label for="current_remarks" class="form-label lbl_rem">
+                    ATAP Remarks 
+                </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
+                <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
+            </div>
+    <?php endif; ?>
     <div class="form-group">
         <label for="new_remarks" class="form-label">
             Remarks 
         </label>
-        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"></textarea>
+        <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
     </div>
     <div class="row align-items-end">
         <div class="col-md-6 form-group">     
