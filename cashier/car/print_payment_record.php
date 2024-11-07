@@ -65,8 +65,8 @@ include('../../inc/header.php');?>
                         <?php
                             $id = pg_escape_string($_GET['id']);
                             $qry1 = pg_query($cnx, "SELECT *,substring(c_account_no::text FROM 1 FOR 3) as acr,
-                            substring(c_account_no::text FROM 6 FOR 3) as blk,
-                            substring(c_account_no::text FROM 9 FOR 2) as lot FROM t_buyers_account WHERE c_account_no = '$id'");
+                            substring(c_account_no::text FROM 4 FOR 3) as blk,
+                            substring(c_account_no::text FROM 7 FOR 2) as lot FROM t_buyers_account WHERE c_account_no = '$id'");
                             $row1 = pg_fetch_assoc($qry1);
                             $property_id = $row1['c_account_no'];
                             $lot_area = $row1['c_lot_area'];
