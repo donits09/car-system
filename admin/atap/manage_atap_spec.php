@@ -946,6 +946,8 @@ $('#atap-form').on('keydown', function(event) {
                     $('.modal-backdrop').remove();
                     updateAtapList();
                 }, 1000);
+            } else if (resp && resp.status === 'check_atap') {
+                alert_toast(resp.msg, 'error');
             } else if (resp && resp.status === 'failed' && resp.err) {
                 alert_toast("An error occurred: " + resp.err, 'error');
             } else if (resp && resp.status === 'not_found') {

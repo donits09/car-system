@@ -142,7 +142,11 @@
                         } elseif ($row['c_mop'] == 2) {
                             echo "Check";
                         } elseif ($row['c_mop'] == 3) {
-                            echo "Online";
+                            if ($row['c_bank'] == 'CDV') {
+                                echo "Check Voucher";
+                            } else {
+                                echo "Online";
+                            }
                         } else {
                             echo "-";
                         }
