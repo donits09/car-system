@@ -242,6 +242,11 @@ include('../../inc/header.php');
                             <a id="export_pdf" class="btn btn-flat btn-danger disabled-link" href="javascript:void(0)">
                                 <span class="fa fa-download"></span> Export as PDF
                             </a>
+
+                            <a id="history_btn" class="btn btn-flat btn-secondary disabled-link" href="javascript:void(0)">
+                                <span class="fa fa-arrow-pointer"></span> Transfer History
+                            </a>
+
                             <hr>
                                 <div class="container">
                                     <div class="row">
@@ -927,6 +932,91 @@ $(document).ready(function() {
             loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
         });
 
+      
+        $('#history_btn').click(function() {
+            var accountNo = $('#buyer_acc_no').val();  
+            console.log("accountNo: ", accountNo);
+
+            $('#transferHistoryModal').modal('show');
+            $('#resultsContainer').html("Loading...");
+
+            $.ajax({
+                url: '<?php echo base_url; ?>transfer_account/view_transfer.php',
+                method: 'POST',
+                data: { accountNo: accountNo },
+                success: function(response) {
+                    console.log("Response from server:", response);
+
+                    if (response.status === 'exists') {
+                        var tableHtml = `
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Old Account #</th>
+                                        <th>New Account #</th>
+                                        <th>Car Type</th>
+                                        <th>Car #</th>
+                                        <th>Pay Date</th>
+                                        <th>Amount</th>
+                                        <th>Encoder</th>
+                                        <th>Transaction Date</th>
+                                        <th>MoP</th>
+                                        <th>Bank</th>
+                                        <th>Check #</th>
+                                        <th>Remarks</th>
+                                        <th>ATAP #</th>
+                                        <th>Date Transferred</th>
+                                        <th>Time Transferred</th>
+                                        <th>Transferred By</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        response.data.forEach(function(item) {
+                            tableHtml += `
+                                <tr>
+                                    <td>${item.old_acc}</td>
+                                    <td>${item.new_acc}</td>
+                                    <td>${item.c_car_type}</td>
+                                    <td>${item.c_car_no}</td>
+                                    <td>${item.c_car_paydate}</td>
+                                    <td>${item.c_car_amount}</td>
+                                    <td>${item.c_encoder}</td>
+                                    <td>${item.c_tran_date}</td>
+                                    <td>${item.c_mop}</td>
+                                    <td>${item.c_bank}</td>
+                                    <td>${item.c_check_no}</td>
+                                    <td>${item.c_remarks}</td>
+                                    <td>${item.c_atap_no}</td>
+                                    <td>${item.date_transferred}</td>
+                                    <td>${item.c_time_transferred}</td>
+                                    <td>${item.transferred_by}</td>
+                                    <td>${item.notes}</td>
+                                </tr>
+                            `;
+                        });
+
+                        tableHtml += `
+                                </tbody>
+                            </table>
+                        `;
+
+                        $('#resultsContainer').html(tableHtml); 
+                    } else if (response.status === 'not_exists') {
+                        $('#resultsContainer').html("<p>No transfer history found for this account.</p>");
+                    } else {
+                        $('#resultsContainer').html("<p>An error occurred: " + response.message + "</p>");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("AJAX Error: " + error);
+                    $('#resultsContainer').html("<p>An error occurred while retrieving data.</p>");
+                }
+            });
+        });
+
         $(document).on('click', '.delete_data_car', function() {
             var carNo = $(this).data('car-no');
             var atapNo = $(this).data('atap-no'); 
@@ -1093,14 +1183,52 @@ $(document).ready(function() {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const orListTab = document.getElementById('or-list-tab');
-
     orListTab.addEventListener('click', function() {
-    
         setTimeout(function() {
             calculateTotalORAmount();
         }, 100); 
     });
 });
+</script>
+<script>
+$(document).ready(function() {
+    $('#searchAcc').click(function(e) {
+        e.preventDefault();
+
+        var accno = $('#acc_no').val();  
+        console.log("Account No:" + accno);
+
+        if (accno) {
+            $.ajax({
+                url: '<?php echo base_url; ?>admin/car/check_accno_exists.php',  
+                method: 'POST',
+                data: { accno: accno },
+                success: function(response) {
+                    console.log("Server Response: ", response);
+                    
+                    if (response.status === 'exists') {
+                        $('#history_btn').removeClass('disabled-link').show();
+                    } else {
+                        $('#history_btn').addClass('disabled-link').hide();
+                    }
+
+                    calculateTotalAmount();
+                    calculateTotalORAmount();
+                    switchToBuyerDetails();
+                },
+                error: function(xhr, status, error) {
+                    console.log("AJAX Error: " + error);
+                }
+            });
+        } else {
+            $('#history_btn').addClass('disabled-link').hide();
+            calculateTotalAmount();
+            calculateTotalORAmount();
+            switchToBuyerDetails();
+        }
+    });
+});
+
 </script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>

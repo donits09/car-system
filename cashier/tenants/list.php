@@ -206,7 +206,6 @@ window._conf = function(msg, func, params) {
         });
     }
 </script>
-
 </div>
 </body>
 <?php include('../../inc/footer.php'); ?>
