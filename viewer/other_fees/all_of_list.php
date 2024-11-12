@@ -92,7 +92,7 @@ include('../../inc/header.php');
                             $or_list .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
                         }
                         
-                        $or_list .= " ORDER BY a.c_or_paydate DESC";
+                        $or_list .= " ORDER BY a.c_or_paydate DESC, a.c_tran_date DESC";
 
                         /* echo $or_list; */
 

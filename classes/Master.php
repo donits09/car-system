@@ -1528,13 +1528,32 @@ Class Master{
 			}
 	
 		} else {
+
+			$check_query = "SELECT status FROM t_atap WHERE (status = '1' OR status = '2') AND id = '$id'";
+			$check_result = odbc_exec($this->conn, $check_query);
+
+			if (odbc_fetch_row($check_result)) {
+				$status = odbc_result($check_result, 'status');
+
+				if ($status == '1') {
+					$resp['status'] = 'check_atap';
+					$resp['msg'] = "Atap is already paid.";
+				} elseif ($status == '2') {
+					$resp['status'] = 'check_atap';
+					$resp['msg'] = "Atap is already partial.";
+				}
+
+				echo json_encode($resp);
+				return;
+			}
+		
 			$update_atap = "UPDATE t_atap SET 
 							c_tran_updated = '$c_tran_date',
 							atap_remarks = '$atap_remarks',
 							approval_status = '$approval_status',
 							approver = '$approver'
 							WHERE c_atap_no = '$prev_c_atap_no'";
-			$save_atap = odbc_exec($conn, $update_atap);
+			$save_atap = odbc_exec($this->conn, $update_atap);
 	
 			if ($save_atap) {
 				$delete_items = "DELETE FROM t_atap_items WHERE c_atap_no = '$prev_c_atap_no'";
@@ -1659,6 +1678,25 @@ Class Master{
 				$resp['err'] = odbc_errormsg($conn);
 			}
 		} else {
+
+			$check_query = "SELECT status FROM t_atap WHERE (status = '1' OR status = '2') AND id = '$id'";
+			$check_result = odbc_exec($this->conn, $check_query);
+
+			if (odbc_fetch_row($check_result)) {
+				$status = odbc_result($check_result, 'status');
+
+				if ($status == '1') {
+					$resp['status'] = 'check_other_atap';
+					$resp['msg'] = "Atap is already paid.";
+				} elseif ($status == '2') {
+					$resp['status'] = 'check_other_atap';
+					$resp['msg'] = "Atap is already partial.";
+				}
+
+				echo json_encode($resp);
+				return;
+			}
+
 			$update_atap = "UPDATE t_other_atap SET 
 							c_name = '$c_name',
 							c_phase = '$c_phase',

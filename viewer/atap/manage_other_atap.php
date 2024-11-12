@@ -749,6 +749,8 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                             $('.modal-backdrop').remove();
                             location.reload();
                         }, 1000);
+                    } else if (resp && resp.status === 'check_other_atap') {
+                        alert_toast(resp.msg, 'error');
                     } else if (resp && resp.status === 'failed' && resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');
                     } else if (resp && resp.status === 'not_found') {

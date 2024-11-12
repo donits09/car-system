@@ -104,7 +104,7 @@ include('../../inc/header.php');
                             $car_list .= " AND CAST(a.c_tran_date AS date) = '$current_date'";
                         }
 
-                        $car_list .= " ORDER BY a.c_car_paydate DESC";
+                        $car_list .= " ORDER BY a.c_car_paydate DESC, a.c_tran_date DESC";
                         /* echo $car_list; */
                         $stmt = odbc_prepare($conn, $car_list);
                         $result = odbc_execute($stmt, array($username));

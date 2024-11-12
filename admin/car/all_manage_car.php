@@ -308,6 +308,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
+                    <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Check Voucher</option>
                 </select>
             </div>
         </div>
