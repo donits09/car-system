@@ -1750,7 +1750,89 @@ Class Master{
 		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
-		
+
+	function save_transfer() {
+		$resp = ['status' => 'failed', 'msg' => 'Unknown error'];
+		if (isset($_POST['selectedRows'])) {
+			$selectedRows = json_decode($_POST['selectedRows'], true);
+			if (!empty($selectedRows)) {
+				$conn = $this->conn;
+				$errors = [];
+				odbc_autocommit($conn, FALSE); 
+	
+				foreach ($selectedRows as $row) {
+			
+					$id = addslashes($row['id']);
+					$old_acc = addslashes($row['old_acc']);
+					$new_acc = addslashes($row['new_acc']);
+					$c_car_type = addslashes($row['c_car_type']);
+					$c_car_no = addslashes($row['c_car_no']);
+					$c_car_paydate = addslashes($row['c_car_paydate']);
+					$c_car_amount = addslashes($row['c_car_amount']);
+					$c_encoder = addslashes($row['c_encoder']);
+					$c_tran_date = addslashes($row['c_tran_date']);
+					$c_mop = addslashes($row['c_mop']);
+					$c_bank = addslashes($row['c_bank']);
+					$c_check_no = addslashes($row['c_check_no']);
+					$c_remarks = addslashes($row['c_remarks']);
+					$c_atap_no = addslashes($row['c_atap_no']);
+					$date_transferred = addslashes($row['date_transferred']);
+					$transferred_by = addslashes($row['transferred_by']);
+					$c_time_transferred = addslashes($row['c_time_transferred']);
+					$notes = addslashes($row['notes']);
+	
+					if (empty($c_car_no) || empty($c_car_type) || empty($c_car_amount)) {
+						$errors[] = "Missing required fields for account $old_acc";
+						continue;
+					}
+	
+					$insert_transfer_to_car = "INSERT INTO t_car_payment
+						(c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, status, e_status, c_bank, 
+						c_check_no, c_remarks, c_atap_no) 
+						VALUES ('$new_acc', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$transferred_by', 
+						'$c_tran_date', '$c_tran_date', '$c_mop', '0', '0', '$c_bank', '$c_check_no', '$c_remarks', '$c_atap_no')";
+					
+					if (!odbc_exec($conn, $insert_transfer_to_car)) {
+						$errors[] = "Failed to insert new car payment for account $old_acc. Error: " . odbc_errormsg($conn);
+						odbc_rollback($conn);
+						break;
+					}
+
+					$insert_transfer = "INSERT INTO t_transfer_logs 
+						(old_acc, new_acc, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoder, c_tran_date, c_mop, c_bank, 
+						c_check_no, c_remarks, c_atap_no, date_transferred, transferred_by, c_time_transferred, notes) 
+						VALUES ('$old_acc', '$new_acc', '$c_car_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoder', 
+						'$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', '$c_atap_no', '$date_transferred', '$transferred_by', '$c_time_transferred', '$notes')";
+					
+					if (!odbc_exec($conn, $insert_transfer)) {
+						$errors[] = "Failed to insert transfer log for account $old_acc. Error: " . odbc_errormsg($conn);
+						odbc_rollback($conn);
+						break;
+					}
+	
+					$delete_transfer = "DELETE FROM t_car_payment WHERE c_account_no = '$old_acc' and c_car_no = '$c_car_no'";
+					if (!odbc_exec($conn, $delete_transfer)) {
+						$errors[] = "Failed to delete car payment for car number $c_car_no, account $old_acc. Error: " . odbc_errormsg($conn);
+						odbc_rollback($conn);
+						break;
+					}
+	
+	
+					
+				}
+	
+				if (empty($errors)) {
+					odbc_commit($conn);
+					$resp = ['status' => 'success', 'msg' => 'Transfers successfully saved.'];
+				} else {
+					$resp['msg'] = implode(', ', $errors);
+				}
+			}
+		}
+		echo json_encode($resp);
+	}
+	
+	
 	
 	
 	function save_locked_trans() {
@@ -2581,6 +2663,9 @@ switch ($action) {
 		break;
 	case 'save_car_check':
 		echo $Master->save_car_check();
+		break;
+	case 'save_transfer':
+		echo $Master->save_transfer();
 		break;
 	case 'save_tenant':
 		echo $Master->save_tenant();
