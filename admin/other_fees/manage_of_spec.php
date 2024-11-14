@@ -118,7 +118,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </script>
     <div class="form-group" id="tran_type_container_or" style="display: none;">
         <label for="c_tran_type_or">Transaction Type/s from client's ATAP</label>
-        <div id="tran_type_dropdown" class="dropdown" style="width:100%;">
+        <div id="tran_type_dropdown_or" class="dropdown" style="width:100%;">
             <select class="form-control" id="c_tran_type_or" name="c_tran_type_or">
             </select>
         </div>
@@ -878,14 +878,14 @@ function updateORList() {
                     $('#tran_type_container_or').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
-                        $('#tran_type_dropdown').hide();
+                        $('#tran_type_dropdown_or').hide();
                         $atapId.val(response[0].value); 
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
                         $atapRemarks.val(response[0].remarks);
                     } else {
                         $textbox.hide();
-                        $('#tran_type_dropdown').show();
+                        $('#tran_type_dropdown_or').show();
                         $.each(response, function(index, option) {
                             $select.append($('<option>', {
                                 value: option.value,

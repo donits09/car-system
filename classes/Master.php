@@ -1854,9 +1854,6 @@ Class Master{
 						odbc_rollback($conn);
 						break;
 					}
-	
-	
-					
 				}
 	
 				if (empty($errors)) {

@@ -32,8 +32,12 @@ include('../inc/header.php');
         width: 60% !important;
         max-width: 60%;
         height:50%;
-        margin-top: 0;
+        margin-top: 2%;
     }
+    .modal-backdrop {
+    opacity: 0.5 !important; 
+}
+
 </style>
 <body>
 <div class="container mt-5">
@@ -44,7 +48,7 @@ include('../inc/header.php');
         </div>
         <div class="search-box">
             <label for="search-account">Search Account No.: </label>
-            <input type="text" id="search-account" placeholder="Enter Account No.">
+            <input type="number" id="search-account" placeholder="Enter Account No.">
             <button id="search-btn" class="btn btn-primary">Search</button>
         </div>
         <div class="table-container">
@@ -69,8 +73,11 @@ include('../inc/header.php');
 <script src="../dist/js/table.js"></script>
 <script>
 $(document).ready(function() {
-    $('#search-btn').on('click', function() {
-        var searchAcc = $('#search-account').val(); 
+    $(document).ready(function() {
+    $('#search-btn').on('click', function(e) {
+        //e.preventDefault(); 
+        
+        var searchAcc = $('#search-account').val().trim(); 
 
         if (searchAcc.length > 0) {
             $.ajax({
@@ -78,16 +85,23 @@ $(document).ready(function() {
                 type: 'GET',
                 data: { searchAcc: searchAcc },
                 success: function(response) {
-                    $('#acc-type-body').html(response); 
+                   
+                    if (response.trim()) {
+                        $('#acc-type-body').html(response);
+                    } else {
+                        $('#acc-type-body').html('<tr><td colspan="6" class="text-center">No results found</td></tr>');
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error("Error fetching data: ", xhr.responseText);
                 }
             });
         } else {
-            $('#acc-type-body').html(''); 
+            $('#acc-type-body').html('<tr><td colspan="6" class="text-center">Please enter an Account No.</td></tr>'); 
         }
     });
+});
+
 });
 
 </script>

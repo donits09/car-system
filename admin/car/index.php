@@ -36,6 +36,19 @@ include('../../inc/header.php');
     endif;
     }
 ?>
+<style>
+.table-wrapper {
+    max-height: 400px;  
+    overflow-y: auto;
+    overflow-x: auto;  
+}
+
+#resultsContainer {
+    max-height: 500px; 
+    overflow: hidden; 
+}
+
+</style>
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
 <body>
@@ -949,29 +962,30 @@ $(document).ready(function() {
 
                     if (response.status === 'exists') {
                         var tableHtml = `
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Old Account #</th>
-                                        <th>New Account #</th>
-                                        <th>Car Type</th>
-                                        <th>Car #</th>
-                                        <th>Pay Date</th>
-                                        <th>Amount</th>
-                                        <th>Encoder</th>
-                                        <th>Transaction Date</th>
-                                        <th>MoP</th>
-                                        <th>Bank</th>
-                                        <th>Check #</th>
-                                        <th>Remarks</th>
-                                        <th>ATAP #</th>
-                                        <th>Date Transferred</th>
-                                        <th>Time Transferred</th>
-                                        <th>Transferred By</th>
-                                        <th>Notes</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                            <div class="table-wrapper">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Old Account #</th>
+                                            <th>New Account #</th>
+                                            <th>Car Type</th>
+                                            <th>Car #</th>
+                                            <th>Pay Date</th>
+                                            <th>Amount</th>
+                                            <th>Encoder</th>
+                                            <th>Transaction Date</th>
+                                            <th>MoP</th>
+                                            <th>Bank</th>
+                                            <th>Check #</th>
+                                            <th>Remarks</th>
+                                            <th>ATAP #</th>
+                                            <th>Date Transferred</th>
+                                            <th>Time Transferred</th>
+                                            <th>Transferred By</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                         `;
 
                         response.data.forEach(function(item) {
@@ -999,8 +1013,9 @@ $(document).ready(function() {
                         });
 
                         tableHtml += `
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         `;
 
                         $('#resultsContainer').html(tableHtml); 
@@ -1016,6 +1031,7 @@ $(document).ready(function() {
                 }
             });
         });
+
 
         $(document).on('click', '.delete_data_car', function() {
             var carNo = $(this).data('car-no');
@@ -1120,10 +1136,8 @@ function delete_car(carNo, atapNo) {
                 }, 1000);
             } else if (resp && resp.status === 'failed') {
                 if (resp.err) {
-                    // Display the main error message from the server
                     alert_toast("An error occurred: " + resp.err, 'error');
                 } else {
-                    // Fallback message if no specific error was returned
                     alert_toast("An error occurred: " + resp.msg, 'error');
                 }
             } else {
@@ -1164,7 +1178,6 @@ $(document).ready(function() {
             $('#totalAmountSummary').text('0.00');
             return; 
         }
-
         $.ajax({
             url: 'car_summary.php',
             type: 'GET',
@@ -1193,7 +1206,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 $(document).ready(function() {
     $('#searchAcc').click(function(e) {
-        e.preventDefault();
+        //e.preventDefault();
 
         var accno = $('#acc_no').val();  
         console.log("Account No:" + accno);

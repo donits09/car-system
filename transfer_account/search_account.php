@@ -25,8 +25,6 @@ if (isset($_GET['searchAcc'])) {
                     <button type='button' class='btn btn-flat btn-default btn-sm dropdown-toggle dropdown-icon' data-toggle='dropdown'>Action <span class='sr-only'>Toggle Dropdown</span></button>
                     <div class='dropdown-menu' role='menu'>
                         <a class='dropdown-item create_transfer' href='javascript:void(0)' data-acc-no='" . $row['c_account_no'] . "'>Transfer</a>
-                        <div class='dropdown-divider'></div>
-                        <a class='dropdown-item edit_tenant' href='javascript:void(0)' data-id='" . $row['id'] . "'>Edit</a>
                     </div>
                   </td>";
             echo "</tr>";
@@ -48,6 +46,7 @@ function loadModal(title, url, modalId) {
             $(modalId + ' .modal-title').text(title);
             $(modalId).modal('show');
             end_loader();
+            $('.dropdown-toggle').dropdown();
         },
         error: function(xhr, status, error) {
             console.error(xhr.responseText);
@@ -56,6 +55,7 @@ function loadModal(title, url, modalId) {
         }
     });
 }
+
 
 window._conf = function(msg, func, params) {
     $('#confirm_modal .modal-body').html(msg);
