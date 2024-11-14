@@ -752,9 +752,11 @@ Class Master{
 		// 	return;
 		// }
 
-		if ($c_check_no == '' || $c_check_no == null) {
+		if (($c_check_no == '' || $c_check_no == null) && ($c_ref_no == '' || $c_ref_no == null)) {
+			$c_check_no = $c_voucher_no;
+		} elseif ($c_check_no == '' || $c_check_no == null) {
 			$c_check_no = $c_ref_no;
-		}
+		}		
 	
 		if ($c_mop == 1) {
 			$c_bank = "";
@@ -762,6 +764,8 @@ Class Master{
 			$c_bank = isset($_POST['c_bank_check']) ? $_POST['c_bank_check'] : "";
 		} elseif ($c_mop == 3) {
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
+		} elseif ($c_mop == 4) {
+			$c_bank = isset($_POST['c_bank_voucher']) ? $_POST['c_bank_voucher'] : "";
 		}
 	
 		if (!empty($_POST['c_tran_type_single'])) {
@@ -953,17 +957,20 @@ Class Master{
 		$c_car_amount = str_replace(',', '', $c_car_amount);
 		$atap_id = $_POST['atap_id'];
 		
-		if ($c_check_no == '' || $c_check_no == null){
+		if (($c_check_no == '' || $c_check_no == null) && ($c_ref_no == '' || $c_ref_no == null)) {
+			$c_check_no = $c_voucher_no;
+		} elseif ($c_check_no == '' || $c_check_no == null) {
 			$c_check_no = $c_ref_no;
-		}
-		
-		/* Nag add lang me here -DhenDwen */
+		}		
+	
 		if ($c_mop == 1) {
 			$c_bank = "";
 		} elseif ($c_mop == 2) {
 			$c_bank = isset($_POST['c_bank_check']) ? $_POST['c_bank_check'] : "";
 		} elseif ($c_mop == 3) {
 			$c_bank = isset($_POST['c_bank_online']) ? $_POST['c_bank_online'] : "";
+		} elseif ($c_mop == 4) {
+			$c_bank = isset($_POST['c_bank_voucher']) ? $_POST['c_bank_voucher'] : "";
 		}
 
 		if (!empty($_POST['c_tran_type_single'])) {
@@ -1173,7 +1180,7 @@ Class Master{
 			$c_bank = isset($_POST['c_bank_check_or']) ? $_POST['c_bank_check_or'] : "";
 		} elseif ($c_mop_or == 3) {
 			$c_bank = isset($_POST['c_bank_online_or']) ? $_POST['c_bank_online_or'] : "";
-		}
+		} 
 
 		if (!empty($_POST['c_tran_type_single_or'])) {
 			$c_tran_type = $_POST['c_tran_type_single_or'];

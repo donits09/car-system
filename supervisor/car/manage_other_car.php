@@ -365,10 +365,11 @@
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeOfPaymentChange()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
+                    <option value="4" <?php echo ($c_mop == 4) ? 'selected' : ''; ?>>Check Voucher</option>
                 </select>
             </div>  
         </div> 
@@ -405,7 +406,7 @@
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online">
                         <?php
-                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 ORDER BY c_bank_type ASC";
+                        $online_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 AND c_bank_type != 'CDV' ORDER BY c_bank_type ASC";
                         $type_result = odbc_exec($conn, $online_bank_query);
                         while ($row = odbc_fetch_array($type_result)) {
                             $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
@@ -421,6 +422,31 @@
             </div>
         </div>
     </div>
+
+    <div class="form-group" id="checkVoucherList" style="display: <?php echo ($c_mop == 4) ? 'block' : 'none'; ?>;">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="c_bank_voucher">Voucher Bank</label>
+                <div class="dropdown">
+                    <select class="form-control" id="c_bank_voucher" name="c_bank_voucher">
+                        <?php
+                        $voucher_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 AND c_bank_type = 'CDV' ORDER BY c_bank_type ASC";
+                        $voucher_result = odbc_exec($conn, $voucher_bank_query);
+                        while ($row = odbc_fetch_array($voucher_result)) {
+                            $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                            echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="c_check_no">Voucher No</label>
+                <input type="text" class="form-control" id="c_voucher_no" name="c_voucher_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
+            </div>
+        </div>
+    </div>
+
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
@@ -452,6 +478,7 @@
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
     </div>
+
     <table style="width:100%;">
         <tr>
             <td style="width:50%; text-align:center;">
@@ -486,6 +513,37 @@
         }
     }
 </script> -->
+
+<script>
+    function handleModeOfPaymentChange() {
+        var mop = document.getElementById('c_mop').value;
+        document.getElementById('c_bank_online').value = '';
+        document.getElementById('c_ref_no').value = '';
+        document.getElementById('c_bank_check').value = '';
+        document.getElementById('c_check_no').value = '';
+        document.getElementById('c_bank_voucher').value = '';
+        document.getElementById('c_voucher_no').value = '';
+
+        if (mop == '2') {
+            document.getElementById('checkList').style.display = 'block';
+            document.getElementById('onlineBankList').style.display = 'none';
+            document.getElementById('checkVoucherList').style.display = 'none';
+        } else if (mop == '3') {
+            document.getElementById('onlineBankList').style.display = 'block';
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('checkVoucherList').style.display = 'none';
+        } else if (mop == '4') {
+            document.getElementById('checkVoucherList').style.display = 'block';
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('onlineBankList').style.display = 'none';
+        } else {
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('onlineBankList').style.display = 'none';
+            document.getElementById('checkVoucherList').style.display = 'none';
+        }
+    }
+</script>
+
 <script>
 $(document).ready(function() {
 

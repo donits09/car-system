@@ -60,7 +60,7 @@ if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetc
 /* Online Banks */
 $l_online_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
                         LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
-                        WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_encoded_by = ? AND c_mop = '3' 
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_mop = '3' AND c_bank != 'CDV' AND c_encoded_by = ? 
                         GROUP BY c_bank 
                         HAVING SUM(c_car_amount) > 0
                         ORDER BY c_bank;";
@@ -73,6 +73,24 @@ if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
         $l_online_list[$bank_row['c_bank']] = $bank_row['total_amount'];
     }
 }
+
+/* CSV (check voucher) */
+$l_check_voucher = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
+                        LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? AND c_bank != '' AND status != '1' AND c_mop = '4' AND c_bank = 'CDV' AND c_encoded_by = ? 
+                        GROUP BY c_bank 
+                        HAVING SUM(c_car_amount) > 0
+                        ORDER BY c_bank;";
+
+$bank_stmt = odbc_prepare($conn, $l_check_voucher);
+$bank_executeParams = [$startDate, $endDate, $c_encoded_by];
+$l_check_voucher_list = [];
+if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
+    while ($bank_row = odbc_fetch_array($bank_stmt)) {
+        $l_check_voucher_list[$bank_row['c_bank']] = $bank_row['total_amount'];
+    }
+}
+
 
 /* Check Banks */
 $l_check_query = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
@@ -138,7 +156,7 @@ $html .= '
                 <th>Account No.</th>
                 <th>Transaction Type</th>
                 <th>Location</th>
-                <th>Cash/Online</th>
+                <th>Cash/Online/Voucher</th>
                 <th>Check</th>
                 <th>Bank</th>
                 <th>Total</th>
@@ -163,9 +181,10 @@ if (empty($carData)) {
         $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $l_cashonline += $cashAmount + $onlineAmount;
+        $voucherAmount = ($row['c_mop'] == 4 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
+        $l_cashonline += $cashAmount + $onlineAmount + $voucherAmount;
         $l_check += $checkAmount;
-        $l_total += $cashAmount + $onlineAmount + $checkAmount;
+        $l_total += $cashAmount + $onlineAmount + $checkAmount + $voucherAmount;
         $totalCash += $cashAmount;
         $totalOnline += $onlineAmount;
         $totalCheck += $checkAmount;
@@ -177,7 +196,7 @@ if (empty($carData)) {
         $checkOnhand = ($row['c_mop'] == 2 && $row['status'] != 1 && $row['c_bank'] == 'On Hand') ? $row['c_car_amount'] : 0;
         $t_check_on_hand += $checkOnhand;
 
-        $totalCashCheck += $cashAmount + $checked + $checkOnhand;
+        $totalCashCheck += $cashAmount + $checkOnhand;
         $totalCashOnly += $cashAmount + $checkOnhand;
 
         $html .= '
@@ -237,11 +256,11 @@ if (empty($carData)) {
 
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_acronym) . " " .htmlspecialchars($c_block) . " " . htmlspecialchars($c_lot) . '</td>';
         /* $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>'; */
-        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount, 2) . '</td>'; // SUM NG CASH AT ONLINE (pinabago ni boss jude)
+        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $voucherAmount, 2) . '</td>'; // SUM NG CASH AT ONLINE (pinabago ni boss jude)
         $html .= '<td class="pdf-font">' . number_format($checkAmount, 2) . '</td>';
         /* $html .= '<td class="pdf-font">' . number_format($onlineAmount, 2) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_bank'] == '' ? '-' : $row['c_bank']) . '</td>';
-        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $checkAmount, 2) . '</td>';
+        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $checkAmount + $voucherAmount, 2) . '</td>';
 
         /* $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>';
@@ -379,6 +398,52 @@ $html .= '
         </div>';
     }  
 
+    /* Check Voucher */
+    if (!empty($l_check_voucher_list)) {
+        $html .= '
+        <div>
+            <h4>Check Voucher (CDV)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Bank</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>';
+    
+        foreach ($l_check_voucher_list as $bank => $bank_total) {
+            $html .= '
+            <tr>
+                <td class="pdf-font" style="width: 25%;">' . htmlspecialchars($bank) . '</td>
+                <td class="pdf-font" style="width: 25%;"><strong>' . number_format($bank_total, 2) . '</strong></td>
+            </tr>';
+        
+        }
+    
+        $html .= '
+                </tbody>
+            </table>
+        </div>';
+    } else {
+        $html .= '
+        <div>
+            <h4>Check Voucher (CDV)</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="pdf-font" colspan="2">Bank/Total amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pdf-font" colspan="2" style="text-align: center;">No records found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>';
+    }  
+
     /* CASH */
     /* $html .= '
     <div>
@@ -402,7 +467,7 @@ $html .= '
     </div>'; */
 
     /* CASH AND CHECK */
-    $html .= '
+    /* $html .= '
     <div>
         <h4>Total of (Cash and Check)</h4>
         <table>
@@ -418,6 +483,28 @@ $html .= '
                 <tr>
                     <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCash, 2) . '<strong>' . '</td>
                     <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($t_checked, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($t_check_on_hand, 2) . '<strong>' . '</td>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCashCheck, 2) . '<strong>' . '</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>'; */
+
+    /* CASH AND CHECK ON HAND TOTAL BASE ON SIR JUDE */
+    $html .= '
+    <div>
+        <h4>Total of (Cash and Check)</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cash On Hand</th>
+                    <th>Check On Hand   
+                    <th>Total On Hand</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCash, 2) . '<strong>' . '</td>
                     <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($t_check_on_hand, 2) . '<strong>' . '</td>
                     <td class="pdf-font" style="width: 25%; height: 30px;">' . '<strong>' . number_format($totalCashCheck, 2) . '<strong>' . '</td>
                 </tr>
