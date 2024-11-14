@@ -10,22 +10,29 @@ $c_name = $_GET['c_name'] ?? '';
 $c_mop = $_GET['c_mop'] ?? '';
 $c_bank_check = $_GET['c_bank_check'] ?? '';
 $c_bank_online = $_GET['c_bank_online'] ?? '';
+$c_bank_voucher = $_GET['c_bank_voucher'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
 $c_ref_no = $_GET['c_ref_no'] ?? '';
+$c_voucher_no = $_GET['c_voucher_no'] ?? '';
 $c_remarks = $_GET['c_remarks'] ?? '';
 
 $c_bank = '';
 $c_check = '';
 
-if ($c_bank_check == '' || $c_bank_check == null){
+if (($c_bank_check == '' || $c_bank_check == null) && ($c_bank_online == '' || $c_bank_online == null)) {
+    $c_bank = $c_bank_voucher;
+} elseif ($c_bank_check == '' || $c_bank_check == null) {
     $c_bank = $c_bank_online;
-}else{
+} else {
     $c_bank = $c_bank_check;
 }
 
-if ($c_check_no == '' || $c_check_no == null){
+
+if (($c_check_no == '' || $c_check_no == null) && ($c_ref_no == '' || $c_ref_no == null)){
+    $c_check = $c_voucher_no;
+} elseif ($c_check_no == '' || $c_check_no == null){
     $c_check = $c_ref_no;
-}else{
+} else{
     $c_check = $c_check_no;
 }
 
@@ -412,6 +419,11 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             cPayDateField.style.display = 'block';
             cBankCheck.style.display = 'none';
             cCheckNo.style.display = 'none';
+        } else if (cMopValue == '4') {
+            dynamicMarginDiv.style.marginTop = '190px';
+            cPayDateField.style.display = 'block';
+            cBankCheck.style.display = 'block';
+            cCheckNo.style.display = 'block';
         } else {
             dynamicMarginDiv.style.marginTop = '205px';
             cPayDateField.style.display = 'block';

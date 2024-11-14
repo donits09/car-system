@@ -80,7 +80,7 @@ if ($bank_stmt && odbc_execute($bank_stmt, $bank_executeParams)) {
 /* CSV (check voucher) */
 $l_check_voucher = "SELECT c_bank, SUM(c_car_amount) AS total_amount FROM t_car_payment 
                         LEFT JOIN t_other_car_payment ON t_car_payment.c_car_no = t_other_car_payment.c_car_no
-                        WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' AND c_mop = '3' AND c_bank = 'CDV' GROUP BY c_bank 
+                        WHERE DATE(c_tran_date) BETWEEN ? AND ? and c_bank != '' AND status != '1' AND c_mop = '4' AND c_bank = 'CDV' GROUP BY c_bank 
                         HAVING SUM(c_car_amount) > 0
                         ORDER BY c_bank; ";
 
@@ -157,7 +157,7 @@ $html .= '
                 <th>Account No.</th>
                 <th>Transaction Type</th>
                 <th>Location</th>
-                <th>Cash/Online</th>
+                <th>Cash/Online/Voucher</th>
                 <th>Check</th>
                 <th>Bank</th>
                 <th>Total</th>
@@ -183,11 +183,12 @@ if (empty($carData)) {
         $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $totalCashOnline += $cashAmount + $onlineAmount;
+        $voucherAmount = ($row['c_mop'] == 4 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
+        $totalCashOnline += $cashAmount + $onlineAmount + $voucherAmount;
         $totalCheck += $checkAmount;
         $totalCash += $cashAmount;
         $totalOnline += $onlineAmount;
-        $totalOfall += $cashAmount + $onlineAmount + $checkAmount;
+        $totalOfall += $cashAmount + $onlineAmount + $checkAmount + $voucherAmount;
 
         /* Checked On Hand */
         $checked = ($row['c_mop'] == 2 && $row['status'] != 1 && $row['c_bank'] != 'On Hand') ? $row['c_car_amount'] : 0;
@@ -273,10 +274,10 @@ if (empty($carData)) {
 
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_acronym) . " " .htmlspecialchars($c_block) . " " . htmlspecialchars($c_lot) . '</td>';
         /* $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>'; */
-        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount, 2) . '</td>'; // SUM NG CASH AT ONLINE (pinabago ni boss jude)
+        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $voucherAmount, 2) . '</td>'; // SUM NG CASH AT ONLINE (pinabago ni boss jude)
         $html .= '<td class="pdf-font">' . number_format($checkAmount, 2) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_bank'] == '' ? '-' : $row['c_bank']) . '</td>';
-        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $checkAmount, 2) . '</td>';
+        $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $checkAmount + $voucherAmount, 2) . '</td>';
 
         /* $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>'; */
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>';

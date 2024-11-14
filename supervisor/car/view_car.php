@@ -139,7 +139,9 @@
                             echo "Check";
                         } elseif ($row['c_mop'] == 3) {
                             echo "Online";
-                        } else {
+                        } elseif ($row['c_mop'] == 4) {
+                            echo "Check Voucher";
+                        }else { 
                             echo "-";
                         }
                         ?>
