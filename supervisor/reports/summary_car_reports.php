@@ -11,7 +11,7 @@ $current_date = date('Y-m-d');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
+    <!-- <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css"> -->
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
     <style>
@@ -21,12 +21,16 @@ $current_date = date('Y-m-d');
             text-align: center;
             cursor: default;
         }
+        *{
+            font-size:12px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
     </style>
 </head>
 <body>
     <div class="container mt-5">
         <div class="card mt-3">
-            <div class="main_header">
+            <div class="main_header" style="padding:10px;">
                 <div id="header">ASIAN LAND STRATEGIES CORPORATION</div>
                 <div id="subheader">SUMMARY REPORT</div>
             </div>

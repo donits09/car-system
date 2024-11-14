@@ -16,7 +16,7 @@ $current_date = date('Y-m-d');
     <!-- <link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
     <script src="<?php echo base_url; ?>dist/js/jquery-3.5.1.min.js"></script>
     <script src="<?php echo base_url; ?>dist/js/jquery-ui.min.js"></script> -->
-    <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
+    <!-- <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css"> -->
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/car_reports.css">
     <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
     <style>
@@ -26,13 +26,17 @@ $current_date = date('Y-m-d');
             text-align: center;
             cursor: default;
         }
+        *{
+            font-size:12px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
     </style>
 </head>
 
 <body>
     <div class="container mt-5">
         <div class="card mt-3">
-            <div class="main_header">
+            <div class="main_header" style="padding:10px;">
                 <div id="header">ASIAN LAND STRATEGIES CORPORATION</div>
                 <div id="subheader">SUMMARY REPORT</div>
                 <!-- <div id="current_date"><?php echo date("Y-m-d"); ?></div> -->

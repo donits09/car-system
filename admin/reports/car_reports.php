@@ -285,6 +285,14 @@ $(document).ready(function(){
     $('#filter').click(function() {
         let startDate = parseDate($('#start_date').val());
         let endDate = parseDate($('#end_date').val());
+
+        function formatDate(date) {
+            let mm = String(date.getMonth() + 1).padStart(2, '0');
+            let dd = String(date.getDate()).padStart(2, '0');
+            let yyyy = date.getFullYear();
+            return `${mm}-${dd}-${yyyy}`;
+        }
+
         let rows = $('#car-type-body tr');
 
         rows.each(function() {
