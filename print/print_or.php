@@ -138,11 +138,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             width: 80px;
             font-size:16px;
         }
-        
-        
-        
-        
-        
+
         #c_bank_main_1{
             margin-top: 320px;
             margin-left: 285px;
@@ -268,10 +264,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             margin-top:300px;
             position:absolute;
         }
-        
-
-
-
         #c_received {
             text-transform: uppercase !important;
             position: relative;
@@ -547,8 +539,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <input type="text" id="c_mop" value="<?php echo number_format($row['c_or_amount'], 2); ?>">
             <input type="hidden" id="c_mop_value" value="<?php echo ($row['c_mop']); ?>">
         </div>
-
-        
 
     <script>
         var cMopValue = document.getElementById('c_mop_value').value;

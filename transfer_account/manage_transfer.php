@@ -258,67 +258,67 @@ $(document).ready(function() {
             return;
         }
 
-        // var formData = new FormData();
-        // formData.append('selectedRows', JSON.stringify(selectedRows));
-
-        // $.ajax({
-        //     url: '<?php echo base_url; ?>classes/Master.php?f=save_transfer',  
-        //     type: 'POST',
-        //     data: formData,
-        //     cache: false,
-        //     contentType: false,
-        //     processData: false,
-        //     dataType: 'json',
-        //     error: function(xhr, status, error) {
-        //         console.log("AJAX Error: ", status, error);
-        //         console.log(xhr.responseText);  
-        //         alert_toast("An error occurred: " + error, 'error');
-        //         // saveButton.prop('disabled', false); 
-        //     },
-        //     success: function(resp) {
-        //         console.log(resp);
-        //         if (resp && resp.status === 'success') {
-        //             alert_toast(resp.msg, 'success');
-        //             setTimeout(function() {
-        //                 $('#createTransferModal').modal('hide');
-        //                 $('body').removeClass('modal-open');
-        //                 $('.modal-backdrop').remove();
-        //                 location.reload();
-        //             }, 1000);
-        //         } else if (resp && resp.status === 'failed' && resp.err) {
-        //             alert_toast("An error occurred: " + resp.err, 'error');
-        //         } else if (resp && resp.status === 'not_found') {
-        //             alert_toast("An error occurred.", 'error');
-        //         } else {
-        //             alert_toast("An error occurred.", 'error');
-        //         }
-        //         end_loader();
-        //     },
-        //     complete: function() {
-        //         $('#atap-form').data('formSubmitting', false);
-        //     }
-        // });
         var formData = new FormData();
         formData.append('selectedRows', JSON.stringify(selectedRows));
 
         $.ajax({
-            url: '<?php echo base_url; ?>classes/Master.php?f=save_transfer',
+            url: '<?php echo base_url; ?>classes/Master.php?f=save_transfer',  
             type: 'POST',
             data: formData,
-            processData: false,
+            cache: false,
             contentType: false,
-            success: function(response) {
-                if (response.success) {
-                    alert_toast("Transfer saved successfully", 'success');
-                } else {
-                    alert_toast("Error saving transfer: " + response.error, 'error');
-                }
-            },
+            processData: false,
+            dataType: 'json',
             error: function(xhr, status, error) {
-                console.error("AJAX Error:", status, error);
-                alert_toast("An error occurred while saving the transfer", 'error');
+                console.log("AJAX Error: ", status, error);
+                console.log(xhr.responseText);  
+                alert_toast("An error occurred: " + error, 'error');
+                // saveButton.prop('disabled', false); 
+            },
+            success: function(resp) {
+                console.log(resp);
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function() {
+                        $('#createTransferModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        location.reload();
+                    }, 1000);
+                } else if (resp && resp.status === 'failed' && resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else if (resp && resp.status === 'not_found') {
+                    alert_toast("An error occurred.", 'error');
+                } else {
+                    alert_toast("An error occurred.", 'error');
+                }
+                end_loader();
+            },
+            complete: function() {
+                $('#atap-form').data('formSubmitting', false);
             }
         });
+        // var formData = new FormData();
+        // formData.append('selectedRows', JSON.stringify(selectedRows));
+
+        // $.ajax({
+        //     url: '<?php echo base_url; ?>classes/Master.php?f=save_transfer',
+        //     type: 'POST',
+        //     data: formData,
+        //     processData: false,
+        //     contentType: false,
+        //     success: function(response) {
+        //         if (response.success) {
+        //             alert_toast("Transfer saved successfully", 'success');
+        //         } else {
+        //             alert_toast("Error saving transfer: " + response.error, 'error');
+        //         }
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error("AJAX Error:", status, error);
+        //         alert_toast("An error occurred while saving the transfer", 'error');
+        //     }
+        // });
     });
 });
 </script>
