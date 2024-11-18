@@ -117,38 +117,41 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             onblur="padBlockValue(); limitInputLength(this, 2);" required>
     </div>
     <script>
-        function limitInputLength(element, maxLength) {
-            if (element.value.length > maxLength) {
-                element.value = element.value.slice(0, maxLength);
+        function padStartPolyfill(value, length, padChar) {
+            value = value.toString();
+                while (value.length < length) {
+                    value = padChar + value;
+                }
+                return value;
             }
-        }
-        document.getElementById('c_block').addEventListener('input', function() {
-            limitInputLength(this, 3);
-        });
 
-        document.getElementById('c_lot').addEventListener('input', function() {
-            limitInputLength(this, 2);
-        });
-        function padBlockValue(value) {
-            return value.toString().padStart(3, '0');
-        }
-        function padLotValue(value) {
-            return value.toString().padStart(2, '0');
-        }
+            function padBlockValue(value) {
+                return padStartPolyfill(value || '', 3, '0');
+            }
 
-        function concatenateValues() {
-            var selectedPhaseOption = document.getElementById('c_phase').options[document.getElementById('c_phase').selectedIndex];
-            var selectedCode = selectedPhaseOption.getAttribute('data-code') || '';
-            var block = padBlockValue(document.getElementById('c_block').value || '');
-            var lot = padLotValue(document.getElementById('c_lot').value || ''); 
-            var concatenatedValue = selectedCode + block + lot + 800;
-            document.getElementById('tenant_acc_no').value = concatenatedValue;
-        }
-        document.getElementById('c_phase').addEventListener('change', function() {
-            concatenateValues();
-        });
-        document.getElementById('c_block').addEventListener('input', concatenateValues);
-        document.getElementById('c_lot').addEventListener('input', concatenateValues);
+            function padLotValue(value) {
+                return padStartPolyfill(value || '', 2, '0');
+            }
+
+            var concatenateValues = function() {
+                var selectedPhaseOption = document.getElementById('c_phase').options[document.getElementById('c_phase').selectedIndex];
+                var selectedCode = selectedPhaseOption.getAttribute('data-code') || '';
+                var block = padBlockValue(document.getElementById('c_block').value || '');
+                var lot = padLotValue(document.getElementById('c_lot').value || '');
+                var concatenatedValue = selectedCode + block + lot + 800;
+                document.getElementById('tenant_acc_no').value = concatenatedValue;
+            };
+
+            var addEventListenerCompat = function(element, event, handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(event, handler);
+                } else if (element.attachEvent) {
+                    element.attachEvent('on' + event, handler);
+                }
+            };
+            addEventListenerCompat(document.getElementById('c_phase'), 'change', concatenateValues);
+            addEventListenerCompat(document.getElementById('c_block'), 'input', concatenateValues);
+            addEventListenerCompat(document.getElementById('c_lot'), 'input', concatenateValues);
     </script>
     <div class="col-md-12">
         <label for="acc_no" class="form-label">Account No.</label>
