@@ -743,7 +743,7 @@ Class Master{
 	
 		
 		$atap_id = $_POST['atap_id'];
-	
+		$c_voucher_no = null;
 
 		// if(empty($atap_id)){
 		// 	$resp['status'] = 'failed';
