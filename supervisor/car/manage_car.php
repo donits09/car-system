@@ -371,7 +371,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             <div class="col-md-6">
                 <label for="c_bank_voucher">Voucher Bank</label>
                 <div class="dropdown">
-                    <select class="form-control" id="c_bank_voucher" name="c_bank_voucher" required>
+                    <select class="form-control" id="c_bank_voucher" name="c_bank_voucher" >
                         <?php
                         $voucher_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 AND c_bank_type = 'CDV' ORDER BY c_bank_type ASC";
                         $voucher_result = odbc_exec($conn, $voucher_bank_query);
