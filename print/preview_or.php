@@ -13,6 +13,7 @@ $c_bank_online_or = $_GET['c_bank_online_or'] ?? '';
 $c_check_no = $_GET['c_check_no'] ?? '';
 $c_ref_no = $_GET['c_ref_no'] ?? '';
 $c_remarks = $_GET['c_remarks'] ?? '';
+$c_or_type = $_GET['c_or_type'] ?? '';
 
 $c_bank = '';
 $c_bank_2 = '';
@@ -123,7 +124,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             height:auto;
             text-align: center;
             font-size: 12px !important;
-            margin-top:185px;
+            margin-top:175px;
             position:absolute;
         }
        
@@ -276,8 +277,9 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             height:auto;
             text-align: center;
             font-size: 12px !important;
-            margin-top:230px;
+            margin-top:210px;
             position:absolute;
+            /* background-color: red; */
         }
         #c_or_amount_words {
             float: right;
@@ -423,8 +425,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             <?php endif; ?>
            
         <?php } ?>
-
-        <textarea rows="6" name="c_remarks" id="c_remarks"><?php echo htmlspecialchars($c_remarks); ?></textarea>
+        <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($c_or_type); ?>">
+        <textarea rows="4" name="c_remarks" id="c_remarks"><?php echo htmlspecialchars($c_remarks); ?></textarea>
         <input type="text" name="c_or_amount" id="c_or_amount" value="<?php echo number_format((float)str_replace(',', '', $c_or_amount), 2); ?>">
         <input type="text" name="c_or_amount2" id="c_or_amount2" value="<?php echo number_format((float)str_replace(',', '', $c_or_amount), 2); ?>">
         <textarea name="c_or_amount_words" id="c_or_amount_words"></textarea>

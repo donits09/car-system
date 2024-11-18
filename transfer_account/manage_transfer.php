@@ -298,27 +298,7 @@ $(document).ready(function() {
                 $('#atap-form').data('formSubmitting', false);
             }
         });
-        // var formData = new FormData();
-        // formData.append('selectedRows', JSON.stringify(selectedRows));
 
-        // $.ajax({
-        //     url: '<?php echo base_url; ?>classes/Master.php?f=save_transfer',
-        //     type: 'POST',
-        //     data: formData,
-        //     processData: false,
-        //     contentType: false,
-        //     success: function(response) {
-        //         if (response.success) {
-        //             alert_toast("Transfer saved successfully", 'success');
-        //         } else {
-        //             alert_toast("Error saving transfer: " + response.error, 'error');
-        //         }
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error("AJAX Error:", status, error);
-        //         alert_toast("An error occurred while saving the transfer", 'error');
-        //     }
-        // });
     });
 });
 </script>

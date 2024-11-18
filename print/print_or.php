@@ -125,8 +125,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             height:auto;
             text-align: center;
             font-size: 12px !important;
-            margin-top:185px;
+            margin-top:150px;
             position:absolute;
+            background-color: red;
         }
        
         #c_or_no {
@@ -314,8 +315,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             height:auto;
             text-align: center;
             font-size: 12px !important;
-            margin-top:175px;
+            margin-top:185px;
             position:absolute;
+            background-color: pink;
         }
         #c_or_amount_words {
             position:absolute;
@@ -524,11 +526,11 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             }
         ?>
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
-        <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
         <!-- <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_or_paydate; ?>"> --> 
-    </div>
+        </div>
         <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo $c_account_no; ?>">
         <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($row['c_or_type']); ?>">
+        <textarea rows="4" name="c_remarks" id="c_remarks"><?php echo htmlspecialchars($c_remarks); ?></textarea>
         <input type="text" name="c_or_amount" id="c_or_amount" value="<?php echo number_format($row['c_or_amount'], 2); ?>">
         <textarea name="c_or_amount_words" id="c_or_amount_words"></textarea>
         
