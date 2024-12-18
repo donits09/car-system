@@ -69,13 +69,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         .background-image {
             position: absolute;
-            top: -10px;
+            top: 0;
             left: 0;
-            height: 400px;
-            width: 750px;
+            height: 280px;
+            width: 670px;
             z-index: 1;
             object-fit: cover;
-            background-color: red;
         }
         input {
             border: none;
@@ -228,7 +227,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <img src="<?php echo base_url ?>images/new_car.png" class="background-image" alt="Car Scanned Copy">
+    <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">
