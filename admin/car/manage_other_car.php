@@ -539,7 +539,7 @@
     }
 </script>
 
-<script>
+<!-- <script>
 $(document).ready(function() {
     
     /* Avoid Enter */
@@ -566,11 +566,6 @@ $(document).ready(function() {
         }else{
             atapVal = $('#c_car_type').val(); 
         }
-
-        // if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
-        //     alert('The selected transaction type is Special.');
-        //     valid = false;
-        // }
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
@@ -657,7 +652,7 @@ $(document).ready(function() {
         }
     });
 });
-</script>
+</script> -->
 <script>
 $(document).ready(function() {
     $('#get_atap').on('click', function() {
@@ -890,5 +885,109 @@ function openPrintWindow() {
 
     $('#previewCarModal').modal('show');
 }
+
+</script>
+<script>
+    $(document).ready(function () {
+    /* Avoid Enter */
+    $('#other-car-form').on('keydown', function (event) {
+        if (event.key === "Enter" || event.keyCode === 13) {
+            var target = event.target;
+            if ($(target).is('textarea')) {
+                return true;
+            }
+            event.preventDefault();
+        }
+    });
+
+    $('#c_car_no').on('input', function () {
+        const carNo = $(this).val();
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            $('#other-car-form button[type="submit"]').attr('disabled', true);
+        } else if (carNo.length > 6) {
+            $('#car_no_error').text('CAR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
+            $('#other-car-form button[type="submit"]').attr('disabled', false);
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: '../../admin/car/check_car_no.php',
+                data: { car_no: carNo },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.exists) {
+                        $('#car_no_error').text('CAR No. already exists.').addClass('bold-text').css('color', 'red');
+                        $('#other-car-form button[type="submit"]').attr('disabled', true);
+                    } else {
+                        $('#car_no_error').text('').removeClass('bold-text');
+                        $('#other-car-form button[type="submit"]').attr('disabled', false);
+                    }
+                }
+            });
+        }
+    });
+
+    $('#other-car-form').on('submit', function (e) {
+        e.preventDefault();
+
+        const submitButton = $('#other-car-form button[type="submit"]');
+        submitButton.attr('disabled', true);
+
+        var carNo = $('#c_car_no').val();
+        const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
+        let valid = true;
+
+        let atapVal = $('#c_tran_type_single').val() || $('#atap_val').val() || $('#c_car_type').val();
+        
+        if (carNo.length < 6) {
+            $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
+        if (carAmount <= 0) {
+            $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        }
+
+        if (!valid) {
+            submitButton.attr('disabled', false); 
+            return;
+        }
+
+        start_loader();
+
+        $.ajax({
+            url: "../../classes/Master.php?f=save_other_car_payment",
+            data: new FormData($(this)[0]),
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            dataType: 'json',
+            error: function (err) {
+                console.log(err);
+                alert_toast("An error occurred.", 'error');
+                end_loader();
+                submitButton.attr('disabled', false); 
+            },
+            success: function (resp) {
+                console.log(resp);
+                if (resp && resp.status === 'success') {
+                    alert_toast(resp.msg, 'success');
+                    setTimeout(function () {
+                        $('#createCarModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        location.reload();
+                    }, 200);
+                } else {
+                    alert_toast(resp.msg || "An unexpected error occurred", 'error');
+                }
+                end_loader();
+                submitButton.attr('disabled', false); 
+            }
+        });
+    });
+});
 
 </script>

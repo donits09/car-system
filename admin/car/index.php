@@ -58,7 +58,7 @@ include('../../inc/header.php');
     <hr>
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
-        <table class="table">
+            <table class="table">
                 <form id="search-type-form">
                     <div class="row align-items-end">
                         <div class="col-md-3 form-group">
