@@ -2,7 +2,6 @@
 
 include('../config.php');
 require_once('../classes/Master.php');
-
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
         return false;
@@ -15,7 +14,6 @@ function fetchBuyerDetails($conn, $accountNo) {
     }
     return false;
 }
-
 function fetchCarDetails($conn, $carNo) {
     $query = "SELECT * FROM t_other_car_payment WHERE c_car_no = ?";
     $stmt = odbc_prepare($conn, $query);
@@ -24,7 +22,6 @@ function fetchCarDetails($conn, $carNo) {
     }
     return false;
 }
-
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $accountId = $_GET['id'];
     $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
@@ -36,7 +33,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $stmt = odbc_prepare($conn, $get_car_query);
     odbc_execute($stmt, array($accountId));
     $result = odbc_fetch_array($stmt);
-
     if ($result) {
         $row = $result;
         $c_account_no = $row['c_account_no'];
