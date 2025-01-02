@@ -140,7 +140,7 @@
                 <h5 class="modal-title" id="previewCarModalLabel">CAR Preview</h5>
             </div>
             <div class="modal-body" onclick="closePreviewModal()">
-                <iframe id="previewCarIframe" style="width: 100%; height: 310px;" frameborder="0"></iframe>
+                <iframe id="previewCarIframe" style="width: 100%; height: 400px;" frameborder="0"></iframe>
             </div>
             </div>
         </div>
