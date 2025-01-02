@@ -370,11 +370,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-
-=======
     
->>>>>>> 619a31eb191a115d1439b66372bdb6979ce12d91
     <div class="form-group" id="checkVoucherList" style="display: <?php echo ($c_mop == 4) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
