@@ -312,10 +312,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-<<<<<<< HEAD
                 <!-- <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()"> -->
-=======
->>>>>>> 619a31eb191a115d1439b66372bdb6979ce12d91
                 <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeOfPaymentChange()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
