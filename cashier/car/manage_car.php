@@ -312,14 +312,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_mop">Mode of Payment</label>
-                <select class="form-control" id="c_mop" name="c_mop" required onchange="toggleCheckDropdown()">
+                <select class="form-control" id="c_mop" name="c_mop" required onchange="handleModeOfPaymentChange()">
                     <option value="1" <?php echo ($c_mop == 1) ? 'selected' : ''; ?>>Cash</option>
                     <option value="2" <?php echo ($c_mop == 2) ? 'selected' : ''; ?>>Check</option>
                     <option value="3" <?php echo ($c_mop == 3) ? 'selected' : ''; ?>>Online</option>
+                    <option value="4" <?php echo ($c_mop == 4) ? 'selected' : ''; ?>>Check Voucher</option>
                 </select>
             </div>  
         </div>  
     </div>  
+
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
@@ -343,6 +345,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
+
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
@@ -366,6 +369,31 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
         </div>
     </div>
+    
+    <div class="form-group" id="checkVoucherList" style="display: <?php echo ($c_mop == 4) ? 'block' : 'none'; ?>;">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="c_bank_voucher">Voucher Bank</label>
+                <div class="dropdown">
+                    <select class="form-control" id="c_bank_voucher" name="c_bank_voucher">
+                        <?php
+                        $voucher_bank_query = "SELECT DISTINCT c_bank_type, id FROM t_car_online WHERE status = 0 AND c_bank_type = 'CDV' ORDER BY c_bank_type ASC";
+                        $voucher_result = odbc_exec($conn, $voucher_bank_query);
+                        while ($row = odbc_fetch_array($voucher_result)) {
+                            $selected = (isset($c_bank) && $c_bank == $row['c_bank_type']) ? 'selected' : '';
+                            echo "<option value='".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."' $selected>".htmlspecialchars($row['c_bank_type'], ENT_QUOTES, 'UTF-8')."</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="c_check_no">Voucher No</label>
+                <input type="text" class="form-control" id="c_voucher_no" name="c_voucher_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
+            </div>
+        </div>
+    </div>
+
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
@@ -411,6 +439,33 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
 </form>
 <script src="../../dist/js/manage_car_cshr.js"></script>
 <script>
+    function handleModeOfPaymentChange() {
+        var mop = document.getElementById('c_mop').value;
+        document.getElementById('c_bank_online').value = '';
+        document.getElementById('c_ref_no').value = '';
+        document.getElementById('c_bank_check').value = '';
+        document.getElementById('c_check_no').value = '';
+        document.getElementById('c_bank_voucher').value = '';
+        document.getElementById('c_voucher_no').value = '';
+
+        if (mop == '2') {
+            document.getElementById('checkList').style.display = 'block';
+            document.getElementById('onlineBankList').style.display = 'none';
+            document.getElementById('checkVoucherList').style.display = 'none';
+        } else if (mop == '3') {
+            document.getElementById('onlineBankList').style.display = 'block';
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('checkVoucherList').style.display = 'none';
+        } else if (mop == '4') {
+            document.getElementById('checkVoucherList').style.display = 'block';
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('onlineBankList').style.display = 'none';
+        } else {
+            document.getElementById('checkList').style.display = 'none';
+            document.getElementById('onlineBankList').style.display = 'none';
+            document.getElementById('checkVoucherList').style.display = 'none';
+        }
+    }
     function clearAmt(){
         var txtamt = document.getElementById('c_car_amount').value;
 

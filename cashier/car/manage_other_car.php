@@ -76,7 +76,7 @@
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <body>
 <form id="other-car-form">
-    <input type="text" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
+    <input type="hidden" id="id" name="id" value="<?php echo isset($accountId) ? $accountId : '' ?>">
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">

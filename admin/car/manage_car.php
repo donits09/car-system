@@ -316,7 +316,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>  
         </div>  
     </div>  
-
+    
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">      
