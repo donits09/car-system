@@ -13,7 +13,7 @@ if (isset($_GET['acct_no']) && $_GET['acct_no'] !== '') {
     $id = $_GET['acct_no'];
 }
 
-$qry4 = "SELECT * FROM t_payment WHERE c_account_no = ?";
+$qry4 = "SELECT * FROM t_payment WHERE c_account_no = ? order by c_payment_count, c_due_date";
 $stmt = odbc_prepare($conn, $qry4);
 
 if ($stmt) {
