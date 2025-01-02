@@ -566,11 +566,6 @@ $(document).ready(function() {
         }else{
             atapVal = $('#c_car_type').val(); 
         }
-
-        // if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
-        //     alert('The selected transaction type is Special.');
-        //     valid = false;
-        // }
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;

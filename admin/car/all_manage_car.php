@@ -369,7 +369,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     <div class="form-group" id="checkVoucherList" style="display: <?php echo ($c_mop == 4) ? 'block' : 'none'; ?>;">
         <div class="row">
             <div class="col-md-6">
-                <label for=>Voucher Bank</label>
+                <label for="c_bank_voucher">Voucher Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_voucher" name="c_bank_voucher">
                         <?php
@@ -385,7 +385,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             </div>
             <div class="col-md-6">
                 <label for="c_check_no">Voucher No</label>
-                <input type="text" class="form-control" id="c_voucher_no" name="c_voucher_no" value="<?php echo htmlspecialchars($c_check_no); ?>" >
+                <input type="text" class="form-control" id="c_voucher_no" name="c_voucher_no" value="<?php echo htmlspecialchars($c_check_no); ?>">
             </div>
         </div>
     </div>

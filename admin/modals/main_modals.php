@@ -132,7 +132,7 @@
                 <button onclick="closeModal3()" class="btn customized-modal" data-dismiss="modal">x</button>
             </div>
             <div class="modal-body">
-                <iframe id="previewCarIframe" src="<?php echo base_url; ?>print/preview_car.php" style="width: 100%; height: 340px; border: none;"></iframe>
+                <iframe id="previewCarIframe" src="<?php echo base_url; ?>print/preview_car.php" style="width: 100%; height: 400px; border: none;"></iframe>
                 <div id="previewCarContent" style="display: none;"></div>
             </div>
             <div class="modal-footer">

@@ -17,25 +17,29 @@ $c_voucher_no = $_GET['c_voucher_no'] ?? '';
 $c_remarks = $_GET['c_remarks'] ?? '';
 
 $c_bank = '';
+$c_bank_2 = '';
 $c_check = '';
+$c_ref = '';
+$c_car_paydate_1 = '';
+$c_car_paydate_2 = '';
 
-if (($c_bank_check == '' || $c_bank_check == null) && ($c_bank_online == '' || $c_bank_online == null)) {
-    $c_bank = $c_bank_voucher;
-} elseif ($c_bank_check == '' || $c_bank_check == null) {
-    $c_bank = $c_bank_online;
-} else {
+if ($c_bank_check == '' || $c_bank_check == null){
+    $c_bank_2 = $c_bank_online;
+}else{
     $c_bank = $c_bank_check;
 }
 
-
-if (($c_check_no == '' || $c_check_no == null) && ($c_ref_no == '' || $c_ref_no == null)){
-    $c_check = $c_voucher_no;
-} elseif ($c_check_no == '' || $c_check_no == null){
-    $c_check = $c_ref_no;
-} else{
+if ($c_check_no == '' || $c_check_no == null){
+    $c_ref = $c_ref_no;
+}else{
     $c_check = $c_check_no;
 }
 
+if ($c_mop == 3) {
+    $c_car_paydate_2 = $c_car_paydate;
+} elseif ($c_mop == 2) {
+    $c_car_paydate_1 = $c_car_paydate;
+}
 
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
@@ -96,10 +100,11 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position: absolute;
             top: 0;
             left: 0;
-            height: 280px;
-            width: 670px;
+            height: 370px;
+            width: 700px;
             z-index: 1;
             object-fit: cover;
+            border:black solid 1px;
         }
         input {
             border: none;
@@ -119,25 +124,34 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_current_date {
             float: right;
-            margin-top: 83px;
-            margin-right: -150px;
+            margin-top: 90px;
+            margin-right: -195px;
         }
         #c_car_type {
-            float: right;
-            margin-top: 185px;
-            margin-right: -180px;
-            width: 300px;
+            width: 440px;
+            height:auto;
+            text-align: center;
+            font-size: 12px !important;
+            margin-top:40px;
+            margin-left: -60px;
+            position:absolute;
         }
         #c_car_amount {
             float: right;
-            margin-top: 165px;
-            margin-right: -300px;
+            margin-top: 30px;
+            margin-right: -260px;
+            width: 140px;
+        }
+        #c_car_amount2 {
+            float: right;
+            margin-top: 110px;
+            margin-right: -260px;
             width: 140px;
         }
         #c_car_amount_words {
-            float: right;
-            margin-top: 145px;
-            margin-right: -290px;
+            float: left;
+            margin-top: 180px;
+            margin-right: -300px;
             width: 340px;
             height: auto;
             line-height: 1.2em;
@@ -147,32 +161,33 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_car_no {
             float: right;
-            margin-top: 62px;
-            margin-right: -360px;
+            margin-top: -83px;
+            margin-right: -150px;
             width: 80px;
+            font-size: 15px !important;
         }
         #c_received {
             text-transform: uppercase!important;
             float: right;
-            margin-top: 100px;
-            margin-right: -380px;
+            margin-right:10px;
+            margin-top: 85px;
             width: 350px;
             padding:0px;
         }
         #c_address {
             text-transform: uppercase;
             float: right;
-            margin-top: 115px;
-            margin-right: -350px;
+            margin-top: 105px;
+            margin-right: -365px;
             width: 360px;
-            text-align: center;
+            text-align: left;
         }
         #c_encoded_by {
             text-transform: uppercase!important;
             float: left;
-            margin-top: 5px;
+            margin-top: -70px;
             width: auto;
-            margin-left:470px;
+            margin-left:545px;
             text-align: center;
             font-size: 10px !important;
         }
@@ -186,21 +201,21 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_loc{
             text-transform: uppercase;
-            float:left;
-            margin-top: -45px;
-            margin-right: 145px;
             width: auto;
-            text-align: center;
+            text-align: left;
             font-size: 12px !important;
+            float:right;
+            margin-left:505px;
+            margin-top:-25px;
+            position:absolute;
         }
         #c_acc_no{
-            text-transform: uppercase;
-            float: right;
-            margin-top: 80px;
-            margin-left: -10px;
             width: auto;
-            text-align: center;
+            text-align: left;
             font-size: 12px !important;
+            float:right;
+            margin-left:505px;
+            margin-top:-10px;
             position:absolute;
         }
         #c_bank{
@@ -218,20 +233,110 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_bank_main{
-            margin-top: 150px;
-            margin-left: -10px;
+            margin-top: 115px; /* ETO YUNG SA CHECK */
+            margin-left: 280px;
+            width: auto;
+            text-align: left;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_bank_main_2{
+            margin-top: 130px; /* ETO NAMAN YUNG SA ONLINE */
+            margin-left: 280px;
+            width: auto;
+            text-align: left;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_check_main{
+            margin-top:115px;
+            margin-left:-60px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+            /* background-color: pink; */
+        }
+        #c_check_main2{
+            margin-top:305px;
+            margin-left:10px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+            /* background-color: red; */
+        }
+        #c_ref_main{
+            margin-top:130px;
+            margin-left:-50px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
         }
-        #c_check_main{
-            margin-top:170px;
+        #sign_cash{
+            margin-top:100px;
+            margin-left:-125px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_check{
+            margin-top:115px;
+            margin-left:-125px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_ref{
+            margin-top:130px;
+            margin-left:-125px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_others{
+            margin-top:145px;
+            margin-left:-125px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #bank_others{
+            margin-top:145px;
             margin-left:-10px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
+        }
+        /* #voucher_others{
+            margin-top:145px;
+            margin-left:-15px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        } */
+        #c_paydate_check {
+            float: left;
+            margin-top: -5px;
+            width: auto;
+            margin-left:110px;
+            text-align: center;
+            font-size: 10px !important;
+        }
+        #c_paydate_online {
+            float: left;
+            margin-top: 2px;
+            width: auto;
+            margin-left:110px;
+            text-align: center;
+            font-size: 10px !important;
         }
         .btn-container {
             display: flex;
@@ -247,30 +352,21 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             font-size: 12px;
         }
         #c_remarks{
-            margin-left: 180px;
+            margin-left: 20px;
             width: 250px;
             text-align: center;
             font-size: 12px !important;
+            height:auto;
+            margin-top:60px;
         }
     </style>
 </head>
 
 <body onload="initializePage()" id="previewCarContent">
-    <img src="<?php echo base_url; ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
+    <img src="<?php echo base_url; ?>images/new_car.png" class="background-image" alt="Car Scanned Copy">
     <div class="container">
         <div class="box_middle">
             <input type="text" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">
-        </div>
-        <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo htmlspecialchars($c_account_no); ?>">
-        <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($c_car_type); ?>">
-        <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
-        <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
-        <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>">
-        
-        <?php $c_mop = $c_mop ?? 0; ?>
-        <div class="dynamic-margin" id="dynamicMarginDiv">
-            <input type="text" id="c_mop" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
-            <input type="hidden" id="c_mop_value" value="<?php echo $c_mop; ?>">
         </div>
         <?php
         if ($buyerDetails) {
@@ -309,26 +405,76 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             <textarea name="c_received" id="c_received"><?php echo $fullName; ?></textarea>
             <textarea name="c_address" id="c_address"><?php echo $full_address; ?></textarea>
             <textarea name="c_loc" id="c_loc"><?php echo $loc; ?></textarea>
+            <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo htmlspecialchars($c_account_no); ?>">
+
+            <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($c_car_type); ?>">
+           
             <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
-            <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
+            <input type="text" name="c_bank_main_2" id="c_bank_main_2" value="<?php echo htmlspecialchars($c_bank_2); ?>">
+
+            <?php if ($c_mop == 2): ?>
+                <input type="text" name="sign_check" id="sign_check" value="✓">
+                <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
+            <?php elseif ($c_mop == 3): ?>
+                <input type="text" name="sign_ref" id="sign_ref" value="✓">
+                <input type="text" name="c_ref_main" id="c_ref_main" value="<?php echo htmlspecialchars($c_ref); ?>">
+            <?php elseif ($c_mop == 4): ?>
+                <input type="text" name="sign_others" id="sign_others" value="✓">
+                <input type="text" name="bank_others" id="bank_others" value="<?php echo htmlspecialchars($c_bank_voucher); ?> - <?php echo htmlspecialchars($c_car_paydate); ?> - <?php echo htmlspecialchars($c_voucher_no); ?> ">
+                <!-- <input type="text" name="voucher_others" id="voucher_others" value="<?php echo htmlspecialchars($c_voucher_no); ?>"> -->
+            <?php elseif ($c_mop == 1): ?>
+                <input type="text" name="sign_cash" id="sign_cash" value="✓">
+            <?php endif; ?>
+
         <?php } ?>
+        <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($c_car_type); ?>">
+        <textarea rows="4" name="c_remarks" id="c_remarks"><?php echo htmlspecialchars($c_remarks); ?></textarea>
+        <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
+        <input type="text" name="c_car_amount2" id="c_car_amount2" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
+        <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
+        <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>">
 
         <?php
-        $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = ?";
-        $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
-        odbc_execute($encoder_stmt, array($c_encoded_by));
-        if ($encoder = odbc_fetch_array($encoder_stmt)) {
-            $realname = htmlspecialchars($encoder["c_realname"]);
-        }
+            $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = ?";  /* ddd */
+            $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
+            odbc_execute($encoder_stmt, array($c_encoded_by));
+            if ($encoder = odbc_fetch_array($encoder_stmt)) {
+                $realname = htmlspecialchars($encoder["c_realname"]);
+            }
         ?>
+        <input type="text" name="c_paydate_check" id="c_paydate_check" value="<?php echo htmlspecialchars($c_car_paydate_1); ?>">
+        <input type="text" name="c_paydate_online" id="c_paydate_online" value="<?php echo htmlspecialchars($c_car_paydate_2); ?>">
+
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
-        <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
-        <input type="text" name="c_paydate" id="c_paydate" value="<?php echo htmlspecialchars($c_car_paydate); ?>">
+
+        <?php $c_mop = $c_mop ?? 0; ?>
+        <div class="dynamic-margin" id="dynamicMarginDiv">
+            <input type="hidden" id="c_mop" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
+            <input type="hidden" id="c_mop_value" value="<?php echo $c_mop; ?>">
+        </div><!-- 
+        <div class="dashes">
+        --------------<br>
+        --------------<br>
+        --------------<br>
+        --------------<br>
+        --------------<br>
+        --------------<br>
+        --------------<br>
+        </div>
+        <div class="dashes2">
+        --------------<br>
+        --------------<br>
+        --------------<br>
+        </div> -->
     </div>
+     
+
+
+    
     <!-- <div class="btn-container">
         <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button> 
     </div> -->
-    <script>
+    <!-- <script>
         var cMopValue = document.getElementById('c_mop_value').value;
         var cBankCheck = document.getElementById('c_bank_main');
         var cCheckNo = document.getElementById('c_check_main');
@@ -356,7 +502,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             cBankCheck.style.display = 'block';
             cCheckNo.style.display = 'block';
         }
-    </script>
+    </script> -->
     <script>
         function initializePage() {
             adjustTextArea('c_received');

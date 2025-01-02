@@ -542,10 +542,12 @@
         }
     }
 </script>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 619a31eb191a115d1439b66372bdb6979ce12d91
 <!-- <script>
 $(document).ready(function() {
-
     /* Avoid Enter */
     $('#other-car-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
@@ -980,7 +982,11 @@ $(document).ready(function() {
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
                         location.reload();
+<<<<<<< HEAD
                     }, 200);
+=======
+                    }, 1000);
+>>>>>>> 619a31eb191a115d1439b66372bdb6979ce12d91
                 } else {
                     alert_toast(resp.msg || "An unexpected error occurred", 'error');
                 }

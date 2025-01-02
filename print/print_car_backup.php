@@ -2,6 +2,7 @@
 
 include('../config.php');
 require_once('../classes/Master.php');
+
 function fetchBuyerDetails($conn, $accountNo) {
     if (empty($accountNo)) {
         return false;
@@ -14,6 +15,7 @@ function fetchBuyerDetails($conn, $accountNo) {
     }
     return false;
 }
+
 function fetchCarDetails($conn, $carNo) {
     $query = "SELECT * FROM t_other_car_payment WHERE c_car_no = ?";
     $stmt = odbc_prepare($conn, $query);
@@ -22,6 +24,7 @@ function fetchCarDetails($conn, $carNo) {
     }
     return false;
 }
+
 if (isset($_GET['id']) && $_GET['id'] > 0) {
     $accountId = $_GET['id'];
     $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
@@ -33,6 +36,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $stmt = odbc_prepare($conn, $get_car_query);
     odbc_execute($stmt, array($accountId));
     $result = odbc_fetch_array($stmt);
+
     if ($result) {
         $row = $result;
         $c_account_no = $row['c_account_no'];
@@ -57,8 +61,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 8px !important;
         }
         .container {
-            margin-top:-25px;
-            margin-left: -40px;
             position: relative;
             width: 500px;
             padding: 20px;
@@ -67,13 +69,12 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         .background-image {
             position: absolute;
-            top: -10px;
+            top: 0;
             left: 0;
-            height: 400px;
-            width: 750px;
+            height: 280px;
+            width: 670px;
             z-index: 1;
             object-fit: cover;
-            display:none;
         }
         input {
             border: none;
@@ -91,17 +92,33 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             resize: none;
             overflow: hidden;
         }
+        #c_current_date {
+            float: right;
+            margin-top: 70px;
+            margin-right: -200px;
+        }
+        #c_car_type {
+            float: right;
+            margin-top: 190px;
+            margin-right: -190px;
+            width: 300px;
+        }
+        #c_car_amount {
+            float: right;
+            margin-top: 165px;
+            margin-right: -340px;
+            width: 140px;
+        }
         #c_car_amount_words {
             float: right;
-            margin-top: 60px;
-            margin-right: 95px;
+            margin-top: 140px;
+            margin-right: -290px;
             width: 340px;
             height: auto;
             line-height: 1.2em;
             overflow: hidden;
             white-space: pre-wrap;
             word-wrap: break-word;
-          
         }
         /* #c_car_no {
             float: right;
@@ -112,51 +129,46 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         #c_received {
             text-transform: uppercase;
             float: right;
-            margin-top: -275px;
-            margin-right: -10px;
+            margin-top: 80px;
+            margin-right: -390px;
             width: 350px;
             padding:0px;
         }
         #c_address {
             text-transform: uppercase;
             float: right;
-            margin-top: -250px;
-            margin-right: -10px;
+            margin-top: 115px;
+            margin-right: -360px;
             width: 360px;
             text-align: center;
-        }
-        #c_current_date {
-            float: right;
-            margin-top: 85px;
-            margin-right: -240px;
-        }
-        #c_acc_no{
-            text-transform: uppercase;
-            margin-top: 120px;
-            margin-left:560px;
-            width: auto;
-            text-align: center;
-            font-size: 12px !important;
-            position:absolute;
-            
         }
         #c_encoded_by {
             text-transform: uppercase;
             float: left;
-            margin-top: -75px;
+            margin-top: 5px;
             width: auto;
-            margin-left:585px;
+            margin-left:530px;
             text-align: center;
             font-size: 10px !important;
         }
         #c_loc{
             text-transform: uppercase;
-            float:right;
-            margin-top: -258px;
-            margin-right: -250px;
+            float:left;
+            margin-top: -80px;
+            margin-right: 145px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
+        }
+        #c_acc_no{
+            text-transform: uppercase;
+            float: right;
+            margin-top: 50px;
+            margin-right: 100px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
         }
         .dynamic-margin {
             width: 100px;
@@ -165,10 +177,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_bank{
-            margin-top: -15px;
+            margin-top: 120px;
+            margin-right: 100px;
             width: auto;
-            float:right;
-            margin-left:290px;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
@@ -186,33 +197,24 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             resize: none; 
         }
         #c_check_main{
-            margin-top: -15px;
-            width: 200px;
+            margin-top:140px;
+            width: auto;
             text-align: center;
             font-size: 12px !important;
             position:absolute;
-        }
-        #c_car_type {
-            /* float: right; */
-            margin-top: 170px;
-            margin-right: 100px;
-            width: 400px;
-            position:absolute;
-            text-align: center;
         }
         #c_remarks{
-            margin-top: -75px;
-            margin-right: 100px;
-            width: 400px;
+            margin-left: 180px;
+            width: 250px;
             text-align: center;
             font-size: 12px !important;
-            position: absolute;
+            margin-top:-35px;
         }
         #c_paydate_main {
             float: left;
-            margin-top: -105px;
+            margin-top: -5px;
             width: auto;
-            margin-left:170px;
+            margin-left:90px;
             text-align: center;
             font-size: 10px !important;
         }
@@ -222,26 +224,10 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             margin-right: -430px;
             width: 80px;
         }
-        #c_mop{
-            margin-left:605px;
-            margin-top:250px;
-            position:relative;
-        }
-        #c_car_amount {
-            float: right;
-            margin-top: 165px;
-            margin-right: -290px;
-            /* width: 140px; */
-        }
-        #check_sym{
-            width:auto;
-            height:auto;
-            position:absolute;
-        }
     </style>
 </head>
 <body onload="initializePage()">
-    <img src="<?php echo base_url ?>images/new_car.png" class="background-image" alt="Car Scanned Copy">
+    <img src="<?php echo base_url ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
          <!-- <img src=""> -->
     <div class="container">
         <div class="box_middle">
@@ -250,53 +236,15 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_acc_no" id="c_acc_no" value="<?php echo $c_account_no; ?>">
         <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($row['c_car_type']); ?>">
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
-        <input type="text" id="c_mop" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
-        <input type="hidden" id="c_mop_value" value="<?php echo ($row['c_mop']); ?>">
-        
         <textarea name="c_car_amount_words" id="c_car_amount_words"></textarea>
-        <input type="hidden" id="c_mop_value" value="<?php echo $row['c_mop']; ?>">
-        <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_car_paydate; ?>">
-        <input type="text" id="check_sym" value="✓">
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const mopValue = document.getElementById("c_mop_value").value;
-                const paydateMain = document.getElementById("c_paydate_main");
-                const bankMain = document.getElementById("c_bank");
-                const checkMain = document.getElementById("c_check_main");
-                const checksym = document.getElementById("check_sym");
-             
-                if (mopValue === "1") {
-                    paydateMain.style.display = "none";
-                    checksym.style.marginTop = "-25px";
-                    checksym.style.marginLeft = "8px";
-                }else if(mopValue === "3"){
-                    paydateMain.style.display = "block";
-                    paydateMain.style.marginTop = "-85px";
-                    bankMain.style.marginTop = "5px";
-                    checkMain.style.marginTop = "5px";
-                    checkMain.style.fontSize = "8px";
-                    checksym.style.marginTop = "5px";
-                    checksym.style.marginLeft = "8px";
-                } else if(mopValue === "4"){
-                    paydateMain.style.display = "block";
-                    checkMain.style.display = "block";
-                    paydateMain.style.marginTop = "-68px";
-                    paydateMain.style.marginLeft = "50px";
-                    bankMain.style.marginTop = "25px";
-                    bankMain.style.marginLeft = "-10px";
-                    checkMain.style.marginTop = "23px";
-                    checkMain.style.fontSize = "8px";
-                    checkMain.style.marginLeft = "150px";
-                    checksym.style.marginTop = "25px";
-                    checksym.style.marginLeft = "8px";
-                }else {
-                    paydateMain.style.display = "block";
-                    paydateMain.style.marginTop = "-105px";
-                    checksym.style.marginTop = "-15px";
-                    checksym.style.marginLeft = "8px";
-                }       
-            });
-        </script>
+        
+        <!-- <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($row['c_car_no']); ?>"> -->
+        
+        <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
+        <div class="dynamic-margin" id="dynamicMarginDiv">
+            <input type="text" id="c_mop" value="<?php echo number_format($row['c_car_amount'], 2); ?>">
+            <input type="hidden" id="c_mop_value" value="<?php echo ($row['c_mop']); ?>">
+        </div>
 
         
 
@@ -386,8 +334,21 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         ?>
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
         <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
+        <input type="text" name="c_paydate_main" id="c_paydate_main" value="<?php echo $c_car_paydate; ?>">
     </div>
-   
+    <script>
+        var cMopValue = document.getElementById('c_mop_value').value;
+        var cPayDateField = document.getElementById('c_paydate');
+        var dynamicMarginDiv = document.getElementById('dynamicMarginDiv');
+
+        if (cMopValue == '1' || cMopValue == '3' || cMopValue == '4') {
+            dynamicMarginDiv.style.marginTop = '195px';
+            cPayDateField.style.display = 'none';
+        } else {
+            dynamicMarginDiv.style.marginTop = '215px';
+            cPayDateField.style.display = 'block';
+        }
+    </script>
     <script>
         function initializePage() {
             adjustTextArea('c_received');

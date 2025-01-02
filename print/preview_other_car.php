@@ -17,23 +17,28 @@ $c_voucher_no = $_GET['c_voucher_no'] ?? '';
 $c_remarks = $_GET['c_remarks'] ?? '';
 
 $c_bank = '';
+$c_bank_2 = '';
 $c_check = '';
+$c_ref = '';
+$c_car_paydate_1 = '';
+$c_car_paydate_2 = '';
 
-if (($c_bank_check == '' || $c_bank_check == null) && ($c_bank_online == '' || $c_bank_online == null)) {
-    $c_bank = $c_bank_voucher;
-} elseif ($c_bank_check == '' || $c_bank_check == null) {
-    $c_bank = $c_bank_online;
-} else {
+if ($c_bank_check == '' || $c_bank_check == null){
+    $c_bank_2 = $c_bank_online;
+}else{
     $c_bank = $c_bank_check;
 }
 
-
-if (($c_check_no == '' || $c_check_no == null) && ($c_ref_no == '' || $c_ref_no == null)){
-    $c_check = $c_voucher_no;
-} elseif ($c_check_no == '' || $c_check_no == null){
-    $c_check = $c_ref_no;
-} else{
+if ($c_check_no == '' || $c_check_no == null){
+    $c_ref = $c_ref_no;
+}else{
     $c_check = $c_check_no;
+}
+
+if ($c_mop == 3) {
+    $c_car_paydate_2 = $c_car_paydate;
+} elseif ($c_mop == 2) {
+    $c_car_paydate_1 = $c_car_paydate;
 }
 
 $realname = '';
@@ -72,7 +77,8 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             box-sizing: border-box;
             z-index: 2; 
         }
-        .background-image {
+        /* old */
+        /* .background-image {
             position: absolute;
             top: 0;
             left: 0;
@@ -80,6 +86,16 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             width: 670px;
             z-index: 1;
             object-fit: cover;
+        } */
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 370px;
+            width: 700px;
+            z-index: 1;
+            object-fit: cover;
+            border:black solid 1px;
         }
         input {
             border: none;
@@ -99,19 +115,25 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
         }
         #c_current_date {
             float: right;
-            margin-top: 83px;
-            margin-right: -150px;
+            margin-top: 90px;
+            margin-right: -195px;
         }
         #c_car_type {
             float: right;
-            margin-top: 190px;
-            margin-right: -180px;
+            margin-top: 160px;
+            margin-right: 30px;
             width: 300px;
         }
         #c_car_amount {
             float: right;
-            margin-top: 165px;
-            margin-right: -300px;
+            margin-top: 160px;
+            margin-right: -590px;
+            width: 140px;
+        }
+        #c_car_amount2 {
+            float: right;
+            margin-top: 237px;
+            margin-right: -590px;
             width: 140px;
         }
         #c_car_amount_words {
@@ -127,9 +149,10 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
         }
         #c_car_no {
             float: right;
-            margin-top: 62px;
-            margin-right: -360px;
+            margin-top: -133px;
+            margin-right: -590px;
             width: 80px;
+            font-size: 15px !important;
         }
         #c_received {
             text-transform: uppercase!important;
@@ -142,17 +165,17 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
         #c_address {
             text-transform: uppercase;
             float: right;
-            margin-top: 120px;
-            margin-right: -350px;
+            margin-top: -220px;
+            margin-right: -318px;
             width: 360px;
             text-align: center;
         }
         #c_encoded_by {
             text-transform: uppercase!important;
             float: left;
-            margin-top: 5px;
+            margin-top: -70px;
             width: auto;
-            margin-left:470px;
+            margin-left:540px;
             text-align: center;
             font-size: 10px !important;
         }
@@ -198,10 +221,10 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             position:absolute;
         }
         #c_name {
-            text-transform: uppercase;
+            text-transform: uppercase!important;
             float: right;
-            margin-top: 100px;
-            margin-right: -380px;
+            margin-right:10px;
+            margin-top: -250px;
             width: 350px;
             padding:0px;
         }
@@ -216,15 +239,18 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
         }
         #location{
             text-transform: uppercase;
-            margin-top: 100px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
+            float:right;
+            margin-left:515px;
+            margin-top: 105px;
+            position:absolute;
         }
         #c_amount_words {
             float: right;
-            margin-top: 140px;
-            margin-right: -290px;
+            margin-top: 130px;
+            margin-right: 100px;
             width: 340px;
             height: auto;
             line-height: 1.2em;
@@ -274,26 +300,117 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
             height:auto;
             text-align: center;
             font-size: 12px !important;
-            margin-top:225px;
+            margin-top:180px;
             position:absolute;
-            margin-left:-100px;
+            margin-left:-110px;
+        }
+        #c_bank_main{
+            margin-top: 242px; /* ETO YUNG SA CHECK */
+            margin-left: 320px;
+            width: auto;
+            text-align: left;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_bank_main_2{
+            margin-top: 257px; /* ETO NAMAN SA ONLINE */
+            margin-left: 320px;
+            width: auto;
+            text-align: left;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_check_main{
+            margin-top:242px; /* TAMA NA TO */
+            margin-left:-10px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+            /* background-color: pink; */
+        }
+        #c_ref_main{
+            margin-top:257px;
+            margin-left:-10px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_cash{
+            margin-top:227px;
+            margin-left:-80px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_check{
+            margin-top:242px; /* TAMA NA TO */
+            margin-left:-80px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #sign_ref{
+            margin-top:257px;
+            margin-left:-80px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #c_paydate_check {
+            float: left; /* TAMA NA TO */
+            margin-top: -95px;
+            width: auto;
+            margin-left:150px;
+            text-align: center;
+            font-size: 10px !important;
+        }
+        #c_paydate_online {
+            float: left;
+            margin-top: -79px;
+            width: auto;
+            margin-left:150px;
+            text-align: center;
+            font-size: 10px !important;
+        }
+        #sign_others{
+            margin-top:272px;
+            margin-left:-80px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
+        }
+        #bank_others{
+            margin-top:272px;
+            margin-left:35px;
+            width: auto;
+            text-align: center;
+            font-size: 12px !important;
+            position:absolute;
         }
     </style>
 </head>
 <body onload="convertCarAmountToWords()" id="previewCarContent">
-    <img src="<?php echo base_url; ?>images/car.jpg" class="background-image" alt="Car Scanned Copy">
+    <!-- <img src="<?php echo base_url; ?>images/car.jpg" class="background-image" alt="Car Scanned Copy"> -->
+    <img src="<?php echo base_url; ?>images/new_car.png" class="background-image" alt="Car Scanned Copy">
     <div class="container">
         <div class="box_middle">
             <input type="text" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">
         </div>
         <input type="text" name="c_car_type" id="c_car_type" value="<?php echo htmlspecialchars($c_car_type); ?>">
         <input type="text" name="c_car_amount" id="c_car_amount" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
+        <input type="text" name="c_car_amount2" id="c_car_amount2" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
         <textarea name="c_amount_words" id="c_amount_words"></textarea>
         <input type="text" name="c_car_no" id="c_car_no" value="<?php echo htmlspecialchars($c_car_no); ?>">
 
         <?php $c_mop = $c_mop ?? 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
-            <input type="text" id="c_mop" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
+            <input type="hidden" id="c_mop" value="<?php echo number_format((float)str_replace(',', '', $c_car_amount), 2); ?>">
             <input type="hidden" id="c_mop_value" value="<?php echo $c_mop; ?>">
         </div>
         <?php
@@ -329,14 +446,47 @@ if ($encoder = odbc_fetch_array($encoder_stmt)) {
 
         <input type="text" name="c_encoded_by" id="c_encoded_by" value="<?php echo $realname; ?>">
         <input type="text" name="c_remarks" id="c_remarks" value="<?php echo htmlspecialchars($c_remarks); ?>">
-        <input type="text" name="c_paydate_prev" id="c_paydate_prev" value="<?php echo htmlspecialchars($c_car_paydate); ?>">
+        <!-- <input type="text" name="c_paydate_prev" id="c_paydate_prev" value="<?php echo htmlspecialchars($c_car_paydate); ?>"> -->
         <input type="text" name="c_bank" id="c_bank" value="<?php echo htmlspecialchars($c_bank); ?>">
         <input type="text" name="c_check" id="c_check" value="<?php echo htmlspecialchars($c_check); ?>">
+    
+        <input type="text" name="c_bank_main" id="c_bank_main" value="<?php echo htmlspecialchars($c_bank); ?>">
+        <input type="text" name="c_bank_main_2" id="c_bank_main_2" value="<?php echo htmlspecialchars($c_bank_2); ?>">
+        <input type="text" name="c_paydate_check" id="c_paydate_check" value="<?php echo htmlspecialchars($c_car_paydate_1); ?>">
+        <input type="text" name="c_paydate_online" id="c_paydate_online" value="<?php echo htmlspecialchars($c_car_paydate_2); ?>">
+
+        <?php if ($c_mop == 2): ?> <!-- CHECK -->
+            <input type="text" name="sign_check" id="sign_check" value="✓">
+            <input type="text" name="c_check_main" id="c_check_main" value="<?php echo htmlspecialchars($c_check); ?>">
+        <?php elseif ($c_mop == 3): ?> <!-- ONLINE -->
+            <input type="text" name="sign_ref" id="sign_ref" value="✓">
+            <input type="text" name="c_ref_main" id="c_ref_main" value="<?php echo htmlspecialchars($c_ref); ?>">
+        <?php elseif ($c_mop == 4): ?> <!-- CHECK VOUCHER -->
+            <input type="text" name="sign_others" id="sign_others" value="✓">
+            <input type="text" name="bank_others" id="bank_others" value="<?php echo htmlspecialchars($c_bank_voucher); ?> - <?php echo htmlspecialchars($c_car_paydate); ?> - <?php echo htmlspecialchars($c_voucher_no); ?> ">
+            <!-- <input type="text" name="voucher_others" id="voucher_others" value="<?php echo htmlspecialchars($c_voucher_no); ?>"> -->
+        <?php elseif ($c_mop == 1): ?> <!-- CASH -->
+            <input type="text" name="sign_cash" id="sign_cash" value="✓">
+        <?php endif; ?>
     </div>
     <!-- <div class="btn-container">
         <button type="button" class="btn btn-primary" onclick="saveAsImage()" id="btnSave">Save as PNG</button> 
     </div> -->
     <script>
+        function initializePage() {
+            adjustTextArea('c_name');
+            convertCarAmountToWords();
+        }
+
+        function adjustTextArea(id) {
+            var receivedField = document.getElementById(id);
+            if (receivedField.value.length > 35) {
+                receivedField.classList.add('small-font');
+                receivedField.value = receivedField.value.match(/.{1,55}/g).join('\n');
+            } else {
+                receivedField.classList.add('normal-font');
+            }
+        }
         function convertToWords(number) {
             var ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
             var teens = ["Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
