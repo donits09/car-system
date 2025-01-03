@@ -138,13 +138,13 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_car_amount {
             float: right;
-            margin-top: 30px;
+            margin-top: 20px;
             margin-right: -260px;
             width: 140px;
         }
         #c_car_amount2 {
             float: right;
-            margin-top: 110px;
+            margin-top: 100px;
             margin-right: -260px;
             width: 140px;
         }
@@ -161,7 +161,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_car_no {
             float: right;
-            margin-top: -83px;
+            margin-top: -95px;
             margin-right: -150px;
             width: 80px;
             font-size: 15px !important;
@@ -169,6 +169,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         #c_received {
             text-transform: uppercase!important;
             float: right;
+            height:28px;
             margin-right:10px;
             margin-top: 85px;
             width: 350px;
@@ -177,7 +178,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         #c_address {
             text-transform: uppercase;
             float: right;
-            margin-top: 105px;
+            margin-top: 112px;
             margin-right: -365px;
             width: 360px;
             text-align: left;
@@ -185,7 +186,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         #c_encoded_by {
             text-transform: uppercase!important;
             float: left;
-            margin-top: -70px;
+            margin-top: -80px;
             width: auto;
             margin-left:545px;
             text-align: center;
@@ -203,20 +204,17 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             text-transform: uppercase;
             width: auto;
             text-align: left;
+            height:18px;
             font-size: 12px !important;
-            float:right;
-            margin-left:505px;
-            margin-top:-25px;
-            position:absolute;
+            margin-left:550px;
+            margin-top:-6px;
         }
         #c_acc_no{
             width: auto;
             text-align: left;
             font-size: 12px !important;
-            float:right;
-            margin-left:505px;
-            margin-top:-10px;
-            position:absolute;
+            margin-left:550px;
+            margin-top:-260px!important;
         }
         #c_bank{
             margin-top: 150px;
@@ -224,7 +222,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             width: auto;
             text-align: center;
             font-size: 12px !important;
-            position:absolute;
+            position:relative;
         }
         .dynamic-margin {
             width: 100px;
@@ -233,7 +231,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_bank_main{
-            margin-top: 115px; /* ETO YUNG SA CHECK */
+            margin-top: 105px; /* ETO YUNG SA CHECK */
             margin-left: 280px;
             width: auto;
             text-align: left;
@@ -241,7 +239,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_bank_main_2{
-            margin-top: 130px; /* ETO NAMAN YUNG SA ONLINE */
+            margin-top: 115px; /* ETO NAMAN YUNG SA ONLINE */
             margin-left: 280px;
             width: auto;
             text-align: left;
@@ -249,8 +247,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #c_check_main{
-            margin-top:115px;
-            margin-left:-60px;
+            margin-top:105px;
+            margin-left:-50px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -267,15 +265,15 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             /* background-color: red; */
         }
         #c_ref_main{
-            margin-top:130px;
-            margin-left:-50px;
+            margin-top:120px;
+            margin-left:-12px;
             width: auto;
             text-align: center;
-            font-size: 12px !important;
+            font-size: 8px !important;
             position:absolute;
         }
         #sign_cash{
-            margin-top:100px;
+            margin-top:90px;
             margin-left:-125px;
             width: auto;
             text-align: center;
@@ -283,7 +281,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #sign_check{
-            margin-top:115px;
+            margin-top:105px;
             margin-left:-125px;
             width: auto;
             text-align: center;
@@ -291,7 +289,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #sign_ref{
-            margin-top:130px;
+            margin-top:120px;
             margin-left:-125px;
             width: auto;
             text-align: center;
@@ -299,7 +297,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #sign_others{
-            margin-top:145px;
+            margin-top:135px;
             margin-left:-125px;
             width: auto;
             text-align: center;
@@ -307,8 +305,8 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
             position:absolute;
         }
         #bank_others{
-            margin-top:145px;
-            margin-left:-10px;
+            margin-top:135px;
+            margin-left:-5px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -324,7 +322,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         } */
         #c_paydate_check {
             float: left;
-            margin-top: -5px;
+            margin-top: -15px;
             width: auto;
             margin-left:110px;
             text-align: center;
@@ -332,7 +330,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_paydate_online {
             float: left;
-            margin-top: 2px;
+            margin-top: -5px;
             width: auto;
             margin-left:110px;
             text-align: center;
