@@ -978,7 +978,7 @@ $(document).ready(function() {
                         $('body').removeClass('modal-open');
                         $('.modal-backdrop').remove();
                         location.reload();
-                    }, 1000);
+                    }, 200);
                 } else {
                     alert_toast(resp.msg || "An unexpected error occurred", 'error');
                 }

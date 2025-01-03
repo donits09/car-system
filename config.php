@@ -3,7 +3,7 @@
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
 
-define('base_url','http://localhost/car/');
+define('base_url','http://192.168.0.75/car/');
 // define('base_url','http://192.168.0.111/car/');
 
 global $dsn, $user, $pass;
@@ -22,9 +22,9 @@ function redirect($url) {
 }
 
 ##### JUDZ CONNECTION ######
-$dbhost = 'localhost';
+$dbhost = '192.168.0.123';
 $dbport = '5432'; 
-$dbname = 'CAR_TESTDB';
+$dbname = 'ProductionDB';
 $dbuser = 'postgres';
 $dbpass = 'admin12345';
 
