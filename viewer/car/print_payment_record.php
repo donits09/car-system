@@ -74,7 +74,7 @@ include('../../inc/header.php');?>
                             $lot_total = (int) $lot_area * (int) $lot_price_sqm;
                             $floor_area = $row1['c_floor_area'];
                             $house_price_sqm = $row1['c_house_price_sqm'];
-                            $house_total = (int) $floor_area * (int) $house_price_sqm;
+                            $house_total = (float) $floor_area * (float) $house_price_sqm;
                             $acr = $row1['acr'];
                             $blk = $row1['blk'];
                             $lot = $row1['lot'];
