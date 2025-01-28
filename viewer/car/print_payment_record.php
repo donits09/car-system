@@ -195,9 +195,9 @@ include('../../inc/header.php');?>
                                     <td class="text-center" style="font-size:13px;width:10%;">
                                     <?php
                                     if (strpos($or_no, 'RSTR') === 0) {
-                                        echo '<a class="basic-link view_restruc" data-id="' . md5($row['property_id']) . '" cid="' . str_replace('RSTR-', '', $or_no) . '">' . $or_no . '</a>';
+                                        echo '<a class="basic-link view_restruc" data-id="' . md5($row['c_account_no']) . '" cid="' . str_replace('RSTR-', '', $or_no) . '">' . $or_no . '</a>';
                                     } elseif (strpos($or_no, 'AV') === 0) {
-                                        echo '<a class="basic-link view_av" data-id="' . md5($row['property_id']) . '" cid="' . $or_no . '">' . $or_no . '</a>';
+                                        echo '<a class="basic-link view_av" data-id="' . md5($row['c_account_no']) . '" cid="' . $or_no . '">' . $or_no . '</a>';
                                     } elseif (strpos($or_no, 'CM') === 0 || strpos($or_no, 'DM') === 0) {
                                         $newId = substr($or_no, 2); 
                                         echo '<a class="basic-link view_cm" data-id="' . $or_no . '">' . $or_no . '</a>';

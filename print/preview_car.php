@@ -150,7 +150,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         }
         #c_car_amount_words {
             float: left;
-            margin-top: 180px;
+            margin-top: 170px;
             margin-right: -300px;
             width: 340px;
             height: auto;

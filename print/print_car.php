@@ -93,7 +93,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
         #c_car_amount_words {
             float: right;
-            margin-top: 60px;
+            margin-top: 47px;
             margin-right: 95px;
             width: 340px;
             height: auto;
@@ -112,28 +112,28 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         #c_received {
             text-transform: uppercase;
             float: right;
-            margin-top: -275px;
-            margin-right: -10px;
+            margin-top: -270px;
+            margin-right: -5px;
             width: 350px;
             padding:0px;
         }
         #c_address {
             text-transform: uppercase;
             float: right;
-            margin-top: -250px;
+            margin-top: -245px;
             margin-right: -10px;
             width: 360px;
             text-align: center;
         }
         #c_current_date {
             float: right;
-            margin-top: 85px;
+            margin-top: 75px;
             margin-right: -240px;
         }
         #c_acc_no{
             text-transform: uppercase;
-            margin-top: 120px;
-            margin-left:560px;
+            margin-top: 110px;
+            margin-left:555px;
             width: auto;
             text-align: center;
             font-size: 12px !important;
@@ -152,7 +152,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         #c_loc{
             text-transform: uppercase;
             float:right;
-            margin-top: -258px;
+            margin-top: -255px;
             margin-right: -250px;
             width: auto;
             text-align: center;
@@ -186,7 +186,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             resize: none; 
         }
         #c_check_main{
-            margin-top: -15px;
+            margin-top: -20px;
             width: 200px;
             text-align: center;
             font-size: 12px !important;
@@ -267,31 +267,31 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
              
                 if (mopValue === "1") {
                     paydateMain.style.display = "none";
-                    checksym.style.marginTop = "-25px";
-                    checksym.style.marginLeft = "8px";
+                    checksym.style.marginTop = "-30px";
+                    checksym.style.marginLeft = "5px";
                 }else if(mopValue === "3"){
                     paydateMain.style.display = "block";
-                    paydateMain.style.marginTop = "-85px";
+                    paydateMain.style.marginTop = "-75px";
                     bankMain.style.marginTop = "5px";
-                    checkMain.style.marginTop = "5px";
+                    checkMain.style.marginTop = "0px";
                     checkMain.style.fontSize = "8px";
-                    checksym.style.marginTop = "5px";
+                    checksym.style.marginTop = "0px";
                     checksym.style.marginLeft = "8px";
                 } else if(mopValue === "4"){
                     paydateMain.style.display = "block";
                     checkMain.style.display = "block";
                     paydateMain.style.marginTop = "-68px";
                     paydateMain.style.marginLeft = "50px";
-                    bankMain.style.marginTop = "25px";
+                    bankMain.style.marginTop = "10px";
                     bankMain.style.marginLeft = "-10px";
-                    checkMain.style.marginTop = "23px";
+                    checkMain.style.marginTop = "10px";
                     checkMain.style.fontSize = "8px";
-                    checkMain.style.marginLeft = "150px";
-                    checksym.style.marginTop = "25px";
+                    checkMain.style.marginLeft = "90px";
+                    checksym.style.marginTop = "10px";
                     checksym.style.marginLeft = "8px";
                 }else {
                     paydateMain.style.display = "block";
-                    paydateMain.style.marginTop = "-105px";
+                    paydateMain.style.marginTop = "-100px";
                     checksym.style.marginTop = "-15px";
                     checksym.style.marginLeft = "8px";
                 }       
