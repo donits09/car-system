@@ -26,6 +26,7 @@ if ($stmt) {
             $pay_dte = $row['c_pay_date'];
             $or_no = $row['c_or_no'];
             $amt_paid = $row['c_amount_paid'];
+            $amt_due = $row['c_amount_due'];
             $interest = $row['c_interest'];
             $principal = $row['c_principal'];
             $surcharge = $row['c_surcharge'];
@@ -51,6 +52,7 @@ if ($stmt) {
             }
             echo "</td>
                 <td class='text-center' style='font-size:13px;width:15%;'>" . number_format($amt_paid, 2) . "</td>
+                  <td class='text-center' style='font-size:13px;width:15%;'>" . number_format($amt_due, 2) . "</td>
                 <td class='text-center' style='font-size:13px;width:10%;'>" . number_format($surcharge, 2) . "</td>
                 <td class='text-center' style='font-size:13px;width:10%;'>" . number_format($interest, 2) . "</td>
                 <td class='text-center' style='font-size:13px;width:10%;'>" . number_format($principal, 2) . "</td>

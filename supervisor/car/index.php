@@ -582,6 +582,7 @@ include('../../inc/header.php');
                                             <th style="text-align:center;font-size:13px;">PAY DATE</th>
                                             <th style="text-align:center;font-size:13px;">OR NO</th>
                                             <th style="text-align:center;font-size:13px;">AMOUNT PAID</th>
+                                            <th style="text-align:center;font-size:13px;">AMOUNT DUE</th>
                                             <th style="text-align:center;font-size:13px;">SURCHARGE</th>
                                             <th style="text-align:center;font-size:13px;">INTEREST</th>
                                             <th style="text-align:center;font-size:13px;">PRINCIPAL</th>

@@ -101,35 +101,36 @@ include('../../inc/header.php');?>
                                     <?php }
                                     ?>
                                 </tr>
-                                <tr><th style="padding-left:5px; width:150px;">Buyer's Name : </th><td><?php echo $row1['c_b1_first_name'];?> <?php echo $row1['c_b1_middle_name'];?> <?php echo $row1['c_b1_last_name'];?> </td></tr>
+                                <tr><th style="padding-left:5px; width:150px;">Buyer1's Name : </th><td><?php echo $row1['c_b1_first_name'];?> <?php echo $row1['c_b1_middle_name'];?> <?php echo $row1['c_b1_last_name'];?> </td>
+                                    <th style="padding-left:5px; width:150px;">Buyer2's Name : </th><td><?php echo $row1['c_b2_first_name'];?> <?php echo $row1['c_b2_middle_name'];?> <?php echo $row1['c_b2_last_name'];?> </td>
                                 <tr><th style="padding-left:5px; width:150px;">Home Address : </th><td><?php echo $row1['c_address'];?><?php echo $row1['c_city_prov'];?> <?php echo $row1['c_zip_code'];?></td></tr>
                             </table>
                             <hr style="height:2px;margin-top:0px;margin-bottom:0px;">
                             <table style="font-size:13px;">
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">Price=LA*SQM : </th><td><?php echo number_format($lot_total,2); ?> = <?php echo $row1['c_lot_area'];?>.0 * <?php echo number_format($row1['c_price_sqm'],2); ?></td>
-                                    <th style="padding-left:5px; width:150px;">Less Discount : </th><td>(<?php echo $row1['c_lot_discount'];?>%) <?php echo number_format ($row1['c_lot_discount_amount'],2);?></td>
-                                    <th style="padding-left:5px; width:150px;">Balance : </th><td><?php echo $row1['c_balance'];?></td>
+                                    <th style="padding-left:5px; width:150px;">Lot Discount : </th><td>(<?php echo $row1['c_lot_discount'];?>%) <?php echo number_format ($row1['c_lot_discount_amount'],2);?></td>
+                                    <th style="padding-left:5px; width:150px;">Balance : </th><td><?php echo number_format($row1['c_balance'],2);?></td>
                                 </tr>
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">Price=FA*SQM : </th><td><?php echo number_format($house_total,2); ?> = <?php echo $row1['c_floor_area'];?>.0 * <?php echo number_format($row1['c_house_price_sqm'],2); ?></td>
-                                    <th style="padding-left:5px; width:150px;">Disc. Amt. : </th><td>(<?php echo $row1['c_h_discount'];?>%) <?php echo number_format ($row1['c_h_discount_amount'],2);?></td>
-                                    <th style="padding-left:5px; width:150px;">Rate : </th><td><?php echo $row1['c_fixed_factor'];?></td>
+                                    <th style="padding-left:5px; width:150px;">House Discount : </th><td>(<?php echo $row1['c_h_discount'];?>%) <?php echo number_format ($row1['c_h_discount_amount'],2);?></td>
+                                    <th style="padding-left:5px; width:150px;">Fixed Factor : </th><td><?php echo $row1['c_fixed_factor'];?></td>
                                 </tr>
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">Total C.Price: </th><td><?php echo number_format($row1['c_tcp'],2);?></td>
-                                    <th style="padding-left:5px; width:150px;">DP Amt. : </th><td><?php echo number_format($row1['c_down_percent'],2);?></td>
+                                    <th style="padding-left:5px; width:150px;">(<?php echo $row1['c_down_percent'];?>%) DP Amt. : </th><td><?php echo number_format((($row1['c_net_tcp'] * ($row1['c_down_percent']/100)) - $row1['c_reservation']),2);?></td>
                                     <th style="padding-left:5px; width:150px;">Terms to Pay : </th><td><?php echo $row1['c_terms'];?> mos.</td>
                                 </tr>
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">VAT: </th><td><?php echo number_format($row1['c_vat_amount'],2);?></td>
                                     <th style="padding-left:5px; width:150px;">DP / Month : </th><td><?php echo number_format($row1['c_monthly_down'],2);?></td>
-                                    <th style="padding-left:5px; width:150px;">Monthly Amort : </th><td><?php echo number_format ($row1['c_monthly_payment'],2);?></td>
+                                    <th style="padding-left:5px; width:150px;">Monthly Amort  : </th><td> (<?php echo $row1['c_interest_rate'];?>%) <?php echo number_format ($row1['c_monthly_payment'],2);?></td>
                                 </tr>
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">NET T.C.Price : </th><td><?php echo number_format($row1['c_net_tcp'],2);?></td>
                                     <th style="padding-left:5px; width:150px;">House Model : </th><td><?php echo $row1['c_house_model'];?></td>
-                                    <th style="padding-left:5px; width:150px;">Commencing on : </th><td>(<?php echo $row1['c_lot_discount'];?>%) <?php echo number_format ($row1['c_lot_discount_amount'],2);?></td>
+                                    <th style="padding-left:5px; width:150px;">Commencing on : </th><td><?php echo  $row1['c_start_date'];?></td>
                                 </tr>   
                             </table>
                         </div>
@@ -195,9 +196,9 @@ include('../../inc/header.php');?>
                                     <td class="text-center" style="font-size:13px;width:10%;">
                                     <?php
                                     if (strpos($or_no, 'RSTR') === 0) {
-                                        echo '<a class="basic-link view_restruc" data-id="' . md5($row['property_id']) . '" cid="' . str_replace('RSTR-', '', $or_no) . '">' . $or_no . '</a>';
+                                        echo '<a class="basic-link view_restruc" data-id="' . md5($row['c_account_no']) . '" cid="' . str_replace('RSTR-', '', $or_no) . '">' . $or_no . '</a>';
                                     } elseif (strpos($or_no, 'AV') === 0) {
-                                        echo '<a class="basic-link view_av" data-id="' . md5($row['property_id']) . '" cid="' . $or_no . '">' . $or_no . '</a>';
+                                        echo '<a class="basic-link view_av" data-id="' . md5($row['c_account_no']) . '" cid="' . $or_no . '">' . $or_no . '</a>';
                                     } elseif (strpos($or_no, 'CM') === 0 || strpos($or_no, 'DM') === 0) {
                                         $newId = substr($or_no, 2); 
                                         echo '<a class="basic-link view_cm" data-id="' . $or_no . '">' . $or_no . '</a>';
