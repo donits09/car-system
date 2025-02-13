@@ -1,5 +1,5 @@
 <?php
-if(!defined('base_url')) define('base_url','http://192.168.0.75/car/');
+if(!defined('base_url')) define('base_url','http://192.168.0.111/car/');
 if(!defined('base_app')) define('base_app', str_replace('\\','/',__DIR__).'/' );
 
 if(!defined('DB_SERVER')) define('DB_SERVER',"localhost");

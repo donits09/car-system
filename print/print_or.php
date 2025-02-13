@@ -141,7 +141,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         }
 
         #c_bank_main_1{
-            margin-top: 320px;
+            margin-top: 325px;
             margin-left: 285px;
             width: auto;
             text-align: center;
@@ -149,7 +149,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_bank_main_2{
-            margin-top: 335px;
+            margin-top: 340px;
             margin-left: 280px;
             width: auto;
             text-align: center;
@@ -165,7 +165,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_paydate_main_1 {
-            margin-top: 320px;
+            margin-top: 325px;
             margin-left: 160px;
             width: auto;
             text-align: center;
@@ -173,7 +173,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_paydate_main_2 {
-            margin-top: 335px;
+            margin-top: 340px;
             margin-left: 165px;
             width: auto;
             text-align: center;
@@ -203,7 +203,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_check_main_1{                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-            margin-top:320px;
+            margin-top:325px;
             margin-left:-10px;
             width: auto;
             text-align: center;
@@ -211,7 +211,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #c_check_main_2{
-            margin-top:335px;
+            margin-top:340px;
             margin-left:-10px;
             width: auto;
             text-align: center;
@@ -219,7 +219,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #sign_cash{
-            margin-top:290px;
+            margin-top:295px;
             margin-left:-65px;
             width: auto;
             text-align: center;
@@ -227,7 +227,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #sign_check{
-            margin-top:320px;
+            margin-top:325px;
             margin-left:-90px;
             width: auto;
             text-align: center;
@@ -235,7 +235,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
         }
         #sign_ref{
-            margin-top:335px;
+            margin-top:340px;
             margin-left:-90px;
             width: auto;
             text-align: center;
@@ -270,20 +270,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position: relative;
             float: right;
             margin-right: 15px;
-            top: -45px;
+            top: -20px;
             width: 350px;
             padding: 0px;
         }
         #c_current_date {
             float: right;
-            margin-top: 60px;
+            margin-top: 80px;
             margin-right: -270px;
         }
         #c_address {
             text-transform: uppercase;
             position: relative;
             float: right;
-            top: -180px;
+            top: -160px;
             margin-right: 5px;
             width: 360px;
             text-align: left;
@@ -295,7 +295,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 12px !important;
             float:right;
             margin-left:625px;
-            margin-top:80px;
+            margin-top:95px;
             position:absolute;
         }
         #c_acc_no{
@@ -304,7 +304,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             text-transform: uppercase;
             float: right;
             margin-left: 645px;
-            margin-top: 85px;
+            margin-top: 95px;
             width: auto;
             text-align: left;
             font-size: 12px !important;
@@ -324,7 +324,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             z-index: 10;
             float: right;
             margin-left: 30px;
-            margin-top: 380px;
+            margin-top: 390px;
             width: 420px;
             height: auto;
             line-height: 1.2em;
@@ -339,7 +339,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             z-index: 10;
             float: right;
             font-size: 12px !important;
-            margin-top: 280px;
+            margin-top: 290px;
             margin-left: 660px;
             width: 140px;
         }
@@ -352,7 +352,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         #c_encoded_by {
             text-transform: uppercase!important;
             float: left;
-            margin-top: 430px;
+            margin-top: 440px;
             width: auto;
             margin-left:630px;
             text-align: left;
