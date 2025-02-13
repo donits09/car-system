@@ -108,12 +108,12 @@ include('../../inc/header.php');?>
                             <table style="font-size:13px;">
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">Price=LA*SQM : </th><td><?php echo number_format($lot_total,2); ?> = <?php echo $row1['c_lot_area'];?>.0 * <?php echo number_format($row1['c_price_sqm'],2); ?></td>
-                                    <th style="padding-left:5px; width:150px;">Less Discount : </th><td>(<?php echo $row1['c_lot_discount'];?>%) <?php echo number_format ($row1['c_lot_discount_amount'],2);?></td>
+                                    <th style="padding-left:5px; width:150px;">Lot Discount : </th><td>(<?php echo $row1['c_lot_discount'];?>%) <?php echo number_format ($row1['c_lot_discount_amount'],2);?></td>
                                     <th style="padding-left:5px; width:150px;">Balance : </th><td><?php echo $row1['c_balance'];?></td>
                                 </tr>
                                 <tr>
                                     <th style="padding-left:5px; width:150px;">Price=FA*SQM : </th><td><?php echo number_format($house_total,2); ?> = <?php echo $row1['c_floor_area'];?>.0 * <?php echo number_format($row1['c_house_price_sqm'],2); ?></td>
-                                    <th style="padding-left:5px; width:150px;">Disc. Amt. : </th><td>(<?php echo $row1['c_h_discount'];?>%) <?php echo number_format ($row1['c_h_discount_amount'],2);?></td>
+                                    <th style="padding-left:5px; width:150px;">House Discount : </th><td>(<?php echo $row1['c_h_discount'];?>%) <?php echo number_format ($row1['c_h_discount_amount'],2);?></td>
                                     <th style="padding-left:5px; width:150px;">Rate : </th><td><?php echo $row1['c_fixed_factor'];?></td>
                                 </tr>
                                 <tr>
