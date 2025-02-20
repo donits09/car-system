@@ -127,7 +127,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 12px !important;
             margin-top:150px;
             position:absolute;
-            background-color: red;
         }
        
         #c_or_no {
@@ -317,7 +316,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             font-size: 12px !important;
             margin-top:185px;
             position:absolute;
-            background-color: pink;
         }
         #c_or_amount_words {
             position:absolute;
@@ -334,21 +332,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             position:absolute;
             padding-left:5px;
         }
-        #c_or_amount {
-            position:absolute;
-            z-index: 10;
-            float: right;
-            font-size: 12px !important;
-            margin-top: 290px;
-            margin-left: 660px;
-            width: 140px;
-        }
-        #c_or_amount2 {
-            float: right;
-            margin-top: 365px;
-            margin-right: -600px;
-            width: 140px;
-        }
         #c_encoded_by {
             text-transform: uppercase!important;
             float: left;
@@ -358,13 +341,6 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             text-align: left;
             font-size: 10px !important;
             position:absolute;
-        }
-        #c_mop{
-            position:absolute;
-            z-index: 10;
-            font-size: 12px !important;
-            margin-top:170px;
-            margin-left:590px;
         }
         #c_paydate {
             float: left;
@@ -397,6 +373,46 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             line-height: 15px;
             float:left;
             margin-left:560px;
+        }
+        #c_sales{
+            position:absolute;
+            z-index: 10;
+            float: right;
+            font-size: 12px !important;
+            margin-top: 320px;
+            margin-left: 530px;
+            width: 140px;
+            text-align: right;
+        }
+        #c_vat{
+            position:absolute;
+            z-index: 10;
+            float: right;
+            font-size: 12px !important;
+            margin-top: 350px;
+            margin-left: 530px;
+            width: 140px;
+            text-align: right;
+        }
+        #c_or_amount {
+            position:absolute;
+            z-index: 10;
+            float: right;
+            font-size: 12px !important;
+            margin-top: 290px;
+            margin-left: 530px;
+            width: 140px;
+            text-align: right;
+        }
+        #c_mop{
+            position:absolute;
+            z-index: 10;
+            float: right;
+            font-size: 12px !important;
+            margin-top:170px;
+            margin-left: 460px;
+            width: 140px;
+            text-align: right;
         }
     </style>
 </head>
@@ -532,10 +548,43 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($row['c_or_type']); ?>">
         <textarea rows="4" name="c_remarks" id="c_remarks"><?php echo htmlspecialchars($c_remarks); ?></textarea>
         <input type="text" name="c_or_amount" id="c_or_amount" value="<?php echo number_format($row['c_or_amount'], 2); ?>">
+        <!-- formulaaaaaaaaaaaaaa -->
+
+        <input type="text" name="c_sales" id="c_sales" readonly>
+        <input type="text" name="c_vat" id="c_vat" readonly>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var orAmountInput = document.getElementById('c_or_amount');
+                var salesInput = document.getElementById('c_sales');
+                var vatInput = document.getElementById('c_vat');
+
+                function formatNumber(num) {
+                    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                function calculateSalesAndVAT() {
+                    var or_amount = orAmountInput.value.replace(/,/g, '').trim();
+
+                    if (or_amount !== '' && !isNaN(or_amount)) {
+                        var amount = parseFloat(or_amount) || 0;
+                        var sales = amount / 1.12;
+                        var vat = amount - sales;
+
+                        salesInput.value = formatNumber(sales);
+                        vatInput.value = formatNumber(vat);
+                    } else {
+                        salesInput.value = '';
+                        vatInput.value = '';
+                    }
+                }
+                orAmountInput.addEventListener('input', calculateSalesAndVAT);
+                calculateSalesAndVAT();
+            });
+        </script>
+        
         <textarea name="c_or_amount_words" id="c_or_amount_words"></textarea>
         
-        <!-- <input type="text" name="c_or_no" id="c_or_no" value="<?php echo htmlspecialchars($row['c_or_no']); ?>"> -->
-        
+       
         <?php $c_mop = isset($row['c_mop']) ? $row['c_mop'] : 0; ?>
         <div class="dynamic-margin" id="dynamicMarginDiv">
             <input type="text" id="c_mop" value="<?php echo number_format($row['c_or_amount'], 2); ?>">

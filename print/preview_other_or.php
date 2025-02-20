@@ -284,18 +284,6 @@ function format_value($value) {
             position:absolute;
             padding-left:5px;
         }
-        #c_or_amount {
-            float: right;
-            margin-top: 280px;
-            margin-right: -600px;
-            width: 140px;
-        }
-        #c_or_amount2 {
-            float: right;
-            margin-top: 365px;
-            margin-right: -600px;
-            width: 140px;
-        }
         #c_encoded_by {
             text-transform: uppercase!important;
             float: left;
@@ -350,6 +338,34 @@ function format_value($value) {
             line-height: 15px;
             float:left;
             margin-left:560px;
+        }
+        #c_sales{
+            float: right;
+            margin-top: 310px;
+            margin-right: -530px;
+            width: 140px;
+            text-align: right;
+        }
+        #c_vat{
+            float: right;
+            margin-top: 340px;
+            margin-right: -530px;
+            width: 140px;
+            text-align: right;
+        }
+        #c_or_amount {
+            float: right;
+            margin-top: 280px;
+            margin-right: -530px;
+            width: 140px;
+            text-align: right;
+        }
+        #c_or_amount2 {
+            float: right;
+            margin-top: 365px;
+            margin-right: -530px;
+            width: 140px;
+            text-align: right;
         }
     </style>
 </head>
@@ -412,6 +428,43 @@ function format_value($value) {
         <input type="text" name="c_or_amount2" id="c_or_amount2" value="<?php echo number_format((float)str_replace(',', '', $c_or_amount), 2); ?>">
         <textarea name="c_or_amount_words" id="c_or_amount_words"></textarea>
         <input type="text" name="c_or_no" id="c_or_no" value="<?php echo htmlspecialchars($c_or_no); ?>">
+        
+        <!-- formulaaaaaaaaaaaaaa -->
+        <input type="text" name="c_or_amount" id="c_or_amount" 
+            value="<?php echo number_format((float)str_replace(',', '', $c_or_amount), 2); ?>">
+
+        <input type="text" name="c_sales" id="c_sales" readonly>
+        <input type="text" name="c_vat" id="c_vat" readonly>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var orAmountInput = document.getElementById('c_or_amount');
+                var salesInput = document.getElementById('c_sales');
+                var vatInput = document.getElementById('c_vat');
+
+                function formatNumber(num) {
+                    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                }
+                function calculateSalesAndVAT() {
+                    var or_amount = orAmountInput.value.replace(/,/g, '').trim();
+
+                    if (or_amount !== '' && !isNaN(or_amount)) {
+                        var amount = parseFloat(or_amount) || 0;
+                        var sales = amount / 1.12;
+                        var vat = amount - sales;
+
+                        salesInput.value = formatNumber(sales);
+                        vatInput.value = formatNumber(vat);
+                    } else {
+                        salesInput.value = '';
+                        vatInput.value = '';
+                    }
+                }
+                orAmountInput.addEventListener('input', calculateSalesAndVAT);
+                calculateSalesAndVAT();
+            });
+        </script>
+        
         <?php
             $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = ?";
             $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
@@ -440,8 +493,7 @@ function format_value($value) {
         --------------<br>
         </div>
         <div class="dashes2">
-        --------------<br>
-        --------------<br>
+        <br>
         --------------<br>
         </div>
         
