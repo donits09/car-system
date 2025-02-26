@@ -547,6 +547,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
+		$c_vat_sales = str_replace(',', '', $c_vat_sales);
+		$c_vat_amount = str_replace(',', '', $c_vat_amount);
+		$c_ewt = str_replace(',', '', $c_ewt);
 		
 		$atap_id = $_POST['c_atap_no_or'];
 		$atap_val = $_POST['atap_id_or'];
@@ -630,9 +633,28 @@ Class Master{
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
 
-		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated,c_mop,c_bank,c_check_no,c_remarks, c_atap_no";
-		$values = "'$maxId','$c_account_no_or', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date','$c_mop_or','$c_bank','$c_check_no','$c_remarks', '" . (!empty($atap_id) ? $atap_id : '0') . "'";
-	
+		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no, c_vat_sales, c_vat_amount, c_vat_selected, c_ewt";
+
+		$values = "'$maxId', 
+				'$c_account_no_or', 
+				'$c_tran_type', 
+				'$c_or_no', 
+				'$c_or_paydate', 
+				'$c_or_amount', 
+				'$c_encoded_by', 
+				'$c_tran_date', 
+				'$c_tran_date', 
+				'$c_mop_or', 
+				'$c_bank', 
+				'$c_check_no', 
+				'$c_remarks', 
+				'" . (!empty($atap_id) ? $atap_id : '0') . "', 
+				'" . (!empty($c_vat_sales) ? $c_vat_sales : '0') . "', 
+				'" . (!empty($c_vat_amount) ? $c_vat_amount : '0') . "', 
+				'" . (!empty($c_vat_selected) ? $c_vat_selected : '0') . "', 
+				'" . (!empty($c_ewt) ? $c_ewt : '0') . "'";
+
+
 		$resp = array();
 	
 		if (empty($id)) {
@@ -710,7 +732,11 @@ Class Master{
 						c_mop = '$c_mop_or',
 						c_bank = '$c_bank',
 						c_check_no = '$c_check_no',
-						c_remarks = '$c_remarks'
+						c_remarks = '$c_remarks',
+						c_vat_sales = " . (!empty($c_vat_sales) ? $c_vat_sales : '0') . ",
+            			c_vat_amount = " . (!empty($c_vat_amount) ? $c_vat_amount : '0') . ",
+						c_vat_selected = '$c_vat_selected',
+						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	

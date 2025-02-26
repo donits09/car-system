@@ -14,6 +14,9 @@ $c_check_no = $_GET['c_check_no'] ?? '';
 $c_ref_no = $_GET['c_ref_no'] ?? '';
 $c_remarks = $_GET['c_remarks'] ?? '';
 $c_or_type = $_GET['c_or_type'] ?? '';
+$c_vat_sales = $_GET['c_vat_sales'] ?? '';
+$c_vat_amount = $_GET['c_vat_amount'] ?? '';
+$c_ewt = $_GET['c_ewt'] ?? '';
 
 $c_bank = '';
 $c_bank_2 = '';
@@ -330,7 +333,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             width:100px;
             position: fixed;
             margin-top:170px;
-            padding-left:25px;
+            padding-left:35px;
             padding-top:5px;
             line-height: 15px;
             float:left;
@@ -342,7 +345,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             width:100px;
             position: fixed;
             margin-top:310px;
-            padding-left:25px;
+            padding-left:35px;
             padding-top:5px;
             line-height: 15px;
             float:left;
@@ -362,6 +365,13 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
             width: 140px;
             text-align: right;
         }
+        #c_ewt{
+            float: right;
+            margin-top: 355px;
+            margin-right: -530px;
+            width: 140px;
+            text-align: right;
+        }
         #c_or_amount {
             float: right;
             margin-top: 280px;
@@ -371,7 +381,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
         }
         #c_or_amount2 {
             float: right;
-            margin-top: 365px;
+            margin-top: 375px;
             margin-right: -530px;
             width: 140px;
             text-align: right;
@@ -452,10 +462,20 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
         <input type="text" name="c_or_amount" id="c_or_amount" 
             value="<?php echo number_format((float)str_replace(',', '', $c_or_amount), 2); ?>">
 
-        <input type="text" name="c_sales" id="c_sales" readonly>
-        <input type="text" name="c_vat" id="c_vat" readonly>
+        <!-- Revised VAT -DHEN -->
+        <input type="text" name="c_vat_sales" id="c_sales" 
+            value="<?php echo ($c_vat_sales == 0 || $c_vat_sales == '0.00') ? '' : number_format((float)str_replace(',', '', $c_vat_sales), 2); ?>">
+        
+        <input type="text" name="c_vat_amount" id="c_vat" 
+            value="<?php echo ($c_vat_amount == 0 || $c_vat_amount == '0.00') ? '' : number_format((float)str_replace(',', '', $c_vat_amount), 2); ?>">
 
-        <script>
+        <input type="text" name="c_ewt" id="c_ewt" 
+            value="<?php echo ($c_ewt == 0 || $c_ewt == '0.00') ? '' : number_format((float)str_replace(',', '', $c_ewt), 2); ?>">
+
+        <!-- <input type="text" name="c_sales" id="c_sales" readonly>
+        <input type="text" name="c_vat" id="c_vat" readonly> -->
+
+        <!-- <script>
             document.addEventListener("DOMContentLoaded", function () {
                 var orAmountInput = document.getElementById('c_or_amount');
                 var salesInput = document.getElementById('c_sales');
@@ -482,7 +502,7 @@ $buyerDetails = fetchBuyerDetails($conn, $c_account_no_or);
                 orAmountInput.addEventListener('input', calculateSalesAndVAT);
                 calculateSalesAndVAT();
             });
-        </script>
+        </script> -->
 
         <?php
             $get_encoder_details_qry = "SELECT * FROM t_car_users WHERE c_employee_code = ?";  /* ddd */
