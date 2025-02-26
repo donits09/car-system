@@ -28,7 +28,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     $accountId = $_GET['id'];
     $get_or_query = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
                       a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, b.c_name, b.c_phase,
-                      b.c_block, b.c_lot, a.c_or_paydate, a.c_bank, a.c_check_no, a.c_remarks
+                      b.c_block, b.c_lot, a.c_or_paydate, a.c_bank, a.c_check_no, a.c_remarks, a.c_vat_sales, a.c_vat_amount, a.c_ewt
                       FROM t_or_payment a
                       LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no
                       WHERE a.c_or_no = ?";
@@ -46,6 +46,9 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         $buyerDetails = fetchBuyerDetails($conn, $c_account_no);
         $orDetails = fetchORDetails($conn, $row['c_or_no']);
         $c_remarks = $row['c_remarks'];
+        $c_vat_sales = $row['c_vat_sales'];
+        $c_vat_amount = $row['c_vat_amount'];
+        $c_ewt = $row['c_ewt'];
 
         $master = new Master();
         $module = "OR/SI Print Management";
@@ -394,6 +397,16 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             width: 140px;
             text-align: right;
         }
+        #c_ewt{
+            position:absolute;
+            z-index: 10;
+            float: right;
+            font-size: 12px !important;
+            margin-top: 370px;
+            margin-left: 530px;
+            width: 140px;
+            text-align: right;
+        }
         #c_or_amount {
             position:absolute;
             z-index: 10;
@@ -409,7 +422,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             z-index: 10;
             float: right;
             font-size: 12px !important;
-            margin-top:170px;
+            margin-top:190px;
             margin-left: 460px;
             width: 140px;
             text-align: right;
@@ -417,7 +430,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
     </style>
 </head>
 <body onload="initializePage()">
-    <!-- <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy"> -->
+    <img src="<?php echo base_url ?>images/ALSC_OR.jpg" class="background-image" alt="OR Scanned Copy">
     <div class="container">
         <div class="box_middle">
             <input type="text" name="c_current_date" id="c_current_date" value="<?php echo date('Y-m-d'); ?>">
@@ -548,9 +561,20 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
         <input type="text" name="c_or_type" id="c_or_type" value="<?php echo htmlspecialchars($row['c_or_type']); ?>">
         <textarea rows="4" name="c_remarks" id="c_remarks"><?php echo htmlspecialchars($c_remarks); ?></textarea>
         <input type="text" name="c_or_amount" id="c_or_amount" value="<?php echo number_format($row['c_or_amount'], 2); ?>">
-        <!-- formulaaaaaaaaaaaaaa -->
 
-        <input type="text" name="c_sales" id="c_sales" readonly>
+        <!-- Revised VAT -DHEN -->
+        <input type="text" name="c_vat_sales" id="c_sales" 
+            value="<?php echo ($c_vat_sales == 0 || $c_vat_sales == '0.00') ? '' : number_format((float)str_replace(',', '', $c_vat_sales), 2); ?>">
+        
+        <input type="text" name="c_vat_amount" id="c_vat" 
+            value="<?php echo ($c_vat_amount == 0 || $c_vat_amount == '0.00') ? '' : number_format((float)str_replace(',', '', $c_vat_amount), 2); ?>">
+            
+        <input type="text" name="c_ewt" id="c_ewt" 
+            value="<?php echo ($c_ewt == 0 || $c_ewt == '0.00') ? '' : number_format((float)str_replace(',', '', $c_ewt), 2); ?>">
+
+
+        <!-- formulaaaaaaaaaaaaaa -->
+        <!-- <input type="text" name="c_sales" id="c_sales" readonly>
         <input type="text" name="c_vat" id="c_vat" readonly>
 
         <script>
@@ -580,7 +604,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 orAmountInput.addEventListener('input', calculateSalesAndVAT);
                 calculateSalesAndVAT();
             });
-        </script>
+        </script> -->
         
         <textarea name="c_or_amount_words" id="c_or_amount_words"></textarea>
         
