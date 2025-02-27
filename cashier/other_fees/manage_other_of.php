@@ -20,11 +20,14 @@
     $c_block = '';
     $c_check_no = '';
     $c_remarks = '';
-
+    $c_vat_sales = 0;
+    $c_vat_amount = 0;
+    $c_vat_selected = '';
+    $c_ewt = 0;
     if (isset($_GET['id']) && $_GET['id'] > 0) {
         $get_or_query = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
                     a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks
+                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks, a.c_vat_sales, a.c_vat_amount, a.c_vat_selected, a.c_ewt
                         FROM t_or_payment a
                         LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no WHERE a.id = ?";
         $accountId = $_GET['id'];
@@ -45,8 +48,14 @@
             $c_bank = $result["c_bank"];
             $c_check_no = $result["c_check_no"];
             $c_remarks = $result["c_remarks"];
+            $c_vat_sales = $result["c_vat_sales"];
+            $c_vat_amount = $result["c_vat_amount"];
+            $c_vat_selected = $result["c_vat_selected"];
+            $c_ewt = $result["c_ewt"];
         }
-    } 
+    } else if ($c_vat_selected === '' || $c_vat_selected === null) {
+        $c_vat_selected = '1'; 
+    }
 ?>
 <style>
 .bold-text {
@@ -71,6 +80,16 @@
     font-style: italic;
     float:left;
 }
+#vat_fields input[type="radio"] {
+    vertical-align: middle;
+    margin-bottom: 5px;
+}
+
+#vat_fields label {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <body>
@@ -373,7 +392,7 @@
         <div class="row">
             <div class="col-md-6">
                 <label for="amount">Amount</label>
-                <input type="text" class="form-control" id="c_or_amount" name="c_or_amount" value="<?php echo number_format(htmlspecialchars($c_or_amount),2); ?>" oninput="validateNumberInputAmt(event)" onclick="clearAmt()" required>
+                <input type="text" class="form-control" id="c_or_amount" name="c_or_amount" value="<?php echo number_format(htmlspecialchars($c_or_amount),2); ?>" oninput="validateNumberInputAmt(event); computeVAT();" onclick="clearAmt()" required>
                 <div id="or_amt_error"></div>
             </div>
             <div class="col-md-6">
@@ -435,6 +454,45 @@
             </div>
         </div>
     </div>
+
+    <div class="form-group" id="vat_fields">
+        <input type="radio" id="none_vat" name="tax_option" value="0" onchange="computeVAT()" 
+            <?php echo ($c_vat_selected == 0) ? 'checked' : ''; ?>>
+        <label for="none_vat">Non VAT</label>
+
+        <input type="radio" id="vat_sales" name="tax_option" value="1" onchange="computeVAT()" 
+            <?php echo ($c_vat_selected == 1) ? 'checked' : ''; ?>>
+        <label for="vat_sales">VAT Sales(12%)</label>
+
+        <input type="radio" id="tax_holder" name="tax_option" value="2" onchange="computeVAT()" 
+            <?php echo ($c_vat_selected == 2) ? 'checked' : ''; ?>>
+        <label for="tax_holder">W/ Holding Tax</label>
+
+        <div class="row" id="vat_details">
+            <div class="col-md-6 mt-3">
+                <label id="vat_sales_label">Vatable Sales: </label>
+                <input type="text" class="form-control" id="c_vat_sales" name="c_vat_sales" 
+                    value="<?php echo number_format(htmlspecialchars($c_vat_sales), 2,'.', ','); ?>" readonly>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label id="vat_amount_label">VAT Amount: </label>
+                <input type="text" class="form-control" id="c_vat_amount" name="c_vat_amount" 
+                    value="<?php echo number_format(htmlspecialchars($c_vat_amount),2,'.', ','); ?>" readonly>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label id="vat_amount_label">Less EWT: </label>
+                <input type="text" class="form-control" id="c_ewt" name="c_ewt" 
+                    value="<?php echo number_format(htmlspecialchars($c_ewt),2,'.', ','); ?>" readonly>
+            </div>
+            <div class="col-md-6 mt-3">
+                <label id="vat_amount_label">NET Sales: </label>
+                <input type="text" class="form-control" id="c_net_sales" name="c_net_sales" 
+                    value="<?php echo number_format(htmlspecialchars($c_or_amount), 2, '.', ','); ?>" readonly>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="c_vat_selected" name="c_vat_selected" value="<?php echo htmlspecialchars($c_vat_selected); ?>">
 
     <div class="form-group">
         <div class="row">
@@ -944,3 +1002,50 @@ function openPrintWindow() {
             }
         }
     </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        computeVAT();
+
+        let amountInput = document.getElementById("c_or_amount");
+        if (amountInput) {
+            amountInput.addEventListener("input", function () {
+                computeVAT();
+            });
+        }
+    });
+    function computeVAT() {
+        let amount = parseFloat(document.getElementById("c_or_amount")?.value.replace(/,/g, '')) || 0;
+        let noneVatRadio = document.getElementById("none_vat").checked;
+        let vatSalesRadio = document.getElementById("vat_sales").checked;
+        let taxHolderRadio = document.getElementById("tax_holder").checked;
+
+        let vatableSales = 0, vatAmount = 0, ewt = 0, netSales = amount, vatSelected = 0;
+
+        if (noneVatRadio) {
+            vatableSales = 0;
+            vatAmount = 0;
+            ewt = 0;
+            vatSelected = 0;
+        } else if (vatSalesRadio) {
+            vatableSales = amount / 1.12;
+            vatAmount = amount - vatableSales;
+            vatSelected = 1;
+        } else if (taxHolderRadio) {
+            vatableSales = amount / 1.07;
+            vatAmount = vatableSales * 0.12;
+            ewt = vatableSales * 0.05;
+            vatSelected = 2;
+        }
+        netSales = amount;
+
+        document.getElementById("c_vat_sales").value = vatableSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById("c_vat_amount").value = vatAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById("c_ewt").value = ewt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById("c_net_sales").value = netSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById("c_vat_selected").value = vatSelected;
+    }
+
+    window.onload = function () {
+        computeVAT();
+    };
+</script>
