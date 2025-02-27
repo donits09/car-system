@@ -635,19 +635,7 @@ Class Master{
 
 		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no, c_vat_sales, c_vat_amount, c_vat_selected, c_ewt";
 
-		$values = "'$maxId', 
-				'$c_account_no_or', 
-				'$c_tran_type', 
-				'$c_or_no', 
-				'$c_or_paydate', 
-				'$c_or_amount', 
-				'$c_encoded_by', 
-				'$c_tran_date', 
-				'$c_tran_date', 
-				'$c_mop_or', 
-				'$c_bank', 
-				'$c_check_no', 
-				'$c_remarks', 
+		$values = "'$maxId', '$c_account_no_or', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop_or', '$c_bank', '$c_check_no', '$c_remarks', 
 				'" . (!empty($atap_id) ? $atap_id : '0') . "', 
 				'" . (!empty($c_vat_sales) ? $c_vat_sales : '0') . "', 
 				'" . (!empty($c_vat_amount) ? $c_vat_amount : '0') . "', 
@@ -1188,6 +1176,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
+		$c_vat_sales = str_replace(',', '', $c_vat_sales);
+		$c_vat_amount = str_replace(',', '', $c_vat_amount);
+		$c_ewt = str_replace(',', '', $c_ewt);
 		// $atap_id = $_POST['atap_id_or'];
 		// $c_tran_type = $_POST['atap_val'];
 		
@@ -1279,8 +1270,13 @@ Class Master{
 		$values = "'$maxId', '$c_or_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 
 		$c_account_no = '';
-		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
-		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop_or', '$c_bank', '$c_check_no', '$c_remarks','" . (!empty($atap_id) ? $atap_id : '0') . "'";
+		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no, c_vat_sales, c_vat_amount, c_vat_selected, c_ewt";
+		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop_or', '$c_bank', '$c_check_no', '$c_remarks',
+				'" . (!empty($atap_id) ? $atap_id : '0') . "', 
+				'" . (!empty($c_vat_sales) ? $c_vat_sales : '0') . "', 
+				'" . (!empty($c_vat_amount) ? $c_vat_amount : '0') . "', 
+				'" . (!empty($c_vat_selected) ? $c_vat_selected : '0') . "', 
+				'" . (!empty($c_ewt) ? $c_ewt : '0') . "'";
 
 	
 		$resp = array();
@@ -1390,7 +1386,11 @@ Class Master{
 						c_mop = '$c_mop_or',
 						c_bank = '$c_bank',
 						c_check_no = '$c_check_no',
-						c_remarks = '$c_remarks'
+						c_remarks = '$c_remarks',
+						c_vat_sales = " . (!empty($c_vat_sales) ? $c_vat_sales : '0') . ",
+            			c_vat_amount = " . (!empty($c_vat_amount) ? $c_vat_amount : '0') . ",
+						c_vat_selected = '$c_vat_selected',
+						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 			$save1 = odbc_exec($this->conn, $update1);
