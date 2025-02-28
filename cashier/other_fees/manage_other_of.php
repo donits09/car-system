@@ -825,6 +825,8 @@ $(document).ready(function() {
         const formattedAmount = parseFloat(data.c_or_amount).toFixed(2);
         $('#c_or_amount').val(formattedAmount).addClass('glow-effect');
 
+        computeVAT();
+
         setTimeout(function() {
             $('#c_name').removeClass('glow-effect');
             $('#c_phase').removeClass('glow-effect');
