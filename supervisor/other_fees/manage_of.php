@@ -823,6 +823,8 @@ $(document).ready(function() {
         statusField.addClass('glow-effect');
         remarksField.val(data.current_remarks).addClass('glow-effect');
 
+        computeVAT();
+
         setTimeout(function() {
             buyerNameField.removeClass('glow-effect');
             amountField.removeClass('glow-effect');
