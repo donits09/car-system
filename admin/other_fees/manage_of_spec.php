@@ -1010,6 +1010,65 @@ function updateORList() {
     document.addEventListener("DOMContentLoaded", function () {
         computeVAT();
 
+        var amountInput = document.getElementById("c_or_amount");
+        if (amountInput) {
+            amountInput.addEventListener("input", function () {
+                computeVAT();
+            });
+        }
+    });
+
+    function computeVAT() {
+        var amountInput = document.getElementById("c_or_amount");
+        if (!amountInput) return; 
+
+        var amount = parseFloat(amountInput.value.replace(/,/g, '')) || 0;
+
+        var noneVatRadio = document.getElementById("none_vat");
+        var vatSalesRadio = document.getElementById("vat_sales");
+        var taxHolderRadio = document.getElementById("tax_holder");
+
+        var vatableSales = 0, vatAmount = 0, ewt = 0, netSales = amount, vatSelected = 0;
+
+        if (noneVatRadio && noneVatRadio.checked) {
+            vatableSales = 0;
+            vatAmount = 0;
+            ewt = 0;
+            vatSelected = 0;
+        } else if (vatSalesRadio && vatSalesRadio.checked) {
+            vatableSales = amount / 1.12;
+            vatAmount = amount - vatableSales;
+            vatSelected = 1;
+        } else if (taxHolderRadio && taxHolderRadio.checked) {
+            vatableSales = amount / 1.07;
+            vatAmount = vatableSales * 0.12;
+            ewt = vatableSales * 0.05;
+            vatSelected = 2;
+        }
+        
+        netSales = amount;
+
+        var c_vat_sales = document.getElementById("c_vat_sales");
+        var c_vat_amount = document.getElementById("c_vat_amount");
+        var c_ewt = document.getElementById("c_ewt");
+        var c_net_sales = document.getElementById("c_net_sales");
+        var c_vat_selected = document.getElementById("c_vat_selected");
+
+        if (c_vat_sales) c_vat_sales.value = vatableSales.toFixed(2);
+        if (c_vat_amount) c_vat_amount.value = vatAmount.toFixed(2);
+        if (c_ewt) c_ewt.value = ewt.toFixed(2);
+        if (c_net_sales) c_net_sales.value = netSales.toFixed(2);
+        if (c_vat_selected) c_vat_selected.value = vatSelected;
+    }
+
+    window.onload = function () {
+        computeVAT();
+    };
+</script>
+<!-- <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        computeVAT();
+
         let amountInput = document.getElementById("c_or_amount");
         if (amountInput) {
             amountInput.addEventListener("input", function () {
@@ -1052,5 +1111,5 @@ function updateORList() {
     window.onload = function () {
         computeVAT();
     };
-</script>
+</script> -->
 </body>

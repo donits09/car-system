@@ -18,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $first_name = isset($_GET['first_name']) ? $_GET['first_name'] : '';
     
         $get_details_query = "SELECT * FROM t_buyers_account WHERE LOWER(c_b1_last_name) ILIKE LOWER(?)";
-        $params = ["$last_name%"];
+        $params = ["%$last_name%"];
         
         if (!empty($first_name)) {
             $get_details_query .= " AND LOWER(c_b1_first_name) ILIKE LOWER(?)";
-            $params[] = "$first_name%";
+            $params[] = "%$first_name%";
         }
         $get_details_query .= " ORDER BY c_b1_last_name, c_b1_first_name";
 
