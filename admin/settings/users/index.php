@@ -40,7 +40,7 @@ include('manage_user.php');
                 <tbody>
                     <?php 
                     $i = 1;
-                    $car_list = "SELECT * FROM t_car_users ORDER BY id DESC";
+                    $car_list = "SELECT * FROM t_car_users WHERE c_status!='1' ORDER BY id DESC";
                     $car_result = odbc_exec($conn, $car_list);
                     while ($row = odbc_fetch_array($car_result)): 
                     ?>
@@ -88,7 +88,7 @@ include('manage_user.php');
                                     <!-- <span class="fa fa-edit text-primary"></span>  -->Edit
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>">Confirm</a>
+                                <a class="dropdown-item delete_data" href="javascript:void(0)" data-id="<?php echo $row['id']; ?>">Delete</a>
                                 <!-- <span class="fa fa-ban text-danger"></span>  -->
                             </div>
                         </td>

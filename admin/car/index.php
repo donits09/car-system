@@ -186,16 +186,28 @@ include('../../inc/header.php');
                                     <input type="text" class="form-control txt" id="buyer_acc_status" name="buyer_acc_status" readonly>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="lname" class="form-label">Last Name</label>
+                                    <label for="lname" class="form-label">Last Name (Buyer 1)</label>
                                     <input type="text" class="form-control txt" id="buyer_lname" name="buyer_lname" readonly>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="fname" class="form-label">First Name</label>
+                                    <label for="fname" class="form-label">First Name (Buyer 1)</label>
                                     <input type="text" class="form-control txt" id="buyer_fname" name="buyer_fname" readonly>
                                 </div>
                                 <div class="col-md-4">
-                                    <label for="mname" class="form-label">Middle Name</label>
+                                    <label for="mname" class="form-label">Middle Name (Buyer 1)</label>
                                     <input type="text" class="form-control txt" id="buyer_mname" name="buyer_mname" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="lname" class="form-label">Last Name (Buyer 2)</label>
+                                    <input type="text" class="form-control txt" id="buyer_lname2" name="buyer_lname2" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="fname" class="form-label">First Name (Buyer 2)</label>
+                                    <input type="text" class="form-control txt" id="buyer_fname2" name="buyer_fname2" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="mname" class="form-label">Middle Name (Buyer 2)</label>
+                                    <input type="text" class="form-control txt" id="buyer_mname2" name="buyer_mname2" readonly>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="bal" class="form-label">Balance</label>

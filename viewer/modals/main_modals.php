@@ -57,9 +57,12 @@
           <thead>
             <tr>
               <th>Account No</th>
-              <th>Last Name</th>
-              <th>First Name</th>
-              <th>Middle Name</th>
+              <th>Last Name (Buyer 1)</th>
+              <th>First Name (Buyer 1)</th>
+              <th>Middle Name (Buyer 1)</th>
+              <th>Last Name (Buyer 2)</th>
+              <th>First Name (Buyer 2)</th>
+              <th>Middle Name (Buyer 2)</th>
               <th>Location</th>
               <th>Action</th>
             </tr>

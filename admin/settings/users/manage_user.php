@@ -163,13 +163,17 @@
                 Are you sure you want to set the status of this user to inactive?
             </div>  
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
             </div>
         </div>
     </div>
 </div>
-
+<script>
+function closeModal() {
+    $('#confirmDeleteModal').modal('hide');
+  }
+</script>
 <script src="../../../dist/js/table.js"></script>
 <script src="../../../dist/js/user.js"></script>
 <!-- <script src="../../../dist/js/modals.js"></script> -->
