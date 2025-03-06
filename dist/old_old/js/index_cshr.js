@@ -84,6 +84,9 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_lname').value = data.c_b1_last_name;
     document.getElementById('buyer_fname').value = data.c_b1_first_name;
     document.getElementById('buyer_mname').value = data.c_b1_middle_name;
+    document.getElementById('buyer_lname2').value = data.c_b2_last_name;
+    document.getElementById('buyer_fname2').value = data.c_b2_first_name;
+    document.getElementById('buyer_mname2').value = data.c_b2_middle_name;
     document.getElementById('buyer_address').value = data.c_address; 
     document.getElementById('buyer_remarks').value = data.c_remarks; 
     document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
@@ -221,6 +224,9 @@ function showMultipleResults(data, page) {
         tr.appendChild(tdLastName);
         tr.appendChild(tdFirstName);
         tr.appendChild(tdMiddleName);
+        tr.appendChild(tdLastName2);
+        tr.appendChild(tdFirstName2);
+        tr.appendChild(tdMiddleName2);
         tr.appendChild(tdStats);
         tr.appendChild(tdButton);
     

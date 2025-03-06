@@ -28,3 +28,9 @@
     max-width: 70%;
     margin-top: 0;
 }
+
+#multipleResultsModal .modal-dialog {
+    width: 75% !important;
+    max-width: 75%;
+    margin-top: 5%;
+}

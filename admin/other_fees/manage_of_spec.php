@@ -1011,6 +1011,7 @@ function updateORList() {
         computeVAT();
 
         var amountInput = document.getElementById("c_or_amount");
+
         if (amountInput) {
             amountInput.addEventListener("input", function () {
                 computeVAT();
@@ -1065,51 +1066,4 @@ function updateORList() {
         computeVAT();
     };
 </script>
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        computeVAT();
-
-        let amountInput = document.getElementById("c_or_amount");
-        if (amountInput) {
-            amountInput.addEventListener("input", function () {
-                computeVAT();
-            });
-        }
-    });
-    function computeVAT() {
-        let amount = parseFloat(document.getElementById("c_or_amount")?.value.replace(/,/g, '')) || 0;
-        let noneVatRadio = document.getElementById("none_vat").checked;
-        let vatSalesRadio = document.getElementById("vat_sales").checked;
-        let taxHolderRadio = document.getElementById("tax_holder").checked;
-
-        let vatableSales = 0, vatAmount = 0, ewt = 0, netSales = amount, vatSelected = 0;
-
-        if (noneVatRadio) {
-            vatableSales = 0;
-            vatAmount = 0;
-            ewt = 0;
-            vatSelected = 0;
-        } else if (vatSalesRadio) {
-            vatableSales = amount / 1.12;
-            vatAmount = amount - vatableSales;
-            vatSelected = 1;
-        } else if (taxHolderRadio) {
-            vatableSales = amount / 1.07;
-            vatAmount = vatableSales * 0.12;
-            ewt = vatableSales * 0.05;
-            vatSelected = 2;
-        }
-        netSales = amount;
-
-        document.getElementById("c_vat_sales").value = vatableSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById("c_vat_amount").value = vatAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById("c_ewt").value = ewt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById("c_net_sales").value = netSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        document.getElementById("c_vat_selected").value = vatSelected;
-    }
-
-    window.onload = function () {
-        computeVAT();
-    };
-</script> -->
 </body>

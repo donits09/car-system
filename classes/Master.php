@@ -98,14 +98,14 @@ Class Master{
 					$c_realname = $row['c_realname'];
 				}
 	
-				$sql = "DELETE FROM t_car_users WHERE id = ?";
+				$sql = "UPDATE t_car_users SET c_status = 1 WHERE id = ?";
 				$stmt = odbc_prepare($this->conn, $sql);
 	
 				if ($stmt) {
 					$result = @odbc_execute($stmt, array($userId));
 	
 					if ($result) {
-						$this->car_logs('Car Users', "DELETED - $c_employee_code - $c_realname");
+						$this->car_logs('Car Users', "SET TO INACTIVE - $c_employee_code - $c_realname");
 						$resp['status'] = 'success';
 						$resp['msg'] = "User successfully deleted.";
 					} else {

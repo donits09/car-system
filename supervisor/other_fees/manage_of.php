@@ -1064,7 +1064,7 @@ function updateORList() {
         }
     }
     </script>
-    <script>
+  <script>
     document.addEventListener("DOMContentLoaded", function () {
         computeVAT();
 

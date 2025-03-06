@@ -5,6 +5,7 @@
     $('#viewModal').modal('hide');
     $('#createCarModal').modal('hide');
     $('#editModal').modal('hide');
+    $('#confirmDeleteModal').modal('hide');
   }
 
   function closeModal2() {

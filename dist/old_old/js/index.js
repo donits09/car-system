@@ -110,6 +110,9 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_lname').value = data.c_b1_last_name;
     document.getElementById('buyer_fname').value = data.c_b1_first_name;
     document.getElementById('buyer_mname').value = data.c_b1_middle_name;
+    document.getElementById('buyer_lname2').value = data.c_b2_last_name;
+    document.getElementById('buyer_fname2').value = data.c_b2_first_name;
+    document.getElementById('buyer_mname2').value = data.c_b2_middle_name;
     document.getElementById('buyer_address').value = data.c_address; 
     document.getElementById('buyer_remarks').value = data.c_remarks; 
     document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
@@ -202,6 +205,9 @@ function showMultipleResults(data, page) {
         var tdLastName = document.createElement('td');
         var tdFirstName = document.createElement('td');
         var tdMiddleName = document.createElement('td');
+        var tdLastName2 = document.createElement('td');
+        var tdFirstName2 = document.createElement('td');
+        var tdMiddleName2 = document.createElement('td');
         var tdStats = document.createElement('td');
         var tdButton = document.createElement('td');
     
@@ -209,6 +215,9 @@ function showMultipleResults(data, page) {
         tdLastName.textContent = buyer.c_b1_last_name;
         tdFirstName.textContent = buyer.c_b1_first_name;
         tdMiddleName.textContent = buyer.c_b1_middle_name;
+        tdLastName2.textContent = buyer.c_b2_last_name;
+        tdFirstName2.textContent = buyer.c_b2_first_name;
+        tdMiddleName2.textContent = buyer.c_b2_middle_name;
     
         var phase = buyer.c_account_no.substring(0, 3);
         var block = buyer.c_account_no.substring(3, 6).replace(/^0+/, ''); 
@@ -247,6 +256,9 @@ function showMultipleResults(data, page) {
         tr.appendChild(tdLastName);
         tr.appendChild(tdFirstName);
         tr.appendChild(tdMiddleName);
+        tr.appendChild(tdLastName2);
+        tr.appendChild(tdFirstName2);
+        tr.appendChild(tdMiddleName2);
         tr.appendChild(tdStats);
         tr.appendChild(tdButton);
     
@@ -288,6 +300,9 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_lname').value = buyer.c_b1_last_name;
     document.getElementById('buyer_fname').value = buyer.c_b1_first_name;
     document.getElementById('buyer_mname').value = buyer.c_b1_middle_name;
+    document.getElementById('buyer_lname2').value = buyer.c_b2_last_name;
+    document.getElementById('buyer_fname2').value = buyer.c_b2_first_name;
+    document.getElementById('buyer_mname2').value = buyer.c_b2_middle_name;
     document.getElementById('buyer_address').value = buyer.c_address; 
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
     document.getElementById('fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
