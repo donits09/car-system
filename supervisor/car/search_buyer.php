@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     } elseif (isset($_GET['last_name'])) {
         $last_name = $_GET['last_name'];
         $first_name = isset($_GET['first_name']) ? $_GET['first_name'] : '';
-    
+
         $get_details_query = "SELECT * FROM t_buyers_account 
                               WHERE (LOWER(c_b1_last_name) ILIKE LOWER(?) 
                                   OR LOWER(c_b2_last_name) ILIKE LOWER(?))";

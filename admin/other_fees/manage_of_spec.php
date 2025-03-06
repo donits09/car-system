@@ -1011,6 +1011,7 @@ function updateORList() {
         computeVAT();
 
         var amountInput = document.getElementById("c_or_amount");
+
         if (amountInput) {
             amountInput.addEventListener("input", function () {
                 computeVAT();
