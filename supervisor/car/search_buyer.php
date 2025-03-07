@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $params[] = "%$first_name%";
         }
         
-        $get_details_query .= " ORDER BY c_b1_last_name, c_b1_first_name";
+        $get_details_query .= " ORDER BY c_b1_last_name, c_b1_first_name, c_b2_last_name, c_b2_first_name";
 
         if ($stmt = odbc_prepare($conn, $get_details_query)) {
             if (odbc_execute($stmt, $params)) {

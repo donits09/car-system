@@ -172,6 +172,7 @@ function isActive($pages) {
                         Files
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownFiles">
+                      <!--   <a class="dropdown-item" href="<?php echo base_url ?>payments">Payments</a> -->
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/car/all_car_list.php">CAR List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/atap/all_atap_list.php">ATAP List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/other_fees/all_of_list.php">Other Fees</a>
