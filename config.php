@@ -23,7 +23,7 @@ function redirect($url) {
 ##### JUDZ CONNECTION ######
 $dbhost = 'localhost';
 $dbport = '5432'; 
-$dbname = 'ProductionDB';
+$dbname = 'CAR_TESTDB';
 $dbuser = 'postgres';
 $dbpass = 'admin12345';
 

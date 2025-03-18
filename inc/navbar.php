@@ -178,6 +178,7 @@ function isActive($pages) {
                         <a class="dropdown-item" href="<?php echo base_url ?>admin/other_fees/all_of_list.php">Other Fees</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>tenants/list.php">Tenant List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>transfer_account">Transfer Payment</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>bci/index.php">BCI Update</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown<?php echo isActive([
