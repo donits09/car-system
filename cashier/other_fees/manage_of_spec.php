@@ -292,14 +292,23 @@ if ($c_vat_selected === '' || $c_vat_selected === null) {
     <input type="hidden" class="form-control" id="atap_val_or" name="atap_val_or" readonly>
     <hr>
     <div class="form-group">
-        <label for="account_no">Account No.</label>
-        <input type="text" class="form-control" id="c_account_no_or" name="c_account_no_or" value="<?php echo htmlspecialchars($c_account_no_or) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="account_no">Account No.</label>
+                <input type="text" class="form-control" id="c_account_no_or" name="c_account_no_or" value="<?php echo htmlspecialchars($c_account_no_or) ?>" <?php echo $readonly; ?> oninput="validateNumberInput(event)" required>
+            </div>
+            <div class="col-md-6">
+                 <label for="or_no">OR No.</label>
+                <input type="number" class="form-control" id="c_or_no" name="c_or_no" value="<?php echo htmlspecialchars($c_or_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
+                <div id="or_no_error"></div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="or_no">OR No.</label>
         <input type="number" class="form-control" id="c_or_no" name="c_or_no" value="<?php echo htmlspecialchars($c_or_no); ?>" maxlength="6" minlength="6" pattern="\d{6}" oninput="validateNumberInput(event)" required>
         <div id="or_no_error"></div>
-    </div>
+    </div> -->
     <div class="form-group">
         <label for="name">Name</label>
         <input type="text" class="form-control" id="buyer_name_or" name="buyer_name_or" oninput="validateAlphaNumericInput(event)" readonly>
@@ -775,11 +784,19 @@ $(document).ready(function() {
 }
 
     function clearTxtNoOr(){
-       const buyerNameField = $('#buyer_name_or');
-       const accField = $('#c_account_no_or');
+        const buyerNameField = $('#buyer_name_or');
+        const accField = $('#c_account_no_or');
+        const vatsales = $('#c_vat_sales');
+        const vatamount = $('#c_vat_amount');
+        const ewt = $('#c_ewt');
+        const netsales = $('#c_net_sales');
 
         buyerNameField.val('');
         accField.val('');
+        vatsales.val('');
+        vatamount.val('');
+        ewt.val('');
+        netsales.val('');
     }
 
     function clearTxt() {
@@ -787,6 +804,10 @@ $(document).ready(function() {
         const amountField = $('#c_or_amount');
         const statusField = $('#status');
         const remarksField = $('#current_remarks');
+        const vatsales = $('#c_vat_sales');
+        const vatamount = $('#c_vat_amount');
+        const ewt = $('#c_ewt');
+        const netsales = $('#c_net_sales');
         var comboBoxMenu = document.getElementById('comboBoxMenu_or');
         var orTypeInput = document.getElementById('c_or_type');
         var getAtapButton = document.getElementById('get_atap_or');
@@ -795,6 +816,10 @@ $(document).ready(function() {
         amountField.val('');
         statusField.val('');
         remarksField.val('');
+        vatsales.val('');
+        vatamount.val('');
+        ewt.val('');
+        netsales.val('');
 
         comboBoxMenu.classList.remove('disabled');
         atapNoField.prop('readonly', false); 
@@ -935,7 +960,11 @@ function updateORList() {
                 var $atapId = $('#atap_id_or'); 
                 var $atapAmount = $('#c_or_amount'); 
                 var $atapVal = $('#atap_val_or'); 
-                var $atapRemarks = $('#current_remarks'); 
+                var $atapRemarks = $('#current_remarks');
+                var $vatsales = $('#c_vat_sales');
+                var $vatamount = $('#c_vat_amount');
+                var $ewt = $('#c_ewt');
+                var $netsales = $('#c_net_sales'); 
                 $select.empty();
                 
                 if (response.length > 0) {
@@ -947,6 +976,7 @@ function updateORList() {
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
                         $atapRemarks.val(response[0].remarks);
+                        computeVAT();
                     } else {
                         $textbox.hide();
                         $('#tran_type_dropdown_or').show();
@@ -959,10 +989,14 @@ function updateORList() {
                                 'data-remarks': option.remarks
                             }));
                         });
+                        $(document).on('change', '#tran_type_dropdown_or', function() {
+                            computeVAT();
+                        });
                         $atapId.val(response[0].value);
                         $atapAmount.val(response[0].amount);
                         $atapVal.val(response[0].text);
                         $atapRemarks.val(response[0].remarks);
+                        computeVAT();
                     }
                 } else {
                     $('#tran_type_container_or').hide();
@@ -970,6 +1004,10 @@ function updateORList() {
                     $atapAmount.val(''); 
                     $atapVal.val('');
                     $atapRemarks.val('');
+                    $vatsales.val('');
+                    $vatamount.val('');
+                    $ewt.val('');
+                    $netsales.val('');
                 }
             },
             error: function(xhr, status, error) {
@@ -979,6 +1017,10 @@ function updateORList() {
                 $('#c_or_amount').val(''); 
                 $('#atap_val_or').val(''); 
                 $('#current_remarks').val(''); 
+                $('#c_vat_sales').val(''); 
+                $('#c_vat_amount').val(''); 
+                $('#c_ewt').val(''); 
+                $('#c_net_sales').val(''); 
             }
         });
     }

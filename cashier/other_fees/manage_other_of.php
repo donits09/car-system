@@ -775,7 +775,15 @@ $(document).ready(function() {
 
     function clearTxtNoOr(){
        const buyerNameField = $('#c_name');
+       const vatsales = $('#c_vat_sales');
+        const vatamount = $('#c_vat_amount');
+        const ewt = $('#c_ewt');
+        const netsales = $('#c_net_sales');
         buyerNameField.val('');
+        vatsales.val('');
+        vatamount.val('');
+        ewt.val('');
+        netsales.val('');
     }
     function clearTxt(){
         $('#c_atap_no_or').val('');
@@ -793,7 +801,10 @@ $(document).ready(function() {
         const lotField = $('#c_lot');
         const amountField = $('#c_or_amount');
         const remarksField = $('#current_remarks');
-
+        const vatsales = $('#c_vat_sales');
+        const vatamount = $('#c_vat_amount');
+        const ewt = $('#c_ewt');
+        const netsales = $('#c_net_sales');
         var comboBoxMenu = document.getElementById('comboBoxMenu_or');
         var orTypeInput = document.getElementById('c_or_type');
         var getAtapButton = document.getElementById('get_atap_or');
@@ -805,7 +816,10 @@ $(document).ready(function() {
         lotField.val('');
         amountField.val('');
         remarksField.val('');
-
+        vatsales.val('');
+        vatamount.val('');
+        ewt.val('');
+        netsales.val('');
         comboBoxMenu.classList.remove('disabled');
         atapNoField.prop('readonly', false); 
         orTypeInput.readOnly = false;      
@@ -875,6 +889,10 @@ $(document).ready(function() {
                 var $atapAmount = $('#c_or_amount'); 
                 var $atapVal = $('#atap_val_or'); 
                 var $atapRemarks = $('#current_remarks'); 
+                var $vatsales = $('#c_vat_sales');
+                var $vatamount = $('#c_vat_amount');
+                var $ewt = $('#c_ewt');
+                var $netsales = $('#c_net_sales');
                 $select.empty();
                 
                 if (response.length > 0) {
@@ -886,6 +904,7 @@ $(document).ready(function() {
                         $atapAmount.val(response[0].amount); 
                         $atapVal.val(response[0].text);
                         $atapRemarks.val(response[0].remarks);
+                        computeVAT();
                     } else {
                         $textbox.hide();
                         $('#tran_type_dropdown').show();
@@ -898,10 +917,14 @@ $(document).ready(function() {
                                 'data-remarks': option.remarks
                             }));
                         });
+                        $(document).on('change', '#tran_type_dropdown', function() {
+                            computeVAT();
+                        });
                         $atapId.val(response[0].value);
                         $atapAmount.val(response[0].amount);
                         $atapVal.val(response[0].text);
                         $atapRemarks.val(response[0].remarks);
+                        computeVAT();
                     }
                 } else {
                     $('#tran_type_container_or').hide();
@@ -909,6 +932,10 @@ $(document).ready(function() {
                     $atapAmount.val(''); 
                     $atapVal.val('');
                     $atapRemarks.val('');
+                    $vatsales.val('');
+                    $vatamount.val('');
+                    $ewt.val('');
+                    $netsales.val('');
                 }
             },
             error: function(xhr, status, error) {
@@ -918,6 +945,10 @@ $(document).ready(function() {
                 $('#c_or_amount').val(''); 
                 $('#atap_val_or').val(''); 
                 $('#current_remarks').val(''); 
+                $('#c_vat_sales').val(''); 
+                $('#c_vat_amount').val(''); 
+                $('#c_ewt').val(''); 
+                $('#c_net_sales').val(''); 
             }
         });
     }

@@ -547,9 +547,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
-		$c_vat_sales = str_replace(',', '', $c_vat_sales);
-		$c_vat_amount = str_replace(',', '', $c_vat_amount);
-		$c_ewt = str_replace(',', '', $c_ewt);
+		/* $c_vat_sales = str_replace(',', '', $c_vat_sales);
+		$c_vat_amount = str_replace(',', '', $c_vat_amount); */
+		/* $c_ewt = str_replace(',', '', $c_ewt); */
 		
 		$atap_id = $_POST['c_atap_no_or'];
 		$atap_val = $_POST['atap_id_or'];
@@ -633,13 +633,31 @@ Class Master{
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
 
+		/* computation of vat */
+		if ($c_vat_selected == 1) {
+			$c_vatsales = round($c_or_amount / 1.12, 2);
+			$c_vatamount = round($c_or_amount - $c_vatsales, 2);
+			$c_ewt = 0;
+			$c_vatselected = 1;
+		} elseif ($c_vat_selected == 2) {
+			$c_vatsales = round($c_or_amount / 1.07, 2);
+			$c_vatamount = round($c_vatsales * 0.12, 2);
+			$c_ewt = round($c_vatsales * 0.05, 2);
+			$c_vatselected = 2;
+		} else {
+			$c_vatsales = 0;
+			$c_vatamount = 0;
+			$c_ewt = 0;
+			$c_vatselected = 0;
+		}				
+
 		$data = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no, c_vat_sales, c_vat_amount, c_vat_selected, c_ewt";
 
 		$values = "'$maxId', '$c_account_no_or', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop_or', '$c_bank', '$c_check_no', '$c_remarks', 
 				'" . (!empty($atap_id) ? $atap_id : '0') . "', 
-				'" . (!empty($c_vat_sales) ? $c_vat_sales : '0') . "', 
-				'" . (!empty($c_vat_amount) ? $c_vat_amount : '0') . "', 
-				'" . (!empty($c_vat_selected) ? $c_vat_selected : '0') . "', 
+				'" . (!empty($c_vatsales) ? $c_vatsales : '0') . "', 
+				'" . (!empty($c_vatamount) ? $c_vatamount : '0') . "', 
+				'" . (!empty($c_vatselected) ? $c_vatselected : '0') . "', 
 				'" . (!empty($c_ewt) ? $c_ewt : '0') . "'";
 
 
@@ -1176,9 +1194,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
-		$c_vat_sales = str_replace(',', '', $c_vat_sales);
+		/* $c_vat_sales = str_replace(',', '', $c_vat_sales);
 		$c_vat_amount = str_replace(',', '', $c_vat_amount);
-		$c_ewt = str_replace(',', '', $c_ewt);
+		$c_ewt = str_replace(',', '', $c_ewt); */
 		// $atap_id = $_POST['atap_id_or'];
 		// $c_tran_type = $_POST['atap_val'];
 		
@@ -1269,13 +1287,31 @@ Class Master{
 		$data = "id, c_or_no, c_name, c_phase, c_block, c_lot";
 		$values = "'$maxId', '$c_or_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 
+		/* computation of vat */
+		if ($c_vat_selected == 1) {
+			$c_vatsales = round($c_or_amount / 1.12, 2);
+			$c_vatamount = round($c_or_amount - $c_vatsales, 2);
+			$c_ewt = 0;
+			$c_vatselected = 1;
+		} elseif ($c_vat_selected == 2) {
+			$c_vatsales = round($c_or_amount / 1.07, 2);
+			$c_vatamount = round($c_vatsales * 0.12, 2);
+			$c_ewt = round($c_vatsales * 0.05, 2);
+			$c_vatselected = 2;
+		} else {
+			$c_vatsales = 0;
+			$c_vatamount = 0;
+			$c_ewt = 0;
+			$c_vatselected = 0;
+		}		
+
 		$c_account_no = '';
 		$data1 = "id, c_account_no, c_or_type, c_or_no, c_or_paydate, c_or_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no, c_vat_sales, c_vat_amount, c_vat_selected, c_ewt";
 		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_or_no', '$c_or_paydate', '$c_or_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop_or', '$c_bank', '$c_check_no', '$c_remarks',
 				'" . (!empty($atap_id) ? $atap_id : '0') . "', 
-				'" . (!empty($c_vat_sales) ? $c_vat_sales : '0') . "', 
-				'" . (!empty($c_vat_amount) ? $c_vat_amount : '0') . "', 
-				'" . (!empty($c_vat_selected) ? $c_vat_selected : '0') . "', 
+				'" . (!empty($c_vatsales) ? $c_vatsales : '0') . "', 
+				'" . (!empty($c_vatamount) ? $c_vatamount : '0') . "', 
+				'" . (!empty($c_vatselected) ? $c_vatselected : '0') . "', 
 				'" . (!empty($c_ewt) ? $c_ewt : '0') . "'";
 
 	
@@ -2055,6 +2091,37 @@ Class Master{
 		echo json_encode($resp);
 	}
 
+	function save_bci() {
+		extract($_POST);
+
+		$c_encode_date = date('Y-m-d');
+		$c_bci_type = 0;
+	
+		$data = "c_account_no,c_last_updated,c_mobile_no,c_tel_no,c_email,c_rep_name,c_rep_mobile,c_rep_landline,c_rep_email,c_encode_date,c_bci_type,c_address,c_city_prov,c_zipcode";
+		$values = "$c_accno, '$c_encode_date', '$c_mno', '$c_lno', '$c_email', '$c_rep_name', '$c_rep_mobile', '$c_rep_landline', '$c_rep_email', '$c_encode_date', $c_bci_type, '$c_address', '$c_prov', '$c_zipcode'";
+
+
+		$resp = array();
+	
+		if (empty($id)) {
+			$insert = "INSERT INTO t_bci ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+
+			$update = "UPDATE t_buyers_account SET c_mobile_no = '$c_mno' WHERE c_account_no = '$c_accno'";
+			$save_2 = odbc_exec($this->conn, $update);
+	
+			if ($save && $save_2) {
+				$this->car_logs('BCI Update', "ADDED - $c_accno");
+				$resp['status'] = 'success';
+				$resp['msg'] = "New tenant account successfully saved.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+		echo json_encode($resp);
+	}
+
 	
 	function save_car_check() {
 		extract($_POST);
@@ -2737,6 +2804,9 @@ switch ($action) {
 		break;
 	case 'save_tenant':
 		echo $Master->save_tenant();
+		break;
+	case 'save_bci':
+		echo $Master->save_bci();
 		break;
 	case 'save_sr':
 		echo $Master->save_sr();

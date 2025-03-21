@@ -34,7 +34,7 @@ include('../inc/header.php');
             </div>
             <p class="text-center fw-bold mt-3" style="font-size: 20px;">Client's Info</p>
             <hr>
-            <form id="tenant-form" method="post" action="">
+            <form id="bci-form" method="post" action="">
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_lname" class="form-label">Last Name</label>
@@ -52,11 +52,11 @@ include('../inc/header.php');
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_lno" class="form-label">Landline No</label>
-                        <input type="text" class="form-control txt" id="c_lno" name="c_lno" value="<?php echo htmlspecialchars("") ?>" required>
+                        <input type="text" class="form-control txt" id="c_lno" name="c_lno" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="c_mno" class="form-label">Mobile No</label>
-                        <input type="text" class="form-control txt" id="c_mno" name="c_mno" value="<?php echo htmlspecialchars("") ?>" required>
+                        <input type="text" class="form-control txt" id="c_mno" name="c_mno" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="c_email" class="form-label">Email Address</label>
@@ -66,15 +66,21 @@ include('../inc/header.php');
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_address" class="form-label">Address</label>
-                        <input type="text" class="form-control txt" id="c_address" name="c_address" value="<?php echo htmlspecialchars("") ?>" required>
+                        <input type="text" class="form-control txt" id="c_address" name="c_address" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="c_prov" class="form-label">City/Provice</label>
-                        <input type="text" class="form-control txt" id="c_prov" name="c_prov" value="<?php echo htmlspecialchars("") ?>" required>
+                        <input type="text" class="form-control txt" id="c_prov" name="c_prov" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="c_zipcode" class="form-label">Zip Code</label>
                         <input type="text" class="form-control txt" id="c_zipcode" name="c_zipcode" value="<?php echo htmlspecialchars("") ?>">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="c_tin" class="form-label">TIN #</label>
+                        <input type="text" class="form-control txt" id="c_tin" name="c_tin" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                 </div>
                 <p class="text-center fw-bold mt-3" style="font-size: 20px;">Representative Info</p>
@@ -82,11 +88,11 @@ include('../inc/header.php');
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_rep_name" class="form-label">Representative Name</label>
-                        <input type="text" class="form-control txt" id="c_rep_name" name="c_rep_name" value="<?php echo htmlspecialchars("") ?>" required>
+                        <input type="text" class="form-control txt" id="c_rep_name" name="c_rep_name" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="c_rep_landline" class="form-label">Landline No</label>
-                        <input type="text" class="form-control txt" id="c_rep_landline" name="c_rep_landline" value="<?php echo htmlspecialchars("") ?>" required>
+                        <input type="text" class="form-control txt" id="c_rep_landline" name="c_rep_landline" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="c_rep_mobile" class="form-label">Mobile No</label>
@@ -96,13 +102,16 @@ include('../inc/header.php');
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_rep_email" class="form-label">Email Address</label>
-                        <input type="text" class="form-control txt" id="c_rep_email" name="c_rep_email" value="<?php echo htmlspecialchars("") ?>" required>
+                        <input type="text" class="form-control txt" id="c_rep_email" name="c_rep_email" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
                         <label for="c_last_updated_select" class="form-label">Select Last Updated</label>
                         <select id="c_last_updated_select" class="form-control">
                             <option value="">Select Date</option>
                         </select>
+                    </div>
+                    <div class="col-md-4 mt-4">
+                        <input type="hidden" class="form-control txt" id="c_accno" name="c_accno" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -149,7 +158,10 @@ include('../inc/header.php');
         function populateDropdown(records) {
             var dropdown = $("#c_last_updated_select");
             dropdown.empty();
-            dropdown.append('<option value="">Select Date</option>');
+
+            if (records.length === 0) {
+                dropdown.append('<option value="">Select Date</option>');
+            }
 
             records.forEach(function (record, index) {
                 dropdown.append('<option value="' + index + '">' + record.c_last_updated + '</option>');
@@ -162,6 +174,7 @@ include('../inc/header.php');
                 }
             });
         }
+
 
         function displayData(data) {
             $("#c_lname").val(data.c_lname);
@@ -178,7 +191,49 @@ include('../inc/header.php');
             $("#c_rep_mobile").val(data.c_rep_mobile);
             $("#c_rep_email").val(data.c_rep_email);
             $("#c_last_updated").val(data.c_last_updated);
+            $("#c_accno").val(data.c_accno);
+            $("#c_tin").val(data.c_tin);
         }
+    });
+
+    $(document).ready(function() {
+            $('#bci-form').on('submit', function(e) {
+                e.preventDefault(); 
+                var formData = $(this).serialize(); 
+                $.ajax({
+                url: '<?php echo base_url; ?>classes/Master.php?f=save_bci',
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                dataType: 'json',
+                error: function(err) {
+                    console.log(err);
+                    alert_toast("An error occurred.", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    console.log(resp);
+                    if (resp && resp.status === 'success') {
+                        alert_toast(resp.msg, 'success');
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1500);
+                    } else if (resp && resp.status === 'failed' && resp.err) {
+                        alert_toast("An error occurred: " + resp.err, 'error');
+                    } else if (resp && resp.status === 'not_found') {
+                        alert_toast("An error occurred.", 'error');
+                    } else {
+                        alert_toast("An error occurred.", 'error');
+                    }
+                    end_loader();
+                },
+                complete: function() {
+                    $('#atap-form').data('formSubmitting', false);
+                }
+            });
+        });
     });
 </script>
 </body>
