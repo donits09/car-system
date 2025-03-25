@@ -35,7 +35,8 @@ if (isset($_POST['account_no'])) {
             "c_rep_mobile" => $row['c_rep_mobile'],
             "c_rep_email" => $row['c_rep_email'],
             "c_last_updated" => $row['c_last_updated'],
-            "c_accno" => $row['c_account_no']
+            "c_accno" => $row['c_account_no'],
+            "c_tin" => $row['c_tin']
         ];
     }
 

@@ -164,13 +164,14 @@ include('../inc/header.php');
             }
 
             records.forEach(function (record, index) {
-                dropdown.append('<option value="' + index + '">' + record.c_last_updated + '</option>');
+                var formattedDate = record.c_last_updated.split(" ")[0];
+                dropdown.append('<option value="' + index + '">' + formattedDate + '</option>');
             });
 
             dropdown.off("change").on("change", function () {
                 var selectedIndex = $(this).val();
                 if (selectedIndex !== "") {
-                    displayData(allRecords[selectedIndex]);
+                    displayData(records[selectedIndex]);
                 }
             });
         }
@@ -213,13 +214,13 @@ include('../inc/header.php');
                     alert_toast("An error occurred.", 'error');
                     end_loader();
                 },
-                success: function(resp) {
+                success: function(resp) {                 
                     console.log(resp);
                     if (resp && resp.status === 'success') {
                         alert_toast(resp.msg, 'success');
                         setTimeout(function() {
-                            location.reload();
-                        }, 1500);
+                            updateBuyerInfo();
+                        }, 300);
                     } else if (resp && resp.status === 'failed' && resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');
                     } else if (resp && resp.status === 'not_found') {
@@ -229,12 +230,38 @@ include('../inc/header.php');
                     }
                     end_loader();
                 },
-                complete: function() {
-                    $('#atap-form').data('formSubmitting', false);
-                }
             });
         });
     });
+
+    function updateBuyerInfo() {
+        var accountNo = $("#search-account").val();
+
+        if (!accountNo) {
+            console.warn("No account number entered.");
+            return;
+        }
+
+        fetch(`<?php echo base_url ?>bci/get_buyers.php?account_no=${accountNo}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert_toast(data.error, 'error');
+                } else {
+                    allRecords = data.records;
+                    populateDropdown(allRecords);
+                    displayData(allRecords[0]);
+                }
+            })
+            .catch(error => {
+                console.error("Fetch error:", error);
+            });
+    }
 </script>
 </body>
 <?php include('../inc/footer.php'); ?>

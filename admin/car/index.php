@@ -233,9 +233,13 @@ include('../../inc/header.php');
                                     <label for="title" class="form-label">Title</label>
                                     <input type="text" class="form-control txt" id="buyer_title" name="buyer_title" readonly>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tin" class="form-label">TIN #</label>
+                                    <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
