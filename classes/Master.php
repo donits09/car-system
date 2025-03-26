@@ -582,7 +582,7 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error executing query.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 	
 			$type_exists = odbc_fetch_array($check_type_result)['count'];
@@ -591,13 +591,13 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "OR type does not exist.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Transaction type or OR type is required.";
 			echo json_encode($resp);
-			return;
+			exit;
 		}
 
 		if (empty($id)) {
@@ -612,13 +612,13 @@ Class Master{
 					$resp['status'] = 'failed';
 					$resp['msg'] = "OR number '$c_or_no' already exists.";
 					echo json_encode($resp);
-					return;
+					exit;
 				}
 			} else {
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error checking OR number.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		}
 
@@ -798,7 +798,7 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error executing query.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 	
 			$type_exists = odbc_fetch_array($check_type_result)['count'];
@@ -807,13 +807,13 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "CAR type does not exist.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Transaction type or car type is required.";
 			echo json_encode($resp);
-			return;
+			exit;
 		}
 	
 		if (empty($id)) {
@@ -828,13 +828,13 @@ Class Master{
 					$resp['status'] = 'failed';
 					$resp['msg'] = "Car number '$c_car_no' already exists.";
 					echo json_encode($resp);
-					return;
+					exit;
 				}
 			} else {
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error checking car number.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		}
 
@@ -1003,7 +1003,7 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error executing query.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 	
 			$type_exists = odbc_fetch_array($check_type_result)['count'];
@@ -1012,13 +1012,13 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "CAR type does not exist.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Transaction type or car type is required.";
 			echo json_encode($resp);
-			return;
+			exit;
 		}
 		
 		if (empty($id)) {
@@ -1033,13 +1033,13 @@ Class Master{
 					$resp['status'] = 'failed';
 					$resp['msg'] = "Car number '$c_car_no' already exists.";
 					echo json_encode($resp);
-					return;
+					exit;
 				}
 			} else {
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error checking car number.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		}
 
@@ -1215,7 +1215,7 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error executing query.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 	
 			$type_exists = odbc_fetch_array($check_type_result)['count'];
@@ -1224,13 +1224,13 @@ Class Master{
 				$resp['status'] = 'failed';
 				$resp['msg'] = "OR type does not exist.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		} else {
 			$resp['status'] = 'failed';
 			$resp['msg'] = "Transaction type or car type is required.";
 			echo json_encode($resp);
-			return;
+			exit;
 		}
 	
 		if (empty($id)) {
@@ -1245,13 +1245,13 @@ Class Master{
 					$resp['status'] = 'failed';
 					$resp['msg'] = "OR number '$c_or_no' already exists.";
 					echo json_encode($resp);
-					return;
+					exit;
 				}
 			} else {
 				$resp['status'] = 'failed';
 				$resp['msg'] = "Error checking OR number.";
 				echo json_encode($resp);
-				return;
+				exit;
 			}
 		}
 
