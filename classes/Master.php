@@ -2093,34 +2093,55 @@ Class Master{
 
 	function save_bci() {
 		extract($_POST);
-
+	
 		$c_encode_date = date('Y-m-d');
 		$c_bci_type = 0;
 	
-		$data = "c_account_no,c_last_updated,c_mobile_no,c_tel_no,c_email,c_rep_name,c_rep_mobile,c_rep_landline,c_rep_email,c_encode_date,c_bci_type,c_address,c_city_prov,c_zipcode";
-		$values = "$c_accno, '$c_encode_date', '$c_mno', '$c_lno', '$c_email', '$c_rep_name', '$c_rep_mobile', '$c_rep_landline', '$c_rep_email', '$c_encode_date', $c_bci_type, '$c_address', '$c_prov', '$c_zipcode'";
-
-
+		$data = "c_account_no,c_last_updated,c_mobile_no,c_tel_no,c_email,c_rep_name,c_rep_mobile,c_rep_landline,c_rep_email,c_encode_date,c_bci_type,c_address,c_city_prov,c_zipcode,c_tin";
+		$values = "$c_accno, '$c_encode_date', '$c_mno', '$c_lno', '$c_email', '$c_rep_name', '$c_rep_mobile', '$c_rep_landline', '$c_rep_email', '$c_encode_date', $c_bci_type, '$c_address', '$c_prov', '$c_zipcode', '$c_tin'";
+	
 		$resp = array();
 	
-		if (empty($id)) {
-			$insert = "INSERT INTO t_bci ($data) VALUES ($values)";
-			$save = odbc_exec($this->conn, $insert);
-
-			$update = "UPDATE t_buyers_account SET c_mobile_no = '$c_mno' WHERE c_account_no = '$c_accno'";
-			$save_2 = odbc_exec($this->conn, $update);
+		$check_query = "SELECT COUNT(*) AS count FROM t_bci WHERE c_account_no = '$c_accno' AND c_last_updated = '$c_encode_date'";
+		$check_result = odbc_exec($this->conn, $check_query);
+		$row = odbc_fetch_array($check_result);
 	
-			if ($save && $save_2) {
-				$this->car_logs('BCI Update', "ADDED - $c_accno");
-				$resp['status'] = 'success';
-				$resp['msg'] = "New tenant account successfully saved.";
-			} else {
-				$resp['status'] = 'failed';
-				$resp['err'] = odbc_errormsg($this->conn);
-			}
+		if ($row['count'] > 0) {
+			$update_query = "UPDATE t_bci SET 
+				c_mobile_no = '$c_mno', 
+				c_tel_no = '$c_lno', 
+				c_email = '$c_email', 
+				c_rep_name = '$c_rep_name', 
+				c_rep_mobile = '$c_rep_mobile', 
+				c_rep_landline = '$c_rep_landline', 
+				c_rep_email = '$c_rep_email', 
+				c_encode_date = '$c_encode_date', 
+				c_address = '$c_address', 
+				c_city_prov = '$c_prov', 
+				c_zipcode = '$c_zipcode', 
+				c_tin = '$c_tin',
+				c_last_updated = '$c_encode_date'
+				WHERE c_account_no = '$c_accno' AND c_last_updated = '$c_encode_date'";
+			$save = odbc_exec($this->conn, $update_query);
+		} else {
+			$insert_query = "INSERT INTO t_bci ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert_query);
 		}
+	
+		$update_buyer_query = "UPDATE t_buyers_account SET c_mobile_no = '$c_mno', c_email = '$c_email', c_tin = '$c_tin' WHERE c_account_no = '$c_accno'";
+		$save_2 = odbc_exec($this->conn, $update_buyer_query);
+	
+		if ($save && $save_2) {
+			$this->car_logs('BCI Update', "UPDATE - $c_accno");
+			$resp['status'] = 'success';
+			$resp['msg'] = "BCI Update successfully processed.";
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = odbc_errormsg($this->conn);
+		}
+	
 		echo json_encode($resp);
-	}
+	}	
 
 	
 	function save_car_check() {
