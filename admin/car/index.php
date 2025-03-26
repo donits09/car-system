@@ -68,6 +68,7 @@ include('../../inc/header.php');
                                 <option value="account">Account #</option>
                                 <option value="location">Location</option>
                                 <option value="last-name">Name</option>
+                                <option value="eadd">Email</option>
                             </select>
                         </div>
                     </div>
@@ -134,6 +135,19 @@ include('../../inc/header.php');
                     </div>
                     <div class="col-md-3 form-group">
                         <button type="submit" id="searchName" class="btn btn-primary" onclick="calculateTotalAmount(); calculateTotalORAmount(); switchToBuyerDetails()"><span class="fa fa-search"></span> Search Name</button>
+                    </div>
+                </div>
+            </form>
+            <!-- By Email -->
+            <form id="eadd-form" class="filter-form" style="display: none;" onsubmit="return searchBuyer('eadd')">
+                <hr>
+                <div class="row align-items-end">
+                    <div class="col-md-3 form-group">
+                        <label for="eadd" class="control-label">Email</label>
+                        <input type="text" id="eadd" name="eadd" class="form-control">
+                    </div>
+                    <div class="col-md-3 form-group">
+                        <button type="submit" id="searchEadd" class="btn btn-primary" onclick="calculateTotalAmount(); calculateTotalORAmount(); switchToBuyerDetails()"><span class="fa fa-search"></span> Search Email</button>
                     </div>
                 </div>
             </form>
@@ -634,15 +648,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var searchAcc = document.getElementById('searchAcc');
     var searchLoc = document.getElementById('searchLoc');
     var searchName = document.getElementById('searchName');
+    var searchEadd = document.getElementById('searchEadd');
     var paymentRecordContent = document.getElementById('payment-record-content');
 
-    if (!paymentRecordTab || !acctNoInput || !searchAcc || !searchLoc || !searchName || !paymentRecordContent) {
+    if (!paymentRecordTab || !acctNoInput || !searchAcc || !searchLoc || !searchName || !searchEadd || !paymentRecordContent) {
         console.error('One or more elements not found:', {
             paymentRecordTab,
             acctNoInput,
             searchAcc,
             searchLoc,
             searchName,
+            searchEadd,
             paymentRecordContent
         });
         return;
@@ -676,7 +692,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch(error => console.error('Error fetching payment record:', error));
     }
 
-    [searchAcc, searchLoc, searchName, paymentRecordTab].forEach(function (element) {
+    [searchAcc, searchLoc, searchName, searchEadd, paymentRecordTab].forEach(function (element) {
         element.addEventListener('click', fetchPaymentRecord);
     });
 });
@@ -904,6 +920,9 @@ $(document).ready(function() {
     document.getElementById("searchName").addEventListener("click", function(event) {
         searchAndCalculateTotal(event, 'last-name');
     });
+    document.getElementById("searchEadd").addEventListener("click", function(event) {
+        searchAndCalculateTotal(event, 'eadd');
+    });
 </script>
 
 <!-- CALLING OF MODAAAAAAALS (MERONG FOR ATAP AND FOR CAR ALSO. PINAGSAMA KO NA) -->
@@ -941,12 +960,10 @@ $(document).ready(function() {
             var accountNo = $(this).data('account-no');
             loadModal('Create New Car', 'manage_car.php?c_account_no=' + accountNo, '#createCarModal');
         });
-
         $('#create_new_or').click(function() {
             var accountNo = $(this).data('account-no');
             loadModal('Create New OR', '../other_fees/manage_of_spec.php?c_account_no=' + accountNo, '#createORModal');
         });
-
         $(document).on('click', '.edit_data', function() {
             var accountId = $(this).data('id');
             var accountNo = $(this).data('account-no');
@@ -1260,6 +1277,38 @@ $(document).ready(function() {
 });
 
 </script>
+<!-- <script>
+document.getElementById("eadd").addEventListener("input", function() {
+    validateEmail();
+});
+
+function validateEmail() {
+    var email = document.getElementById("eadd").value;
+    var emailError = document.getElementById("emailError");
+
+    var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    if (email === "") {
+        emailError.innerHTML = "";
+        return false;
+    } else if (!emailPattern.test(email)) {
+        emailError.innerHTML = "<strong><em style='font-size: 1em;'>Invalid email format</em></strong>";
+        return false;
+    } else {
+        emailError.innerHTML = ""; 
+        return true;
+    }
+}
+
+function validateEmailBeforeSubmit() {
+    if (!validateEmail()) {
+        return false; 
+    }
+    searchBuyer('eadd'); 
+    return false; 
+}
+</script> -->
+
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>

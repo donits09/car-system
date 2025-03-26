@@ -77,7 +77,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $response['status'] = 'error';
             $response['message'] = 'Query preparation failed.';
         }
-    } else {
+    } elseif (isset($_GET['eadd'])) {
+        $eadd = $_GET['eadd'];
+        $get_details_query = "SELECT * FROM t_buyers_account WHERE c_email ILIKE ? ORDER BY c_b1_last_name";
+
+        if ($stmt = odbc_prepare($conn, $get_details_query)) {
+            if (odbc_execute($stmt, array("%$eadd%"))) {
+                $rows = [];
+                while ($row = odbc_fetch_array($stmt)) {
+                    $rows[] = $row;
+                }
+                if (!empty($rows)) {
+                    $response['status'] = 'success';
+                    $response['data'] = $rows;
+                } else {
+                    $response['status'] = 'no_data';
+                    $response['message'] = 'No matching records found.';
+                }
+            } else {
+                $response['status'] = 'error';
+                $response['message'] = 'Query execution failed.';
+            }
+        } else {
+            $response['status'] = 'error';
+            $response['message'] = 'Query preparation failed.';
+        }
+
+    }else {
         $response['status'] = 'error';
         $response['message'] = 'Required parameter is missing.';
     }

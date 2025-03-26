@@ -106,6 +106,7 @@
               <th>Last Name (Buyer 2)</th>
               <th>First Name (Buyer 2)</th>
               <th>Middle Name (Buyer 2)</th>
+              <th>Email Address</th>
               <th>Location</th>
               <th>Action</th>
             </tr>

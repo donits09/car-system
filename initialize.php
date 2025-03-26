@@ -7,6 +7,8 @@ if(!defined('DB_SERVER')) define('DB_SERVER',"localhost");
 if(!defined('DB_USERNAME')) define('DB_USERNAME',"postgres");
 if(!defined('DB_PASSWORD')) define('DB_PASSWORD',"admin12345");
 //if(!defined('DB_NAME')) define('DB_NAME',"CAR_TESTDB");
+
 if(!defined('DB_NAME')) define('DB_NAME',"CAR_TESTDB");
+
 ?>
 

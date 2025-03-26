@@ -26,6 +26,9 @@ function searchBuyer(type) {
         var first_name = document.getElementById('first_name').value;
         formData.append('last_name', last_name);
         formData.append('first_name', first_name); 
+    }else if (type === 'eadd') {
+        var eadd = document.getElementById('eadd').value;
+        formData.append('eadd', eadd); 
     }
 
     var xhr = new XMLHttpRequest();
@@ -43,7 +46,7 @@ function searchBuyer(type) {
             var response = JSON.parse(xhr.responseText);
             if (response.status === 'success') {
                 if (Array.isArray(response.data)) {
-                    if ((type === 'last-name' || type === 'location') && response.data.length > 1) {
+                    if ((type === 'last-name' || type === 'location' || type === 'eadd') && response.data.length > 1) {
                         showMultipleResults(response.data);
                     } else {
                         fillBuyerDetails(response.data[0]);
@@ -70,7 +73,7 @@ function toggleForm() {
     document.getElementById("account-form").style.display = searchType === "account" ? "block" : "none";
     document.getElementById("location-form").style.display = searchType === "location" ? "block" : "none";
     document.getElementById("last-name-form").style.display = searchType === "last-name" ? "block" : "none";
-
+    document.getElementById("eadd-form").style.display = searchType === "eadd" ? "block" : "none";
     clearFormFields();
 }
 
@@ -136,6 +139,8 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_lname2').value = data.c_b2_last_name;
     document.getElementById('buyer_fname2').value = data.c_b2_first_name;
     document.getElementById('buyer_mname2').value = data.c_b2_middle_name;
+    document.getElementById('buyer_email').value = data.c_email;
+
     document.getElementById('buyer_address').value = data.c_address; 
     document.getElementById('buyer_remarks').value = data.c_remarks; 
     document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
@@ -246,6 +251,7 @@ function showMultipleResults(data, page) {
         var tdLastName2 = document.createElement('td');
         var tdFirstName2 = document.createElement('td');
         var tdMiddleName2 = document.createElement('td');
+        var tdEadd = document.createElement('td');
         var tdStats = document.createElement('td');
         var tdButton = document.createElement('td');
     
@@ -256,6 +262,7 @@ function showMultipleResults(data, page) {
         tdLastName2.textContent = buyer.c_b2_last_name;
         tdFirstName2.textContent = buyer.c_b2_first_name;
         tdMiddleName2.textContent = buyer.c_b2_middle_name;
+        tdEadd.textContent = buyer.c_email;
     
         var phase = buyer.c_account_no.substring(0, 3);
         var block = buyer.c_account_no.substring(3, 6).replace(/^0+/, ''); 
@@ -297,6 +304,7 @@ function showMultipleResults(data, page) {
         tr.appendChild(tdLastName2);
         tr.appendChild(tdFirstName2);
         tr.appendChild(tdMiddleName2);
+        tr.appendChild(tdEadd);
         tr.appendChild(tdStats);
         tr.appendChild(tdButton);
     
@@ -339,6 +347,7 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_lname2').value = buyer.c_b2_last_name;
     document.getElementById('buyer_fname2').value = buyer.c_b2_first_name;
     document.getElementById('buyer_mname2').value = buyer.c_b2_middle_name;
+    document.getElementById('buyer_email').value = buyer.c_email;
     
     document.getElementById('buyer_address').value = buyer.c_address; 
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
