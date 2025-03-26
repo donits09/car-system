@@ -11,6 +11,20 @@ include('../inc/header.php');
 
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/index.css">
 <link rel="stylesheet" href="<?php echo base_url ?>dist/css/table.css">
+<style>
+    .selectable-row {
+        cursor: pointer;
+    }
+
+    .selectable-row:hover {
+        background-color: #f1f1f1;
+    }
+
+    .table-primary {
+        background-color:rgb(160, 160, 160) !important;
+        color: white;
+    }
+</style>
 <body>
 <div class="container mt-5">
     <div class="card mt-3">
@@ -105,13 +119,28 @@ include('../inc/header.php');
                         <input type="text" class="form-control txt" id="c_rep_email" name="c_rep_email" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
-                        <label for="c_last_updated_select" class="form-label">Select Last Updated</label>
-                        <select id="c_last_updated_select" class="form-control">
-                            <option value="">Select Date</option>
-                        </select>
+                        <label for="c_last_updated" class="form-label">Last Updated</label>
+                        <input type="text" class="form-control txt" id="c_last_updated" name="c_last_updated" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4 mt-4">
                         <input type="hidden" class="form-control txt" id="c_accno" name="c_accno" value="<?php echo htmlspecialchars("") ?>">
+                    </div>
+                </div>
+                <p class="text-center fw-bold mt-3" style="font-size: 19px;">Select Last Updated</p>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <table id="c_last_updated_table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Address</th>
+                                    <th>Mobile No</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -145,7 +174,7 @@ include('../inc/header.php');
                         alert(response.error);
                     } else {
                         allRecords = response.records;
-                        populateDropdown(allRecords);
+                        populateTable(allRecords);
                         displayData(allRecords[0]);
                     }
                 },
@@ -155,26 +184,59 @@ include('../inc/header.php');
             });
         });
 
-        function populateDropdown(records) {
-            var dropdown = $("#c_last_updated_select");
-            dropdown.empty();
+        function populateTable(records) {
+            var tableBody = $("#c_last_updated_table tbody");
+            tableBody.empty();
 
             if (records.length === 0) {
-                dropdown.append('<option value="">Select Date</option>');
+                tableBody.append('<tr><td colspan="3" class="text-center">No records found</td></tr>');
+                return;
             }
 
-            records.forEach(function (record, index) {
-                var formattedDate = record.c_last_updated.split(" ")[0];
-                dropdown.append('<option value="' + index + '">' + formattedDate + '</option>');
-            });
+            var latestRow = null; // Store the latest row
 
-            dropdown.off("change").on("change", function () {
-                var selectedIndex = $(this).val();
-                if (selectedIndex !== "") {
-                    displayData(records[selectedIndex]);
+            records.forEach(function (record, index) {
+                var formattedDate = record.c_last_updated ? record.c_last_updated.split(" ")[0] : "N/A";
+                var address = record.c_address || "N/A";
+                var mobileNo = record.c_mno || "N/A";
+                var email = record.c_email || "N/A";
+
+                var row = $('<tr class="selectable-row"></tr>')
+                    .append('<td>' + formattedDate + '</td>')
+                    .append('<td>' + address + '</td>')
+                    .append('<td>' + mobileNo + '</td>')
+                    .append('<td>' + email + '</td>');
+
+                // Click event to select row
+                row.on("click", function () {
+                    $(".selectable-row").removeClass("table-secondary");
+                    $(this).addClass("table-secondary");
+
+                    // Update selected fields
+                    $("#c_last_updated").val(formattedDate);
+                    $("#c_mno").val(mobileNo);
+                    $("#c_email").val(email);
+
+                    // Display the full data in the form
+                    displayData(records[index]);
+                });
+
+                tableBody.append(row);
+
+                // Mark the first row as the latest and store it
+                if (index === 0) {
+                    latestRow = row;
                 }
             });
+
+            // Auto-select the latest row
+            if (latestRow) {
+                latestRow.addClass("table-secondary"); // Highlight latest row
+                latestRow.trigger("click"); // Simulate a click to set values
+            }
         }
+
+
 
 
         function displayData(data) {

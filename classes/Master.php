@@ -2102,13 +2102,11 @@ Class Master{
 	
 		$resp = array();
 	
-		// Check if c_account_no and c_last_updated exist
 		$check_query = "SELECT COUNT(*) AS count FROM t_bci WHERE c_account_no = '$c_accno' AND c_last_updated = '$c_encode_date'";
 		$check_result = odbc_exec($this->conn, $check_query);
 		$row = odbc_fetch_array($check_result);
 	
 		if ($row['count'] > 0) {
-			// If exists, update
 			$update_query = "UPDATE t_bci SET 
 				c_mobile_no = '$c_mno', 
 				c_tel_no = '$c_lno', 
@@ -2126,12 +2124,10 @@ Class Master{
 				WHERE c_account_no = '$c_accno' AND c_last_updated = '$c_encode_date'";
 			$save = odbc_exec($this->conn, $update_query);
 		} else {
-			// If not exists, insert
 			$insert_query = "INSERT INTO t_bci ($data) VALUES ($values)";
 			$save = odbc_exec($this->conn, $insert_query);
 		}
 	
-		// Update t_buyers_account table
 		$update_buyer_query = "UPDATE t_buyers_account SET c_mobile_no = '$c_mno', c_email = '$c_email', c_tin = '$c_tin' WHERE c_account_no = '$c_accno'";
 		$save_2 = odbc_exec($this->conn, $update_buyer_query);
 	
