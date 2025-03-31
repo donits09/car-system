@@ -741,7 +741,9 @@ Class Master{
 						c_remarks = '$c_remarks',
 						c_vat_sales = " . (!empty($c_vatsales) ? $c_vatsales : '0') . ",
             			c_vat_amount = " . (!empty($c_vatamount) ? $c_vatamount : '0') . ",
+
 						c_vat_selected = '$c_vatselected',
+
 						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
@@ -1425,7 +1427,9 @@ Class Master{
 						c_remarks = '$c_remarks',
 						c_vat_sales = " . (!empty($c_vatsales) ? $c_vatsales : '0') . ",
             			c_vat_amount = " . (!empty($c_vatamount) ? $c_vatamount : '0') . ",
+
 						c_vat_selected = '$c_vatselected',
+
 						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
