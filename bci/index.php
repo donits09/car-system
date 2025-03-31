@@ -33,17 +33,55 @@ include('../inc/header.php');
             <hr>
         </div>
         <div class="m-3">
+            <label for="search-account" class="form-label">Search Account No</label>
             <div class="row mt-2">
-                <div class="col-md-4">
-                    <label for="search-account" class="form-label">Search Account No.: </label>
-                    <div class="row g-2">
-                        <div class="col">
-                            <input type="number" class="form-control txt" id="search-account" placeholder="Enter Account No.">
-                        </div>
-                        <div class="col-auto">
-                            <button id="search-btn" class="btn btn-primary">Search</button>
-                        </div>
-                    </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control txt" id="search-account" placeholder="Account No">
+                </div>
+                <script>
+                document.getElementById("search-account").addEventListener("input", function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 11);
+                });
+                </script>
+                <div class="col-auto">
+                    <button id="search-btn" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+            <label for="search-account" class="form-label">Search Location</label>
+            <div class="row mt-2">
+                <div class="col-sm-2">
+                    <select class="form-control" id="search-phase" name="search-phase">
+                        <option value="">Select Phase</option>
+                        <?php
+                        $project_query = "SELECT DISTINCT c_acronym, c_code FROM t_projects ORDER BY c_acronym ASC";
+                        $result = odbc_exec($conn, $project_query);
+
+                        while ($row = odbc_fetch_array($result)) {
+                            $selected = (isset($selected_code) && $selected_code == $row['c_code']) ? 'selected' : '';
+                            echo "<option value='" . htmlspecialchars($row['c_code'], ENT_QUOTES, 'UTF-8') . "' $selected>" . htmlspecialchars($row['c_acronym'], ENT_QUOTES, 'UTF-8') . "</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
+                <div class="col-sm-2">
+                    <input type="text" class="form-control txt" id="search-block" placeholder="Block" maxlength="3">
+                </div>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control txt" id="search-lot" placeholder="Lot" maxlength="2">
+                </div>
+
+                <script>
+                document.getElementById("search-block").addEventListener("input", function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 3);
+                });
+                document.getElementById("search-lot").addEventListener("input", function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 2);
+                });
+                </script>
+
+                <div class="col-auto">
+                    <button id="search-loc" class="btn btn-primary">Search</button>
                 </div>
             </div>
             <p class="text-center fw-bold mt-3" style="font-size: 20px;">Client's Info</p>
@@ -63,6 +101,21 @@ include('../inc/header.php');
                         <input type="text" class="form-control txt" id="c_mname" name="c_mname" readonly>
                     </div>
                 </div>
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <label for="c_accno" class="form-label">Account No.</label>
+                        <input type="text" class="form-control txt" id="c_accno" name="c_accno" value="<?php echo htmlspecialchars("") ?>" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="c_type" class="form-label">Type</label>
+                        <input type="text" class="form-control txt" id="c_type" name="c_type"  value="<?php echo htmlspecialchars("") ?>" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="c_last_updated" class="form-label">Last Updated</label>
+                        <input type="text" class="form-control txt" id="c_last_updated" name="c_last_updated"  value="<?php echo htmlspecialchars("") ?>" readonly>
+                    </div>
+                </div>
+                <hr>
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_lno" class="form-label">Landline No</label>
@@ -90,8 +143,6 @@ include('../inc/header.php');
                         <label for="c_zipcode" class="form-label">Zip Code</label>
                         <input type="text" class="form-control txt" id="c_zipcode" name="c_zipcode" value="<?php echo htmlspecialchars("") ?>">
                     </div>
-                </div>
-                <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_tin" class="form-label">TIN #</label>
                         <input type="text" class="form-control txt" id="c_tin" name="c_tin" value="<?php echo htmlspecialchars("") ?>">
@@ -118,13 +169,6 @@ include('../inc/header.php');
                         <label for="c_rep_email" class="form-label">Email Address</label>
                         <input type="text" class="form-control txt" id="c_rep_email" name="c_rep_email" value="<?php echo htmlspecialchars("") ?>">
                     </div>
-                    <div class="col-md-4">
-                        <label for="c_last_updated" class="form-label">Last Updated</label>
-                        <input type="text" class="form-control txt" id="c_last_updated" name="c_last_updated" value="<?php echo htmlspecialchars("") ?>">
-                    </div>
-                    <div class="col-md-4 mt-4">
-                        <input type="hidden" class="form-control txt" id="c_accno" name="c_accno" value="<?php echo htmlspecialchars("") ?>">
-                    </div>
                 </div>
                 <p class="text-center fw-bold mt-3" style="font-size: 19px;">Select Last Updated</p>
                 <div class="row mt-3">
@@ -133,6 +177,8 @@ include('../inc/header.php');
                             <thead>
                                 <tr>
                                     <th>Date</th>
+                                    <th>Account No.</th>
+                                    <th>Type</th>
                                     <th>Address</th>
                                     <th>Mobile No</th>
                                     <th>Email</th>
@@ -156,18 +202,60 @@ include('../inc/header.php');
     $(document).ready(function () {
         var allRecords = [];
 
-        $("#search-btn").click(function () {
-            var accountNo = $("#search-account").val();
+        $("#search-btn, #search-loc").click(function () {
+            var accountNo = $("#search-account").val().trim();
+            var phase = $("#search-phase").val().trim();
+            var block = $("#search-block").val().trim();
+            var lot = $("#search-lot").val().trim();
 
-            if (accountNo === "") {
-                alert("Please enter an account number.");
+            if (accountNo !== "") {
+                $("#search-phase").val('');
+                $("#search-block").val('');
+                $("#search-lot").val('');
+            } else if (phase !== "" && block !== "" && lot !== "") {
+                $("#search-account").val('');
+            } else {
+                alert("Mag Enter ka muna ng account o location");
                 return;
             }
 
+            if (block !== "") {
+                block = block.padStart(3, '0');
+            }
+
+            if (lot !== "") {
+                lot = lot.padStart(2, '0');
+            }
+
+            var location = phase + block + lot;
+            console.log("Laman ni Location:", location);
+            console.log("Laman ni Account:", accountNo);
+
+            /* get_buyers_account.php */
+            $.ajax({
+                type: "POST",
+                url: '<?php echo base_url ?>bci/get_buyers_account.php',
+                data: { account_no: accountNo,
+                        location: location },
+                dataType: "json",
+                success: function (response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else {
+                        displayData(response.records[0]);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while fetching account data.");
+                }
+            });
+
+            /* get_buyers.php */
             $.ajax({
                 type: "POST",
                 url: '<?php echo base_url ?>bci/get_buyers.php',
-                data: { account_no: accountNo },
+                data: { account_no: accountNo,
+                        location: location },
                 dataType: "json",
                 success: function (response) {
                     if (response.error) {
@@ -175,11 +263,10 @@ include('../inc/header.php');
                     } else {
                         allRecords = response.records;
                         populateTable(allRecords);
-                        displayData(allRecords[0]);
                     }
                 },
                 error: function () {
-                    alert("An error occurred while fetching data.");
+                    alert("An error occurred while fetching buyer data.");
                 }
             });
         });
@@ -189,55 +276,40 @@ include('../inc/header.php');
             tableBody.empty();
 
             if (records.length === 0) {
-                tableBody.append('<tr><td colspan="3" class="text-center">No records found</td></tr>');
+                tableBody.append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
                 return;
             }
 
-            var latestRow = null; // Store the latest row
-
             records.forEach(function (record, index) {
                 var formattedDate = record.c_last_updated ? record.c_last_updated.split(" ")[0] : "N/A";
+                var accno = record.c_accno || "N/A";
+                var type = record.c_type || "N/A";
                 var address = record.c_address || "N/A";
                 var mobileNo = record.c_mno || "N/A";
                 var email = record.c_email || "N/A";
 
                 var row = $('<tr class="selectable-row"></tr>')
                     .append('<td>' + formattedDate + '</td>')
+                    .append('<td>' + accno + '</td>')
+                    .append('<td>' + type + '</td>')
                     .append('<td>' + address + '</td>')
                     .append('<td>' + mobileNo + '</td>')
                     .append('<td>' + email + '</td>');
 
-                // Click event to select row
                 row.on("click", function () {
                     $(".selectable-row").removeClass("table-secondary");
                     $(this).addClass("table-secondary");
 
-                    // Update selected fields
                     $("#c_last_updated").val(formattedDate);
                     $("#c_mno").val(mobileNo);
                     $("#c_email").val(email);
 
-                    // Display the full data in the form
                     displayData(records[index]);
                 });
 
                 tableBody.append(row);
-
-                // Mark the first row as the latest and store it
-                if (index === 0) {
-                    latestRow = row;
-                }
             });
-
-            // Auto-select the latest row
-            if (latestRow) {
-                latestRow.addClass("table-secondary"); // Highlight latest row
-                latestRow.trigger("click"); // Simulate a click to set values
-            }
         }
-
-
-
 
         function displayData(data) {
             $("#c_lname").val(data.c_lname);
@@ -256,8 +328,10 @@ include('../inc/header.php');
             $("#c_last_updated").val(data.c_last_updated);
             $("#c_accno").val(data.c_accno);
             $("#c_tin").val(data.c_tin);
+            $("#c_type").val(data.c_type);
         }
     });
+
 
     $(document).ready(function() {
             $('#bci-form').on('submit', function(e) {
@@ -324,6 +398,35 @@ include('../inc/header.php');
                 console.error("Fetch error:", error);
             });
     }
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchAccount = document.getElementById("search-account");
+        const searchPhase = document.getElementById("search-phase");
+        const searchBlock = document.getElementById("search-block");
+        const searchLot = document.getElementById("search-lot");
+
+        function toggleSearchFields() {
+            if (searchAccount.value.trim() !== "") {
+                searchPhase.disabled = true;
+                searchBlock.disabled = true;
+                searchLot.disabled = true;
+            } else if (searchPhase.value !== "" || searchBlock.value.trim() !== "" || searchLot.value.trim() !== "") {
+                searchAccount.disabled = true;
+            } else {
+                searchAccount.disabled = false;
+                searchPhase.disabled = false;
+                searchBlock.disabled = false;
+                searchLot.disabled = false;
+            }
+        }
+
+        searchAccount.addEventListener("input", toggleSearchFields);
+        searchPhase.addEventListener("change", toggleSearchFields);
+        searchBlock.addEventListener("input", toggleSearchFields);
+        searchLot.addEventListener("input", toggleSearchFields);
+    });
 </script>
 </body>
 <?php include('../inc/footer.php'); ?>

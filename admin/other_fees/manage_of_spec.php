@@ -1097,10 +1097,14 @@ function updateORList() {
         var c_net_sales = document.getElementById("c_net_sales");
         var c_vat_selected = document.getElementById("c_vat_selected");
 
-        if (c_vat_sales) c_vat_sales.value = vatableSales.toFixed(2);
-        if (c_vat_amount) c_vat_amount.value = vatAmount.toFixed(2);
-        if (c_ewt) c_ewt.value = ewt.toFixed(2);
-        if (c_net_sales) c_net_sales.value = netSales.toFixed(2);
+        function formatNumber(num) {
+            return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        if (c_vat_sales) c_vat_sales.value = formatNumber(vatableSales);
+        if (c_vat_amount) c_vat_amount.value = formatNumber(vatAmount);
+        if (c_ewt) c_ewt.value = formatNumber(ewt);
+        if (c_net_sales) c_net_sales.value = formatNumber(netSales);
         if (c_vat_selected) c_vat_selected.value = vatSelected;
     }
 

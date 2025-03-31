@@ -741,7 +741,9 @@ Class Master{
 						c_remarks = '$c_remarks',
 						c_vat_sales = " . (!empty($c_vatsales) ? $c_vatsales : '0') . ",
             			c_vat_amount = " . (!empty($c_vatamount) ? $c_vatamount : '0') . ",
-						c_vat_selected = '$c_vat_selected',
+
+						c_vat_selected = '$c_vatselected',
+
 						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
@@ -1425,7 +1427,9 @@ Class Master{
 						c_remarks = '$c_remarks',
 						c_vat_sales = " . (!empty($c_vatsales) ? $c_vatsales : '0') . ",
             			c_vat_amount = " . (!empty($c_vatamount) ? $c_vatamount : '0') . ",
-						c_vat_selected = '$c_vat_selected',
+
+						c_vat_selected = '$c_vatselected',
+
 						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
@@ -2128,7 +2132,8 @@ Class Master{
 			$save = odbc_exec($this->conn, $insert_query);
 		}
 	
-		$update_buyer_query = "UPDATE t_buyers_account SET c_mobile_no = '$c_mno', c_email = '$c_email', c_tin = '$c_tin' WHERE c_account_no = '$c_accno'";
+		$update_buyer_query = "UPDATE t_buyers_account SET c_tel_no = '$c_lno', c_mobile_no = '$c_mno', c_email = '$c_email',
+		c_address = '$c_address', c_city_prov = '$c_prov', c_zip_code = '$c_zipcode', c_tin = '$c_tin' WHERE c_account_no = '$c_accno'";
 		$save_2 = odbc_exec($this->conn, $update_buyer_query);
 	
 		if ($save && $save_2) {
