@@ -739,8 +739,8 @@ Class Master{
 						c_bank = '$c_bank',
 						c_check_no = '$c_check_no',
 						c_remarks = '$c_remarks',
-						c_vat_sales = " . (!empty($c_vat_sales) ? $c_vat_sales : '0') . ",
-            			c_vat_amount = " . (!empty($c_vat_amount) ? $c_vat_amount : '0') . ",
+						c_vat_sales = " . (!empty($c_vatsales) ? $c_vatsales : '0') . ",
+            			c_vat_amount = " . (!empty($c_vatamount) ? $c_vatamount : '0') . ",
 						c_vat_selected = '$c_vat_selected',
 						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
@@ -1423,8 +1423,8 @@ Class Master{
 						c_bank = '$c_bank',
 						c_check_no = '$c_check_no',
 						c_remarks = '$c_remarks',
-						c_vat_sales = " . (!empty($c_vat_sales) ? $c_vat_sales : '0') . ",
-            			c_vat_amount = " . (!empty($c_vat_amount) ? $c_vat_amount : '0') . ",
+						c_vat_sales = " . (!empty($c_vatsales) ? $c_vatsales : '0') . ",
+            			c_vat_amount = " . (!empty($c_vatamount) ? $c_vatamount : '0') . ",
 						c_vat_selected = '$c_vat_selected',
 						c_ewt = " . (!empty($c_ewt) ? $c_ewt : '0') . "
 					  WHERE id = '$id'";
