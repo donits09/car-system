@@ -9,7 +9,7 @@
         $accountId = $_GET['id'];
         $get_or_query = "SELECT a.id, a.c_account_no, a.c_or_no, a.c_or_type,
                     a.c_or_paydate,a.c_or_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop,a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks
+                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks, a.c_vat_sales, a.c_vat_amount, a.c_vat_selected, a.c_ewt
                         FROM t_or_payment a
                         LEFT JOIN t_other_or_payment b ON a.c_or_no = b.c_or_no WHERE a.id = ?";
         $stmt = odbc_prepare($conn, $get_or_query);
@@ -126,6 +126,22 @@
                 </tr>
                 <tr>
                     <th>Amount:</th>
+                    <td><?php echo number_format($row['c_or_amount'],2); ?></td>
+                </tr>
+                <tr>
+                    <th>Vatable Sales:</th>
+                    <td><?php echo number_format($row['c_vat_sales'],2); ?></td>
+                </tr>
+                <tr>
+                    <th>VAT Amount:</th>
+                    <td><?php echo number_format($row['c_vat_amount'],2); ?></td>
+                </tr>
+                <tr>
+                    <th>Less EWT:</th>
+                    <td><?php echo number_format($row['c_ewt'],2); ?></td>
+                </tr>
+                <tr>
+                    <th>Net Sales:</th>
                     <td><?php echo number_format($row['c_or_amount'],2); ?></td>
                 </tr>
                 <tr>

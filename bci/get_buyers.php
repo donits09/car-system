@@ -4,54 +4,114 @@ include('../config.php');
 
 if (isset($_POST['account_no'])) {
     $account_no = $_POST['account_no'];
+    $location = $_POST['location'];
 
-    $check_bci = "SELECT * FROM t_bci WHERE c_account_no = ?";
-    $stmt_check = odbc_prepare($conn, $check_bci);
-    odbc_execute($stmt_check, array($account_no));
-    $row = odbc_fetch_array($stmt_check);
+    if (!empty($account_no)) {
+        $check_bci = "SELECT * FROM t_bci WHERE c_account_no = ?";
+        $stmt_check = odbc_prepare($conn, $check_bci);
+        odbc_execute($stmt_check, array($account_no));
+        $row = odbc_fetch_array($stmt_check);
 
-    if ($row) {
-        $query = "SELECT 
-                    b.c_b1_last_name, 
-                    b.c_b1_first_name, 
-                    b.c_b1_middle_name,
-                    t.c_tel_no,
-                    t.c_mobile_no,
-                    t.c_email,
-                    t.c_address,
-                    t.c_city_prov,
-                    t.c_zipcode,
-                    t.c_account_no,
-                    t.c_tin,
-                    t.c_rep_name,
-                    t.c_rep_landline,
-                    t.c_rep_mobile,
-                    t.c_rep_email,
-                    t.c_last_updated
-                FROM t_buyers_account b
-                LEFT JOIN t_bci t ON b.c_account_no = t.c_account_no
-                WHERE b.c_account_no = ?
-                ORDER BY t.c_last_updated DESC";
-    } else {
-        $query = "SELECT 
-                    b.c_b1_last_name, 
-                    b.c_b1_first_name, 
-                    b.c_b1_middle_name,
-                    b.c_tel_no,
-                    b.c_mobile_no,
-                    b.c_email,
-                    b.c_address,
-                    b.c_city_prov,
-                    b.c_zip_code AS c_zipcode,
-                    b.c_account_no,
-                    b.c_tin,
-                    NULL AS c_rep_name,
-                    NULL AS c_rep_landline,
-                    NULL AS c_rep_mobile,
-                    NULL AS c_rep_email,
-                    NULL AS c_last_updated
-                FROM t_buyers_account b
-                WHERE b.c_account_no = ?";
+        if ($row) {
+            $query = "SELECT 
+                        b.c_b1_last_name, 
+                        b.c_b1_first_name, 
+                        b.c_b1_middle_name,
+                        b.c_type,
+                        t.c_tel_no,
+                        t.c_mobile_no,
+                        t.c_email,
+                        t.c_address,
+                        t.c_city_prov,
+                        t.c_zipcode,
+                        t.c_account_no,
+                        t.c_tin,
+                        t.c_rep_name,
+                        t.c_rep_landline,
+                        t.c_rep_mobile,
+                        t.c_rep_email,
+                        t.c_last_updated
+                    FROM t_buyers_account b
+                    LEFT JOIN t_bci t ON b.c_account_no = t.c_account_no
+                    WHERE b.c_account_no = ?
+                    ORDER BY t.c_last_updated DESC";
+            $param = [$account_no];
+        } else {
+            $query = "SELECT 
+                        b.c_b1_last_name, 
+                        b.c_b1_first_name, 
+                        b.c_b1_middle_name,
+                        b.c_tel_no,
+                        b.c_mobile_no,
+                        b.c_email,
+                        b.c_address,
+                        b.c_city_prov,
+                        b.c_zip_code AS c_zipcode,
+                        b.c_account_no,
+                        b.c_tin,
+                        b.c_type,
+                        NULL AS c_rep_name,
+                        NULL AS c_rep_landline,
+                        NULL AS c_rep_mobile,
+                        NULL AS c_rep_email,
+                        NULL AS c_last_updated
+                    FROM t_buyers_account b
+                    WHERE b.c_account_no = ?";
+            $param = [$account_no];
+        }
+    }elseif (!empty($location)) {
+        $check_bci = "SELECT * FROM t_bci WHERE c_account_no::text ILIKE ?";
+        $stmt_check = odbc_prepare($conn, $check_bci);
+        odbc_execute($stmt_check, array("%$location%"));
+        $row = odbc_fetch_array($stmt_check);
+
+        if ($row) {
+            $query = "SELECT 
+                        b.c_b1_last_name, 
+                        b.c_b1_first_name, 
+                        b.c_b1_middle_name,
+                        b.c_type,
+                        t.c_tel_no,
+                        t.c_mobile_no,
+                        t.c_email,
+                        t.c_address,
+                        t.c_city_prov,
+                        t.c_zipcode,
+                        t.c_account_no,
+                        t.c_tin,
+                        t.c_rep_name,
+                        t.c_rep_landline,
+                        t.c_rep_mobile,
+                        t.c_rep_email,
+                        t.c_last_updated
+                    FROM t_buyers_account b
+                    LEFT JOIN t_bci t ON b.c_account_no = t.c_account_no
+                    WHERE b.c_account_no::text ILIKE ?
+                    ORDER BY t.c_last_updated DESC";
+            $param = ["%$location%"];
+        } else {
+            $query = "SELECT 
+                        b.c_b1_last_name, 
+                        b.c_b1_first_name, 
+                        b.c_b1_middle_name,
+                        b.c_tel_no,
+                        b.c_mobile_no,
+                        b.c_email,
+                        b.c_address,
+                        b.c_city_prov,
+                        b.c_zip_code AS c_zipcode,
+                        b.c_account_no,
+                        b.c_tin,
+                        b.c_type,
+                        NULL AS c_rep_name,
+                        NULL AS c_rep_landline,
+                        NULL AS c_rep_mobile,
+                        NULL AS c_rep_email,
+                        NULL AS c_last_updated
+                    FROM t_buyers_account b
+                    WHERE b.c_account_no::text ILIKE ?";
+            $param = ["%$location%"];
+        }
     }
 
     $stmt = odbc_prepare($conn, $query);
@@ -61,7 +121,7 @@ if (isset($_POST['account_no'])) {
         exit;
     }
 
-    $result = odbc_execute($stmt, array($account_no));
+    $result = odbc_execute($stmt, $param);
 
     if (!$result) {
         echo json_encode(["error" => "Query execution failed"]);
@@ -86,7 +146,8 @@ if (isset($_POST['account_no'])) {
             "c_rep_email" => $row['c_rep_email'],
             "c_last_updated" => $row['c_last_updated'],
             "c_accno" => $row['c_account_no'],
-            "c_tin" => $row['c_tin']
+            "c_tin" => $row['c_tin'],
+            "c_type" => $row['c_type']
         ];
     }
 
