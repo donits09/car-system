@@ -33,7 +33,6 @@ function searchBuyer(type) {
 
     var xhr = new XMLHttpRequest();
     var url = 'search_buyer.php';
-
     var params = [];
     formData.forEach(function(value, key) {
         params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));

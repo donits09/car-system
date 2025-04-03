@@ -1,13 +1,10 @@
 <?php
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(1);
-
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
-
 ?>
 <?php
     $c_remarks = '';
@@ -56,7 +53,7 @@ include('../../inc/header.php');
     <div class="card mt-3">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
-            <button id="refresh-tabs" class="btn btn-primary">Refresh</button>
+            <button id="refresh-tabs" class="btn btn-outline-primary"><span class="fa fa-refresh"></span> Refresh</button>
         </div>
     <hr>
         <div class="pd-20">

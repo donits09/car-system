@@ -102,7 +102,7 @@ include('../../inc/header.php');
     <div class="card mt-3">
         <div class="d-flex justify-content-between align-items-center">
             <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
-            <button id="refresh-tabs" class="btn btn-primary">Refresh</button>
+            <button id="refresh-tabs" class="btn btn-outline-primary"><span class="fa fa-refresh"></span> Refresh</button>
         </div>
     <hr>
         <div class="pd-20">
@@ -295,9 +295,13 @@ include('../../inc/header.php');
                                     <label for="title" class="form-label">Title</label>
                                     <input type="text" class="form-control txt" id="buyer_title" name="buyer_title" readonly>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tin" class="form-label">TIN #</label>
+                                    <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
@@ -616,6 +620,7 @@ include('../../inc/header.php');
         </div>
     </div>
 </div>
+</body>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const acctNoInput = document.getElementById('acct_no');

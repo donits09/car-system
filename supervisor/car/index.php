@@ -115,7 +115,10 @@ include('../../inc/header.php');
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
-    <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+            <button id="refresh-tabs" class="btn btn-outline-primary"><span class="fa fa-refresh"></span> Refresh</button>
+        </div>
     <hr>
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
@@ -309,9 +312,13 @@ include('../../inc/header.php');
                                     <label for="title" class="form-label">Title</label>
                                     <input type="text" class="form-control txt" id="buyer_title" name="buyer_title" readonly>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tin" class="form-label">TIN #</label>
+                                    <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
@@ -1187,6 +1194,44 @@ document.addEventListener('DOMContentLoaded', function() {
             calculateTotalORAmount();
         }, 100); 
     });
+});
+</script>
+<script>
+document.getElementById('refresh-tabs').addEventListener('click', function() {
+    var formData = new FormData();
+    var buyer_acc_no = document.getElementById('buyer_acc_no').value;
+    formData.append('acc_no', buyer_acc_no);
+
+    var xhr = new XMLHttpRequest();
+    var url = 'search_buyer.php';
+    var params = [];
+    
+    formData.forEach(function(value, key) {
+        params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    });
+    var queryString = params.join('&');
+
+    xhr.open('GET', url + '?' + queryString, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+                if (Array.isArray(response.data)) {
+                    fillBuyerDetails(response.data[0]);
+                } else {
+                    fillBuyerDetails(response.data);
+                }
+            } else {
+                alert('No data found');
+            }
+            updateCarList();
+            calculateTotalAmount();
+            calculateTotalORAmount();
+        } else {
+            alert('Error: ' + xhr.status);
+        }
+    };
+    xhr.send();
 });
 </script>
 <script src="../../dist/js/table.js"></script>
