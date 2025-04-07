@@ -20,12 +20,21 @@ if (isset($_POST['account_no']) || isset($_POST['location'])) {
                     b.c_account_no,
                     b.c_tin,
                     b.c_type,
-                    NULL AS c_rep_name,
-                    NULL AS c_rep_landline,
-                    NULL AS c_rep_mobile,
-                    NULL AS c_rep_email,
+                    t.c_rep_name,
+                    t.c_rep_landline,
+                    t.c_rep_mobile,
+                    t.c_rep_email,
                     CURRENT_DATE AS c_last_updated 
                 FROM t_buyers_account b
+                LEFT JOIN (
+                    SELECT *
+                    FROM t_bci
+                    WHERE c_last_updated = (
+                        SELECT MAX(c_last_updated)
+                        FROM t_bci t2
+                        WHERE t2.c_account_no = t_bci.c_account_no
+                    )
+                ) t ON b.c_account_no = t.c_account_no
                 WHERE b.c_account_no = ?";
         $param = [$account_no];
     } elseif (!empty($location)) {
@@ -42,12 +51,21 @@ if (isset($_POST['account_no']) || isset($_POST['location'])) {
                     b.c_account_no,
                     b.c_tin,
                     b.c_type,
-                    NULL AS c_rep_name,
-                    NULL AS c_rep_landline,
-                    NULL AS c_rep_mobile,
-                    NULL AS c_rep_email,
+                    t.c_rep_name,
+                    t.c_rep_landline,
+                    t.c_rep_mobile,
+                    t.c_rep_email,
                     CURRENT_DATE AS c_last_updated
                 FROM t_buyers_account b
+                LEFT JOIN (
+                    SELECT *
+                    FROM t_bci
+                    WHERE c_last_updated = (
+                        SELECT MAX(c_last_updated)
+                        FROM t_bci t2
+                        WHERE t2.c_account_no = t_bci.c_account_no
+                    )
+                ) t ON b.c_account_no = t.c_account_no
                 WHERE b.c_account_no::text ILIKE ?";
         $param = ["%$location%"];
     } else {

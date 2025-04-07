@@ -2928,6 +2928,26 @@ Class Master{
 		header('Content-Type: application/json');
 		echo json_encode($resp);
 	}
+
+	function update_tin() {
+		extract($_POST);
+	
+		$resp = array();
+	
+		$update_query = "UPDATE t_buyers_account SET c_tin = '$tin' WHERE c_account_no = '$acc_no'";
+		$save = odbc_exec($this->conn, $update_query);
+	
+		if ($save) {
+			$this->car_logs('TIN Update', "UPDATE - $acc_no - TIN - $tin ");
+			$resp['status'] = 'success';
+			$resp['msg'] = "TIN successfully updated.";
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = odbc_errormsg($this->conn);
+		}
+	
+		echo json_encode($resp);
+	}	
 	
 	public function car_logs($module, $notes){
 		require_once('../auth/session_auth.php');
@@ -2989,6 +3009,9 @@ switch ($action) {
 		break;
 	case 'save_bci':
 		echo $Master->save_bci();
+		break;
+	case 'update_tin':
+		echo $Master->update_tin();
 		break;
 	case 'save_sr':
 		echo $Master->save_sr();
