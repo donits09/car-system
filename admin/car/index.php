@@ -1,13 +1,10 @@
 <?php
 session_start();
-
 require_once('../../inc/check_session.php');
 check_user_group(1);
-
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
-
 ?>
 <?php
     $c_remarks = '';
@@ -54,7 +51,10 @@ include('../../inc/header.php');
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
-    <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+            <button id="refresh-tabs" class="btn btn-outline-primary"><span class="fa fa-refresh"></span> Refresh</button>
+        </div>
     <hr>
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
@@ -169,7 +169,6 @@ include('../../inc/header.php');
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="or-list-tab" data-toggle="tab" href="#or-list" role="tab" aria-controls="or-list" aria-selected="false">Other Fees (OR)</a>
                 </li>
-                
             </ul>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="buyer-details" role="tabpanel" aria-labelledby="buyer-details-tab">
@@ -1277,38 +1276,44 @@ $(document).ready(function() {
 });
 
 </script>
-<!-- <script>
-document.getElementById("eadd").addEventListener("input", function() {
-    validateEmail();
-});
+<script>
+document.getElementById('refresh-tabs').addEventListener('click', function() {
+    var formData = new FormData();
+    var buyer_acc_no = document.getElementById('buyer_acc_no').value;
+    formData.append('acc_no', buyer_acc_no);
 
-function validateEmail() {
-    var email = document.getElementById("eadd").value;
-    var emailError = document.getElementById("emailError");
-
-    var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    var xhr = new XMLHttpRequest();
+    var url = 'search_buyer.php';
+    var params = [];
     
-    if (email === "") {
-        emailError.innerHTML = "";
-        return false;
-    } else if (!emailPattern.test(email)) {
-        emailError.innerHTML = "<strong><em style='font-size: 1em;'>Invalid email format</em></strong>";
-        return false;
-    } else {
-        emailError.innerHTML = ""; 
-        return true;
-    }
-}
+    formData.forEach(function(value, key) {
+        params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    });
+    var queryString = params.join('&');
 
-function validateEmailBeforeSubmit() {
-    if (!validateEmail()) {
-        return false; 
-    }
-    searchBuyer('eadd'); 
-    return false; 
-}
-</script> -->
-
+    xhr.open('GET', url + '?' + queryString, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+                if (Array.isArray(response.data)) {
+                    fillBuyerDetails(response.data[0]);
+                } else {
+                    fillBuyerDetails(response.data);
+                }
+            } else {
+                alert('No data found');
+            }
+            updateCarList();
+            calculateTotalAmount();
+            calculateTotalORAmount();
+        } else {
+            alert('Error: ' + xhr.status);
+        }
+    };
+    xhr.send();
+});
+</script>
 <script src="../../dist/js/table.js"></script>
 <script src="../../dist/js/index.js"></script>
 <script src="../../dist/js/export_scripts.js"></script>

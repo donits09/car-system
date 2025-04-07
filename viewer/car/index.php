@@ -93,7 +93,10 @@ include('../../inc/header.php');
 <body>
 <div class="container mt-5" style="margin-bottom:50px;">
     <div class="card mt-3">
-    <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="text-blue h4">Cash Acknowledgement Receipt of Account</h2>
+            <button id="refresh-tabs" class="btn btn-outline-primary"><span class="fa fa-refresh"></span> Refresh</button>
+        </div>
     <hr>
         <div class="pd-20">
         <!-- Dropdown 'to Par -->
@@ -670,6 +673,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var searchAcc = document.getElementById('searchAcc');
     var searchLoc = document.getElementById('searchLoc');
     var searchName = document.getElementById('searchName');
+    var searchEadd = document.getElementById('searchEadd');
     var paymentRecordContent = document.getElementById('payment-record-content');
 
     if (!paymentRecordTab || !acctNoInput || !searchAcc || !searchLoc || !searchName || !searchEadd || !paymentRecordContent) {
@@ -1003,6 +1007,44 @@ document.addEventListener('DOMContentLoaded', function() {
             calculateTotalORAmount();
         }, 100); 
     });
+});
+</script>
+<script>
+document.getElementById('refresh-tabs').addEventListener('click', function() {
+    var formData = new FormData();
+    var buyer_acc_no = document.getElementById('buyer_acc_no').value;
+    formData.append('acc_no', buyer_acc_no);
+
+    var xhr = new XMLHttpRequest();
+    var url = 'search_buyer.php';
+    var params = [];
+    
+    formData.forEach(function(value, key) {
+        params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+    });
+    var queryString = params.join('&');
+
+    xhr.open('GET', url + '?' + queryString, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            if (response.status === 'success') {
+                if (Array.isArray(response.data)) {
+                    fillBuyerDetails(response.data[0]);
+                } else {
+                    fillBuyerDetails(response.data);
+                }
+            } else {
+                alert('No data found');
+            }
+            updateCarList();
+            calculateTotalAmount();
+            calculateTotalORAmount();
+        } else {
+            alert('Error: ' + xhr.status);
+        }
+    };
+    xhr.send();
 });
 </script>
 <script src="../../dist/js/export_scripts.js"></script>
