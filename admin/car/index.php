@@ -1346,17 +1346,17 @@ $(document).ready(function() {
         });
     });
 </script>
-<!-- <script>
+<script>
 document.getElementById("eadd").addEventListener("input", function() {
     validateEmail();
 });
 
-function validateEmail() {
+/* function validateEmail() {
     var email = document.getElementById("eadd").value;
     var emailError = document.getElementById("emailError");
 
     var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
+} */
 document.getElementById('refresh-tabs').addEventListener('click', function() {
     var formData = new FormData();
     var buyer_acc_no = document.getElementById('buyer_acc_no').value;
