@@ -47,7 +47,23 @@ include('../../inc/header.php');
     max-height: 500px; 
     overflow: hidden; 
 }
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
+#editTinBtn, #saveTinBtn {
+    position: absolute;
+    right: -82px; 
+    top: 35%;
+    transform: translateY(-50%);
+    height: 75%;
+    width: 35%;
+    padding: 0 8px;
+    font-size: 12px;
+    white-space: nowrap;
+}
 </style>
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/table.css">
 <link rel="stylesheet" href="<?php echo base_url; ?>dist/css/index.css">
@@ -251,9 +267,13 @@ include('../../inc/header.php');
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <label for="tin" class="form-label">TIN #</label>
-                                    <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
+                                        <button type="button" class="btn btn-warning btn-sm" id="editTinBtn">Edit</button>
+                                        <button type="button" class="btn btn-success btn-sm d-none" id="saveTinBtn">Save</button>
+                                    </div>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
@@ -752,21 +772,31 @@ document.addEventListener('DOMContentLoaded', function () {
         const exportcsvBtn = document.getElementById('export_csv');
         const exportpdfBtn = document.getElementById('export_pdf');
         const createNewOrBtn = document.getElementById('create_new_or');
-        let initialValue = accnoInput.value; 
-     
+        const editTinBtn = document.getElementById('editTinBtn');
+        let initialValue = accnoInput.value.trim();
+
         function checkValueChange() {
-           
-            if (accnoInput.value !== initialValue) {
-                createNewBtn.disabled = false; 
-                exportcsvBtn.classList.remove('disabled-link'); 
-                exportpdfBtn.classList.remove('disabled-link'); 
-                exportcsvBtn.removeAttribute('disabled'); 
-                exportpdfBtn.removeAttribute('disabled'); 
+            let accnoValue = accnoInput.value.trim();
+
+            if (accnoValue !== initialValue) {
+                createNewBtn.disabled = false;
+                exportcsvBtn.classList.remove('disabled-link');
+                exportpdfBtn.classList.remove('disabled-link');
+                exportcsvBtn.removeAttribute('disabled');
+                exportpdfBtn.removeAttribute('disabled');
                 createNewOrBtn.disabled = false;
-                initialValue = accnoInput.value; 
+                initialValue = accnoValue;
+            }
+
+            if (accnoValue === '') {
+                editTinBtn.disabled = true;
+            } else {
+                editTinBtn.disabled = false;
             }
         }
-        setInterval(checkValueChange, 500); 
+
+        checkValueChange();
+        setInterval(checkValueChange, 500);
     });
 </script>
 <!-- REMARKS FUNCTIONS -->
@@ -1276,6 +1306,45 @@ $(document).ready(function() {
     });
 });
 
+</script>
+<script>
+    $(document).ready(function() {
+        $('#editTinBtn').click(function() {
+            var tinValue = $('#buyer_tin').val().trim();
+            $('#buyer_tin').removeAttr('readonly').focus();
+            $('#editTinBtn').addClass('d-none');
+            $('#saveTinBtn').removeClass('d-none');
+        });
+
+        $('#saveTinBtn').click(function() {
+            var updatedTin = $('#buyer_tin').val().trim();
+
+            if (updatedTin === '') {
+                alert('TIN # field cannot be empty. Please enter a valid TIN.');
+                return;
+            }
+
+            $.ajax({
+                url: '<?php echo base_url; ?>classes/Master.php?f=update_tin',
+                type: 'POST',
+                data: { tin: updatedTin, acc_no: $('#buyer_acc_no').val() },
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp.status === 'success') {
+                        alert_toast('TIN updated successfully!', 'success');
+                        $('#buyer_tin').attr('readonly', true);
+                        $('#editTinBtn').prop('disabled', true);
+                        $('#saveTinBtn').prop('disabled', true);
+                    } else {
+                        alert_toast('Failed to update TIN.', 'error');
+                    }
+                },
+                error: function() {
+                    alert_toast('An error occurred.', 'error');
+                }
+            });
+        });
+    });
 </script>
 <!-- <script>
 document.getElementById("eadd").addEventListener("input", function() {

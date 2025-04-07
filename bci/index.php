@@ -38,11 +38,6 @@ include('../inc/header.php');
                 <div class="col-sm-3">
                     <input type="text" class="form-control txt" id="search-account" placeholder="Account No">
                 </div>
-                <script>
-                document.getElementById("search-account").addEventListener("input", function () {
-                    this.value = this.value.replace(/\D/g, '').slice(0, 11);
-                });
-                </script>
                 <div class="col-auto">
                     <button id="search-btn" class="btn btn-primary">Search</button>
                 </div>
@@ -63,25 +58,33 @@ include('../inc/header.php');
                         ?>
                     </select>
                 </div>
-
                 <div class="col-sm-2">
                     <input type="text" class="form-control txt" id="search-block" placeholder="Block" maxlength="3">
                 </div>
                 <div class="col-sm-2">
                     <input type="text" class="form-control txt" id="search-lot" placeholder="Lot" maxlength="2">
                 </div>
-
-                <script>
-                document.getElementById("search-block").addEventListener("input", function () {
-                    this.value = this.value.replace(/\D/g, '').slice(0, 3);
-                });
-                document.getElementById("search-lot").addEventListener("input", function () {
-                    this.value = this.value.replace(/\D/g, '').slice(0, 2);
-                });
-                </script>
-
                 <div class="col-auto">
                     <button id="search-loc" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+            <p class="text-center fw-bold mt-3" style="font-size: 19px;">Select Last Updated</p>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <table id="c_last_updated_table" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Account No.</th>
+                                <th>Type</th>
+                                <th>Address</th>
+                                <th>Mobile No</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <p class="text-center fw-bold mt-3" style="font-size: 20px;">Client's Info</p>
@@ -123,11 +126,13 @@ include('../inc/header.php');
                     </div>
                     <div class="col-md-4">
                         <label for="c_mno" class="form-label">Mobile No</label>
-                        <input type="text" class="form-control txt" id="c_mno" name="c_mno" value="<?php echo htmlspecialchars("") ?>">
+                        <input type="text" class="form-control txt" id="c_mno" name="c_mno">
+                        <small id="mno_error" class="text-danger"></small>
                     </div>
                     <div class="col-md-4">
                         <label for="c_email" class="form-label">Email Address</label>
-                        <input type="text" class="form-control txt" id="c_email" name="c_email" value="<?php echo htmlspecialchars("") ?>">
+                        <input type="text" class="form-control txt" id="c_email" name="c_email">
+                        <small id="email_error" class="text-danger"></small>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -144,8 +149,8 @@ include('../inc/header.php');
                         <input type="text" class="form-control txt" id="c_zipcode" name="c_zipcode" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                     <div class="col-md-4">
-                        <label for="c_tin" class="form-label">TIN #</label>
-                        <input type="text" class="form-control txt" id="c_tin" name="c_tin" value="<?php echo htmlspecialchars("") ?>">
+                        <!-- <label for="c_tin" class="form-label">TIN #</label> -->
+                        <input type="hidden" class="form-control txt" id="c_tin" name="c_tin" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                 </div>
                 <p class="text-center fw-bold mt-3" style="font-size: 20px;">Representative Info</p>
@@ -170,25 +175,6 @@ include('../inc/header.php');
                         <input type="text" class="form-control txt" id="c_rep_email" name="c_rep_email" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                 </div>
-                <p class="text-center fw-bold mt-3" style="font-size: 19px;">Select Last Updated</p>
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <table id="c_last_updated_table" class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Account No.</th>
-                                    <th>Type</th>
-                                    <th>Address</th>
-                                    <th>Mobile No</th>
-                                    <th>Email</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-primary" id="btnsave" style="float:right;">Save</button>
@@ -201,6 +187,23 @@ include('../inc/header.php');
 <script>
     $(document).ready(function () {
         var allRecords = [];
+
+        // para sa old versions ng browsers ayaw kase gumana nung search-loc hayup yan
+        if (!String.prototype.padStart) {
+            String.prototype.padStart = function(targetLength, padString) {
+                targetLength = targetLength >> 0;
+                padString = String(padString || ' ');
+                if (this.length >= targetLength) {
+                    return String(this);
+                } else {
+                    targetLength = targetLength - this.length;
+                    if (targetLength > padString.length) {
+                        padString += padString.repeat(targetLength / padString.length); 
+                    }
+                    return padString.slice(0, targetLength) + String(this);
+                }
+            };
+        }
 
         $("#search-btn, #search-loc").click(function () {
             var accountNo = $("#search-account").val().trim();
@@ -220,11 +223,11 @@ include('../inc/header.php');
             }
 
             if (block !== "") {
-                block = block.padStart(3, '0');
+                block = ('000' + block).slice(-3);
             }
 
             if (lot !== "") {
-                lot = lot.padStart(2, '0');
+                lot = ('00' + lot).slice(-2);
             }
 
             var location = phase + block + lot;
@@ -272,42 +275,50 @@ include('../inc/header.php');
         });
 
         function populateTable(records) {
+            var table = $("#c_last_updated_table").DataTable();
+            table.clear().destroy();
+
             var tableBody = $("#c_last_updated_table tbody");
             tableBody.empty();
 
             if (records.length === 0) {
-                tableBody.append('<tr><td colspan="4" class="text-center">No records found</td></tr>');
-                return;
+                tableBody.append('<tr><td colspan="6" class="text-center">No records found</td></tr>');
+            } else {
+                records.forEach(function (record, index) {
+                    var formattedDate = record.c_last_updated ? record.c_last_updated.split(" ")[0] : "N/A";
+                    var accno = record.c_accno || "-";
+                    var type = record.c_type || "-";
+                    var address = record.c_address || "-";
+                    var mobileNo = record.c_mno || "-";
+                    var email = record.c_email || "-";
+
+                    var row = $('<tr class="selectable-row"></tr>')
+                        .append('<td>' + formattedDate + '</td>')
+                        .append('<td>' + accno + '</td>')
+                        .append('<td>' + type + '</td>')
+                        .append('<td>' + address + '</td>')
+                        .append('<td>' + mobileNo + '</td>')
+                        .append('<td>' + email + '</td>');
+
+                    row.on("click", function () {
+                        $(".selectable-row").removeClass("table-secondary");
+                        $(this).addClass("table-secondary");
+
+                        $("#c_last_updated").val(formattedDate);
+                        $("#c_mno").val(mobileNo);
+                        $("#c_email").val(email);
+
+                        displayData(records[index]);
+                    });
+
+                    tableBody.append(row);
+                });
             }
 
-            records.forEach(function (record, index) {
-                var formattedDate = record.c_last_updated ? record.c_last_updated.split(" ")[0] : "N/A";
-                var accno = record.c_accno || "N/A";
-                var type = record.c_type || "N/A";
-                var address = record.c_address || "N/A";
-                var mobileNo = record.c_mno || "N/A";
-                var email = record.c_email || "N/A";
-
-                var row = $('<tr class="selectable-row"></tr>')
-                    .append('<td>' + formattedDate + '</td>')
-                    .append('<td>' + accno + '</td>')
-                    .append('<td>' + type + '</td>')
-                    .append('<td>' + address + '</td>')
-                    .append('<td>' + mobileNo + '</td>')
-                    .append('<td>' + email + '</td>');
-
-                row.on("click", function () {
-                    $(".selectable-row").removeClass("table-secondary");
-                    $(this).addClass("table-secondary");
-
-                    $("#c_last_updated").val(formattedDate);
-                    $("#c_mno").val(mobileNo);
-                    $("#c_email").val(email);
-
-                    displayData(records[index]);
-                });
-
-                tableBody.append(row);
+            $('#c_last_updated_table').DataTable({
+                "pageLength": 5,
+                "lengthChange": false,
+                "order": [[0, "desc"]]
             });
         }
 
@@ -334,10 +345,47 @@ include('../inc/header.php');
 
 
     $(document).ready(function() {
-            $('#bci-form').on('submit', function(e) {
-                e.preventDefault(); 
-                var formData = $(this).serialize(); 
-                $.ajax({
+        function isValidMobile(mobile) {
+            const mobilePattern = /^09[0-9]{9}$/;
+            return mobilePattern.test(mobile);
+        }
+
+        function isValidEmail(email) {
+            const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            return emailPattern.test(email);
+        }
+
+        $('#bci-form').on('submit', function(e) {
+            e.preventDefault();
+
+            const mobileVal = $('#c_mno').val().trim();
+            const emailVal = $('#c_email').val().trim();
+            let valid = true;
+
+            if (mobileVal !== "" && !isValidMobile(mobileVal)) {
+                $('#mno_error').text("Mali naman mobile jusku");
+                $('#c_mno').addClass("is-invalid");
+                valid = false;
+            } else {
+                $('#mno_error').text("");
+                $('#c_mno').removeClass("is-invalid");
+            }
+
+            if (emailVal !== "" && !isValidEmail(emailVal)) {
+                $('#email_error').text("Mali rin email ayusin");
+                $('#c_email').addClass("is-invalid");
+                valid = false;
+            } else {
+                $('#email_error').text("");
+                $('#c_email').removeClass("is-invalid");
+            }
+
+            if (!valid) {
+                alert("Invalid mobile number or email address");
+                return;
+            }
+
+            $.ajax({
                 url: '<?php echo base_url; ?>classes/Master.php?f=save_bci',
                 data: new FormData($(this)[0]),
                 cache: false,
@@ -347,7 +395,7 @@ include('../inc/header.php');
                 dataType: 'json',
                 error: function(err) {
                     console.log(err);
-                    alert_toast("An error occurred.", 'error');
+                    alert_toast("Need to put account first", 'error');
                     end_loader();
                 },
                 success: function(resp) {                 
@@ -365,7 +413,7 @@ include('../inc/header.php');
                         alert_toast("An error occurred.", 'error');
                     }
                     end_loader();
-                },
+                }
             });
         });
     });
@@ -426,6 +474,63 @@ include('../inc/header.php');
         searchPhase.addEventListener("change", toggleSearchFields);
         searchBlock.addEventListener("input", toggleSearchFields);
         searchLot.addEventListener("input", toggleSearchFields);
+    });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mobileInput = document.getElementById("c_mno");
+    const emailInput = document.getElementById("c_email");
+    const mnoError = document.getElementById("mno_error");
+    const emailError = document.getElementById("email_error");
+
+    function validateMobile() {
+        const value = mobileInput.value.trim();
+        const mobilePattern = /^09[0-9]{9}$/;
+
+        if (value === "") {
+            mnoError.textContent = "";
+            mobileInput.classList.remove("is-invalid");
+        } else if (!mobilePattern.test(value)) {
+            mnoError.textContent = "Mobile number must start with '09' and be 11 digits long";
+            mobileInput.classList.add("is-invalid");
+        } else {
+            mnoError.textContent = "";
+            mobileInput.classList.remove("is-invalid");
+        }
+    }
+
+    function validateEmail() {
+        const value = emailInput.value.trim();
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        if (value === "") {
+            emailError.textContent = "";
+            emailInput.classList.remove("is-invalid");
+        } else if (!emailPattern.test(value)) {
+            emailError.textContent = "Enter a valid email address with '@'";
+            emailInput.classList.add("is-invalid");
+        } else {
+            emailError.textContent = "";
+            emailInput.classList.remove("is-invalid");
+        }
+    }
+
+    mobileInput.addEventListener("input", validateMobile);
+    emailInput.addEventListener("input", validateEmail);
+});
+</script>
+<script>
+    document.getElementById("search-account").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 11);
+    });
+    document.getElementById("search-block").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 3);
+    });
+    document.getElementById("search-lot").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 2);
+    });
+    document.getElementById("c_mno").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 11);
     });
 </script>
 </body>
