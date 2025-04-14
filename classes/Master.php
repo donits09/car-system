@@ -1351,21 +1351,13 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
-		/* $c_vat_sales = str_replace(',', '', $c_vat_sales);
-		$c_vat_amount = str_replace(',', '', $c_vat_amount);
-		$c_ewt = str_replace(',', '', $c_ewt); */
-		// $atap_id = $_POST['atap_id_or'];
-		// $c_tran_type = $_POST['atap_val'];
 		
 		$atap_id = $_POST['c_atap_no_or'];
 		$atap_val = $_POST['atap_id_or'];
 
-
 		if ($c_check_no == '' || $c_check_no == null){
 			$c_check_no = $c_ref_no;
 		}
-		
-		/* Nag add lang me here -DhenDwen */
 		if ($c_mop_or == 1) {
 			$c_bank = "";
 		} elseif ($c_mop_or == 2) {
@@ -1429,8 +1421,8 @@ Class Master{
 				exit;
 			}
 		}
-
-		$maxIdQuery = "SELECT COALESCE(MAX(id), 0) + 1 AS max_id FROM t_car_payment";
+		
+		$maxIdQuery = "SELECT COALESCE(MAX(id), 0) + 1 AS max_id FROM t_or_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 
 		if ($maxIdResult) {
@@ -1440,12 +1432,9 @@ Class Master{
 			$maxId = 1;
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
-
 	
 		$data = "id, c_or_no, c_name, c_phase, c_block, c_lot";
-		$values = "'$maxId', '$c_or_no', '$c_name', '$c_phase', '$c_block', '$c_lot'";
 
-		/* computation of vat */
 		if ($c_vat_selected == 1) {
 			$c_vatsales = round($c_or_amount / 1.12, 2);
 			$c_vatamount = round($c_or_amount - $c_vatsales, 2);
@@ -1471,18 +1460,18 @@ Class Master{
 				'" . (!empty($c_vatamount) ? $c_vatamount : '0') . "', 
 				'" . (!empty($c_vatselected) ? $c_vatselected : '0') . "', 
 				'" . (!empty($c_ewt) ? $c_ewt : '0') . "'";
-
-	
 		$resp = array();
 	
 		if (empty($id)) {
+			$insert1 = "INSERT INTO t_or_payment ($data1) VALUES ($values1) RETURNING id";
+			$result = odbc_exec($this->conn, $insert1);
+			if ($result && odbc_fetch_row($result)) {
+				$generatedId = odbc_result($result, 'id');
+				$insert = "INSERT INTO t_other_or_payment ($data) VALUES ('$generatedId', '$c_or_no', '$c_name', '$c_phase', '$c_block', '$c_lot')";
+				$save = odbc_exec($this->conn, $insert);
+			}
 
-			$insert = "INSERT INTO t_other_or_payment ($data) VALUES ($values)";
-			$insert1 = "INSERT INTO t_or_payment ($data1) VALUES ($values1)";
-			$save = odbc_exec($this->conn, $insert);
-			$save1 = odbc_exec($this->conn, $insert1);
-	
-			if ($save && $save1) {
+			if ($save && $result) {
 				if (!empty($atap_id)) {
 					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1, c_car_no ='$c_or_no' WHERE id = '$atap_val'";
 					$update_tran_type_result = odbc_exec($this->conn, $update_tran_type);
@@ -1491,28 +1480,7 @@ Class Master{
 						$resp['err'] = odbc_errormsg($this->conn);
 					}
 				}
-				// if (!empty($c_atap_no)) {
-				// 	$check_items = "SELECT COUNT(*) AS count_items FROM t_atap_items WHERE c_atap_no = '$c_atap_no' AND atap_status = 0";
-				// 	$check_items_result = odbc_exec($this->conn, $check_items);
-				
-				// 	if ($check_items_result) {
-				// 		$row = odbc_fetch_array($check_items_result);
-				// 		$count_items = $row['count_items'];
-				
-				// 		if ($count_items > 0) {
-				// 			$update_atap = "UPDATE t_atap SET status = 2 WHERE c_atap_no = '$c_atap_no'";
-				// 		} else {
-						
-				// 			$update_atap = "UPDATE t_atap SET status = 1 WHERE c_atap_no = '$c_atap_no'";
-				// 		}
-				
-				// 		$update = odbc_exec($this->conn, $update_atap);
-				// 	} else {
-				// 		$update = false;
-				// 	}
-				// } else {
-				// 	$update = true;
-				// }
+			
 				if (!empty($atap_id)) {
 					$check_items = "SELECT COUNT(*) AS count_items FROM t_atap_items WHERE c_atap_no = '$atap_id' AND atap_status = 0";
 					$check_items_result = odbc_exec($this->conn, $check_items);
