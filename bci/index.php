@@ -29,7 +29,7 @@ include('../inc/header.php');
 <div class="container mt-5">
     <div class="card mt-3">
         <div class="pd-20">
-            <h2 class="text-blue h4">Buyer's Contact Info</h2>
+            <h2 class="text-blue h4">Client's Contact Info</h2>
             <hr>
         </div>
         <div class="m-3">
@@ -66,25 +66,6 @@ include('../inc/header.php');
                 </div>
                 <div class="col-auto">
                     <button id="search-loc" class="btn btn-primary">Search</button>
-                </div>
-            </div>
-            <p class="text-center fw-bold mt-3" style="font-size: 19px;">Select Last Updated</p>
-            <div class="row mt-3">
-                <div class="col-md-12">
-                    <table id="c_last_updated_table" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Account No.</th>
-                                <th>Type</th>
-                                <th>Address</th>
-                                <th>Mobile No</th>
-                                <th>Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
                 </div>
             </div>
             <p class="text-center fw-bold mt-3" style="font-size: 20px;">Client's Info</p>
@@ -148,10 +129,6 @@ include('../inc/header.php');
                         <label for="c_zipcode" class="form-label">Zip Code</label>
                         <input type="text" class="form-control txt" id="c_zipcode" name="c_zipcode" value="<?php echo htmlspecialchars("") ?>">
                     </div>
-                    <div class="col-md-4">
-                        <!-- <label for="c_tin" class="form-label">TIN #</label> -->
-                        <input type="hidden" class="form-control txt" id="c_tin" name="c_tin" value="<?php echo htmlspecialchars("") ?>">
-                    </div>
                 </div>
                 <p class="text-center fw-bold mt-3" style="font-size: 20px;">Representative Info</p>
                 <hr>
@@ -166,13 +143,32 @@ include('../inc/header.php');
                     </div>
                     <div class="col-md-4">
                         <label for="c_rep_mobile" class="form-label">Mobile No</label>
-                        <input type="text" class="form-control txt" id="c_rep_mobile" name="c_rep_mobile" value="<?php echo htmlspecialchars("") ?>">
+                        <input type="number" class="form-control txt" id="c_rep_mobile" name="c_rep_mobile" value="<?php echo htmlspecialchars("") ?>">
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <label for="c_rep_email" class="form-label">Email Address</label>
                         <input type="text" class="form-control txt" id="c_rep_email" name="c_rep_email" value="<?php echo htmlspecialchars("") ?>">
+                    </div>
+                </div>
+                <p class="text-center fw-bold mt-3" style="font-size: 19px;">Select Last Updated</p>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <table id="c_last_updated_table" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Account No.</th>
+                                    <th>Type</th>
+                                    <th>Address</th>
+                                    <th>Mobile No</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -338,7 +334,6 @@ include('../inc/header.php');
             $("#c_rep_email").val(data.c_rep_email);
             $("#c_last_updated").val(data.c_last_updated);
             $("#c_accno").val(data.c_accno);
-            $("#c_tin").val(data.c_tin);
             $("#c_type").val(data.c_type);
         }
     });
@@ -402,9 +397,9 @@ include('../inc/header.php');
                     console.log(resp);
                     if (resp && resp.status === 'success') {
                         alert_toast(resp.msg, 'success');
-                        setTimeout(function() {
-                            updateBuyerInfo();
-                        }, 300);
+                        setTimeout(function () {
+                            $("#search-loc").click();
+                        }, 1000);
                     } else if (resp && resp.status === 'failed' && resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');
                     } else if (resp && resp.status === 'not_found') {
@@ -530,6 +525,9 @@ document.addEventListener("DOMContentLoaded", function () {
         this.value = this.value.replace(/\D/g, '').slice(0, 2);
     });
     document.getElementById("c_mno").addEventListener("input", function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 11);
+    });
+    document.getElementById("c_rep_mobile").addEventListener("input", function () {
         this.value = this.value.replace(/\D/g, '').slice(0, 11);
     });
 </script>

@@ -1430,7 +1430,7 @@ Class Master{
 			}
 		}
 
-		$maxIdQuery = "SELECT COALESCE(MAX(id), 0) + 1 AS max_id FROM t_car_payment";
+		$maxIdQuery = "SELECT COALESCE(MAX(id), 0) + 1 AS max_id FROM t_other_or_payment";
 		$maxIdResult = odbc_exec($this->conn, $maxIdQuery);
 
 		if ($maxIdResult) {
@@ -2257,8 +2257,8 @@ Class Master{
 		$c_encode_date = date('Y-m-d');
 		$c_bci_type = 0;
 	
-		$data = "c_account_no,c_last_updated,c_mobile_no,c_tel_no,c_email,c_rep_name,c_rep_mobile,c_rep_landline,c_rep_email,c_encode_date,c_bci_type,c_address,c_city_prov,c_zipcode,c_tin";
-		$values = "$c_accno, '$c_encode_date', '$c_mno', '$c_lno', '$c_email', '$c_rep_name', '$c_rep_mobile', '$c_rep_landline', '$c_rep_email', '$c_encode_date', $c_bci_type, '$c_address', '$c_prov', '$c_zipcode', '$c_tin'";
+		$data = "c_account_no,c_last_updated,c_mobile_no,c_tel_no,c_email,c_rep_name,c_rep_mobile,c_rep_landline,c_rep_email,c_encode_date,c_bci_type,c_address,c_city_prov,c_zipcode";
+		$values = "$c_accno, '$c_encode_date', '$c_mno', '$c_lno', '$c_email', '$c_rep_name', '$c_rep_mobile', '$c_rep_landline', '$c_rep_email', '$c_encode_date', $c_bci_type, '$c_address', '$c_prov', '$c_zipcode'";
 	
 		$resp = array();
 	
@@ -2278,8 +2278,7 @@ Class Master{
 				c_encode_date = '$c_encode_date', 
 				c_address = '$c_address', 
 				c_city_prov = '$c_prov', 
-				c_zipcode = '$c_zipcode', 
-				c_tin = '$c_tin',
+				c_zipcode = '$c_zipcode',
 				c_last_updated = '$c_encode_date'
 				WHERE c_account_no = '$c_accno' AND c_last_updated = '$c_encode_date'";
 			$save = odbc_exec($this->conn, $update_query);
@@ -2289,7 +2288,7 @@ Class Master{
 		}
 	
 		$update_buyer_query = "UPDATE t_buyers_account SET c_tel_no = '$c_lno', c_mobile_no = '$c_mno', c_email = '$c_email',
-		c_address = '$c_address', c_city_prov = '$c_prov', c_zip_code = '$c_zipcode', c_tin = '$c_tin' WHERE c_account_no = '$c_accno'";
+		c_address = '$c_address', c_city_prov = '$c_prov', c_zip_code = '$c_zipcode' WHERE c_account_no = '$c_accno'";
 		$save_2 = odbc_exec($this->conn, $update_buyer_query);
 	
 		if ($save && $save_2) {
