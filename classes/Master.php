@@ -1217,18 +1217,47 @@ Class Master{
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
 		$data = "id, c_car_no, c_name, c_phase, c_block, c_lot";
+
 		$c_account_no = '';
 		$data1 = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
 		$values1 = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks'," . (!empty($c_atap_no) ? "'$c_atap_no'" : 0);
 		$resp = array();
+
 		if (empty($id)) {
 			$insert1 = "INSERT INTO t_car_payment ($data1) VALUES ($values1) RETURNING id";
 			$result = odbc_exec($this->conn, $insert1);
+
 			if ($result && odbc_fetch_row($result)) {
 				$generatedId = odbc_result($result, 'id');
+				
 				$insert = "INSERT INTO t_other_car_payment ($data) VALUES ('$generatedId', '$c_car_no', '$c_name', '$c_phase', '$c_block', '$c_lot') RETURNING id";
 				$save = odbc_exec($this->conn, $insert);
+
+				$checkCar = "SELECT COUNT(*) AS count FROM t_car_payment WHERE id = '$generatedId'";
+				$checkCarResult = odbc_exec($this->conn, $checkCar);
+				
+				if ($checkCarResult && odbc_fetch_row($checkCarResult)) {
+					$countCar = odbc_result($checkCarResult, 'count');
+		
+					if ($countCar > 1) {
+						$deleteCar = "DELETE FROM t_car_payment WHERE id = '$generatedId' and c_car_no='$c_car_no' LIMIT " . ($countcar - 1);
+						odbc_exec($this->conn, $deleteCar);
+					}
+				}
+
+				$checkOther = "SELECT COUNT(*) AS count FROM t_other_car_payment WHERE id = '$generatedId'";
+				$checkOtherResult = odbc_exec($this->conn, $checkOther);
+		
+				if ($checkOtherResult && odbc_fetch_row($checkOtherResult)) {
+					$countOther = odbc_result($checkOtherResult, 'count');
+
+					if ($countOther > 1) {
+						$deleteOther = "DELETE FROM t_other_car_payment WHERE id = '$generatedId' and c_car_no='$c_car_no' LIMIT " . ($countOther - 1);
+						odbc_exec($this->conn, $deleteOther);
+					}
+				}
 			}
+			
 			if ($save && $result) {
 				if (!empty($atap_id)) {
 					$update_tran_type = "UPDATE t_atap_items SET atap_status = 1, c_car_no ='$c_car_no' WHERE id = '$atap_id'";
@@ -1439,10 +1468,39 @@ Class Master{
 		if (empty($id)) {
 			$insert1 = "INSERT INTO t_or_payment ($data1) VALUES ($values1) RETURNING id";
 			$result = odbc_exec($this->conn, $insert1);
+			
 			if ($result && odbc_fetch_row($result)) {
 				$generatedId = odbc_result($result, 'id');
+		
 				$insert = "INSERT INTO t_other_or_payment ($data) VALUES ('$generatedId', '$c_or_no', '$c_name', '$c_phase', '$c_block', '$c_lot') RETURNING id";
 				$save = odbc_exec($this->conn, $insert);
+		
+				$insert = "INSERT INTO t_other_or_payment ($data) VALUES ('$generatedId', '$c_or_no', '$c_name', '$c_phase', '$c_block', '$c_lot') RETURNING id";
+				$save = odbc_exec($this->conn, $insert);
+				
+				$checkOr = "SELECT COUNT(*) AS count FROM t_or_payment WHERE id = '$generatedId'";
+				$checkOrResult = odbc_exec($this->conn, $checkOr);
+				
+				if ($checkOrResult && odbc_fetch_row($checkOrResult)) {
+					$countOr = odbc_result($checkOrResult, 'count');
+		
+					if ($countOr > 1) {
+						$deleteOr = "DELETE FROM t_or_payment WHERE id = '$generatedId' and c_or_no='$c_or_no' LIMIT " . ($countOr - 1);
+						odbc_exec($this->conn, $deleteOr);
+					}
+				}
+		
+				$checkOther = "SELECT COUNT(*) AS count FROM t_other_or_payment WHERE id = '$generatedId'";
+				$checkOtherResult = odbc_exec($this->conn, $checkOther);
+		
+				if ($checkOtherResult && odbc_fetch_row($checkOtherResult)) {
+					$countOther = odbc_result($checkOtherResult, 'count');
+
+					if ($countOther > 1) {
+						$deleteOther = "DELETE FROM t_other_or_payment WHERE id = '$generatedId' and c_or_no='$c_or_no' LIMIT " . ($countOther - 1);
+						odbc_exec($this->conn, $deleteOther);
+					}
+				}
 			}
 
 			if ($save && $result) {
