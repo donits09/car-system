@@ -269,7 +269,7 @@ include('../../inc/header.php');
                                 <div class="col-md-3">
                                     <label for="tin" class="form-label">TIN #</label>
                                     <div class="input-group">
-                                        <input type="number" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
+                                        <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
                                         <button type="button" class="btn btn-warning btn-sm" id="editTinBtn">Edit</button>
                                         <button type="button" class="btn btn-success btn-sm d-none" id="saveTinBtn">Save</button>
                                     </div>
@@ -1307,21 +1307,28 @@ $(document).ready(function() {
 
 </script>
 <script>
-
     $(document).ready(function() {
         $('#editTinBtn').click(function() {
             var tinValue = $('#buyer_tin').val().trim();
             $('#buyer_tin').removeAttr('readonly').focus();
             $('#editTinBtn').addClass('d-none');
             $('#saveTinBtn').removeClass('d-none');
+
+            $('#buyer_tin').on('input', function () {
+                let raw = $(this).val().replace(/\D/g, '');
+                raw = raw.substring(0, 12);
+                let formatted = raw.replace(/(\d{3})(?=\d)/g, '$1-');
+                $(this).val(formatted);
+            });
         });
 
         $('#saveTinBtn').click(function() {
-            var updatedTin = $('#buyer_tin').val().trim();
+            var updatedTin = $('#buyer_tin').val().replace(/-/g, '').trim();
 
             if (updatedTin === '') {
-                alert('TIN # field cannot be empty. Please enter a valid TIN.');
-                return;
+                if (!confirm('Are you sure you want to leave the TIN field empty?')) {
+                    return;
+                }
             }
 
             $.ajax({
@@ -1382,6 +1389,11 @@ document.getElementById('refresh-tabs').addEventListener('click', function() {
                 } else {
                     fillBuyerDetails(response.data);
                 }
+                document.getElementById('buyer_tin').readOnly = true;
+                document.getElementById('editTinBtn').disabled = false;
+                document.getElementById('editTinBtn').classList.remove('d-none');
+                document.getElementById('saveTinBtn').disabled = false;
+                document.getElementById('saveTinBtn').classList.add('d-none');
             } else {
                 alert('No data found');
             }
