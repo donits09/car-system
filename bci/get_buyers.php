@@ -25,7 +25,6 @@ if (isset($_POST['account_no'])) {
                         t.c_city_prov,
                         t.c_zipcode,
                         t.c_account_no,
-                        t.c_tin,
                         t.c_rep_name,
                         t.c_rep_landline,
                         t.c_rep_mobile,
@@ -48,7 +47,6 @@ if (isset($_POST['account_no'])) {
                         b.c_city_prov,
                         b.c_zip_code AS c_zipcode,
                         b.c_account_no,
-                        b.c_tin,
                         b.c_type,
                         NULL AS c_rep_name,
                         NULL AS c_rep_landline,
@@ -78,7 +76,6 @@ if (isset($_POST['account_no'])) {
                         t.c_city_prov,
                         t.c_zipcode,
                         t.c_account_no,
-                        t.c_tin,
                         t.c_rep_name,
                         t.c_rep_landline,
                         t.c_rep_mobile,
@@ -101,7 +98,6 @@ if (isset($_POST['account_no'])) {
                         b.c_city_prov,
                         b.c_zip_code AS c_zipcode,
                         b.c_account_no,
-                        b.c_tin,
                         b.c_type,
                         NULL AS c_rep_name,
                         NULL AS c_rep_landline,
@@ -146,7 +142,6 @@ if (isset($_POST['account_no'])) {
             "c_rep_email" => $row['c_rep_email'],
             "c_last_updated" => $row['c_last_updated'],
             "c_accno" => $row['c_account_no'],
-            "c_tin" => $row['c_tin'],
             "c_type" => $row['c_type']
         ];
     }

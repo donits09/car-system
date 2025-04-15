@@ -2,6 +2,13 @@
 session_start();
 include('../config.php');
 
+header('Content-Type: application/json');
+
+if (!$conn) {
+    echo json_encode(["error" => "Database connection failed"]);
+    exit;
+}
+
 if (isset($_POST['account_no']) || isset($_POST['location'])) {
     $account_no = trim($_POST['account_no']);
     $location = trim($_POST['location']);
@@ -18,7 +25,6 @@ if (isset($_POST['account_no']) || isset($_POST['location'])) {
                     b.c_city_prov,
                     b.c_zip_code AS c_zipcode,
                     b.c_account_no,
-                    b.c_tin,
                     b.c_type,
                     t.c_rep_name,
                     t.c_rep_landline,
@@ -27,16 +33,13 @@ if (isset($_POST['account_no']) || isset($_POST['location'])) {
                     CURRENT_DATE AS c_last_updated 
                 FROM t_buyers_account b
                 LEFT JOIN (
-                    SELECT *
+                    SELECT DISTINCT ON (c_account_no) *
                     FROM t_bci
-                    WHERE c_last_updated = (
-                        SELECT MAX(c_last_updated)
-                        FROM t_bci t2
-                        WHERE t2.c_account_no = t_bci.c_account_no
-                    )
+                    ORDER BY c_account_no, c_last_updated DESC
                 ) t ON b.c_account_no = t.c_account_no
                 WHERE b.c_account_no = ?";
         $param = [$account_no];
+
     } elseif (!empty($location)) {
         $query = "SELECT 
                     b.c_b1_last_name, 
@@ -49,32 +52,28 @@ if (isset($_POST['account_no']) || isset($_POST['location'])) {
                     b.c_city_prov,
                     b.c_zip_code AS c_zipcode,
                     b.c_account_no,
-                    b.c_tin,
                     b.c_type,
                     t.c_rep_name,
                     t.c_rep_landline,
                     t.c_rep_mobile,
                     t.c_rep_email,
-                    CURRENT_DATE AS c_last_updated
+                    CURRENT_DATE AS c_last_updated 
                 FROM t_buyers_account b
                 LEFT JOIN (
-                    SELECT *
+                    SELECT DISTINCT ON (c_account_no) *
                     FROM t_bci
-                    WHERE c_last_updated = (
-                        SELECT MAX(c_last_updated)
-                        FROM t_bci t2
-                        WHERE t2.c_account_no = t_bci.c_account_no
-                    )
+                    ORDER BY c_account_no, c_last_updated DESC
                 ) t ON b.c_account_no = t.c_account_no
-                WHERE b.c_account_no::text ILIKE ?";
-        $param = ["%$location%"];
+                WHERE LEFT(CAST(b.c_account_no AS VARCHAR), 8) = ?";
+        $param = [$location];
+
     } else {
         echo json_encode(["error" => "No valid input provided"]);
         exit;
     }
 
     $stmt = odbc_prepare($conn, $query);
-    
+
     if (!$stmt) {
         echo json_encode(["error" => "Query preparation failed"]);
         exit;
@@ -105,7 +104,6 @@ if (isset($_POST['account_no']) || isset($_POST['location'])) {
             "c_rep_email" => $row['c_rep_email'],
             "c_last_updated" => $row['c_last_updated'],
             "c_accno" => $row['c_account_no'],
-            "c_tin" => $row['c_tin'],
             "c_type" => $row['c_type']
         ];
     }

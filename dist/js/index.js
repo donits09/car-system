@@ -161,7 +161,9 @@ function fillBuyerDetails(data) {
     }
     document.getElementById('buyer_email').value = data.c_email;
     document.getElementById('buyer_mobile').value = data.c_mobile_no;
-    document.getElementById('buyer_tin').value = data.c_tin;
+    /* document.getElementById('buyer_tin').value = data.c_tin; */
+    let tin = data.c_tin.toString().replace(/(\d{3})(?=\d)/g, '$1-');
+    document.getElementById('buyer_tin').value = tin;
 
     var c_lid = data.c_account_no.substring(0, 8);
     var phase = data.c_account_no.substring(0, 3);
@@ -369,7 +371,9 @@ function selectBuyer(buyer) {
     }
     document.getElementById('buyer_email').value = buyer.c_email;
     document.getElementById('buyer_mobile').value = buyer.c_mobile_no;
-    document.getElementById('buyer_tin').value = buyer.c_tin;
+    /* document.getElementById('buyer_tin').value = buyer.c_tin; */
+    let tin = buyer.c_tin.toString().replace(/(\d{3})(?=\d)/g, '$1-');
+    document.getElementById('buyer_tin').value = tin;
 
     var phase = buyer.c_account_no.substring(0, 3);
     var block = buyer.c_account_no.substring(3, 6).replace(/^0+/, ''); 
