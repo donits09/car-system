@@ -7,7 +7,14 @@ check_user_group(4);
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');     
-
+/* $allow_tin_edit = ($_SESSION['user_group'] === '4' && $_SESSION['user_department'] === 'Documentation'); */
+$allow_tin_edit = (
+    $_SESSION['user_group'] === '4' &&
+    (
+        $_SESSION['user_department'] === 'Documentation' ||
+        $_SESSION['user_department'] === 'Information Technology'
+    )
+);
 ?>
 <?php
     $c_remarks = '';
@@ -88,6 +95,23 @@ include('../../inc/header.php');
         pointer-events: none; 
         opacity: 0.5; 
         cursor: not-allowed; 
+    }
+    .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    #editTinBtn, #saveTinBtn {
+        position: absolute;
+        right: -82px; 
+        top: 35%;
+        transform: translateY(-50%);
+        height: 75%;
+        width: 35%;
+        padding: 0 8px;
+        font-size: 12px;
+        white-space: nowrap;
     }
 </style>
 <body>
@@ -294,10 +318,26 @@ include('../../inc/header.php');
                                     <label for="title" class="form-label">Title</label>
                                     <input type="text" class="form-control txt" id="buyer_title" name="buyer_title" readonly>
                                 </div>
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
                                 </div>
+                                <?php if (!$allow_tin_edit): ?>
+                                    <div class="col-md-4">
+                                        <label for="tin" class="form-label">TIN #</label>
+                                        <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if ($allow_tin_edit): ?>
+                                    <div class="col-md-3">
+                                        <label for="tin" class="form-label">TIN #</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
+                                            <button type="button" class="btn btn-warning btn-sm" id="editTinBtn">Edit</button>
+                                            <button type="button" class="btn btn-success btn-sm d-none" id="saveTinBtn">Save</button>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
                                         Remarks 
@@ -727,6 +767,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('DOMContentLoaded', function() {
         const accnoInput = document.getElementById('accno');
         const createNewBtn = document.getElementById('create_new_atap');
+        const editTinBtn = document.getElementById('editTinBtn');
         let initialValue = accnoInput.value; 
      
         function checkValueChange() {
@@ -734,6 +775,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (accnoInput.value !== initialValue) {
                 createNewBtn.disabled = false; 
                 initialValue = accnoInput.value; 
+            }
+
+            if (accnoInput.value === '') {
+                editTinBtn.disabled = true;
+            } else {
+                editTinBtn.disabled = false;
             }
         }
 
@@ -1010,6 +1057,56 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
+    $(document).ready(function() {
+        $('#editTinBtn').click(function() {
+            var tinValue = $('#buyer_tin').val().trim();
+            $('#buyer_tin').removeAttr('readonly').focus();
+            $('#editTinBtn').addClass('d-none');
+            $('#saveTinBtn').removeClass('d-none');
+
+            $('#buyer_tin').on('input', function () {
+                let raw = $(this).val().replace(/\D/g, '');
+                raw = raw.substring(0, 12);
+                let formatted = raw.replace(/(\d{3})(?=\d)/g, '$1-');
+                $(this).val(formatted);
+            });
+        });
+
+        $('#saveTinBtn').click(function() {
+            var updatedTin = $('#buyer_tin').val().replace(/-/g, '').trim();
+
+            if (updatedTin === '') {
+                if (!confirm('Are you sure you want to leave the TIN field empty?')) {
+                    return;
+                }
+            }else if (updatedTin.length !== 12) {
+                alert_toast('TIN must be exactly 12 digits.', 'error');
+                return;
+            }
+
+            $.ajax({
+                url: '<?php echo base_url; ?>classes/Master.php?f=update_tin',
+                type: 'POST',
+                data: { tin: updatedTin, acc_no: $('#buyer_acc_no').val() },
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp.status === 'success') {
+                        alert_toast('TIN updated successfully!', 'success');
+                        $('#buyer_tin').attr('readonly', true);
+                        $('#editTinBtn').prop('disabled', true);
+                        $('#saveTinBtn').prop('disabled', true);
+                    } else {
+                        alert_toast('Failed to update TIN.', 'error');
+                    }
+                },
+                error: function() {
+                    alert_toast('An error occurred.', 'error');
+                }
+            });
+        });
+    });
+</script>
+<script>
 document.getElementById('refresh-tabs').addEventListener('click', function() {
     var formData = new FormData();
     var buyer_acc_no = document.getElementById('buyer_acc_no').value;
@@ -1034,6 +1131,11 @@ document.getElementById('refresh-tabs').addEventListener('click', function() {
                 } else {
                     fillBuyerDetails(response.data);
                 }
+                document.getElementById('buyer_tin').readOnly = true;
+                document.getElementById('editTinBtn').disabled = false;
+                document.getElementById('editTinBtn').classList.remove('d-none');
+                document.getElementById('saveTinBtn').disabled = false;
+                document.getElementById('saveTinBtn').classList.add('d-none');
             } else {
                 alert('No data found');
             }

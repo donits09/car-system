@@ -16,8 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $hashed_password = $user_data['c_password'];
 
         if (password_verify($password, $hashed_password)) {
-            $c_group = $user_data['c_group'];
-            initialize_session($username, $c_group);
+            $user_group = $user_data['c_group'];
+            $user_department = $user_data['c_department'];
+            initialize_session($username, $user_group, $user_department);
             check_session();
         } else {
             $error = "Invalid username or password";

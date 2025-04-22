@@ -4,13 +4,14 @@ session_start();
 require_once('../classes/Master.php');
 
 
-function initialize_session($username, $user_group) {
+function initialize_session($username, $user_group, $user_department) {
     $_SESSION['username'] = $username;
     $_SESSION['user_group'] = $user_group;
+    $_SESSION['user_department'] = $user_department;
 
     $master = new Master();
     $module = "Car Log In";
-    $notes = "USER LOGGED - $username";
+    $notes = "USER LOGGED - $username - $user_department";
     $master->car_logs($module, $notes);
 }
 
