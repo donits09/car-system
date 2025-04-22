@@ -399,6 +399,7 @@ include('../inc/header.php');
                         alert_toast(resp.msg, 'success');
                         setTimeout(function () {
                             $("#search-loc").click();
+                            $("#search-btn").click();
                         }, 1000);
                     } else if (resp && resp.status === 'failed' && resp.err) {
                         alert_toast("An error occurred: " + resp.err, 'error');
@@ -413,7 +414,7 @@ include('../inc/header.php');
         });
     });
 
-    function updateBuyerInfo() {
+    /* function updateBuyerInfo() {
         var accountNo = $("#search-account").val();
 
         if (!accountNo) {
@@ -441,7 +442,7 @@ include('../inc/header.php');
                 console.error("Fetch error:", error);
             });
     }
-
+ */
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

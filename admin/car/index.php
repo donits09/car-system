@@ -4,7 +4,9 @@ require_once('../../inc/check_session.php');
 check_user_group(1);
 require_once('../../config.php');
 include('../../inc/navbar.php');    
-include('../../inc/header.php');     
+include('../../inc/header.php');
+$allow_tin_edit = ($_SESSION['user_group'] === '1' && $_SESSION['user_department'] === 'Information Technology');
+/* $allow_tin_edit = ($_SESSION['user_group'] === '1' && $_SESSION['username'] === '10157'); */
 ?>
 <?php
     $c_remarks = '';
@@ -266,14 +268,22 @@ include('../../inc/header.php');
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="tin" class="form-label">TIN #</label>
-                                    <div class="input-group">
+                                <?php if (!$allow_tin_edit): ?>
+                                    <div class="col-md-4">
+                                        <label for="tin" class="form-label">TIN #</label>
                                         <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
-                                        <button type="button" class="btn btn-warning btn-sm" id="editTinBtn">Edit</button>
-                                        <button type="button" class="btn btn-success btn-sm d-none" id="saveTinBtn">Save</button>
                                     </div>
-                                </div>
+                                <?php endif; ?>
+                                <?php if ($allow_tin_edit): ?>
+                                    <div class="col-md-3">
+                                        <label for="tin" class="form-label">TIN #</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
+                                            <button type="button" class="btn btn-warning btn-sm" id="editTinBtn">Edit</button>
+                                            <button type="button" class="btn btn-success btn-sm d-none" id="saveTinBtn">Save</button>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
                                         Remarks 
@@ -1329,6 +1339,9 @@ $(document).ready(function() {
                 if (!confirm('Are you sure you want to leave the TIN field empty?')) {
                     return;
                 }
+            }else if (updatedTin.length !== 12) {
+                alert_toast('TIN must be exactly 12 digits.', 'error');
+                return;
             }
 
             $.ajax({
