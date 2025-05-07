@@ -11,7 +11,7 @@ include('../../inc/header.php');
 $allow_tin_edit = (
     $_SESSION['user_group'] === '4' &&
     (
-        $_SESSION['user_department'] === 'Documentation' ||
+        /* $_SESSION['user_department'] === 'Documentation' || */
         $_SESSION['user_department'] === 'Information Technology'
     )
 );
