@@ -864,19 +864,15 @@ Class Master{
 			$maxId = 1;
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
-
 		$data = "id, c_account_no, c_car_type, c_car_no, c_car_paydate, c_car_amount, c_encoded_by, c_tran_date, c_tran_updated, c_mop, c_bank, c_check_no, c_remarks, c_atap_no";
 		$values = "'$maxId', '$c_account_no', '$c_tran_type', '$c_car_no', '$c_car_paydate', '$c_car_amount', '$c_encoded_by', '$c_tran_date', '$c_tran_date', '$c_mop', '$c_bank', '$c_check_no', '$c_remarks', " . (!empty($c_atap_no) ? "'$c_atap_no'" : 0);
-	
 		$resp = array();
-	
 		if (empty($id)) {
 			//for ($i = 0; $i < 2; $i++) {
 				$this->car_logs('Car Management', "ADDED - CAR#$c_car_no");
 				$insert = "INSERT INTO t_car_payment ($data) VALUES ($values)";
 				$save = odbc_exec($this->conn, $insert);
 			//}
-			
 			if ($save) {
 				$delete_duplicate = "DELETE FROM t_car_payment a
 				USING t_car_payment b
