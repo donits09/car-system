@@ -3039,6 +3039,54 @@ Class Master{
 	
 		echo json_encode($resp);
 	}	
+
+	function save_tin() {
+		extract($_POST);
+	
+		$c_account_no = trim($tin_acc_no);
+		$c_b1_tin = trim($tin_b1_no);
+		$c_b2_tin = trim($tin_b2_no);
+	
+		$data = "c_account_no, c_b1_tin, c_b2_tin";
+		$values = "'$c_account_no', '$c_b1_tin', '$c_b2_tin'";
+	
+		$resp = array();
+	
+		$check_existing = "SELECT * FROM t_clients_tin WHERE c_account_no = '$c_account_no'";
+		$result_check = odbc_exec($this->conn, $check_existing);
+	
+		odbc_fetch_row($result_check);
+		if (odbc_num_rows($result_check) > 0) {
+			$update = "UPDATE t_clients_tin SET 
+							c_b1_tin = '$c_b1_tin',
+							c_b2_tin = '$c_b2_tin'
+						WHERE c_account_no = '$c_account_no'";
+			$save = odbc_exec($this->conn, $update);
+	
+			if ($save) {
+				$this->car_logs('TIN Update', "UPDATED - $c_account_no - TIN1: $c_b1_tin, TIN2: $c_b2_tin");
+				$resp['status'] = 'success';
+				$resp['msg'] = "TIN successfully updated.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		} else {
+			$insert = "INSERT INTO t_clients_tin ($data) VALUES ($values)";
+			$save = odbc_exec($this->conn, $insert);
+	
+			if ($save) {
+				$this->car_logs('TIN Insert', "ADDED - $c_account_no ");
+				$resp['status'] = 'success';
+				$resp['msg'] = "TIN successfully inserted.";
+			} else {
+				$resp['status'] = 'failed';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+		}
+	
+		echo json_encode($resp);
+	}	
 	
 	public function car_logs($module, $notes){
 		require_once('../auth/session_auth.php');
@@ -3103,6 +3151,9 @@ switch ($action) {
 		break;
 	case 'update_tin':
 		echo $Master->update_tin();
+		break;
+	case 'save_tin':
+		echo $Master->save_tin();
 		break;
 	case 'save_sr':
 		echo $Master->save_sr();

@@ -5,7 +5,7 @@ check_user_group(1);
 require_once('../../config.php');
 include('../../inc/navbar.php');    
 include('../../inc/header.php');
-$allow_tin_edit = ($_SESSION['user_group'] === '1' && $_SESSION['user_department'] === 'Information Technology');
+/* $allow_tin_edit = ($_SESSION['user_group'] === '1' && $_SESSION['user_department'] === 'Information Technology'); */
 /* $allow_tin_edit = ($_SESSION['user_group'] === '1' && $_SESSION['username'] === '10157'); */
 ?>
 <?php
@@ -268,7 +268,7 @@ $allow_tin_edit = ($_SESSION['user_group'] === '1' && $_SESSION['user_department
                                     <label for="address" class="form-label">Address</label>
                                     <input type="text" class="form-control txt" id="buyer_address" name="buyer_address" readonly>
                                 </div>
-                                <?php if (!$allow_tin_edit): ?>
+                                <!-- <?php if (!$allow_tin_edit): ?>
                                     <div class="col-md-4">
                                         <label for="tin" class="form-label">TIN #</label>
                                         <input type="text" class="form-control txt" id="buyer_tin" name="buyer_tin" readonly>
@@ -283,7 +283,12 @@ $allow_tin_edit = ($_SESSION['user_group'] === '1' && $_SESSION['user_department
                                             <button type="button" class="btn btn-success btn-sm d-none" id="saveTinBtn">Save</button>
                                         </div>
                                     </div>
-                                <?php endif; ?>
+                                <?php endif; ?> -->
+                                <div class="col-md-4">
+                                    <a id="tin_modal" class="btn btn-flat btn-success" href="javascript:void(0)" data-account-no="">
+                                        <span class="fa fa-edit"></span> Client's TIN Number
+                                    </a>
+                                </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
                                         Remarks 
@@ -1016,6 +1021,11 @@ $(document).ready(function() {
 
         $('#create_other_new').click(function() {
             loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
+        });
+
+        $('#tin_modal').click(function() {
+            var accountNo = $('#buyer_acc_no').val();
+            loadModal('Clients TIN Number', '../clients_tin/main.php?c_account_no=' + accountNo, '#createTinModal');
         });
 
       
