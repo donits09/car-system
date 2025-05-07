@@ -141,6 +141,7 @@ $c_time_transferred = date('H:i:s');
                         <tr>
                             <td><?php echo $index + 1; ?></td>
                             <td><input type="text" id="c_car_type" name="c_car_type" class="hide_textbox" value="<?php echo $car['c_car_type'] ?>" readonly>
+                            <input type="text" id="cid" name="cid" class="hide_textbox" value="<?php echo $car['id'] ?>" readonly>
                             <input type="text" id="c_car_no" name="c_car_no" class="hide_textbox" value="<?php echo $car['c_car_no'] ?>" readonly>
                             <input type="text" id="c_car_paydate" name="c_car_paydate" class="hide_textbox" value="<?php echo $car['c_car_paydate'] ?>" readonly>
                             <input type="text" id="c_car_amount" name="c_car_amount" class="hide_textbox" value="<?php echo $car['c_car_amount'] ?>" readonly>

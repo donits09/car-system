@@ -140,7 +140,14 @@ function fillBuyerDetails(data) {
     document.getElementById('buyer_mname2').value = data.c_b2_middle_name;
     document.getElementById('buyer_email').value = data.c_email;
 
-    document.getElementById('buyer_address').value = data.c_address; 
+    let addressParts = [];
+
+    if (data.c_address) addressParts.push(data.c_address);
+    if (data.c_city_prov) addressParts.push(data.c_city_prov);
+    if (data.c_zip_code) addressParts.push(data.c_zip_code);
+    
+    document.getElementById('buyer_address').value = addressParts.join(', ');
+    
     document.getElementById('buyer_remarks').value = data.c_remarks; 
     document.getElementById('fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
     document.getElementById('atap_fullname').value = data.c_b1_first_name + ' ' + data.c_b1_last_name;
@@ -161,9 +168,16 @@ function fillBuyerDetails(data) {
     }
     document.getElementById('buyer_email').value = data.c_email;
     document.getElementById('buyer_mobile').value = data.c_mobile_no;
+    //document.getElementById('buyer_tin').value = data.c_tin;
     /* document.getElementById('buyer_tin').value = data.c_tin; */
-    let tin = data.c_tin.toString().replace(/(\d{3})(?=\d)/g, '$1-');
-    document.getElementById('buyer_tin').value = tin;
+   
+    if (data.c_tin && data.c_tin.trim() !== '') {
+        let tin = data.c_tin.toString().replace(/(\d{3})(?=\d)/g, '$1-');
+        document.getElementById('buyer_tin').value = tin;
+    } else {
+        document.getElementById('buyer_tin').value = "------";
+    }
+
 
     var c_lid = data.c_account_no.substring(0, 8);
     var phase = data.c_account_no.substring(0, 3);
@@ -350,7 +364,14 @@ function selectBuyer(buyer) {
     document.getElementById('buyer_mname2').value = buyer.c_b2_middle_name;
     document.getElementById('buyer_email').value = buyer.c_email;
     
-    document.getElementById('buyer_address').value = buyer.c_address; 
+    let addressParts = [];
+
+    if (buyer.c_address) addressParts.push(buyer.c_address);
+    if (buyer.c_city_prov) addressParts.push(buyer.c_city_prov);
+    if (buyer.c_zip_code) addressParts.push(buyer.c_zip_code);
+
+    document.getElementById('buyer_address').value = addressParts.join(', ');
+
     document.getElementById('buyer_remarks').value = buyer.c_remarks; 
     document.getElementById('fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
     document.getElementById('atap_fullname').value = buyer.c_b1_first_name + ' ' + buyer.c_b1_last_name;
@@ -371,9 +392,13 @@ function selectBuyer(buyer) {
     }
     document.getElementById('buyer_email').value = buyer.c_email;
     document.getElementById('buyer_mobile').value = buyer.c_mobile_no;
-    /* document.getElementById('buyer_tin').value = buyer.c_tin; */
-    let tin = buyer.c_tin.toString().replace(/(\d{3})(?=\d)/g, '$1-');
-    document.getElementById('buyer_tin').value = tin;
+    
+    if (buyer.c_tin && buyer.c_tin.trim() !== '') {
+        let tin = buyer.c_tin.toString().replace(/(\d{3})(?=\d)/g, '$1-');
+        document.getElementById('buyer_tin').value = tin;
+    } else {
+        document.getElementById('buyer_tin').value = "------";
+    }
 
     var phase = buyer.c_account_no.substring(0, 3);
     var block = buyer.c_account_no.substring(3, 6).replace(/^0+/, ''); 
