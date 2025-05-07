@@ -633,7 +633,6 @@ Class Master{
 			error_log("Failed to retrieve max ID: " . odbc_errormsg($this->conn));
 		}
 
-		/* computation of vat */
 		if ($c_vat_selected == 1) {
 			$c_vatsales = round($c_or_amount / 1.12, 2);
 			$c_vatamount = round($c_or_amount - $c_vatsales, 2);
@@ -664,11 +663,11 @@ Class Master{
 		$resp = array();
 	
 		if (empty($id)) {
-			for ($i = 0; $i < 2; $i++) {
+			//for ($i = 0; $i < 2; $i++) {
 				$this->car_logs('OR Management', "ADDED - OR#$c_or_no");
 				$insert = "INSERT INTO t_or_payment ($data) VALUES ($values)";
 				$save = odbc_exec($this->conn, $insert);
-			}
+			//}
 			if ($save) {
 				$delete_duplicate = "DELETE FROM t_or_payment a
 				USING t_or_payment b
