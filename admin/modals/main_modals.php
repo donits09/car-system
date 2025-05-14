@@ -196,7 +196,7 @@
 </div>
 
 <div class="modal fade" id="createTinModal" tabindex="-1" role="dialog" aria-labelledby="createTinModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 70vw;" role="document">
+    <div class="modal-dialog" style="max-width: 90vw;" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createTinModalLabel">TIN Number List</h5>

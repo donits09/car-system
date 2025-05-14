@@ -1,7 +1,18 @@
 <?php
 header('Content-Type: application/json');
 include('../../config.php');
+
 $response = array('status' => 'error', 'data' => null);
+
+// Helper function to get c_remarks connected to $pg_conn
+function get_c_remarks_pg($pg_conn, $acc_no) {
+    $pg_query = "SELECT c_remarks FROM t_buyers_account WHERE c_account_no = $1";
+    $pg_result = pg_query_params($pg_conn, $pg_query, [$acc_no]);
+    if ($pg_result && $pg_row = pg_fetch_assoc($pg_result)) {
+        return $pg_row['c_remarks'];
+    }
+    return null;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['acc_no'])) {
@@ -10,9 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = odbc_prepare($conn, $get_details_query);
         odbc_execute($stmt, array($acc_no));
         if ($row = odbc_fetch_array($stmt)) {
+            if ($pg_conn) {
+                $row['c_remarks'] = get_c_remarks_pg($pg_conn, $acc_no);
+            }
             $response['status'] = 'success';
             $response['data'] = $row;
         }
+
     } elseif (isset($_GET['last_name'])) {
         $last_name = $_GET['last_name'];
         $first_name = isset($_GET['first_name']) ? $_GET['first_name'] : '';
@@ -35,6 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (odbc_execute($stmt, $params)) {
                 $rows = [];
                 while ($row = odbc_fetch_array($stmt)) {
+                    if ($pg_conn && isset($row['c_account_no'])) {
+                        $row['c_remarks'] = get_c_remarks_pg($pg_conn, $row['c_account_no']);
+                    }
                     $rows[] = $row;
                 }
                 if (!empty($rows)) {
@@ -52,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $response['status'] = 'error';
             $response['message'] = 'Query preparation failed.';
         }
+
     } elseif (isset($_GET['loc'])) {
         $loc = $_GET['loc'];
         $get_details_query = "SELECT * FROM t_buyers_account WHERE c_account_no::text ILIKE ? ORDER BY c_b1_last_name";
@@ -60,6 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (odbc_execute($stmt, array("$loc%"))) {
                 $rows = [];
                 while ($row = odbc_fetch_array($stmt)) {
+                    if ($pg_conn && isset($row['c_account_no'])) {
+                        $row['c_remarks'] = get_c_remarks_pg($pg_conn, $row['c_account_no']);
+                    }
                     $rows[] = $row;
                 }
                 if (!empty($rows)) {
@@ -77,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $response['status'] = 'error';
             $response['message'] = 'Query preparation failed.';
         }
+
     } elseif (isset($_GET['eadd'])) {
         $eadd = $_GET['eadd'];
         $get_details_query = "SELECT * FROM t_buyers_account WHERE c_email ILIKE ? ORDER BY c_b1_last_name";
@@ -85,6 +108,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (odbc_execute($stmt, array("%$eadd%"))) {
                 $rows = [];
                 while ($row = odbc_fetch_array($stmt)) {
+                    if ($pg_conn && isset($row['c_account_no'])) {
+                        $row['c_remarks'] = get_c_remarks_pg($pg_conn, $row['c_account_no']);
+                    }
                     $rows[] = $row;
                 }
                 if (!empty($rows)) {
@@ -106,6 +132,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }else {
         $response['status'] = 'error';
         $response['message'] = 'Required parameter is missing.';
+    }
+
+    // Close ng pg_conn
+    if ($pg_conn) {
+        pg_close($pg_conn);
     }
 }
 

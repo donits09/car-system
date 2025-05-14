@@ -20,6 +20,19 @@ function redirect($url) {
     exit();
 }
 
+/* FOR REMARKS ONLY PROBLEM THE SIZE ON odbc_connect*/
+$dbhost = 'localhost';
+$dbport = '5432';
+$dbname = 'CAR_TESTDB';
+$dbuser = 'postgres';
+$dbpass = 'admin12345';
+
+$pg_conn = pg_connect("host=$dbhost port=$dbport dbname=$dbname user=$dbuser password=$dbpass");
+if (!$pg_conn) {
+    die("PostgreSQL connection failed: " . pg_last_error());
+}
+
+
 ##### JUDZ CONNECTION ######
 $dbhost = 'localhost';
 $dbport = '5432'; 

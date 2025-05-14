@@ -3043,28 +3043,25 @@ Class Master{
 	function save_tin() {
 		extract($_POST);
 	
-		$c_account_no = trim($tin_acc_no);
-		$c_b1_tin = trim($tin_b1_no);
-		$c_b2_tin = trim($tin_b2_no);
-	
-		$data = "c_account_no, c_b1_tin, c_b2_tin";
-		$values = "'$c_account_no', '$c_b1_tin', '$c_b2_tin'";
+		$data = "c_account_no, c_client_last_name, c_client_first_name, c_client_middle_name, c_client_tin, c_status, c_tran_date, c_type";
+		$values = "'$c_account_no', '$c_client_last_name', '$c_client_first_name', '$c_client_middle_name', '$c_client_tin', '$c_status', NOW(), '$c_type'";
 	
 		$resp = array();
 	
-		$check_existing = "SELECT * FROM t_clients_tin WHERE c_account_no = '$c_account_no'";
-		$result_check = odbc_exec($this->conn, $check_existing);
-	
-		odbc_fetch_row($result_check);
-		if (odbc_num_rows($result_check) > 0) {
+		if (!empty($id)) {
 			$update = "UPDATE t_clients_tin SET 
-							c_b1_tin = '$c_b1_tin',
-							c_b2_tin = '$c_b2_tin'
-						WHERE c_account_no = '$c_account_no'";
+							c_client_last_name = '$c_client_last_name',
+							c_client_first_name = '$c_client_first_name',
+							c_client_middle_name = '$c_client_middle_name',
+							c_client_tin = '$c_client_tin',
+							c_status = '$c_status',
+							c_tran_date = NOW(),
+							c_type = '$c_type'
+						WHERE id = '$id'";
 			$save = odbc_exec($this->conn, $update);
 	
 			if ($save) {
-				$this->car_logs('TIN Update', "UPDATED - $c_account_no - TIN1: $c_b1_tin, TIN2: $c_b2_tin");
+				$this->car_logs('TIN Update', "UPDATED - Account: $c_account_no - TIN#: $c_client_tin");
 				$resp['status'] = 'success';
 				$resp['msg'] = "TIN successfully updated.";
 			} else {
@@ -3072,17 +3069,50 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
 		} else {
-			$insert = "INSERT INTO t_clients_tin ($data) VALUES ($values)";
-			$save = odbc_exec($this->conn, $insert);
+			$check_existing = "SELECT * FROM t_clients_tin WHERE c_client_tin = '$c_client_tin'";
+			$result_check = odbc_exec($this->conn, $check_existing);
 	
-			if ($save) {
-				$this->car_logs('TIN Insert', "ADDED - $c_account_no ");
+			odbc_fetch_row($result_check);
+			if (odbc_num_rows($result_check) > 0) {
+				$resp['status'] = 'failed';
+				$resp['err'] = "TIN already exists.";
+			} else {
+				$insert = "INSERT INTO t_clients_tin ($data) VALUES ($values)";
+				$save = odbc_exec($this->conn, $insert);
+	
+				if ($save) {
+					$this->car_logs('TIN Insert', "ADDED - $c_account_no - TIN#: $c_client_tin");
+					$resp['status'] = 'success';
+					$resp['msg'] = "TIN successfully inserted.";
+				} else {
+					$resp['status'] = 'failed';
+					$resp['err'] = odbc_errormsg($this->conn);
+				}
+			}
+		}
+	
+		echo json_encode($resp);
+	}		
+
+	function delete_tin() {
+		extract($_POST);
+		$resp = array();
+	
+		if (!empty($id)) {
+			$delete = "DELETE FROM t_clients_tin WHERE id = '$id'";
+			$result = odbc_exec($this->conn, $delete);
+	
+			if ($result) {
+				$this->car_logs('TIN Delete', "DELETED - ID: $id");
 				$resp['status'] = 'success';
-				$resp['msg'] = "TIN successfully inserted.";
+				$resp['msg'] = 'TIN record successfully deleted.';
 			} else {
 				$resp['status'] = 'failed';
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
+		} else {
+			$resp['status'] = 'failed';
+			$resp['err'] = 'Invalid record ID.';
 		}
 	
 		echo json_encode($resp);
@@ -3154,6 +3184,9 @@ switch ($action) {
 		break;
 	case 'save_tin':
 		echo $Master->save_tin();
+		break;
+	case 'delete_tin':
+		echo $Master->delete_tin();
 		break;
 	case 'save_sr':
 		echo $Master->save_sr();

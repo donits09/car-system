@@ -285,9 +285,9 @@ include('../../inc/header.php');
                                     </div>
                                 <?php endif; ?> -->
                                 <div class="col-md-4">
-                                    <a id="tin_modal" class="btn btn-flat btn-success" href="javascript:void(0)" data-account-no="">
+                                    <button id="tin_modal" class="btn btn-flat btn-success" type="button" style="float:center; width: 100%; margin-top:23px;" data-account-no="">
                                         <span class="fa fa-edit"></span> Client's TIN Number
-                                    </a>
+                                    </button>
                                 </div>
                                 <div class="col-md-12">
                                     <label for="remarks" class="form-label">
@@ -786,7 +786,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const exportcsvBtn = document.getElementById('export_csv');
         const exportpdfBtn = document.getElementById('export_pdf');
         const createNewOrBtn = document.getElementById('create_new_or');
-        const editTinBtn = document.getElementById('editTinBtn');
+        const editTinBtn = document.getElementById('tin_modal');
         let initialValue = accnoInput.value.trim();
 
         function checkValueChange() {
@@ -1326,7 +1326,7 @@ $(document).ready(function() {
 });
 
 </script>
-<script>
+<!-- <script>
     $(document).ready(function() {
         $('#editTinBtn').click(function() {
             var tinValue = $('#buyer_tin').val().trim();
@@ -1375,7 +1375,7 @@ $(document).ready(function() {
             });
         });
     });
-</script>
+</script> -->
 <script>
 document.getElementById("eadd").addEventListener("input", function() {
     validateEmail();

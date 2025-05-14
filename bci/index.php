@@ -183,8 +183,8 @@ include('../inc/header.php');
 <script>
     $(document).ready(function () {
         var allRecords = [];
+        var errorShown = false; // Flag to prevent multiple alerts
 
-        // para sa old versions ng browsers ayaw kase gumana nung search-loc hayup yan
         if (!String.prototype.padStart) {
             String.prototype.padStart = function(targetLength, padString) {
                 targetLength = targetLength >> 0;
@@ -194,7 +194,7 @@ include('../inc/header.php');
                 } else {
                     targetLength = targetLength - this.length;
                     if (targetLength > padString.length) {
-                        padString += padString.repeat(targetLength / padString.length); 
+                        padString += padString.repeat(targetLength / padString.length);
                     }
                     return padString.slice(0, targetLength) + String(this);
                 }
@@ -206,6 +206,8 @@ include('../inc/header.php');
             var phase = $("#search-phase").val().trim();
             var block = $("#search-block").val().trim();
             var lot = $("#search-lot").val().trim();
+
+            errorShown = false;
 
             if (accountNo !== "") {
                 $("#search-phase").val('');
@@ -230,34 +232,43 @@ include('../inc/header.php');
             console.log("Laman ni Location:", location);
             console.log("Laman ni Account:", accountNo);
 
-            /* get_buyers_account.php */
+            // get_buyers_account.php
             $.ajax({
                 type: "POST",
                 url: '<?php echo base_url ?>bci/get_buyers_account.php',
-                data: { account_no: accountNo,
-                        location: location },
+                data: {
+                    account_no: accountNo,
+                    location: location
+                },
                 dataType: "json",
                 success: function (response) {
-                    if (response.error) {
+                    if (response.error && !errorShown) {
+                        errorShown = true;
                         alert(response.error);
                     } else {
                         displayData(response.records[0]);
                     }
                 },
                 error: function () {
-                    alert("An error occurred while fetching account data.");
+                    if (!errorShown) {
+                        errorShown = true;
+                        alert("An error occurred while fetching account data.");
+                    }
                 }
             });
 
-            /* get_buyers.php */
+            // get_buyers.php
             $.ajax({
                 type: "POST",
                 url: '<?php echo base_url ?>bci/get_buyers.php',
-                data: { account_no: accountNo,
-                        location: location },
+                data: {
+                    account_no: accountNo,
+                    location: location
+                },
                 dataType: "json",
                 success: function (response) {
-                    if (response.error) {
+                    if (response.error && !errorShown) {
+                        errorShown = true;
                         alert(response.error);
                     } else {
                         allRecords = response.records;
@@ -265,7 +276,10 @@ include('../inc/header.php');
                     }
                 },
                 error: function () {
-                    alert("An error occurred while fetching buyer data.");
+                    if (!errorShown) {
+                        errorShown = true;
+                        alert("An error occurred while fetching buyer data.");
+                    }
                 }
             });
         });
