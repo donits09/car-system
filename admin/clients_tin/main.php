@@ -274,7 +274,6 @@ $c_account_no = $account_no;
 
 <script>
 $(document).ready(function () {
-    // Handle TIN form submission
     $(document).on('submit', '#tinForm', function(e) {
         e.preventDefault();
         $.ajax({
@@ -301,7 +300,6 @@ $(document).ready(function () {
         });
     });
 
-    // Handle edit button click
     $(document).on('click', '.edit-btn', function () {
         const btn = $(this);
         $('#c_id').val(btn.data('id'));
@@ -317,7 +315,6 @@ $(document).ready(function () {
         }, 500);
     });
 
-    // Handle delete button click
     $(document).on('click', '.delete-btn', function () {
         const id = $(this).data('id');
         if (confirm('Are you sure you want to delete this record?')) {
