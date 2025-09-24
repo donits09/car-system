@@ -27,6 +27,9 @@ function isActive($pages) {
     }
     return '';
 }
+
+$allow_account_logs = ($_SESSION['user_group'] === '4' && $_SESSION['user_department'] === 'Audit');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -179,6 +182,7 @@ function isActive($pages) {
                         <a class="dropdown-item" href="<?php echo base_url ?>tenants/list.php">Tenant List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>transfer_account">Transfer Payment</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>bci/index.php">BCI Update</a>
+                        <a class="dropdown-item" href="<?php echo base_url ?>account_logs/index.php">Account logs</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown<?php echo isActive([
@@ -401,6 +405,9 @@ function isActive($pages) {
                         <a class="dropdown-item" href="<?php echo base_url ?>viewer/atap/all_atap_list.php">ATAP List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>viewer/car/all_car_list.php">Car List</a>
                         <a class="dropdown-item" href="<?php echo base_url ?>viewer/other_fees/all_of_list.php">Other Fees</a>
+                        <?php if ($allow_account_logs): ?>
+                        <a class="dropdown-item" href="<?php echo base_url ?>account_logs/index.php">Account logs</a>
+                        <?php endif; ?>
                     </div>
                 </li>
                 <li class="nav-item dropdown<?php echo isActive(['profile']) ? ' active' : ''; ?>">

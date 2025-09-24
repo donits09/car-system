@@ -3,7 +3,7 @@
 ini_set('date.timezone','Asia/Manila');
 date_default_timezone_set('Asia/Manila');
 
-define('base_url','http://192.168.0.111/car/');
+define('base_url','http://localhost/car/');
 
 global $dsn, $user, $pass;
 $dsn = "PostgreSQL30"; 
@@ -21,9 +21,9 @@ function redirect($url) {
 }
 
 /* FOR REMARKS ONLY PROBLEM THE SIZE ON odbc_connect*/
-$dbhost = '192.168.0.123';
+$dbhost = 'localhost';
 $dbport = '5432';
-$dbname = 'ProductionDB';
+$dbname = 'CAR_TESTDB';
 $dbuser = 'postgres';
 $dbpass = 'admin12345';
 
@@ -34,9 +34,9 @@ if (!$pg_conn) {
 
 
 ##### JUDZ CONNECTION ######
-$dbhost = '192.168.0.123';
+$dbhost = 'localhost';
 $dbport = '5432'; 
-$dbname = 'ProductionDB';
+$dbname = 'CAR_TESTDB';
 $dbuser = 'postgres';
 $dbpass = 'admin12345';
 
