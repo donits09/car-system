@@ -54,7 +54,7 @@ $current_date = date('Y-m-d');
                 <tr>
                         <th>No</th>
                         <th>Account No.</th>
-                        <th>OR No.</th>
+                        <th>SI No.</th>
                         <th>Transaction Type</th>
                         <th>Name</th>
                         <th>Location</th>
@@ -128,7 +128,7 @@ $current_date = date('Y-m-d');
                                     if (!empty($c_account_no)) {
                                         $c_phase = substr($c_account_no, 0, 3);
                                         $c_block = ltrim(substr($c_account_no, 3, 3), '0'); 
-                                        $c_lot = substr($c_account_no, 6, 2);
+                                        $c_lot   = substr($c_account_no, 6, 2);
 
                                         $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
                                         $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
@@ -137,7 +137,13 @@ $current_date = date('Y-m-d');
                                             $phase_details = odbc_fetch_array($phase_stmt);
 
                                             if ($phase_details) {
-                                                echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                $parts = [];
+                                                $parts[] = $phase_details["c_acronym"];
+
+                                                if (!empty($c_block)) $parts[] = 'B' . $c_block;
+                                                if (!empty($c_lot))   $parts[] = 'L' . $c_lot;
+
+                                                echo htmlspecialchars(implode(' ', $parts));
                                             } else {
                                                 echo "-----";
                                             }
@@ -147,7 +153,7 @@ $current_date = date('Y-m-d');
                                     } else {
                                         $c_phase = $row['c_phase'];
                                         $c_block = $row['c_block'];
-                                        $c_lot = $row['c_lot'];
+                                        $c_lot   = $row['c_lot'];
 
                                         if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
                                             echo "-------------";
@@ -160,7 +166,13 @@ $current_date = date('Y-m-d');
                                                     $phase_details = odbc_fetch_array($phase_stmt);
 
                                                     if ($phase_details) {
-                                                        echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
+                                                        $parts = [];
+                                                        $parts[] = $phase_details["c_acronym"];
+
+                                                        if (!empty($c_block)) $parts[] = 'B' . $c_block;
+                                                        if (!empty($c_lot))   $parts[] = 'L' . $c_lot;
+
+                                                        echo htmlspecialchars(implode(' ', $parts));
                                                     } else {
                                                         echo "-----";
                                                     }
@@ -168,7 +180,11 @@ $current_date = date('Y-m-d');
                                                     echo "-----";
                                                 }
                                             } else {
-                                                echo htmlspecialchars("-----" . ' B' . $c_block . ' L' . $c_lot);
+                                                $parts = ['-----'];
+                                                if (!empty($c_block)) $parts[] = 'B' . $c_block;
+                                                if (!empty($c_lot))   $parts[] = 'L' . $c_lot;
+
+                                                echo htmlspecialchars(implode(' ', $parts));
                                             }
                                         }
                                     }

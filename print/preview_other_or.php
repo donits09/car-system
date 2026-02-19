@@ -399,7 +399,7 @@ function format_value($value) {
 
             $c_loc = "----------------------";
 
-            if (!empty($c_phase) && !empty($c_block) && !empty($c_lot)) {
+            /* if (!empty($c_phase) && !empty($c_block) && !empty($c_lot)) {
                 $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
                 $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
 
@@ -408,6 +408,38 @@ function format_value($value) {
 
                     if ($phase_details) {
                         $c_loc = $phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot;
+                    }
+                }
+            } */
+
+            if (!empty($c_phase)) {
+                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+
+                if ($phase_stmt && odbc_execute($phase_stmt, array($c_phase))) {
+                    $phase_details = odbc_fetch_array($phase_stmt);
+
+                    if ($phase_details) {
+                        $block_clean = $c_block;
+                        $lot_clean   = $c_lot;
+                        if (!empty($block_clean) && preg_match('/^0+$/', (string)$block_clean)) {
+                            $block_clean = '';
+                        }
+                        if (!empty($lot_clean) && preg_match('/^0+$/', (string)$lot_clean)) {
+                            $lot_clean = '';
+                        }
+
+                        $parts = [];
+                        $parts[] = $phase_details["c_acronym"];
+
+                        if (!empty($block_clean)) {
+                            $parts[] = 'B' . $block_clean;
+                        }
+                        if (!empty($lot_clean)) {
+                            $parts[] = 'L' . $lot_clean;
+                        }
+
+                        $c_loc = implode(' ', $parts);
                     }
                 }
             }

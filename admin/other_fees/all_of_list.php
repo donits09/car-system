@@ -154,56 +154,81 @@ include('../../inc/header.php');
                                         $c_account_no = $row['c_account_no'];
 
                                         try {
-                                            if (!empty($c_account_no)) {
-                                                $c_phase = substr($c_account_no, 0, 3);
-                                                $c_block = ltrim(substr($c_account_no, 3, 3), '0');
-                                                $c_lot = substr($c_account_no, 6, 2);
+                                        if (!empty($c_account_no)) {
+                                            $c_phase = substr($c_account_no, 0, 3);
+                                            $c_block = substr($c_account_no, 3, 3);
+                                            $c_lot   = substr($c_account_no, 6, 2);
 
-                                                $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                                                $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+                                            if (preg_match('/^0+$/', $c_block)) $c_block = '';
+                                            if (preg_match('/^0+$/', $c_lot))   $c_lot   = '';
 
-                                                if (odbc_execute($phase_stmt, array($c_phase))) {
-                                                    $phase_details = odbc_fetch_array($phase_stmt);
+                                            $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                                            $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
 
-                                                    if ($phase_details) {
-                                                        echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
-                                                    } else {
-                                                        echo "-----";
-                                                    }
+                                            if (odbc_execute($phase_stmt, array($c_phase))) {
+                                                $phase_details = odbc_fetch_array($phase_stmt);
+
+                                                if ($phase_details) {
+                                                    $acronym = $phase_details["c_acronym"];
+                                                    $parts = [$acronym];
+
+                                                    if (!empty($c_block)) $parts[] = 'B' . $c_block;
+                                                    if (!empty($c_lot))   $parts[] = 'L' . $c_lot;
+
+                                                    echo htmlspecialchars(implode(' ', $parts));
                                                 } else {
                                                     echo "-----";
                                                 }
                                             } else {
-                                                $c_phase = $row['c_phase'];
-                                                $c_block = $row['c_block'];
-                                                $c_lot = $row['c_lot'];
+                                                echo "-----";
+                                            }
+                                        } else {
+                                            $c_phase = $row['c_phase'];
+                                            $c_block = $row['c_block'];
+                                            $c_lot   = $row['c_lot'];
 
-                                                if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
-                                                    echo "-------------";
-                                                } else {
-                                                    if (!empty($c_phase) && is_numeric($c_phase)) {
-                                                        $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
-                                                        $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+                                            if (preg_match('/^0+$/', $c_block)) $c_block = '';
+                                            if (preg_match('/^0+$/', $c_lot))   $c_lot   = '';
 
-                                                        if (odbc_execute($phase_stmt, array($c_phase))) {
-                                                            $phase_details = odbc_fetch_array($phase_stmt);
+                                            if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
+                                                echo "-------------";
+                                            } else {
 
-                                                            if ($phase_details) {
-                                                                echo htmlspecialchars($phase_details["c_acronym"] . ' B' . $c_block . ' L' . $c_lot);
-                                                            } else {
-                                                                echo "-----";
-                                                            }
+                                                if (!empty($c_phase) && is_numeric($c_phase)) {
+                                                    $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                                                    $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+
+                                                    if (odbc_execute($phase_stmt, array($c_phase))) {
+                                                        $phase_details = odbc_fetch_array($phase_stmt);
+
+                                                        if ($phase_details) {
+                                                            $acronym = $phase_details["c_acronym"];
+                                                            $parts = [$acronym];
+
+                                                            if (!empty($c_block)) $parts[] = 'B' . $c_block;
+                                                            if (!empty($c_lot))   $parts[] = 'L' . $c_lot;
+
+                                                            echo htmlspecialchars(implode(' ', $parts));
                                                         } else {
                                                             echo "-----";
                                                         }
                                                     } else {
-                                                        echo htmlspecialchars("-----" . ' B' . $c_block . ' L' . $c_lot);
+                                                        echo "-----";
                                                     }
+                                                } else {
+                                                    $parts = [];
+                                                    if (!empty($c_block)) $parts[] = 'B' . $c_block;
+                                                    if (!empty($c_lot))   $parts[] = 'L' . $c_lot;
+
+                                                    echo !empty($parts)
+                                                        ? htmlspecialchars(implode(' ', $parts))
+                                                        : "-----";
                                                 }
                                             }
-                                        } catch (Exception $e) {
-                                            echo "-----";
                                         }
+                                    } catch (Exception $e) {
+                                        echo "-----";
+                                    }
                                         ?>
                                     </td>
                                     <td class="text-center"><?php echo number_format($row['c_or_amount'], 2); ?></td>

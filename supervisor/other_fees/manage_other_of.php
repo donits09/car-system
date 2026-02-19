@@ -89,7 +89,9 @@
     margin-right: 10px;
     vertical-align: middle;
 }
-
+.is-invalid{
+  border: 2px solid red !important;
+}
 </style>
 <link rel="stylesheet" href="../../dist/css/manage_car.css">
 <body>
@@ -322,13 +324,22 @@
                 ?>
             </select>
         </div>
-        <div class="col-md-3 form-group">
+        <!-- <div class="col-md-3 form-group">
             <label for="c_block" class="control-label">Block</label>
             <input type="number" id="c_block" name="c_block" class="form-control" value="<?php echo htmlspecialchars($c_block); ?>" oninput="validateNumberInput(event)">
         </div>
         <div class="col-md-3 form-group">
             <label for="c_lot" class="control-label">Lot</label>
             <input type="number" id="c_lot" name="c_lot" class="form-control" value="<?php echo htmlspecialchars($c_lot); ?>" oninput="validateNumberInput(event)">
+        </div> -->
+
+        <div class="col-md-3 form-group">
+            <label for="c_block" class="control-label">Block</label>
+            <input type="number" id="c_block" name="c_block" class="form-control" value="<?php echo htmlspecialchars($c_block); ?>" oninput="validateNumberInput(event); validateBlockLotZeros();">
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="c_lot" class="control-label">Lot</label>
+            <input type="number" id="c_lot" name="c_lot" class="form-control" value="<?php echo htmlspecialchars($c_lot); ?>" oninput="validateNumberInput(event); validateBlockLotZeros();">
         </div>
     </div>
 
@@ -572,6 +583,21 @@ $(document).ready(function() {
         var orNo = $('#c_or_no').val();
         const orAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
         let valid = true;
+
+        let blockVal = $('#c_block').val();
+        let lotVal   = $('#c_lot').val();
+
+        $('#c_block, #c_lot').removeClass('is-invalid');
+
+        if (/^0{4,}$/.test(blockVal)) {
+            $('#c_block').addClass('is-invalid');
+            valid = false;
+        }
+
+        if (/^0{3,}$/.test(lotVal)) {
+            $('#c_lot').addClass('is-invalid');
+            valid = false;
+        }
 
         let atapVal = $('#c_tran_type_single_or').val(); 
         if (!atapVal) {
@@ -1126,4 +1152,23 @@ function openPrintWindow() {
     window.onload = function () {
         computeVAT();
     };
+</script>
+<script>
+function validateBlockLotZeros() {
+    const $block = $('#c_block');
+    const $lot   = $('#c_lot');
+
+    $block.removeClass('is-invalid');
+    $lot.removeClass('is-invalid');
+
+    const blockVal = $block.val();
+    const lotVal   = $lot.val();
+    if (/^0{4,}$/.test(blockVal)) {
+        $block.addClass('is-invalid');
+    }
+    if (/^0{3,}$/.test(lotVal)) {
+        $lot.addClass('is-invalid');
+    }
+    return !(/^0{4,}$/.test(blockVal) || /^0{3,}$/.test(lotVal));
+}
 </script>
