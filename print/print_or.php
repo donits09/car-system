@@ -501,7 +501,7 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
             $c_lot = $row['c_lot'];
             $loc ="";
 
-            if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
+            /* if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
             } else {
                 if (!empty($c_phase)) {
                     $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
@@ -519,6 +519,35 @@ if (isset($_GET['id']) && $_GET['id'] > 0) {
                 } else {
                     $loc = '----- B' . $c_block . ' L' . $c_lot;
                 }
+            } */
+
+            if (empty($c_phase) && empty($c_block) && empty($c_lot)) {
+            } else {
+                $parts = [];
+                if (!empty($c_phase)) {
+                    $get_phase_details_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+                    $phase_stmt = odbc_prepare($conn, $get_phase_details_qry);
+
+                    if (odbc_execute($phase_stmt, array($c_phase))) {
+                        $phase_details = odbc_fetch_array($phase_stmt);
+                        if ($phase_details) {
+                            $parts[] = $phase_details["c_acronym"];
+                        } else {
+                            $parts[] = '-----';
+                        }
+                    } else {
+                        $parts[] = '-----';
+                    }
+                } else {
+                    $parts[] = '-----';
+                }
+                if (!empty($c_block)) {
+                    $parts[] = 'B' . $c_block;
+                }
+                if (!empty($c_lot)) {
+                    $parts[] = 'L' . $c_lot;
+                }
+                $loc = implode(' ', $parts);
             }
         ?>
             <textarea name="c_received" id="c_received"><?php echo htmlspecialchars($c_name); ?></textarea>

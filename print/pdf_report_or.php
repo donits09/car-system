@@ -208,6 +208,11 @@ if (empty($orData)) {
 
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_or_type']) . '</td>';
 
+        /* Need adjustment for other_or_payment, see code below. */
+        /* 
+        $lot         = $row['c_lot'];
+        $block       = $row['c_block'];
+        $phase       = $row['c_phase'];
         $c_account_no = $row['c_account_no'];
         if (!empty($c_account_no)) {
             $c_phase = substr($c_account_no, 0, 3);
@@ -231,7 +236,54 @@ if (empty($orData)) {
             $c_block = '-----';
             $c_lot = '-----';
             $c_acronym = "-----";
+        } */
+
+        $lot          = $row['c_lot'];
+        $block        = $row['c_block'];
+        $phase        = $row['c_phase'];
+        $c_account_no = $row['c_account_no'];
+
+        if (!empty($c_account_no)) {
+            $c_phase = substr($c_account_no, 0, 3);
+            $c_block = substr($c_account_no, 3, 3);   // keep raw first
+            $c_lot   = substr($c_account_no, 6, 2);
+        } else {
+            $c_phase = $phase;
+            $c_block = $block;
+            $c_lot   = $lot;
         }
+        if (preg_match('/^0+$/', $c_block)) {
+            $c_block = '';
+        }
+        if (preg_match('/^0+$/', $c_lot)) {
+            $c_lot = '';
+        }
+        $c_acronym = "-----";
+        if (!empty($c_phase) && is_numeric($c_phase)) {
+            $get_acronym_qry = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
+            $project_stmt = odbc_prepare($conn, $get_acronym_qry);
+
+            if ($project_stmt && odbc_execute($project_stmt, array($c_phase))) {
+                $project_details = odbc_fetch_array($project_stmt);
+
+                if ($project_details && !empty($project_details["c_acronym"])) {
+                    $c_acronym = $project_details["c_acronym"];
+                }
+            }
+        }
+        $parts = [];
+        if (!empty($c_phase)) {
+            $parts[] = $c_acronym;
+        } else {
+            $parts[] = "-----";
+        }
+        if (!empty($c_block)) {
+            $parts[] = "B" . $c_block;
+        }
+        if (!empty($c_lot)) {
+            $parts[] = "L" . $c_lot;
+        }
+        $c_loc = implode(" ", $parts);
 
         $html .= '<td class="pdf-font">' . htmlspecialchars($c_acronym) . " " .htmlspecialchars($c_block) . " " . htmlspecialchars($c_lot) . '</td>';
         /* $html .= '<td class="pdf-font">' . number_format($cashAmount, 2) . '</td>'; */
