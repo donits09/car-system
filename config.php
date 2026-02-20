@@ -21,9 +21,9 @@ function redirect($url) {
 }
 
 /* FOR REMARKS ONLY PROBLEM THE SIZE ON odbc_connect*/
-$dbhost = 'localhost';
+$dbhost = '192.168.0.123';
 $dbport = '5432';
-$dbname = 'CAR_TESTDB';
+$dbname = 'ProductionDB';
 $dbuser = 'postgres';
 $dbpass = 'admin12345';
 
@@ -34,9 +34,9 @@ if (!$pg_conn) {
 
 
 ##### JUDZ CONNECTION ######
-$dbhost = 'localhost';
+$dbhost = '192.168.0.123';
 $dbport = '5432'; 
-$dbname = 'CAR_TESTDB';
+$dbname = 'ProductionDB';
 $dbuser = 'postgres';
 $dbpass = 'admin12345';
 
