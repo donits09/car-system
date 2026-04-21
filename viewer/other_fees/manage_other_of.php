@@ -363,10 +363,10 @@ $(document).ready(function() {
         var orNo = $('#c_or_no').val();
         const carAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
         let valid = true;
-        if (orNo.length < 6) {
-            $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
-            valid = false;
-        }
+        // if (orNo.length < 6) {
+        //     $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+        //     valid = false;
+        // }
 
         if (carAmount <= 0) {
             $('#car_amt_error').text('Amount must be greater than zero.').addClass('bold-text').css('color', 'red');
@@ -416,13 +416,13 @@ $(document).ready(function() {
         const orNoError = $('#or_no_error');
         const submitButton = $('#btnsave');
 
-        if (orNo.length < 6) {
-            $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
-            $('#other-or-form button[type="submit"]').attr('disabled', true);
-        } else if (orNo.length > 6) {
-            $('#or_no_error').text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
-            $('#other-or-form button[type="submit"]').attr('disabled', false);
-        } else {
+        // if (orNo.length < 6) {
+        //     $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+        //     $('#other-or-form button[type="submit"]').attr('disabled', true);
+        // } else if (orNo.length > 6) {
+        //     $('#or_no_error').text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
+        //     $('#other-or-form button[type="submit"]').attr('disabled', false);
+        // } else {
             $.ajax({
                 type: 'POST',
                 url: 'check_or_no.php',
@@ -442,7 +442,7 @@ $(document).ready(function() {
                     submitButton.attr('disabled', true);
                 }
             });
-        }
+        // }
     });
 
     $('#other-or-form').on('submit', function(e) {
