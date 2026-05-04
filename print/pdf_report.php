@@ -178,10 +178,14 @@ if (empty($carData)) {
 } else {
     $counter = 1;
     foreach ($carData as $row) {
-        $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
+        /* $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
         $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
-        $voucherAmount = ($row['c_mop'] == 4 && $row['status'] != 1) ? $row['c_car_amount'] : 0;
+        $voucherAmount = ($row['c_mop'] == 4 && $row['status'] != 1) ? $row['c_car_amount'] : 0; */
+        $cashAmount = ($row['c_mop'] == 1 && $row['status'] != 1 && $row['status'] != 2) ? $row['c_car_amount'] : 0;
+        $checkAmount = ($row['c_mop'] == 2 && $row['status'] != 1 && $row['status'] != 2) ? $row['c_car_amount'] : 0;
+        $onlineAmount = ($row['c_mop'] == 3 && $row['status'] != 1 && $row['status'] != 2) ? $row['c_car_amount'] : 0;
+        $voucherAmount = ($row['c_mop'] == 4 && $row['status'] != 1 && $row['status'] != 2) ? $row['c_car_amount'] : 0;
         $l_cashonline += $cashAmount + $onlineAmount + $voucherAmount;
         $l_check += $checkAmount;
         $l_total += $cashAmount + $onlineAmount + $checkAmount + $voucherAmount;
@@ -263,7 +267,12 @@ if (empty($carData)) {
         $html .= '<td class="pdf-font">' . number_format($cashAmount + $onlineAmount + $checkAmount + $voucherAmount, 2) . '</td>';
 
         /* $html .= '<td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>'; */
-        $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>';
+        /* $html .= '<td class="pdf-font">' . htmlspecialchars($row['status'] == 0 ? '-----' : ($row['status'] == 1 ? 'CANCELLED' : $row['status'])) . '</td>'; */
+        $html .= '<td class="pdf-font">' . htmlspecialchars(
+            $row['status'] == 0 ? '-----' :
+            ($row['status'] == 1 ? 'CANCELLED' :
+            ($row['status'] == 2 ? 'BOUNCE CHECK' : $row['status']))
+        ) . '</td>';
         $html .= '<td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>
         </tr>';
     }

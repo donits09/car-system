@@ -385,6 +385,7 @@ include('../../inc/header.php');
                                                     <th>Name</th>
                                                     <th>Location</th>
                                                     <th>Amount</th>
+                                                    <th>Status</th>
                                                     <th>Pay Date</th>
                                                     <th>Encoder</th>
                                                     <th>Action</th>

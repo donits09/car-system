@@ -107,7 +107,29 @@ if (!empty($account_no)) {
                     }
                     ?>
                 </td>
-                <td class="text-center"><?php echo number_format($row['c_car_amount'], 2); ?></td>
+                <td class="text-center">
+                    <?php
+                        $amount = $row['c_car_amount'];
+                            if ($row['status'] == 1 || $row['status'] == 2) {
+                                $amount = -abs($amount);
+                            }
+                        echo number_format($amount, 2);
+                    ?>
+                </td>
+                
+                <td class="text-center">
+                    <?php
+                        if($row['status'] == 0){
+                            echo '<span class="badge rounded-pill px-2 py-1" style="background:#e8f5e9;color:#2e7d32;font-size:0.80rem;">ACTIVE PAYMENT</span>';
+                        }elseif($row['status'] == 1){
+                            echo '<span class="badge rounded-pill px-2 py-1" style="background:#fdecea;color:#c62828;font-size:0.80rem;">CANCELLED</span>';
+                        }elseif($row['status'] == 2){
+                            echo '<span class="badge rounded-pill px-2 py-1" style="background:#fff8e1;color:#f57f17;font-size:0.80rem;">BOUNCE CHECK</span>';
+                        }else{
+                            echo '<span class="badge rounded-pill px-2 py-1 bg-secondary" style="font-size:0.80rem;">UNKNOWN</span>';
+                        }
+                    ?>
+                </td>
                 <td class="text-center"><?php echo htmlspecialchars($row['c_car_paydate']); ?></td>
                 <?php
                 $c_encoded_by = $row['c_encoded_by'];

@@ -14,15 +14,19 @@ if (isset($_GET['id'])) {
 
     function fetchCarPayments($conn, $carNo) {
         $query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
-                          a.c_car_paydate, a.c_car_amount, a.c_encoded_by, a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
-                          b.c_name, b.c_phase, b.c_block, b.c_lot
-                  FROM t_car_payment a
-                  LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
-                  WHERE a.c_account_no = ? AND status != '1' ORDER BY a.c_tran_updated DESC";
+                        a.c_car_paydate, a.c_car_amount, a.c_encoded_by,
+                        a.c_tran_date, a.c_tran_updated, a.c_mop, a.c_bank,
+                        b.c_name, b.c_phase, b.c_block, b.c_lot, a.status
+                    FROM t_car_payment a
+                    LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no
+                    WHERE a.c_account_no = ? AND a.status != '1'
+                    ORDER BY a.c_tran_updated DESC";
+
         $stmt = odbc_prepare($conn, $query);
         if (!$stmt || !odbc_execute($stmt, array($carNo))) {
             return null;
         }
+
         $rows = [];
         while ($row = odbc_fetch_array($stmt)) {
             $rows[] = $row;
@@ -33,9 +37,7 @@ if (isset($_GET['id'])) {
     function fetchBuyerDetails($conn, $accountNo) {
         $query = "SELECT c_b1_last_name, c_b1_first_name FROM t_buyers_account WHERE c_account_no = ?";
         $stmt = odbc_prepare($conn, $query);
-        if (!$stmt || !odbc_execute($stmt, array($accountNo))) {
-            return null;
-        }
+        odbc_execute($stmt, array($accountNo));
         $details = odbc_fetch_array($stmt);
         return $details ? htmlspecialchars($details["c_b1_first_name"] . ' ' . $details["c_b1_last_name"]) : "";
     }
@@ -43,9 +45,7 @@ if (isset($_GET['id'])) {
     function fetchPhaseDetails($conn, $phaseCode) {
         $query = "SELECT c_acronym FROM t_projects WHERE c_code = ?";
         $stmt = odbc_prepare($conn, $query);
-        if (!$stmt || !odbc_execute($stmt, array($phaseCode))) {
-            return null;
-        }
+        odbc_execute($stmt, array($phaseCode));
         $details = odbc_fetch_array($stmt);
         return $details ? htmlspecialchars($details["c_acronym"]) : "";
     }
@@ -53,22 +53,16 @@ if (isset($_GET['id'])) {
     function fetchEncoderName($conn, $employeeCode) {
         $query = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
         $stmt = odbc_prepare($conn, $query);
-        if (!$stmt || !odbc_execute($stmt, array($employeeCode))) {
-            return null;
-        }
+        odbc_execute($stmt, array($employeeCode));
         $details = odbc_fetch_array($stmt);
         return $details ? htmlspecialchars($details["c_realname"]) : "";
     }
 
-    /* Eto yung sa footer ng page */
     $c_employee_code = $_SESSION['username'];
-    $get_encoder_details_qry = "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?";
-    $encoder_stmt = odbc_prepare($conn, $get_encoder_details_qry);
-    $c_realname = "Unknown";
-
-    if (odbc_execute($encoder_stmt, array($c_employee_code)) && $encoder = odbc_fetch_array($encoder_stmt)) {
-        $c_realname = htmlspecialchars($encoder["c_realname"]);
-    }
+    $encoder_stmt = odbc_prepare($conn, "SELECT c_realname FROM t_car_users WHERE c_employee_code = ?");
+    odbc_execute($encoder_stmt, array($c_employee_code));
+    $encoder = odbc_fetch_array($encoder_stmt);
+    $c_realname = $encoder ? htmlspecialchars($encoder["c_realname"]) : "Unknown";
 
     $carData = fetchCarPayments($conn, $c_account_no);
     $buyer_name = fetchBuyerDetails($conn, $c_account_no);
@@ -77,60 +71,46 @@ if (isset($_GET['id'])) {
     $c_block = 'B' . ltrim(substr($c_account_no, 3, 3), '0');
     $c_lot = 'L' . substr($c_account_no, 6, 2);
     $phase_acronym = fetchPhaseDetails($conn, $c_phase) . ' ' . $c_block . ' ' . $c_lot;
-    
-    $totalCash = 0;
-    $totalCheck = 0;
 
     $html = '
 <html>
 <head>
-    <style>
-        ' . $l_css_path . '
-    </style>
+<style>' . $l_css_path . '</style>
 </head>
 <body>
-    <header>
-        <h2>ASIAN LAND STRATEGIES CORPORATION</h2>
-        <h3>CASH ACKNOWLEDGEMENT RECEIPT</h3>
 
-        <div class="info-box">
-            <p class="b-info">Account No:</p>
-            <p>' . htmlspecialchars($c_account_no) . '</p>
-        </div>
-        <div class="info-box">
-            <p class="b-info">Buyers Name:</p>
-            <p>' . $buyer_name . '</p>
-        </div>
-        <div class="info-box">
-            <p class="b-info">Project Site:</p>
-            <p>' . $phase_acronym . '</p>
-        </div>
+<header>
+    <h2>ASIAN LAND STRATEGIES CORPORATION</h2>
+    <h3>CASH ACKNOWLEDGEMENT RECEIPT</h3>
 
-    </header>
+    <div class="info-box"><p class="b-info">Account No:</p><p>' . htmlspecialchars($c_account_no) . '</p></div>
+    <div class="info-box"><p class="b-info">Buyers Name:</p><p>' . $buyer_name . '</p></div>
+    <div class="info-box"><p class="b-info">Project Site:</p><p>' . $phase_acronym . '</p></div>
+</header>
 
-    <footer>
-        <div class="footer-content">
-            <p>Printed By: ' . $c_realname . '</p>
-        </div>
-    </footer>
-    
-    <table border="1" cellspacing="0" cellpadding="5">
-        <thead>
-            <tr>
-                <th>No.</th>
-                <th>CAR No.</th>
-                <th>Transaction Type</th>
-                <th>Location</th>
-                <th>Cash/Online</th>
-                <th>Check</th>
-                <th>Bank</th>
-                <th>Total</th>
-                <th>Transaction Date</th>
-                <th>Payment Date</th>
-                <th>Encoded By</th>
-            </tr>
-        </thead>
-        <tbody>';
+<footer>
+    <p>Printed By: ' . $c_realname . '</p>
+</footer>
+
+<table border="1" cellspacing="0" cellpadding="5">
+<thead>
+<tr>
+    <th>No.</th>
+    <th>CAR No.</th>
+    <th>Transaction Type</th>
+    <th>Location</th>
+    <th>Cash/Online</th>
+    <th>Check</th>
+    <th>Bank</th>
+    <th>Total</th>
+    <th>Status</th>
+    <th>Transaction Date</th>
+    <th>Payment Date</th>
+    <th>Encoded By</th>
+</tr>
+</thead>
+<tbody>
+';
 
     if (!empty($carData)) {
         $counter = 1;
@@ -139,75 +119,75 @@ if (isset($_GET['id'])) {
         $totalOfall = 0;
 
         foreach ($carData as $row) {
-            $cashAmount = ($row['c_mop'] == 1) ? $row['c_car_amount'] : 0;
-            $checkAmount = ($row['c_mop'] == 2) ? $row['c_car_amount'] : 0;
-            $checkOnline = ($row['c_mop'] == 3) ? $row['c_car_amount'] : 0;
 
-            $totalCashOnline += $cashAmount + $checkOnline;
-            $totalCheck += $checkAmount;
-            $totalOfall += $cashAmount + $checkAmount +$checkOnline;
+            $actualAmount = $row['c_car_amount'];
+            $isBounce = ($row['status'] == 2);
 
-            $phase_acronym = fetchPhaseDetails($conn, $c_phase) . ' ' . $c_block . ' ' . $c_lot;
+            // DISPLAY (negative if bounce)
+            $displayAmount = $isBounce ? -$actualAmount : $actualAmount;
+
+            $cashAmount = ($row['c_mop'] == 1) ? $displayAmount : 0;
+            $checkAmount = ($row['c_mop'] == 2) ? $displayAmount : 0;
+            $checkOnline = ($row['c_mop'] == 3) ? $displayAmount : 0;
+
+            // TOTALS (exclude bounce)
+            $totalCashAmount = ($row['c_mop'] == 1 && !$isBounce) ? $actualAmount : 0;
+            $totalCheckAmount = ($row['c_mop'] == 2 && !$isBounce) ? $actualAmount : 0;
+            $totalOnlineAmount = ($row['c_mop'] == 3 && !$isBounce) ? $actualAmount : 0;
+
+            $totalCashOnline += $totalCashAmount + $totalOnlineAmount;
+            $totalCheck += $totalCheckAmount;
+            $totalOfall += $totalCashAmount + $totalCheckAmount + $totalOnlineAmount;
 
             $l_encode = fetchEncoderName($conn, $row['c_encoded_by']);
 
+            $statusTex = '-';
+            if ($row['status'] == 2) $statusTex = 'BOUNCE CHECK';
+
+            $displayCashOnline = $cashAmount + $checkOnline;
+            $displayCheck = $checkAmount;
+            $displayTotal = $displayCashOnline + $displayCheck;
+
             $html .= '
             <tr>
-                <td class="pdf-font">' . $counter++ . '</td>
-                <td class="pdf-font">' . htmlspecialchars($row['c_car_no']) . '</td>
-                <td class="pdf-font">' . htmlspecialchars($row['c_car_type']) . '</td>
-                <td class="pdf-font">' . $phase_acronym . '</td>
+                <td>' . $counter++ . '</td>
+                <td>' . htmlspecialchars($row['c_car_no']) . '</td>
+                <td>' . htmlspecialchars($row['c_car_type']) . '</td>
+                <td>' . $phase_acronym . '</td>
 
-                <td class="pdf-font">' . number_format($cashAmount + $checkOnline, 2) . '</td>
-                <td class="pdf-font">' . number_format($checkAmount, 2) . '</td>
-                <td class="pdf-font">' . htmlspecialchars($row['c_bank'] == '' ? '-' : $row['c_bank']) . '</td>
-                <td class="pdf-font">' . number_format($cashAmount + $checkAmount + $checkOnline , 2) . '</td>
+                <td>' . ($displayCashOnline < 0 ? '-' : '') . number_format(abs($displayCashOnline), 2) . '</td>
+                <td>' . ($displayCheck < 0 ? '-' : '') . number_format(abs($displayCheck), 2) . '</td>
+                <td>' . htmlspecialchars($row['c_bank'] ?: '-') . '</td>
+                <td>' . ($displayTotal < 0 ? '-' : '') . number_format(abs($displayTotal), 2) . '</td>
 
-                <td class="pdf-font">' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>
-                <td class="pdf-font">' . htmlspecialchars($row['c_car_paydate']) . '</td>
-                <td class="pdf-font">' . $l_encode . '</td>
+                <td>' . $statusTex . '</td>
+
+                <td>' . htmlspecialchars((new DateTime($row['c_tran_date']))->format('Y-m-d')) . '</td>
+                <td>' . htmlspecialchars($row['c_car_paydate']) . '</td>
+                <td>' . $l_encode . '</td>
             </tr>';
         }
 
         $html .= '
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td class="pdf-font" colspan="4" style="text-align: right;"></td>
-                    <td class="pdf-font">' . number_format($totalCashOnline, 2) . '</td>
-                    <td class="pdf-font">' . number_format($totalCheck, 2) . '</td>
-                    <td class="pdf-font" colspan="1"></td>
-                    <td class="pdf-font">' . number_format($totalOfall, 2) . '</td>
-                    <td class="pdf-font" colspan="3"></td>
-                </tr>
-            </tfoot>';
-
-        $html .= '
-                </tbody>
-            </table>';
-
-    } else {
-        $html .= '
-            <tr>
-                <td class="pdf-font" colspan="11" style="text-align: center;">No records found.</td>
-            </tr>
-        </tbody>';
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="4"></td>
+            <td>' . number_format($totalCashOnline, 2) . '</td>
+            <td>' . number_format($totalCheck, 2) . '</td>
+            <td></td>
+            <td>' . number_format($totalOfall, 2) . '</td>
+            <td colspan="4"></td>
+        </tr>
+        </tfoot>
+        </table>';
     }
 
-    $html .= '</p>
-        </div>
-    </body>
-    </html>';
+    $html .= '</body></html>';
 
     $dompdf->loadHtml($html);
-
     $dompdf->setPaper('legal', 'landscape');
-
     $dompdf->render();
-
     $dompdf->stream("car_buyers_payment.pdf", ["Attachment" => 0]);
 }
 ?>
-
-
-

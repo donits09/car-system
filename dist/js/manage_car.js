@@ -85,27 +85,24 @@ function calculateTotalAmount() {
     for (var i = 0; i < rows.length; i++) {
         if (rows[i].style.display !== "none") {
             var amountCell = rows[i].getElementsByTagName("td")[7]; 
-            if (amountCell) {
-                var amountValue = amountCell.textContent.trim().replace(/,/g, '');
-                var parsedValue = parseFloat(amountValue);
-                if (!isNaN(parsedValue)) {
-                    total += parsedValue;
-                } else {
-                    console.log("Invalid number:", amountValue);
+            var statusCell = rows[i].getElementsByTagName("td")[8]; 
+            if (amountCell && statusCell) {
+                var statusText = statusCell.textContent.trim();
+                if (statusText === "ACTIVE PAYMENT") {
+                    var amountValue = amountCell.textContent.trim().replace(/,/g, '');
+                    var parsedValue = parseFloat(amountValue);
+                    if (!isNaN(parsedValue)) {
+                        total += parsedValue;
+                    }
                 }
-            } else {
-                console.log(i);
             }
-        } else {
-            console.log(i);
         }
     }
-
     var totalAmountElement = document.getElementById("totalAmount");
     if (totalAmountElement) {
-        totalAmountElement.textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-    } else {
-        console.log("Total amount element not found.");
+        totalAmountElement.textContent = total
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
 }
 
