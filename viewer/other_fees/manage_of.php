@@ -407,7 +407,7 @@ $(document).ready(function() {
                     submitButton.attr('disabled', true);
                 }
             });
-        }
+        // }
     });
 
 

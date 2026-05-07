@@ -4,7 +4,7 @@
 // PostgreSQL database connection parameters
 $dbhost = 'localhost';
 $dbport = '5432'; // default PostgreSQL port
-$dbname = 'CAR_TESTDB';
+$dbname = 'ProductionDB';
 $dbuser = 'glicelo';
 $dbpass = 'admin12345';
 

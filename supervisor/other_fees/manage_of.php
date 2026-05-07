@@ -693,7 +693,7 @@ $(document).ready(function() {
                     submitButton.attr('disabled', true);
                 }
             });
-        }
+        // }
     });
 
     $('#or-form').on('submit', function(e) {

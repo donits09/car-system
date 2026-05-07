@@ -457,7 +457,7 @@ $(document).ready(function() {
                     submitButton.attr('disabled', true);
                 }
             });
-        }
+        // }
     });
 
     $('#other-or-form').on('submit', function(e) {
