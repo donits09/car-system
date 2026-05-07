@@ -40,8 +40,8 @@
     <div class="form-group">
         <label for="status">Status</label>
         <select class="form-control" id="status" name="status" required>
-            <option value="0" <?php echo ($status == '1') ? 'selected' : ''; ?>>Active</option>
-            <option value="1" <?php echo ($status == '0') ? 'selected' : ''; ?>>Inactive</option>
+            <option value="0" <?php echo ($status == '0') ? 'selected' : ''; ?>>Active</option>
+            <option value="1" <?php echo ($status == '1') ? 'selected' : ''; ?>>Inactive</option>
         </select>
     </div>
     <button type="submit" class="btn btn-primary" id="btnsave">Save</button>

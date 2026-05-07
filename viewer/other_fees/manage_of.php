@@ -274,8 +274,16 @@ $(document).ready(function() {
 
         let valid = true;
 
-        if (orNo.length < 6) {
+        /* if (orNo.length < 6) {
             $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
+            valid = false;
+        } */
+
+        if (orNo.length < 5 || orNo.length > 6) {
+            $('#or_no_error')
+                .text('OR No. must be 5 or 6 digits only.')
+                .addClass('bold-text')
+                .css('color', 'red');
             valid = false;
         }
 
@@ -366,13 +374,20 @@ $(document).ready(function() {
         const orNoError = $('#or_no_error');
         const submitButton = $('#btnsave');
 
-        if (orNo.length < 6) {
+        /* if (orNo.length < 6) {
             orNoError.text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             submitButton.attr('disabled', true);
         } else if (orNo.length > 6) {
             orNoError.text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
             //submitButton.attr('disabled', true);
-        } else {
+        } */ 
+       
+        if (orNo.length < 5 || orNo.length > 6) {
+            orNoError.text('OR No. must be 5 or 6 digits only.')
+                .addClass('bold-text')
+                .css('color', 'red');
+            submitButton.attr('disabled', true);
+        }else {
             $.ajax({
                 type: 'POST',
                 url: 'check_or_no.php',
