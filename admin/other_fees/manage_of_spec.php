@@ -665,40 +665,45 @@ $(document).ready(function() {
         const orNoError = $('#or_no_error');
         const submitButton = $('#btnsave');
 
-        /* if (orNo.length < 6) {
-            orNoError.text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
-            submitButton.attr('disabled', true);
-        } else if (orNo.length > 6) {
-            orNoError.text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
-            //submitButton.attr('disabled', true);
-        } */ 
-       
         if (orNo.length < 5 || orNo.length > 6) {
             orNoError.text('OR No. must be 5 or 6 digits only.')
                 .addClass('bold-text')
                 .css('color', 'red');
+
             submitButton.attr('disabled', true);
-        }else {
+
+        } else {
+
             $.ajax({
                 type: 'POST',
                 url: '../../admin/other_fees/check_or_no.php',
-                data: { c_or_no: orNo },  
+                data: { c_or_no: orNo },
                 dataType: 'json',
+
                 success: function(response) {
+
                     if (response.exists) {
-                        orNoError.text('OR No. already exists.').addClass('bold-text').css('color', 'red');
+                        orNoError.text('OR No. already exists.')
+                            .addClass('bold-text')
+                            .css('color', 'red');
+
                         submitButton.attr('disabled', true);
+
                     } else {
                         orNoError.text('').removeClass('bold-text');
                         submitButton.attr('disabled', false);
                     }
                 },
+
                 error: function() {
-                    orNoError.text('Error checking OR No.').addClass('bold-text').css('color', 'red');
+                    orNoError.text('Error checking OR No.')
+                        .addClass('bold-text')
+                        .css('color', 'red');
+
                     submitButton.attr('disabled', true);
                 }
             });
-        // }
+        }
     });
 
     $('#or-form').on('submit', function(e) {
