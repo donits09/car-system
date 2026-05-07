@@ -419,52 +419,66 @@ $(document).ready(function() {
         });
     });
 
-    $('#c_or_no').on('input', function() {
-        const orNo = $(this).val();
-        const orNoError = $('#or_no_error');
-        const submitButton = $('#btnsave');
+    $('#c_or_no').on('input', function () {
 
-        /* if (orNo.length < 6) {
-            $('#or_no_error').text('OR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
-            $('#other-or-form button[type="submit"]').attr('disabled', true);
-        } else if (orNo.length > 6) {
-            $('#or_no_error').text('OR No. exceeds 6 digits.').addClass('bold-text').css('color', 'blue');
-            $('#other-or-form button[type="submit"]').attr('disabled', false);
-        } */ 
-       
-        if (orNo.length < 5 || orNo.length > 6) {
-            orNoError.text('OR No. must be 5 or 6 digits only.')
-                .addClass('bold-text')
-                .css('color', 'red');
-            submitButton.attr('disabled', true);
-        }else {
-            $.ajax({
-                type: 'POST',
-                url: 'check_or_no.php',
-                data: { c_or_no: orNo },  
-                dataType: 'json',
-                success: function(response) {
-                    if (response.exists) {
-                        orNoError.text('OR No. already exists.').addClass('bold-text').css('color', 'red');
-                        submitButton.attr('disabled', true);
-                    } else {
-                        orNoError.text('').removeClass('bold-text');
-                        submitButton.attr('disabled', false);
-                    }
-                },
-                error: function() {
-                    orNoError.text('Error checking OR No.').addClass('bold-text').css('color', 'red');
-                    submitButton.attr('disabled', true);
+    const orNo = $(this).val().trim();
+    const orNoError = $('#or_no_error');
+    const submitButton = $('#btnsave');
+
+    if (orNo.length < 5 || orNo.length > 6) {
+
+        orNoError
+            .text('OR No. must be 5 or 6 digits only.')
+            .addClass('bold-text')
+            .css('color', 'red');
+
+        submitButton.prop('disabled', true);
+
+    } else {
+
+        $.ajax({
+            type: 'POST',
+            url: 'check_or_no.php',
+            data: { c_or_no: orNo },
+            dataType: 'json',
+
+            success: function(response) {
+
+                if (response.exists) {
+
+                    orNoError
+                        .text('OR No. already exists.')
+                        .addClass('bold-text')
+                        .css('color', 'red');
+
+                    submitButton.prop('disabled', true);
+
+                } else {
+
+                    orNoError.text('').removeClass('bold-text');
+                    submitButton.prop('disabled', false);
                 }
-            });
-        // }
-    });
+            },
 
-    $('#other-or-form').on('submit', function(e) {
-        if ($('#or_no_error').text().includes('must be 6 digits')) {
-            e.preventDefault();
-        }
-    });
+            error: function() {
+
+                orNoError
+                    .text('Error checking OR No.')
+                    .addClass('bold-text')
+                    .css('color', 'red');
+
+                submitButton.prop('disabled', true);
+            }
+        });
+    }
+});
+
+$('#other-or-form').on('submit', function(e) {
+
+    if ($('#or_no_error').text() !== '') {
+        e.preventDefault();
+    }
+});
 });
 </script>
 <script>
