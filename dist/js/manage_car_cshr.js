@@ -66,7 +66,7 @@ $(document).ready(function () {
     });
 });
 
-function calculateTotalAmount() {
+/* function calculateTotalAmount() {
     var table = document.getElementById("car-list-table");
     if (!table) {
         console.log("Table not found.");
@@ -104,6 +104,52 @@ function calculateTotalAmount() {
     var totalAmountElement = document.getElementById("totalAmount");
     if (totalAmountElement) {
         totalAmountElement.textContent = total.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+    } else {
+        console.log("Total amount element not found.");
+    }
+} */
+
+function calculateTotalAmount() {
+    var table = document.getElementById("car-list-table");
+    if (!table) {
+        console.log("Table not found.");
+        return;
+    }
+
+    var tbody = table.getElementsByTagName("tbody")[0];
+    if (!tbody) {
+        console.log("Table body not found.");
+        return;
+    }
+
+    var rows = tbody.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display !== "none") {
+            var amountCell = rows[i].getElementsByTagName("td")[7];
+            var statusCell = rows[i].getElementsByTagName("td")[8];
+
+            if (amountCell && statusCell) {
+                var statusText = statusCell.textContent.trim();
+
+                if (statusText === "ACTIVE PAYMENT") {
+                    var amountValue = amountCell.textContent.trim().replace(/,/g, '');
+                    var parsedValue = parseFloat(amountValue);
+
+                    if (!isNaN(parsedValue)) {
+                        total += parsedValue;
+                    }
+                }
+            }
+        }
+    }
+
+    var totalAmountElement = document.getElementById("totalAmount");
+    if (totalAmountElement) {
+        totalAmountElement.textContent = total
+            .toFixed(2)
+            .replace(/\d(?=(\d{3})+\.)/g, '$&,');
     } else {
         console.log("Total amount element not found.");
     }

@@ -129,19 +129,27 @@ Class Master{
 	}	
 	function delete_car($carNo, $atapNo) {
 		$resp = array();
+
+		$statusValue = isset($_POST['statusValue']) ? (int)$_POST['statusValue'] : 1;
+		$label = ($statusValue === 2) ? 'BOUNCE CHECK' : 'CANCELLED';
 		
 		if (!empty($carNo)) {
 			if ($atapNo == 0) {
-				$sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?";
+				/* $sql = "UPDATE t_car_payment SET status = 1 WHERE c_car_no = ?"; */
+				$sql = "UPDATE t_car_payment SET status = ? WHERE c_car_no = ?";
 				$stmt = odbc_prepare($this->conn, $sql);
 	
 				if ($stmt) {
-					$result = @odbc_execute($stmt, array($carNo));
+					/* $result = @odbc_execute($stmt, array($carNo)); */
+					$result = @odbc_execute($stmt, array($statusValue, $carNo));
 	
 					if ($result) {
-						$this->car_logs('Car Management', "CANCELLED - CAR#$carNo");
+						/* $this->car_logs('Car Management', "CANCELLED - CAR#$carNo"); */
+						$this->car_logs('Car Management', "$label - CAR#$carNo");
 						$resp['status'] = 'success';
-						$resp['msg'] = "Car payment successfully canceled.";
+						$resp['msg'] = ($label == 'BOUNCE CHECK') 
+							? "Car payment successfully marked as Bounce Check." 
+							: "Car payment successfully cancelled.";
 					} else {
 						$resp['status'] = 'failed';
 						$resp['err'] = "Failed to cancel car payment: " . odbc_errormsg($this->conn);

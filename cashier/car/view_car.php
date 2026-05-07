@@ -14,7 +14,7 @@
         $accountId = $_GET['id'];
         $get_car_query = "SELECT a.id, a.c_account_no, a.c_car_no, a.c_car_type,
                     a.c_car_paydate,a.c_car_amount,a.c_encoded_by,a.c_tran_date,a.c_tran_updated,a.c_mop, a.c_bank, b.c_name, b.c_phase,
-                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks
+                    b.c_block, b.c_lot, a.c_check_no, a.c_remarks, a.status
                         FROM t_car_payment a
                         LEFT JOIN t_other_car_payment b ON a.c_car_no = b.c_car_no WHERE a.id = ?";
         $stmt = odbc_prepare($conn, $get_car_query);
@@ -132,6 +132,20 @@
                 <tr>
                     <th>Amount:</th>
                     <td><?php echo number_format($row['c_car_amount'],2); ?></td>
+                </tr>
+                <tr>
+                    <th>Status:</th>
+                    <td>
+                        <?php 
+                            if ($row['status'] == 1) {
+                                echo "<span style='color:red; font-weight:bold;'>Cancelled</span>";
+                            } elseif ($row['status'] == 2) {
+                                echo "<span style='color:orange; font-weight:bold;'>Bounced</span>";
+                            } else {
+                                echo "<span style='color:green; font-weight:bold;'>Active</span>";
+                            }
+                        ?>
+                    </td>
                 </tr>
                 <tr>
                     <th>Mode of Payment:</th>

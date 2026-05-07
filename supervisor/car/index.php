@@ -402,6 +402,7 @@ include('../../inc/header.php');
                                                     <th>Name</th>
                                                     <th>Location</th>
                                                     <th>Amount</th>
+                                                    <th>Status</th>
                                                     <th>Pay Date</th>
                                                     <th>Encoder</th>
                                                     <th>Action</th>
@@ -1023,12 +1024,39 @@ $(document).ready(function() {
             loadModal('Create New Car', 'manage_other_car.php', '#createCarModal');
         });
 
-        $(document).on('click', '.delete_data_car', function() {
+        /* Old code revised dahil need mag add ng bounce check (2026-03-04) */
+        /* $(document).on('click', '.delete_data_car', function() {
             var carNo = $(this).data('car-no');
             var atapNo = $(this).data('atap-no');
             console.log("Car No: " + carNo + ", ATAP No: " + atapNo);
             _conf("Are you sure you want to cancel this car permanently?", delete_car, [carNo, atapNo]);
+        }); */
+
+        $(document).on('click', '.delete_data_car', function () {
+            var carNo = $(this).data('car-no');
+            var atapNo = $(this).data('atap-no');
+            console.log("Car No: " + carNo + ", ATAP No: " + atapNo);
+            show_cancel_or_bounce_modal(carNo, atapNo);
         });
+
+        function show_cancel_or_bounce_modal(carNo, atapNo) {
+            $('#confirm_modal .modal-body').html(`
+                <p class="mb-0">Do you want to <b>Cancel Payment</b> or mark this CAR as <b>Bounce Check</b>?</p>
+                <small class="text-muted">CAR No: <b>${carNo}</b></small>
+            `);
+            $('#confirm_modal .modal-footer').html(`
+                <button type="button" class="btn btn-danger" id="btn_cancel_car">Cancel Payment</button>
+                <button type="button" class="btn btn-warning" id="btn_bounce_car">Bounce Check</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            `);
+            $(document).off('click', '#btn_cancel_car').on('click', '#btn_cancel_car', function () {
+                delete_car(carNo, atapNo, 1);
+            });
+            $(document).off('click', '#btn_bounce_car').on('click', '#btn_bounce_car', function () {
+                delete_car(carNo, atapNo, 2);
+            });
+            $('#confirm_modal').modal('show');
+        }
 
         window._conf = function(msg, func, params) {
             $('#confirm_modal .modal-body').html(msg);
@@ -1102,7 +1130,8 @@ function delete_or(orId, orNo) {
         }
     });
 }
-function delete_car(carNo, atapNo) {
+/* Old code revised dahil need mag add ng bounce check (2026-03-04) */
+/* function delete_car(carNo, atapNo) {
     start_loader();
     $.ajax({
         url: "../../classes/Master.php?f=delete_car",
@@ -1121,6 +1150,45 @@ function delete_car(carNo, atapNo) {
                     $('#confirm_modal').modal('hide'); 
                     $('body').removeClass('modal-open'); 
                     $('.modal-backdrop').remove(); 
+                    updateCarList();
+                    $('.delete_data_car[data-car-no="' + carNo + '"]').closest('tr').remove();
+                }, 1000);
+            } else if (resp && resp.status === 'failed') {
+                if (resp.err) {
+                    alert_toast("An error occurred: " + resp.err, 'error');
+                } else {
+                    alert_toast("An error occurred: " + resp.msg, 'error');
+                }
+            } else {
+                alert_toast("An unexpected error occurred", 'error');
+            }
+            end_loader();
+        }
+    });
+} */
+function delete_car(carNo, atapNo, statusValue) {
+    start_loader();
+    $.ajax({
+        url: "../../classes/Master.php?f=delete_car",
+        method: "POST",
+        data: {
+            carNo: carNo,
+            atapNo: atapNo,
+            statusValue: statusValue
+        },
+        dataType: "json",
+        error: function (err) {
+            console.log(err);
+            alert_toast("An error occurred while making the request.", 'error');
+            end_loader();
+        },
+        success: function (resp) {
+            if (resp && resp.status === 'success') {
+                alert_toast(resp.msg, 'success');
+                setTimeout(function () {
+                    $('#confirm_modal').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
                     updateCarList();
                     $('.delete_data_car[data-car-no="' + carNo + '"]').closest('tr').remove();
                 }, 1000);

@@ -4,6 +4,7 @@ session_start();
 <?php
 include('../../config.php');
 $account_no = $_GET['buyer_acc_no'];
+/* $car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_car_paydate DESC"; */
 $car_list = "SELECT * FROM t_car_payment WHERE c_account_no = ? and status != 1 ORDER BY c_car_paydate DESC";
 $stmt = odbc_prepare($conn, $car_list);
 $hasRows = false;
@@ -104,7 +105,28 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
         }
     ?>
     </td>
-    <td class="text-center"><?php echo number_format($row['c_car_amount'],2); ?></td>
+    <td class="text-center">
+        <?php
+            $amount = $row['c_car_amount'];
+                if ($row['status'] == 1 || $row['status'] == 2) {
+                    $amount = -abs($amount);
+                }
+            echo number_format($amount, 2);
+        ?>
+    </td>
+    
+    <td class="text-center">
+        <?php
+            if($row['status'] == 0){
+                echo '<span class="badge rounded-pill px-2 py-1" style="background:#e8f5e9;color:#2e7d32;font-size:0.80rem;">ACTIVE PAYMENT</span>';
+            }elseif($row['status'] == 1){
+                echo '<span class="badge rounded-pill px-2 py-1" style="background:#fdecea;color:#c62828;font-size:0.80rem;">CANCELLED</span>';
+            }elseif($row['status'] == 2){
+                echo '<span class="badge rounded-pill px-2 py-1" style="background:#fff8e1;color:#f57f17;font-size:0.80rem;">BOUNCE CHECK</span>';
+            }else{
+                echo '<span class="badge rounded-pill px-2 py-1 bg-secondary" style="font-size:0.80rem;">UNKNOWN</span>';
+            }
+        ?>
     </td>
     <td class="text-center"><?php echo $row['c_car_paydate']; ?></td>
     <?php
@@ -122,34 +144,33 @@ if ($stmt && odbc_execute($stmt, array($account_no))) {
             Action <?php if ($row['e_status'] == 1) { echo '<span class="fa fa-lock"></span>'; } ?>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
+
         <div class="dropdown-menu" role="menu">
             <a class="dropdown-item view_data" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-                <!-- <span class="fa fa-eye text-primary"></span> -->View 
+                View
             </a>
             <div class="dropdown-divider"></div>
-            <div class="card-tools">
-                <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
-                    <!-- <span class="fas fa-print"></span>  -->Print
-                </a>
-            </div>
-            <?php if ($row['e_status'] == 0){ ?>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item edit_data" href="javascript:void(0)" 
-            data-id="<?php echo $row['id']; ?>" 
-            data-account-no="<?php echo $row['c_account_no']; ?>" 
-            data-payment-type="<?php echo $row['c_car_type']; ?>" 
-            data-amount="<?php echo $row['c_car_amount']; ?>" 
-            data-car-no="<?php echo $row['c_car_no']; ?>" 
-            data-pay-date="<?php echo $row['c_car_paydate']; ?>" 
-            data-encoder="<?php echo $row['c_encoded_by']; ?>">
-                <!-- <span class="fa fa-edit text-info"></span>  -->Edit
+            <a class="dropdown-item edit_data" href="javascript:void(0)"
+                data-id="<?php echo $row['id']; ?>"
+                data-account-no="<?php echo $row['c_account_no']; ?>"
+                data-payment-type="<?php echo $row['c_car_type']; ?>"
+                data-amount="<?php echo $row['c_car_amount']; ?>"
+                data-car-no="<?php echo $row['c_car_no']; ?>"
+                data-pay-date="<?php echo $row['c_car_paydate']; ?>"
+                data-encoder="<?php echo $row['c_encoded_by']; ?>">
+                Edit
             </a>
-
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item delete_data_car" href="javascript:void(0)" data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>" data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
+            <a class="dropdown-item" href="<?php echo base_url ?>print/print_car.php?id=<?php echo $row['c_car_no']; ?>" target="_blank">
+                Print
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item delete_data_car"
+                href="javascript:void(0)"
+                data-car-no="<?php echo htmlspecialchars($row['c_car_no'], ENT_QUOTES, 'UTF-8'); ?>"
+                data-atap-no="<?php echo htmlspecialchars($row['c_atap_no'], ENT_QUOTES, 'UTF-8'); ?>">
                 Cancel
             </a>
-            <?php } ?>
         </div>
     </td>
 </tr>
