@@ -714,7 +714,7 @@ $(document).ready(function() {
         });
     }
 });
-
+});
 $('#or-form').on('submit', function(e) {
 
     if ($('#or_no_error').text() !== '') {

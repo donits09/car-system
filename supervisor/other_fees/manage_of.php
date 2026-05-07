@@ -655,12 +655,23 @@ $(document).ready(function() {
         fetchBuyerDetails(accountNo);
     });
 
-    $('#c_or_no').on('input', function () {
+$('#c_or_no').on('input', function () {
 
-    const orNo = $('#c_or_no').val().trim();
+    let orNo = $(this).val();
+
+
+    orNo = orNo.replace(/\D/g, '');
+
+
+    $(this).val(orNo);
+
     const orNoError = $('#or_no_error');
     const submitButton = $('#btnsave');
 
+    // clear old errors
+    orNoError.text('').removeClass('bold-text');
+
+    // validate length
     if (orNo.length < 5 || orNo.length > 6) {
 
         orNoError
@@ -670,50 +681,54 @@ $(document).ready(function() {
 
         submitButton.prop('disabled', true);
 
-    } else {
+        return;
+    }
 
-        $.ajax({
-            type: 'POST',
-            url: 'check_or_no.php',
-            data: { c_or_no: orNo },
-            dataType: 'json',
+    // duplicate checking
+    $.ajax({
+        type: 'POST',
+        url: 'check_or_no.php',
+        data: { c_or_no: orNo },
+        dataType: 'json',
 
-            success: function(response) {
+        success: function (response) {
 
-                if (response.exists) {
-
-                    orNoError
-                        .text('OR No. already exists.')
-                        .addClass('bold-text')
-                        .css('color', 'red');
-
-                    submitButton.prop('disabled', true);
-
-                } else {
-
-                    orNoError.text('').removeClass('bold-text');
-                    submitButton.prop('disabled', false);
-                }
-            },
-
-            error: function() {
+            if (response.exists) {
 
                 orNoError
-                    .text('Error checking OR No.')
+                    .text('OR No. already exists.')
                     .addClass('bold-text')
                     .css('color', 'red');
 
                 submitButton.prop('disabled', true);
+
+            } else {
+
+                orNoError.text('');
+                submitButton.prop('disabled', false);
             }
-        });
-    }
+        },
+
+        error: function () {
+
+            orNoError
+                .text('Error checking OR No.')
+                .addClass('bold-text')
+                .css('color', 'red');
+
+            submitButton.prop('disabled', true);
+        }
+    });
+
 });
 
-$('#or-form').on('submit', function(e) {
+$('#or-form').on('submit', function (e) {
 
     if ($('#or_no_error').text() !== '') {
         e.preventDefault();
     }
+});
+
 });
 </script>
 <script>
