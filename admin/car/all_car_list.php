@@ -6,7 +6,7 @@ check_user_group(1);
 
 include('../../config.php');
 include('../../inc/navbar.php');    
-include('../../inc/header.php');     
+include('../../inc/header.php');     /* aaaaa */
 ?>
 <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
 <link href="<?php echo base_url; ?>dist/css/jquery-ui.css" rel="stylesheet">
