@@ -1,6 +1,6 @@
-<?php 
+<?php
     session_start();
-    
+
     require_once('../../inc/check_session.php');
     check_user_group(3);
 
@@ -47,7 +47,7 @@
             $c_bank = $result["c_bank"];
             $c_remarks = $result["c_remarks"];
         }
-    } 
+    }
 ?>
 <style>
 .bold-text {
@@ -56,7 +56,7 @@
     font-style: italic;
 }
 .combo-box-menu {
-    max-height: 200px; 
+    max-height: 200px;
     overflow-y: auto;
 }
 .disabled {
@@ -80,7 +80,7 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
-                <label for="c_atap_no">ATAP No.</label> 
+                <label for="c_atap_no">ATAP No.</label>
                 <input type="number" class="form-control" id="c_atap_no" name="c_atap_no" oninput="checkAtapNo()">
             </div>
         </div>
@@ -98,7 +98,7 @@
     <script>
     function disableAtapNo() {
         document.getElementById('c_atap_no').readOnly = true;
-        toggleCarType(); 
+        toggleCarType();
     }
 
     function enableAtapNo() {
@@ -122,7 +122,7 @@
         getAtapButton.style.backgroundColor = '';
         getAtapButton.style.borderColor = '';
         getAtapButton.innerHTML = '<span class="fa fa-edit"></span> Get ATAP';
-        toggleCarType(); 
+        toggleCarType();
     }
     </script>
     <div class="form-group" id="tran_type_container" style="display: none;">
@@ -209,19 +209,19 @@
     </script>
     <script>
         $(document).ready(function() {
-      
+
         function updateAtapVal(selectedValue) {
             $('#atap_val').val(selectedValue);
         }
 
- 
+
         $('.dropdown-menu a.dropdown-item').on('click', function(e) {
             //e.preventDefault();
             var selectedValue = $(this).data('value');
             updateAtapVal(selectedValue);
 
             $('#dropdownMenuButton').text(selectedValue);
-            $('#c_car_type').val(selectedValue); 
+            $('#c_car_type').val(selectedValue);
         });
 
         var initialSelectedValue = $('#c_car_type').val();
@@ -240,7 +240,7 @@
             tranTypeContainer.style.display = 'none';
         } else {
             tranTypeContainer.style.display = 'block';
-            carTypeContainer.style.display = 'none';  
+            carTypeContainer.style.display = 'none';
         }
     }
     </script>
@@ -250,7 +250,7 @@
                 event.preventDefault();
                 const selectedValue = this.getAttribute('data-value');
                 document.getElementById('c_car_type').value = selectedValue;
-              
+
                 document.getElementById('c_atap_no').readOnly = true;
             });
         });
@@ -263,18 +263,18 @@
         <label for="name">Name</label>
         <input type="text" class="form-control" id="c_name" name="c_name" value="<?php echo htmlspecialchars($c_name); ?>" oninput="validateAlphaNumericInput(event)" required>
     </div>
-    <?php 
+    <?php
         if (!isset($_GET['id']) || $_GET['id'] == null): ?>
             <div class="form-group">
                 <label for="current_remarks" class="form-label lbl_rem">
-                    ATAP Remarks 
+                    ATAP Remarks
                 </label><div class="remarks_ref">(These remarks are for your reference only.)</div>
                 <textarea class="form-control txt" rows="2" cols="50" id="current_remarks" name="current_remarks" readOnly><?php echo htmlspecialchars($c_remarks) ?></textarea>
             </div>
     <?php endif; ?>
     <div class="form-group">
         <label for="new_remarks" class="form-label">
-            Remarks 
+            Remarks
         </label>
         <textarea class="form-control txt" rows="1" cols="50" id="c_remarks" name="c_remarks"><?php echo htmlspecialchars($c_remarks) ?></textarea>
     </div>
@@ -287,9 +287,9 @@
                 $sql = "SELECT * FROM t_projects ORDER BY c_acronym";
                 $results = odbc_exec($conn, $sql);
                 while ($row = odbc_fetch_array($results)) {
-                    $selected = ''; 
+                    $selected = '';
                     if ($row['c_code'] == $c_phase) {
-                        $selected = 'selected'; 
+                        $selected = 'selected';
                     }
                     echo '<option value="' . $row['c_code'] . '" ' . $selected . '>' . $row['c_acronym'] . '</option>';
                 }
@@ -312,7 +312,7 @@
         <div id="car_no_error"></div>
     </div>
 
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.dropdown-item').forEach(function(item) {
@@ -376,7 +376,7 @@
 
     <div class="form-group" id="checkList" style="display: <?php echo ($c_mop == 2) ? 'block' : 'none'; ?>;">
         <div class="row">
-            <div class="col-md-6">          
+            <div class="col-md-6">
                 <label for="c_bank_check">Check Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_check" name="c_bank_check">
@@ -400,7 +400,7 @@
 
     <div class="form-group" id="onlineBankList" style="display: <?php echo ($c_mop == 3) ? 'block' : 'none'; ?>;">
         <div class="row">
-            <div class="col-md-6">     
+            <div class="col-md-6">
                 <label for="c_bank_online">Online Bank</label>
                 <div class="dropdown">
                     <select class="form-control" id="c_bank_online" name="c_bank_online">
@@ -472,7 +472,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-group hidden_fields">
         <label for="encoder">Transaction date</label>
         <input type="text" class="form-control" id="c_tran_date" name="c_tran_date" value="<?php echo  htmlspecialchars($c_tran_date) ?>" readonly>
@@ -548,7 +548,7 @@ $(document).ready(function() {
     $('#other-car-form').on('keydown', function(event) {
         if (event.key === "Enter" || event.keyCode === 13) {
             var target = event.target;
-            
+
             if ($(target).is('textarea')) {
                 return true;
             }
@@ -557,23 +557,30 @@ $(document).ready(function() {
     });
 
     $('#other-car-form').on('submit', function(e) {
-        e.preventDefault(); 
+        e.preventDefault();
+        const $form = $(this);
+        const $submitButton = $form.find('button[type="submit"]');
+        if ($form.data('isSubmitting')) {
+            return false;
+        }
+        $form.data('isSubmitting', true);
+        $submitButton.prop('disabled', true);
         var carNo = $('#c_car_no').val();
         const carAmount = parseFloat($('#c_car_amount').val().replace(/,/g, ''));
         let valid = true;
 
-        let atapVal = $('#c_tran_type_single').val(); 
+        let atapVal = $('#c_tran_type_single').val();
         if (!atapVal) {
-            atapVal = $('#atap_val').val(); 
+            atapVal = $('#atap_val').val();
         }else{
-            atapVal = $('#c_car_type').val(); 
+            atapVal = $('#c_car_type').val();
         }
 
         if(atapVal === "STREETLIGHT FEE" || atapVal === "GRASS CUTTING FEE") {
             alert('The selected transaction type is Special.');
             valid = false;
         }
-        
+
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
@@ -585,6 +592,8 @@ $(document).ready(function() {
         }
 
         if (!valid) {
+            $form.data('isSubmitting', false);
+            $submitButton.prop('disabled', false);
             return;
         }
         start_loader();
@@ -601,16 +610,18 @@ $(document).ready(function() {
                 console.log(err);
                 alert_toast("An error occurred.", 'error');
                 end_loader();
+                $form.data('isSubmitting', false);
+                $submitButton.prop('disabled', false);
             },
             success: function(resp) {
-                console.log(resp); 
+                console.log(resp);
                 if (resp && resp.status === 'success') {
                     alert_toast(resp.msg, 'success');
                     setTimeout(function() {
-                        $('#createCarModal').modal('hide'); 
-                        $('body').removeClass('modal-open'); 
-                        $('.modal-backdrop').remove(); 
-                        location.reload(); 
+                        $('#createCarModal').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                        location.reload();
                     }, 1000);
                 } else if (resp && resp.status === 'failed') {
                     if (resp.msg === "CAR type does not exist.") {
@@ -622,6 +633,10 @@ $(document).ready(function() {
                     alert_toast("An unexpected error occurred", 'error');
                 }
                 end_loader();
+                if (!(resp && resp.status === 'success')) {
+                    $form.data('isSubmitting', false);
+                    $submitButton.prop('disabled', false);
+                }
             }
         });
     });
@@ -668,12 +683,12 @@ $(document).ready(function() {
         var clearType = $('#c_car_type');
         if (atapNo.length > 0) {
             $('#car_type_container').show();
-            $('#tran_type_container').hide(); 
+            $('#tran_type_container').hide();
             fetchAtapDetails(atapNo);
         } else {
             alert('Please enter an ATAP No. first.');
         }
-        clearType.val(''); 
+        clearType.val('');
     });
 
     function fetchAtapDetails(atapNo) {
@@ -721,7 +736,7 @@ $(document).ready(function() {
                                 clearTxtNoCar();
                                 $('#btnsave').prop('disabled', true);
                             }
-                        }, 100); 
+                        }, 100);
                     }
                 } else {
                     $('#car_type_container').show();
@@ -793,12 +808,12 @@ $(document).ready(function() {
         $('#c_tran_type').change(function() {
             var selectedOption = $(this).find(':selected');
             var selectedValue = selectedOption.val();
-            var amount = selectedOption.data('amount'); 
-            var atap_val = selectedOption.text(); 
+            var amount = selectedOption.data('amount');
+            var atap_val = selectedOption.text();
 
             updateAtapId(selectedValue);
             updateAtapAmount(amount);
-            updateAtapVal(atap_val); 
+            updateAtapVal(atap_val);
         });
     });
 
@@ -811,19 +826,19 @@ $(document).ready(function() {
             success: function(response) {
                 var $select = $('#c_tran_type');
                 var $textbox = $('#c_tran_type_single');
-                var $atapId = $('#atap_id'); 
-                var $atapAmount = $('#c_car_amount'); 
-                var $atapVal = $('#atap_val'); 
-                var $atapRemarks = $('#current_remarks'); 
+                var $atapId = $('#atap_id');
+                var $atapAmount = $('#c_car_amount');
+                var $atapVal = $('#atap_val');
+                var $atapRemarks = $('#current_remarks');
                 $select.empty();
-                
+
                 if (response.length > 0) {
                     $('#tran_type_container').show();
                     if (response.length === 1) {
                         $textbox.val(response[0].text).show();
                         $('#tran_type_dropdown').hide();
-                        $atapId.val(response[0].value); 
-                        $atapAmount.val(response[0].amount); 
+                        $atapId.val(response[0].value);
+                        $atapAmount.val(response[0].amount);
                         $atapVal.val(response[0].text);
                         $atapRemarks.val(response[0].remarks);
                     } else {
@@ -845,8 +860,8 @@ $(document).ready(function() {
                     }
                 } else {
                     $('#tran_type_container').hide();
-                    $atapId.val(''); 
-                    $atapAmount.val(''); 
+                    $atapId.val('');
+                    $atapAmount.val('');
                     $atapVal.val('');
                     $atapRemarks.val('');
                 }
@@ -854,10 +869,10 @@ $(document).ready(function() {
             error: function(xhr, status, error) {
                 console.error('Error fetching data:', error);
                 $('#tran_type_container').hide();
-                $('#atap_id').val(''); 
-                $('#c_car_amount').val(''); 
-                $('#atap_val').val(''); 
-                $('#current_remarks').val(''); 
+                $('#atap_id').val('');
+                $('#c_car_amount').val('');
+                $('#atap_val').val('');
+                $('#current_remarks').val('');
             }
         });
     }
@@ -928,6 +943,13 @@ $(document).ready(function() {
 
     $('#other-car-form').on('submit', function (e) {
         e.preventDefault();
+        const $form = $(this);
+        const $submitButton = $form.find('button[type="submit"]');
+        if ($form.data('isSubmitting')) {
+            return false;
+        }
+        $form.data('isSubmitting', true);
+        $submitButton.prop('disabled', true);
 
         const submitButton = $('#other-car-form button[type="submit"]');
         submitButton.attr('disabled', true);
@@ -937,7 +959,7 @@ $(document).ready(function() {
         let valid = true;
 
         let atapVal = $('#c_tran_type_single').val() || $('#atap_val').val() || $('#c_car_type').val();
-        
+
         if (carNo.length < 6) {
             $('#car_no_error').text('CAR No. must be 6 digits.').addClass('bold-text').css('color', 'red');
             valid = false;
@@ -949,7 +971,8 @@ $(document).ready(function() {
         }
 
         if (!valid) {
-            submitButton.attr('disabled', false); 
+            $form.data('isSubmitting', false);
+            $submitButton.prop('disabled', false);
             return;
         }
 
@@ -967,7 +990,8 @@ $(document).ready(function() {
                 console.log(err);
                 alert_toast("An error occurred.", 'error');
                 end_loader();
-                submitButton.attr('disabled', false); 
+                $form.data('isSubmitting', false);
+                $submitButton.prop('disabled', false);
             },
             success: function (resp) {
                 console.log(resp);
@@ -983,7 +1007,10 @@ $(document).ready(function() {
                     alert_toast(resp.msg || "An unexpected error occurred", 'error');
                 }
                 end_loader();
-                submitButton.attr('disabled', false); 
+                if (!(resp && resp.status === 'success')) {
+                    $form.data('isSubmitting', false);
+                    $submitButton.prop('disabled', false);
+                }
             }
         });
     });
