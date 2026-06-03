@@ -586,6 +586,13 @@ $(document).ready(function() {
 
     $('#other-or-form').on('submit', function(e) {
         e.preventDefault(); 
+        const $form = $(this);
+        const $submitButton = $form.find('button[type="submit"]');
+        if ($form.data('isSubmitting')) {
+            return false;
+        }
+        $form.data('isSubmitting', true);
+        $submitButton.prop('disabled', true);
         var orNo = $('#c_or_no').val();
         const orAmount = parseFloat($('#c_or_amount').val().replace(/,/g, ''));
         let valid = true;
@@ -636,6 +643,8 @@ $(document).ready(function() {
         }
 
         if (!valid) {
+            $form.data('isSubmitting', false);
+            $submitButton.prop('disabled', false);
             return;
         }
         start_loader();
@@ -652,6 +661,8 @@ $(document).ready(function() {
                 console.log(err);
                 alert_toast("An error occurred.", 'error');
                 end_loader();
+                $form.data('isSubmitting', false);
+                $submitButton.prop('disabled', false);
             },
             success: function(resp) {
                 console.log(resp); 
@@ -675,6 +686,10 @@ $(document).ready(function() {
                     alert_toast("An unexpected error occurred", 'error');
                 }
                 end_loader();
+                if (!(resp && resp.status === 'success')) {
+                    $form.data('isSubmitting', false);
+                    $submitButton.prop('disabled', false);
+                }
             }
         });
     });

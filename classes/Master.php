@@ -555,6 +555,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
+		if (empty($id)) {
+			$this->acquire_payment_lock('or_payment', $c_or_no);
+		}
 		/* $c_vat_sales = str_replace(',', '', $c_vat_sales);
 		$c_vat_amount = str_replace(',', '', $c_vat_amount); */
 		/* $c_ewt = str_replace(',', '', $c_ewt); */
@@ -788,6 +791,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
+		if (empty($id)) {
+			$this->acquire_payment_lock('car_payment', $c_car_no);
+		}
 		
 		$atap_id = $_POST['atap_id'] ?? null;
 	
@@ -1160,6 +1166,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_car_amount = str_replace(',', '', $c_car_amount);
+		if (empty($id)) {
+			$this->acquire_payment_lock('car_payment', $c_car_no);
+		}
 		$atap_id = $_POST['atap_id'];
 		
 		if (($c_check_no == '' || $c_check_no == null) && ($c_ref_no == '' || $c_ref_no == null)) {
@@ -1413,6 +1422,9 @@ Class Master{
 		extract($_POST);
 		$conn = $this->conn;
 		$c_or_amount = str_replace(',', '', $c_or_amount);
+		if (empty($id)) {
+			$this->acquire_payment_lock('or_payment', $c_or_no);
+		}
 		
 		$atap_id = $_POST['c_atap_no_or'];
 		$atap_val = $_POST['atap_id_or'];
@@ -3126,6 +3138,23 @@ Class Master{
 		echo json_encode($resp);
 	}	
 	
+
+	private function acquire_payment_lock($prefix, $paymentNo) {
+		$lockKey = pg_escape_string($prefix . ':' . trim((string) $paymentNo));
+		$lockQuery = "SELECT pg_advisory_lock(hashtext('$lockKey'))";
+		$lockResult = odbc_exec($this->conn, $lockQuery);
+
+		if (!$lockResult) {
+			$resp = array(
+				'status' => 'failed',
+				'msg' => 'Unable to lock this payment number for saving. Please try again.',
+				'err' => odbc_errormsg($this->conn)
+			);
+			echo json_encode($resp);
+			exit;
+		}
+	}
+
 	public function car_logs($module, $notes){
 		require_once('../auth/session_auth.php');
 
