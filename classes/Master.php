@@ -1,11 +1,13 @@
 <?php
 Class Master{
 	private $conn;
+	private $paymentTransactionActive = false;
 
     public function __construct() {
         require_once('../config.php');
 		global $dsn, $user, $pass;
         $this->conn = odbc_connect($dsn, $user, $pass);
+        register_shutdown_function(array($this, 'rollback_active_payment_transaction'));
     }
 
 	function save_car_users() {
@@ -784,6 +786,7 @@ Class Master{
 			}
 		}
 	
+		$this->finalize_payment_transaction($resp, empty($id));
 		echo json_encode($resp);
 	}
 	
@@ -987,6 +990,7 @@ Class Master{
 			}
 		}
 	
+		$this->finalize_payment_transaction($resp, empty($id));
 		echo json_encode($resp);
 	}
 	
@@ -1415,6 +1419,7 @@ Class Master{
 				$resp['err'] = odbc_errormsg($this->conn);
 			}
 		}
+		$this->finalize_payment_transaction($resp, empty($id));
 		echo json_encode($resp);
 	}
 
@@ -1713,6 +1718,7 @@ Class Master{
 			}
 		}
 	
+		$this->finalize_payment_transaction($resp, empty($id));
 		echo json_encode($resp);
 	}
 	
@@ -3140,11 +3146,28 @@ Class Master{
 	
 
 	private function acquire_payment_lock($prefix, $paymentNo) {
+		if (!$this->paymentTransactionActive) {
+			$begin = odbc_exec($this->conn, "BEGIN");
+
+			if (!$begin) {
+				$resp = array(
+					'status' => 'failed',
+					'msg' => 'Unable to start the payment save transaction. Please try again.',
+					'err' => odbc_errormsg($this->conn)
+				);
+				echo json_encode($resp);
+				exit;
+			}
+
+			$this->paymentTransactionActive = true;
+		}
+
 		$lockKey = pg_escape_string($prefix . ':' . trim((string) $paymentNo));
-		$lockQuery = "SELECT pg_advisory_lock(hashtext('$lockKey'))";
+		$lockQuery = "SELECT pg_advisory_xact_lock(hashtext('$lockKey'))";
 		$lockResult = odbc_exec($this->conn, $lockQuery);
 
 		if (!$lockResult) {
+			$this->rollback_active_payment_transaction();
 			$resp = array(
 				'status' => 'failed',
 				'msg' => 'Unable to lock this payment number for saving. Please try again.',
@@ -3152,6 +3175,33 @@ Class Master{
 			);
 			echo json_encode($resp);
 			exit;
+		}
+	}
+
+	private function finalize_payment_transaction(&$resp, $usesPaymentTransaction) {
+		if (!$usesPaymentTransaction || !$this->paymentTransactionActive) {
+			return;
+		}
+
+		if (isset($resp['status']) && $resp['status'] === 'success') {
+			$commit = odbc_exec($this->conn, "COMMIT");
+			$this->paymentTransactionActive = false;
+
+			if (!$commit) {
+				$resp['status'] = 'failed';
+				$resp['msg'] = 'Unable to commit the payment save transaction. Please try again.';
+				$resp['err'] = odbc_errormsg($this->conn);
+			}
+			return;
+		}
+
+		$this->rollback_active_payment_transaction();
+	}
+
+	public function rollback_active_payment_transaction() {
+		if ($this->paymentTransactionActive && $this->conn) {
+			odbc_exec($this->conn, "ROLLBACK");
+			$this->paymentTransactionActive = false;
 		}
 	}
 
